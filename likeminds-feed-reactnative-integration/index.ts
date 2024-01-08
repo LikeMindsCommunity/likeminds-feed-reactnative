@@ -1,4 +1,8 @@
-import App1 from "./App";
+import { LMFeedProvider } from "./lmFeedProvider";
+import {initMyClient} from './setup'
+import { AppProvider } from "./store/AppContext";
 export {
-    App1
+    LMFeedProvider,
+    initMyClient,
+    AppProvider
 }

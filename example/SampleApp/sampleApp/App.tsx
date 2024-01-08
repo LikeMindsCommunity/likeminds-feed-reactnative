@@ -1,9 +1,14 @@
 import React from 'react';
-import { App1 } from 'likeminds-feed-reactnative-integration';
-
+import {AppProvider, LMFeedProvider} from 'likeminds-feed-reactnative-integration';
+import { myClient } from '.';
+import { Text } from 'react-native';
 const App = () => {
   return (
-    <App1 />
+    <AppProvider>
+    <LMFeedProvider myClient={myClient} userName='user123' userUniqueId='fed69eac-2857-4fe6-af05-830c0950e032'>
+      <Text>Example app</Text>
+    </LMFeedProvider>
+    </AppProvider>
   );
 };
 

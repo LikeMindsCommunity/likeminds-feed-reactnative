@@ -1,13 +1,9 @@
 import React from "react";
-import { AppProvider } from "./store/AppContext";
-import DemoComponent from "./screens/demoComponent";
+import { Text } from "react-native";
 
 const App1 = () => {
   return (
-    <AppProvider>
-      <DemoComponent />
-      {/* Add other components here */}
-    </AppProvider>
+    <Text>App</Text>
   );
 };
 

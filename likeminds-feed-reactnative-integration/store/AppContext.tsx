@@ -1,12 +1,10 @@
 import React, {createContext, useReducer, useContext, ReactNode} from 'react';
-import {counterReducer, initialState} from './reducers/one';
-import {userInit, userReducer} from './reducers/two';
+import {loginReducer, initialState} from './reducers/loginReducer';
 import { ActionTypes } from './actions/types';
 
 // Define your state type
 interface AppState {
-  counter: initialState;
-  user: userInit;
+  login: initialState;
 }
 
 export interface AppAction {
@@ -16,8 +14,7 @@ export interface AppAction {
 
 // Combine your reducers
 const rootReducer = (state: AppState, action: AppAction): AppState => ({
-  counter: counterReducer(state.counter, action),
-  user: userReducer(state.user, action),
+  login: loginReducer(state.login, action),
 });
 
 // Create your context
@@ -30,15 +27,14 @@ interface AppProviderProps {
   children: ReactNode;
 }
 
-const initState = {
-  counter: {count: 0, type: ''},
-  user: {user: null, age: 0},
+const defaultState = {
+  login: {}
 };
 
 const AppProvider: React.FC<AppProviderProps> = ({
   children,
 }: AppProviderProps) => {
-  const [state, dispatch] = useReducer(rootReducer, initState);
+  const [state, dispatch] = useReducer(rootReducer, defaultState);
 
   return (
     <AppContext.Provider value={{state, dispatch}}>
