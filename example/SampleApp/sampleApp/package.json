@@ -12,6 +12,7 @@
   "dependencies": {
     "diff": "5.1.0",
     "likeminds_feed_reactnative_ui": "file:../../../likeminds-feed-reactnative-ui/likeminds_feed_reactnative_ui-1.0.0.tgz",
+    "likeminds-feed-reactnative-integration": "file:../../../likeminds-feed-reactnative-integration/likeminds-feed-reactnative-integration-1.0.0.tgz",
     "react": "18.2.0",
     "react-native": "0.73.1"
   },
