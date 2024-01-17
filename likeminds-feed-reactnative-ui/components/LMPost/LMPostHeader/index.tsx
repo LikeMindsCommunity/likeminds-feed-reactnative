@@ -1,11 +1,12 @@
-import { View, StyleSheet, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
-import { LMPostHeaderProps } from "./types";
-import { timeStamp } from "../../../utils";
-import LMPostMenu from "../LMPostMenu";
-import LMProfilePicture from "../../LMProfilePicture";
-import LMText from "../../LMText";
-import LMIcon from "../../LMIcon";
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
+import React, {useState} from 'react';
+import {LMPostHeaderProps} from './types';
+import {timeStamp} from '../../../utils';
+import LMPostMenu from '../LMPostMenu';
+import LMProfilePicture from '../../LMProfilePicture'
+import LMText from '../../LMText';
+import LMIcon from '../../LMIcon';
+import { getNameInitials } from '../../../utils/utils';
 import { styles } from "./styles";
 
 const LMPostHeader = ({
@@ -50,7 +51,7 @@ const LMPostHeader = ({
       <TouchableOpacity activeOpacity={0.8} onPress={() => onTap(post?.user)}>
         <View style={styles.alignRow}>
           <LMProfilePicture
-            fallbackText={{ children: post?.user?.name }}
+            fallbackText={{...profilePicture?.fallbackText,children:profilePicture?.fallbackText.children ? profilePicture.fallbackText.children : getNameInitials(post?.user?.name)}}
             imageUrl={post?.user?.imageUrl}
             onTap={profilePicture?.onTap}
             size={profilePicture?.size}

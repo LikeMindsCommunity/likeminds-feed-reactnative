@@ -1,13 +1,12 @@
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import React from "react";
 import LMPostHeader from "../LMPostHeader";
 import LMPostContent from "../LMPostContent";
 import LMPostMedia from "../LMPostMedia";
 import LMPostFooter from "../LMPostFooter";
 import { LMPostProps } from "./types";
-import layout from "../../../utils/layout";
-import STYLES from "../../../constants/constants";
 import { ATTACHMENT_TYPE } from "../../../constants/strings";
+import { getNameInitials } from "../../../utils/utils";
 import { styles } from "./styles";
 
 const LMPost = ({
@@ -21,7 +20,7 @@ const LMPost = ({
   const updatedHeaderProps = {
     post: post,
     profilePicture: {
-      fallbackText: { children: post?.user?.name },
+      fallbackText: { children: getNameInitials(post?.user?.name) },
       imageUrl: post?.user?.imageUrl,
       size: headerProps?.profilePicture?.size,
       onTap: headerProps?.profilePicture?.onTap,
@@ -49,11 +48,11 @@ const LMPost = ({
     },
     onTap: headerProps?.onTap ? headerProps.onTap : () => null,
     createdAt: {
-      text: `${post?.createdAt}`,
+      children: `${post?.createdAt}`,
       textStyle: headerProps?.createdAt?.textStyle,
     },
     titleText: {
-      text: post?.user?.name,
+      children: post?.user?.name,
       textStyle: headerProps?.titleText?.textStyle,
     },
     isEdited: post?.isEdited,

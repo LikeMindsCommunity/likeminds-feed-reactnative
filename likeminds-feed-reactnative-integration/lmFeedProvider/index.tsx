@@ -11,8 +11,9 @@ import { Credentials } from "../credentials";
 import { LMFeedClient } from "@likeminds.community/feed-js";
 import { Client } from "../client";
 import { LMFeedProviderProps, ThemeContextProps } from "./types";
-import { useAppContext } from "../store/AppContext";
+import { useAppDispatch, useAppSelector } from "../store/AppContext";
 import { INIT_API_SUCCESS, PROFILE_DATA_SUCCESS } from "../store/actions/types";
+import { UniversalFeed} from "../screens";
 
 // Create the theme context
 export const LMFeedStylesContext = createContext<ThemeContextProps | undefined>(
@@ -45,9 +46,13 @@ export const LMFeedProvider = ({
   userName,
   userUniqueId,
   themeStyles,
+  universalFeedStyle,
+  postListStyle,
+  loaderStyle
 }: LMFeedProviderProps): React.JSX.Element => {
   const [isInitiated, setIsInitiated] = useState(false);
-  const {state, dispatch } = useAppContext();
+  const dispatch  = useAppDispatch();
+  const state  = useAppSelector();
 
   useEffect(() => {
     //setting client in Client class
@@ -92,7 +97,8 @@ export const LMFeedProvider = ({
 
   return isInitiated ? (
     <LMFeedContext.Provider value={myClient}>
-      <LMFeedStylesContext.Provider value={{ themeStyles }}>
+      <LMFeedStylesContext.Provider value={{ universalFeedStyle, postListStyle, loaderStyle }}>
+        <UniversalFeed />
         <View style={styles.flexStyling}>{children}</View>
       </LMFeedStylesContext.Provider>
     </LMFeedContext.Provider>

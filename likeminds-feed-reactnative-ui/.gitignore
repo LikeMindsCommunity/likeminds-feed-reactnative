@@ -4,3 +4,4 @@ node_modules/
 npm-debug.log
 yarn-error.log
 likeminds_feed_reactnative_ui-1.0.0.tgz
+package-lock.json

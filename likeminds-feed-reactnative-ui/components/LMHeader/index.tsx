@@ -11,11 +11,12 @@ const LMHeader = ({
   onBackPress,
   subHeading,
   backIcon,
-  subHeadingStyle,
-  headingStyle
+  subHeadingTextStyle,
+  headingTextStyle,
+  headingViewStyle
 }: LMHeaderProps) => {
   return (
-    <View style={defaultStyles.headerViewStyle}>
+    <View style={[defaultStyles.headerViewStyle, headingViewStyle]}>
       {showBackArrow && (
         <TouchableOpacity
           activeOpacity={0.8}
@@ -32,12 +33,12 @@ const LMHeader = ({
           )}
         </TouchableOpacity>
       )}
-      <Text style={StyleSheet.flatten([defaultStyles.headingStyle, headingStyle])}>
+      <Text style={StyleSheet.flatten([defaultStyles.headingStyle, headingTextStyle])}>
         {heading}
         {subHeading && (
           <>
             {"\n"}
-            <Text style={StyleSheet.flatten([defaultStyles.subHeadingStyle,subHeadingStyle])}>{subHeading}</Text>
+            <Text style={StyleSheet.flatten([defaultStyles.subHeadingStyle,subHeadingTextStyle])}>{subHeading}</Text>
           </>
         )}
       </Text>

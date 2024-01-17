@@ -14,10 +14,11 @@ export class STYLES {
     MSG: "#777e8e",
     FONT_PRIMARY: "hsl(222, 53%, 15%)",
     JOINED_BTN: "hsl(222, 22%, 93%)",
-    LIGHT_BLUE: "#0276fa",
-    SELECTED_BLUE: "hsl(222, 64%, 95%)",
-    SELECTED_CHAT_BUBBLE: "hsl(222, 67%, 91%)",
     RED: "red",
+    whiteTextColor: '#ffffff',
+    darkTextColor: '#000000',
+    lightGreyTextColor: '#00000077',
+    darkGreyTextColor: '#00000099',
   };
   static $FONT_SIZES = {
     XS: 10,
@@ -43,6 +44,7 @@ export class STYLES {
   static $BACKGROUND_COLORS = {
     LIGHT: "#ffffff",
     DARK: "#000000",
+    DARKTRANSPARENT: '#00000088',
   };
   static $SHADOWS = {
     LIGHT: "0 5px 10px rgba(0, 0, 0, 0.1)",
@@ -54,11 +56,14 @@ export class STYLES {
     SMALL: 10,
     MEDIUM: 15,
     LARGE: 20,
+    XL:25
   };
   static $PADDINGS = {
+    XS:5,
     SMALL: 10,
     MEDIUM: 15,
     LARGE: 20,
+    XL: 25
   };
   static $AVATAR = {
     WIDTH: 50,
@@ -78,6 +83,8 @@ export class STYLES {
     "dark-content": "dark-content",
     "light-content": "light-content",
   };
+  static $LMLoaderSizeiOS: 10;
+  static $LMLoaderSizeAndroid: 25;
   static setTheme({
     hue,
     fontColor,
@@ -97,7 +104,6 @@ export class STYLES {
       JOINED_BTN: lightBackgroundColor
         ? lightBackgroundColor
         : `hsl(${hue ? hue : 222}, 22%, 93%)`,
-      SELECTED_BLUE: `hsl(${hue ? hue : 222}, 64%, 95%)`,
     };
   }
 }

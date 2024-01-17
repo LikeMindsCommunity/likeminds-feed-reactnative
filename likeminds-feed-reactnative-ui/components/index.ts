@@ -23,6 +23,31 @@ import {
 import LMCommentItem from "./LMCommentItem";
 import LMMemberListItem from "./LMMemberListItem";
 import LMNotificationFeedItem from "./LMNotificationFeedItem";
+import { LMButtonProps } from "./LMButton/types";
+import { LMCommentProps } from "./LMCommentItem/types";
+import { LMHeaderProps } from "./LMHeader/types";
+import { LMIconProps } from "./LMIcon/types";
+import { LMInputTextProps } from "./LMInputText/types";
+import { LMLoaderProps } from "./LMLoader/types";
+import { LMMemberListItemProps } from "./LMMemberListItem/types";
+import { LMNotificationFeedItemProps } from "./LMNotificationFeedItem/types";
+import { LMProfilePictureProps } from "./LMProfilePicture/types";
+import { LMTextProps } from "./LMText/types";
+import {
+  LMImageProps,
+  LMCarouselProps,
+  LMDocumentProps,
+  LMLinkPreviewProps,
+  LMVideoProps,
+} from "./LMMedia";
+import {
+  LMPostProps,
+  LMPostHeaderProps,
+  LMPostContentProps,
+  LMPostFooterProps,
+  LMPostMediaProps,
+  LMPostMenuProps,
+} from "./LMPost";
 export {
   LMText,
   LMIcon,
@@ -45,4 +70,27 @@ export {
   LMCommentItem,
   LMMemberListItem,
   LMNotificationFeedItem,
+};
+export type {
+  LMButtonProps,
+  LMCarouselProps,
+  LMCommentProps,
+  LMDocumentProps,
+  LMHeaderProps,
+  LMIconProps,
+  LMImageProps,
+  LMInputTextProps,
+  LMLinkPreviewProps,
+  LMLoaderProps,
+  LMMemberListItemProps,
+  LMNotificationFeedItemProps,
+  LMPostContentProps,
+  LMPostFooterProps,
+  LMPostHeaderProps,
+  LMPostMediaProps,
+  LMPostMenuProps,
+  LMPostProps,
+  LMProfilePictureProps,
+  LMTextProps,
+  LMVideoProps,
 };

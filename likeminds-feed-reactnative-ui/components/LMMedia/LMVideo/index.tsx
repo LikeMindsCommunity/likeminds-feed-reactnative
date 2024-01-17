@@ -67,7 +67,7 @@ const LMVideo = ({
       ) : null}
 
       {/* this renders the video */}
-      <TouchableWithoutFeedback onPress={() => setViewController(true)}>
+      <>
         <Video
           source={{ uri: videoUrl }}
           key={videoUrl}
@@ -102,7 +102,7 @@ const LMVideo = ({
               : false
           } // this handles the mute of the video according to the video being played
         />
-      </TouchableWithoutFeedback>
+      </>
       {/* this renders the cancel button */}
       {showCancel && (
         <View style={defaultStyles.cancelVideoView}>
