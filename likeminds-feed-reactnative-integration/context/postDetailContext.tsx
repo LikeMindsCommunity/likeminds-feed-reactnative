@@ -617,7 +617,7 @@ export const PostDetailContextProvider = ({
   // this useEffect handles the pagination of the comments
   useEffect(() => {
     getPostData();
-  }, [commentPageNumber]);
+  }, [commentPageNumber,route.params[0]]);
 
   // this function is executed on the click of menu icon & handles the position and visibility of the modal
   const onOverlayMenuClick = (event: {
