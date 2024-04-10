@@ -25,5 +25,6 @@ export const styles = StyleSheet.create({
     bottom: -10,
     right: -8,
   },
-  contentView: { width: "75%", marginLeft: 10 },
+  contentView: { width: "82%", marginLeft: 10 },
+  activityText:{fontSize: 15}
 });

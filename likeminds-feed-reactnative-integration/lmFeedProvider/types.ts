@@ -24,7 +24,7 @@ interface ThemeStyles {
 }
 
 // custom style interface for universal feed screen
-interface UniversalFeedStyleProps {
+export interface UniversalFeedStyleProps {
   newPostButtonStyle?: ViewStyle;
   newPostButtonText?: TextStyle;
   newPostIcon?: ImageProps;
@@ -32,7 +32,7 @@ interface UniversalFeedStyleProps {
 }
 
 // custom style interface for post's list
-interface PostListStyleProps {
+export interface PostListStyleProps {
   header?: {
     profilePicture?: {
       fallbackTextStyle?: TextStyle;
@@ -224,12 +224,12 @@ interface PostListStyleProps {
 }
 
 // custom style interface for loader
-interface LoaderStyleProps {
+export interface LoaderStyleProps {
   loader?: LMLoaderProps;
 }
 
 // custom style interface for post detail screen
-interface PostDetailStyleProps {
+export interface PostDetailStyleProps {
   screenHeader?: LMHeaderProps;
   commentItemStyle?: {
     onTapViewMore?: () => void;
@@ -280,7 +280,7 @@ interface PostDetailStyleProps {
   };
 }
 
-interface CreatePostStyleProps {
+export interface CreatePostStyleProps {
   userNameTextStyle?: TextStyle;
   createPostScreenHeader?: {
     showBackArrow?: boolean;
@@ -311,11 +311,27 @@ interface CreatePostStyleProps {
   };
 }
 
-interface PostLikesListStyleProps {
+export interface PostLikesListStyleProps {
   screenHeader?: LMHeaderProps;
   likeListItemStyle?: ViewStyle;
   userNameTextStyle?: TextStyle;
-  userDesignationTextStyle?: TextStyle
+  userDesignationTextStyle?: TextStyle;
+}
+
+export interface NotificationFeedStyleProps {
+  screenHeader?: LMHeaderProps;
+  backgroundColor?: string;
+  unreadBackgroundColor?: string;
+  activityTextStyles?: TextStyle;
+  timestampTextStyles?: TextStyle;
+  userImageStyles?:  {
+    fallbackTextStyle?: TextStyle;
+    size?: number;
+    onTap?: () => void;
+    fallbackTextBoxStyle?: ViewStyle;
+    profilePictureStyle?: ImageStyle;
+  };
+  activityAttachmentImageStyle?: LMIconProps
 }
 
 export interface ThemeContextProps {
@@ -326,6 +342,7 @@ export interface ThemeContextProps {
   postDetailStyle?: PostDetailStyleProps;
   createPostStyle?: CreatePostStyleProps;
   postLikesListStyle?: PostLikesListStyleProps;
+  notificationFeedStyle?: NotificationFeedStyleProps
 }
 
 export interface LMFeedProviderProps {
@@ -340,4 +357,5 @@ export interface LMFeedProviderProps {
   postDetailStyle?: PostDetailStyleProps;
   createPostStyle?: CreatePostStyleProps;
   postLikesListStyle?: PostLikesListStyleProps;
+  notificationFeedStyle?: NotificationFeedStyleProps
 }

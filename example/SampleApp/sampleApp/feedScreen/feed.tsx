@@ -1,5 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { UniversalFeed, usePostListContext, useUniversalFeedContext} from '@likeminds.community/feed-rn-core';
+import { getUniqueId } from 'react-native-device-info';
+import { Alert, PermissionsAndroid, Platform } from 'react-native';
+import getNotification, { getRoute, validateRegisterDeviceRequest } from '../registerDeviceApi';
+import messaging from '@react-native-firebase/messaging';
+import notifee, { EventType } from "@notifee/react-native";
+
+
 
 const Feed = ({route}) => {
   const {
@@ -11,9 +18,9 @@ const Feed = ({route}) => {
     onTapLikeCount,
     handleDeletePost,
     handleReportPost,
-    onOverlayMenuClick
+    onOverlayMenuClick,
   } = usePostListContext();
-  const {navigation, newPostButtonClick} = useUniversalFeedContext()
+  const {navigation, newPostButtonClick, onTapNotificationBell, accessToken} = useUniversalFeedContext()
 
   const customPostLike = (postId) => {
     console.log('before like ');
@@ -63,6 +70,85 @@ const Feed = ({route}) => {
     onOverlayMenuClick(event);
     console.log('after menuItemClick');
   };
+  const customNotificationBellTap = () => {
+    console.log('before notification icon tap');
+    onTapNotificationBell();
+    console.log('after notification icon tap');
+  };
+
+
+
+
+
+
+
+
+  const [FCMToken, setFCMToken] = useState('')
+ 
+
+  /// Setup notifications
+const pushAPI = async (fcmToken: string, accessToken:string) => {
+  
+  const deviceID = await getUniqueId();
+  
+  try {
+    const payload = {
+      token: fcmToken,
+      deviceId: deviceID,
+      xPlatformCode: Platform.OS === "ios" ? "ios" : "an",
+    };
+    await validateRegisterDeviceRequest(payload, accessToken);
+  } catch (error) {
+    Alert.alert(`${error}`);
+  }
+};
+
+ 
+  
+  const fetchFCMToken = async () => {
+    const fcmToken = await messaging().getToken();
+    console.log('fcmToken',fcmToken)
+    return fcmToken;
+  };
+ 
+  async function requestUserPermission() {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    return enabled;
+  }
+  
+
+useEffect(() => {
+  const token = async () => {
+    const isPermissionEnabled = await requestUserPermission();
+    console.log('isPermissionEnabled',isPermissionEnabled);
+    if (isPermissionEnabled) {
+      let fcmToken = await fetchFCMToken();
+      if (!!fcmToken) {
+        setFCMToken(fcmToken);
+      }
+    }
+  };
+  token();
+}, []);
+
+// useEffect(() =>{
+//   if(Platform.OS === 'android'){
+//     PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+//   }else{
+//     requestUserPermission()
+//   }
+
+// },[])
+
+useEffect(() => {
+  if (FCMToken) {
+    pushAPI(FCMToken, accessToken);
+  }
+}, [FCMToken]);
+
   return (
       <UniversalFeed
         navigation={navigation}
@@ -77,6 +163,7 @@ const Feed = ({route}) => {
         handleReportPostProps={(postId) => customHandleReport(postId)}
         newPostButtonClickProps={() => customHandleNewPostButton()}
         onOverlayMenuClickProp={(event, menuItems, postId) => customOverlayMenuCick(event, menuItems, postId)}
+        onTapNotificationBellProp={() => customNotificationBellTap()}
       >
       </UniversalFeed>
   );
