@@ -1,5 +1,4 @@
 #import "AppDelegate.h"
-import FirebaseCore
 #import <React/RCTBundleURLProvider.h>
 
 @implementation AppDelegate

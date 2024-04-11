@@ -36,6 +36,7 @@ const App = () => {
     shadowColor: '#000',
   };
 
+  // notification listener on foreground state
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       const val = await getNotification(remoteMessage);
@@ -45,6 +46,7 @@ const App = () => {
     return unsubscribe;
   }, []);
 
+  // notification display on foreground state
   useEffect(() => {
     return notifee.onForegroundEvent(({type, detail}) => {
       let routes = getRoute(detail?.notification?.data?.route);

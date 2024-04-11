@@ -10,7 +10,7 @@ import { useLMFeedStyles } from "../../lmFeedProvider";
 
 const LMFeedNotificationFeedListView = () => {
   const { notifications, handleActivityOnTap, refreshing, onRefresh, notificationFeedPageNumber,
-    setNotificationFeedPageNumber } =
+    setNotificationFeedPageNumber,handleLoadMore, isLoading } =
     useNotificationFeedContext();
   const { onNotificationItemClickedProp } =
     useNotificationFeedCustomisableMethodsContext();
@@ -40,9 +40,9 @@ const LMFeedNotificationFeedListView = () => {
           }}
           onEndReachedThreshold={0.3}
           onEndReached={() => {
-            setNotificationFeedPageNumber(notificationFeedPageNumber + 1);
+            handleLoadMore();
           }}
-          ListFooterComponent={ <LMLoader {...loaderStyle} />}
+          ListFooterComponent={<>{isLoading && <LMLoader {...loaderStyle} />}</>}
         />
       ) : (
         <View style={styles.loaderView}>

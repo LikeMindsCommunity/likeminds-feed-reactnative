@@ -51,11 +51,14 @@ export interface NotificationFeedContextValues {
   notifications: LMActivityUI[];
   refreshing: boolean;
   setRefreshing: Dispatch<SetStateAction<boolean>>;
-  fetchNotificationFeed: () => void;
+  isLoading: boolean;
+  setIsLoading: Dispatch<SetStateAction<boolean>>;
+  fetchNotificationFeed: (page: number) => void;
   readNotification: (id: string) => void;
   handleScreenBackPress: () => void;
   handleActivityOnTap:(activity: LMActivityUI) => void;
   onRefresh: () => void;
+  handleLoadMore: () => void;
 }
 
 const NotificationFeedContext = createContext<
@@ -83,17 +86,18 @@ export const NotificationFeedContextProvider = ({
   const notifications = useAppSelector(
     (state) => state.notification.activities
   );
+  const [isLoading, setIsLoading] = useState(false)
   const [refreshing, setRefreshing] = useState(false);
   const PostRegexPattern = /^route:\/\/post_detail\?post_id=\w+$/;
   const commentRegexPattern =
     /^route:\/\/post_detail\?post_id=[\w\d]+&comment_id=[\w\d]+$/;
   const createPostRegexPattern = /^route:\/\/create_post$/;
   const universalFeedRegexPattern = /^route:\/\/feed\?type=universal$/;
-
+  const PAGE_SIZE = 20
   // this functions gets notification feed data
-  const fetchNotificationFeed = async () => {
+  const fetchNotificationFeed = async (page) => {
     const payload = {
-      page: notificationFeedPageNumber,
+      page: page,
       pageSize: 20,
     };
     // calling getFeed API
@@ -121,8 +125,8 @@ export const NotificationFeedContextProvider = ({
   };
 
   useEffect(() => {
-    fetchNotificationFeed();
-  }, [notificationFeedPageNumber]);
+    fetchNotificationFeed(notificationFeedPageNumber);
+  }, []);
 
   const handleScreenBackPress = () => {
     navigation.goBack();
@@ -163,6 +167,27 @@ export const NotificationFeedContextProvider = ({
     setRefreshing(false);
   };
 
+  // fetch data for next page
+  const loadData = async (newPage: number) => {
+    setIsLoading(true);
+    setTimeout(async () => {
+      const res: any = await fetchNotificationFeed(newPage);
+      if (res) {
+        setIsLoading(false);
+      }
+    }, 1500);
+  };
+
+  // pagination
+  const handleLoadMore = async () => {
+    if (!isLoading && notifications.length === PAGE_SIZE * notificationFeedPageNumber) {
+      const newPage = notificationFeedPageNumber + 1;
+      setNotificationFeedPageNumber((page) => {
+        return page + 1;
+      });
+      loadData(newPage);
+    }
+  };
   const contextValues: NotificationFeedContextValues = {
     navigation,
     route,
@@ -175,7 +200,10 @@ export const NotificationFeedContextProvider = ({
     readNotification,
     handleScreenBackPress,
     handleActivityOnTap,
-    onRefresh
+    onRefresh,
+    handleLoadMore,
+    setIsLoading,
+    isLoading
   };
 
   return (

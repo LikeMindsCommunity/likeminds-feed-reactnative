@@ -14,6 +14,7 @@ import messaging from '@react-native-firebase/messaging';
 import notifee, {EventType} from '@notifee/react-native';
 import * as RootNavigation from './RootNavigation.js';
 
+// notification display for background state
 notifee.onBackgroundEvent(async ({type, detail}) => {
   let routes = getRoute(detail?.notification?.data?.route);
 
@@ -26,12 +27,13 @@ notifee.onBackgroundEvent(async ({type, detail}) => {
   }
 });
 
+// notification listener for background state
 messaging().setBackgroundMessageHandler(async remoteMessage => {
   await getNotification(remoteMessage);
   return remoteMessage;
 });
 
-const myClient = initMyClient('');
+const myClient = initMyClient('69edd43f-4a5e-4077-9c50-2b7aa740acce');
 
 AppRegistry.registerComponent(appName, () => App);
 

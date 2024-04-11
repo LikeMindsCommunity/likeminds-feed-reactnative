@@ -7,7 +7,7 @@ import {
 import {getUniqueId} from 'react-native-device-info';
 import {Alert, Platform} from 'react-native';
 import {validateRegisterDeviceRequest} from '../registerDeviceApi';
-import messaging from '@react-native-firebase/messaging';
+import { pushAPI, token } from '../pushNotification';
 
 const Feed = ({route}) => {
   const {
@@ -83,45 +83,12 @@ const Feed = ({route}) => {
   };
 
   /// Setup notifications
-  const pushAPI = async (fcmToken: string, accessToken: string) => {
-    const deviceID = await getUniqueId();
-
-    try {
-      const payload = {
-        token: fcmToken,
-        deviceId: deviceID,
-        xPlatformCode: Platform.OS === 'ios' ? 'ios' : 'an',
-      };
-      await validateRegisterDeviceRequest(payload, accessToken);
-    } catch (error) {
-      Alert.alert(`${error}`);
-    }
-  };
-
-  const fetchFCMToken = async () => {
-    const fcmToken = await messaging().getToken();
-    return fcmToken;
-  };
-
-  async function requestUserPermission() {
-    const authStatus = await messaging().requestPermission();
-    const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-    return enabled;
-  }
-
   useEffect(() => {
-    const token = async () => {
-      const isPermissionEnabled = await requestUserPermission();
-      if (isPermissionEnabled) {
-        let fcmToken = await fetchFCMToken();
-        if (!!fcmToken) {
-          setFCMToken(fcmToken);
-        }
-      }
-    };
-    token();
+   token().then((res) => {
+     if (!!res) {
+      setFCMToken(res);
+    }
+   });
   }, []);
 
   useEffect(() => {

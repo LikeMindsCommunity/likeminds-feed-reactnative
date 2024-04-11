@@ -22,8 +22,8 @@ export const styles = StyleSheet.create({
   },
   notificationTypeIcon: {
     position: "absolute",
-    bottom: -10,
-    right: -8,
+    top: 27,
+    left:22
   },
   contentView: { width: "82%", marginLeft: 10 },
   activityText:{fontSize: 15}
