@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Text,
   View,
+  TouchableOpacity
 } from "react-native";
 import React, { useState } from "react";
 import { POST_LIKES_LIST, UNIVERSAL_FEED } from "../../constants/screenNames";
@@ -22,7 +23,6 @@ import {
   VIEW_MORE_TEXT,
 } from "../../constants/Strings";
 import { DeleteModal, ReportModal } from "../../customModals";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { styles } from "./styles";
 import Layout from "../../constants/Layout";
 import {

@@ -73,8 +73,7 @@ const PostsListComponent = () => {
     postLikeHandler,
     debouncedSaveFunction,
     savePostHandler,
-    setFeedPageNumber,
-    feedPageNumber,
+    handleLoadMore,
     renderLoader,
     showLoader,
     showDeleteModal,
@@ -114,6 +113,7 @@ const onMenuItemSelect = (
    selectEditPostProp ? selectEditPostProp(postId) : handleEditPost(postId)
   }
 };
+
   return (
     <>
       {/* posts list section */}
@@ -181,11 +181,11 @@ const onMenuItemSelect = (
               </TouchableOpacity>
             )}
             onEndReachedThreshold={0.3}
-            onEndReached={() => {
-              setFeedPageNumber(feedPageNumber + 1);
+            onEndReached={handleLoadMore}
+            keyExtractor={item => {
+              return item?.id?.toString()
             }}
-            keyExtractor={item => keyExtractor(item)}
-            ListFooterComponent={<>{renderLoader()}</>}
+            ListFooterComponent={renderLoader}
             onViewableItemsChanged={({changed, viewableItems}) => {
               if (changed) {
                 if (viewableItems) {
