@@ -69,6 +69,7 @@ interface UniversalFeedProps {
     postId: string
   ) => void;
   onTapNotificationBellProp: () => void;
+  onSharePostClicked: (id:string) => void;
 }
 
 const UniversalFeed = ({
@@ -86,6 +87,7 @@ const UniversalFeed = ({
   newPostButtonClickProps,
   onOverlayMenuClickProp,
   onTapNotificationBellProp,
+  onSharePostClicked
 }: UniversalFeedProps) => {
   return (
     <UniversalFeedCustomisableMethodsContextProvider
@@ -100,6 +102,7 @@ const UniversalFeed = ({
       newPostButtonClickProps={newPostButtonClickProps}
       onOverlayMenuClickProp={onOverlayMenuClickProp}
       onTapNotificationBellProp={onTapNotificationBellProp}
+      onSharePostClicked={onSharePostClicked}
     >
       <UniversalFeedComponent />
     </UniversalFeedCustomisableMethodsContextProvider>

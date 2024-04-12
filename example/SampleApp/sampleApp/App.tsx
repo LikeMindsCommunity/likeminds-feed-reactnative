@@ -10,8 +10,8 @@ import {
   getRoute,
 } from '@likeminds.community/feed-rn-core';
 import {myClient} from '.';
-import {ViewStyle} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
+import {ActivityIndicator, ViewStyle} from 'react-native';
+import {LinkingOptions, NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {navigationRef} from './RootNavigation';
 import FeedWrapper from './feedScreen/feedWrapper';
@@ -63,12 +63,31 @@ const App = () => {
     });
   });
 
+  type RootStackParamList = {
+    UniversalFeed: undefined
+    DetailWrapper: Array<string> | undefined;
+    }
+  
+
+  const linking:LinkingOptions<RootStackParamList>  = {
+    prefixes: ['sampleapp://www.google.com/'],
+    config: {
+      // initialRouteName: UNIVERSAL_FEED,
+      screens:{
+        DetailWrapper:'detail/:params'
+      }
+    }
+  };
+
   return (
     <LMOverlayProvider
       myClient={myClient}
-      userName=""
-      userUniqueId="">
-      <NavigationContainer ref={navigationRef} independent={true}>
+      userName="abc"
+      userUniqueId="siddharth-1">
+      <NavigationContainer
+        // linking={linking}
+        // fallback={<ActivityIndicator color="blue" size="large" />}
+         ref={navigationRef} independent={true}>
         <Stack.Navigator screenOptions={{headerShown: false}}>
           <Stack.Screen name={UNIVERSAL_FEED} component={FeedWrapper} />
           <Stack.Screen name={POST_DETAIL} component={DetailWrapper} />
