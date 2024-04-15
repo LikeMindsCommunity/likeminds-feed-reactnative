@@ -3,10 +3,8 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Text,
-  ScrollView,
   Pressable,
   FlatList,
-  Alert,
   StyleSheet,
 } from "react-native";
 import React from "react";
@@ -66,7 +64,11 @@ interface CreatePostProps {
   };
   handleGalleryProp: (type: string) => void;
   handleDocumentProp: () => void;
-  onPostClickProp: (allMedia:Array<LMAttachmentUI>, linkData: Array<LMAttachmentUI>, content: string) => void;
+  onPostClickProp: (
+    allMedia: Array<LMAttachmentUI>,
+    linkData: Array<LMAttachmentUI>,
+    content: string
+  ) => void;
   handleScreenBackPressProp: () => void;
 }
 
@@ -77,18 +79,17 @@ const CreatePost = ({
   handleDocumentProp,
   handleGalleryProp,
   onPostClickProp,
-  handleScreenBackPressProp
+  handleScreenBackPressProp,
 }: CreatePostProps) => {
   return (
-  
-      <CreatePostCustomisableMethodsContextProvider
-        handleDocumentProp={handleDocumentProp}
-        handleGalleryProp={handleGalleryProp}
-        onPostClickProp={onPostClickProp}
-        handleScreenBackPressProp={handleScreenBackPressProp}
-      >
-        <CreatePostComponent />
-      </CreatePostCustomisableMethodsContextProvider>
+    <CreatePostCustomisableMethodsContextProvider
+      handleDocumentProp={handleDocumentProp}
+      handleGalleryProp={handleGalleryProp}
+      onPostClickProp={onPostClickProp}
+      handleScreenBackPressProp={handleScreenBackPressProp}
+    >
+      <CreatePostComponent />
+    </CreatePostCustomisableMethodsContextProvider>
   );
 };
 
@@ -97,12 +98,13 @@ const CreatePostComponent = () => {
   const LMFeedContextStyles = useLMFeedStyles();
   const { postListStyle, createPostStyle, postDetailStyle } =
     LMFeedContextStyles;
-    const customTextInputStyle = createPostStyle?.createPostTextInputStyle
-    const customAddMoreAttachmentsButton = createPostStyle?.addMoreAttachmentsButton
-    const customCreatePostScreenHeader = createPostStyle?.createPostScreenHeader
-    const customAttachmentOptionsStyle = createPostStyle?.attachmentOptionsStyle
-    const postHeaderStyle = postListStyle?.header
-    const postMediaStyle = postListStyle?.media
+  const customTextInputStyle = createPostStyle?.createPostTextInputStyle;
+  const customAddMoreAttachmentsButton =
+    createPostStyle?.addMoreAttachmentsButton;
+  const customCreatePostScreenHeader = createPostStyle?.createPostScreenHeader;
+  const customAttachmentOptionsStyle = createPostStyle?.attachmentOptionsStyle;
+  const postHeaderStyle = postListStyle?.header;
+  const postMediaStyle = postListStyle?.media;
   const {
     navigation,
     postToEdit,
@@ -137,20 +139,20 @@ const CreatePostComponent = () => {
     postDetail,
     postEdit,
     onPostClick,
-    handleScreenBackPress
+    handleScreenBackPress,
   }: CreatePostContextValues = useCreatePostContext();
 
   const {
     handleDocumentProp,
     handleGalleryProp,
     onPostClickProp,
-    handleScreenBackPressProp
+    handleScreenBackPressProp,
   } = useCreatePostCustomisableMethodsContext();
 
   // this renders the post detail UI
   const uiRenderForPost = () => {
     return (
-      <ScrollView
+      <View
         keyboardShouldPersistTaps={"handled"}
         style={
           postToEdit
@@ -198,8 +200,7 @@ const CreatePostComponent = () => {
             customTextInputStyle?.inputTextStyle,
           ]}
           multilineField={
-            customTextInputStyle?.multilineField !=
-            undefined
+            customTextInputStyle?.multilineField != undefined
               ? customTextInputStyle?.multilineField
               : true
           }
@@ -236,7 +237,6 @@ const CreatePostComponent = () => {
           >
             <FlatList
               data={[...allTags]}
-              nestedScrollEnabled={true}
               renderItem={({ item }: { item: LMUserUI }) => {
                 return (
                   <Pressable
@@ -262,8 +262,8 @@ const CreatePostComponent = () => {
                       {...postHeaderStyle?.profilePicture}
                       fallbackText={{
                         ...postHeaderStyle?.profilePicture?.fallbackText,
-                        children: postHeaderStyle?.profilePicture
-                          ?.fallbackText?.children ? (
+                        children: postHeaderStyle?.profilePicture?.fallbackText
+                          ?.children ? (
                           postHeaderStyle?.profilePicture?.fallbackText
                             ?.children
                         ) : (
@@ -272,8 +272,7 @@ const CreatePostComponent = () => {
                       }}
                       fallbackTextBoxStyle={[
                         styles.taggingListProfileBoxStyle,
-                        postHeaderStyle?.profilePicture
-                          ?.fallbackTextBoxStyle,
+                        postHeaderStyle?.profilePicture?.fallbackTextBoxStyle,
                       ]}
                       size={
                         postHeaderStyle?.profilePicture?.size
@@ -447,9 +446,13 @@ const CreatePostComponent = () => {
             <LMButton
               onTap={() => {
                 formattedMediaAttachments.length > 0
-                  ? handleGalleryProp ? handleGalleryProp(SELECT_BOTH) : handleGallery(SELECT_BOTH)
+                  ? handleGalleryProp
+                    ? handleGalleryProp(SELECT_BOTH)
+                    : handleGallery(SELECT_BOTH)
                   : formattedDocumentAttachments.length > 0
-                  ? handleDocumentProp ? handleDocumentProp() : handleDocument()
+                  ? handleDocumentProp
+                    ? handleDocumentProp()
+                    : handleDocument()
                   : {},
                   customAddMoreAttachmentsButton?.onTap();
               }}
@@ -469,12 +472,10 @@ const CreatePostComponent = () => {
                 customAddMoreAttachmentsButton?.buttonStyle,
               ])}
               placement={customAddMoreAttachmentsButton?.placement}
-              isClickable={
-                customAddMoreAttachmentsButton?.isClickable
-              }
+              isClickable={customAddMoreAttachmentsButton?.isClickable}
             />
           )}
-      </ScrollView>
+      </View>
     );
   };
 
@@ -489,7 +490,9 @@ const CreatePostComponent = () => {
             : true
         }
         onBackPress={() => {
-          handleScreenBackPressProp ? handleScreenBackPressProp() : handleScreenBackPress()
+          handleScreenBackPressProp
+            ? handleScreenBackPressProp()
+            : handleScreenBackPress();
         }}
         heading={
           postToEdit
@@ -523,7 +526,19 @@ const CreatePostComponent = () => {
                 ? styles.enabledOpacity
                 : styles.disabledOpacity
             }
-            onPress={() => onPostClickProp ? onPostClickProp(allAttachment,formattedLinkAttachments, postContentText) : onPostClick(allAttachment,formattedLinkAttachments, postContentText)}
+            onPress={() =>
+              onPostClickProp
+                ? onPostClickProp(
+                    allAttachment,
+                    formattedLinkAttachments,
+                    postContentText
+                  )
+                : onPostClick(
+                    allAttachment,
+                    formattedLinkAttachments,
+                    postContentText
+                  )
+            }
           >
             {customCreatePostScreenHeader?.rightComponent ? (
               customCreatePostScreenHeader?.rightComponent
@@ -562,9 +577,10 @@ const CreatePostComponent = () => {
               customAttachmentOptionsStyle?.photoAttachmentView,
             ]}
             onPress={() => {
-              handleGalleryProp ? handleGalleryProp(SELECT_IMAGE) :handleGallery(SELECT_IMAGE);
-              customAttachmentOptionsStyle
-                ?.onPhotoAttachmentOptionClick &&
+              handleGalleryProp
+                ? handleGalleryProp(SELECT_IMAGE)
+                : handleGallery(SELECT_IMAGE);
+              customAttachmentOptionsStyle?.onPhotoAttachmentOptionClick &&
                 customAttachmentOptionsStyle?.onPhotoAttachmentOptionClick();
             }}
           >
@@ -575,8 +591,7 @@ const CreatePostComponent = () => {
             <LMText
               children={<Text>{ADD_IMAGES}</Text>}
               textStyle={styles.selectionOptionstext}
-              {...customAttachmentOptionsStyle
-                ?.photoAttachmentTextStyle}
+              {...customAttachmentOptionsStyle?.photoAttachmentTextStyle}
             />
           </TouchableOpacity>
           {/* add video button */}
@@ -587,9 +602,10 @@ const CreatePostComponent = () => {
               customAttachmentOptionsStyle?.videoAttachmentView,
             ]}
             onPress={() => {
-              handleGalleryProp ? handleGalleryProp(SELECT_VIDEO) : handleGallery(SELECT_VIDEO);
-              customAttachmentOptionsStyle
-                ?.onVideoAttachmentOptionClick &&
+              handleGalleryProp
+                ? handleGalleryProp(SELECT_VIDEO)
+                : handleGallery(SELECT_VIDEO);
+              customAttachmentOptionsStyle?.onVideoAttachmentOptionClick &&
                 customAttachmentOptionsStyle?.onVideoAttachmentOptionClick();
             }}
           >
@@ -600,8 +616,7 @@ const CreatePostComponent = () => {
             <LMText
               children={<Text>{ADD_VIDEOS}</Text>}
               textStyle={styles.selectionOptionstext}
-              {...customAttachmentOptionsStyle
-                ?.videoAttachmentTextStyle}
+              {...customAttachmentOptionsStyle?.videoAttachmentTextStyle}
             />
           </TouchableOpacity>
           {/* add files button */}
@@ -613,8 +628,7 @@ const CreatePostComponent = () => {
             ]}
             onPress={() => {
               handleDocumentProp ? handleDocumentProp() : handleDocument();
-              customAttachmentOptionsStyle
-                ?.onFilesAttachmentOptionClick &&
+              customAttachmentOptionsStyle?.onFilesAttachmentOptionClick &&
                 customAttachmentOptionsStyle?.onFilesAttachmentOptionClick();
             }}
           >
@@ -625,8 +639,7 @@ const CreatePostComponent = () => {
             <LMText
               children={<Text>{ADD_FILES}</Text>}
               textStyle={styles.selectionOptionstext}
-              {...customAttachmentOptionsStyle
-                ?.filesAttachmentTextStyle}
+              {...customAttachmentOptionsStyle?.filesAttachmentTextStyle}
             />
           </TouchableOpacity>
         </View>
