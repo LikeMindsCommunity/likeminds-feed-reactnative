@@ -10,7 +10,7 @@ import {
   getRoute,
 } from '@likeminds.community/feed-rn-core';
 import {myClient} from '.';
-import {ActivityIndicator, ViewStyle} from 'react-native';
+import {ActivityIndicator, Linking, ViewStyle} from 'react-native';
 import {LinkingOptions, NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {navigationRef} from './RootNavigation';
@@ -21,10 +21,13 @@ import LikesWrapper from './feedScreen/likesWrapper';
 import NotificationWrapper from './feedScreen/notificationWrapper';
 import messaging from '@react-native-firebase/messaging';
 import notifee, {EventType} from '@notifee/react-native';
+import { NAVIGATED_FROM_NOTIFICATION } from '@likeminds.community/feed-rn-core/constants/Strings';
 
 const App = () => {
   const Stack = createStackNavigator();
   // custom style of new post button
+  const regex = /post_id=([^&]+)/;
+
   const newPostButtonStyle: ViewStyle = {
     backgroundColor: 'red',
     width: '40%',
@@ -62,31 +65,58 @@ const App = () => {
       }
     });
   });
-
-  type RootStackParamList = {
-    UniversalFeed: undefined
-    DetailWrapper: Array<string> | undefined;
+  // deeplink listener for foreground state
+  useEffect(() => {
+    Linking.addEventListener('url', ({url}) => {
+      const match = url.match(regex);      
+      // Extract the postId from the matched result
+      const postId = match ? match[1] : null;
+      if(navigationRef) {
+      navigationRef.navigate(POST_DETAIL, [
+        postId,
+        NAVIGATED_FROM_NOTIFICATION
+      ])
     }
-  
+    })
+  }, [])
 
-  const linking:LinkingOptions<RootStackParamList>  = {
-    prefixes: ['sampleapp://www.google.com/'],
-    config: {
-      // initialRouteName: UNIVERSAL_FEED,
-      screens:{
-        DetailWrapper:'detail/:params'
-      }
-    }
-  };
+  // deeplink listener for kill state
+  useEffect(() => {
+    let isMounted = true;
+
+    const getUrlAsync = async () => {
+        const initialUrl = await Linking.getInitialURL();
+        if (isMounted) {
+            // Execute the regex pattern on the URL
+            const match = initialUrl.match(regex);
+            // Extract the postId from the matched result
+            const postId = match ? match[1] : null;
+           setTimeout(() =>{
+            if(navigationRef) {
+              navigationRef.navigate(POST_DETAIL, [
+                postId,
+                NAVIGATED_FROM_NOTIFICATION
+              ])
+            }
+           },2000)
+
+        }
+    };
+
+    getUrlAsync();
+
+    // Cleanup function to unsubscribe when component is unmounted
+    return () => {
+        isMounted = false; 
+    };
+}, []);
 
   return (
     <LMOverlayProvider
       myClient={myClient}
-      userName="abc"
-      userUniqueId="siddharth-1">
+      userName=""
+      userUniqueId="">
       <NavigationContainer
-        // linking={linking}
-        // fallback={<ActivityIndicator color="blue" size="large" />}
          ref={navigationRef} independent={true}>
         <Stack.Navigator screenOptions={{headerShown: false}}>
           <Stack.Screen name={UNIVERSAL_FEED} component={FeedWrapper} />

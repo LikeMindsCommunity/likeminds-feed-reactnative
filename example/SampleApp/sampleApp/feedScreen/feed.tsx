@@ -86,7 +86,7 @@ const Feed = ({route}) => {
     try {
       const result = await Share.share({
         // todo: static data (replace with the deeplink)
-        message: 'www.google.com',
+        message: `https://www.sampleapp.com/post?post_id=${postId}`,
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -104,7 +104,7 @@ const Feed = ({route}) => {
 
   /// Setup notifications
   useEffect(() => {
-   token().then((res) => {
+   token().then((res) => {    
      if (!!res) {
       setFCMToken(res);
     }
