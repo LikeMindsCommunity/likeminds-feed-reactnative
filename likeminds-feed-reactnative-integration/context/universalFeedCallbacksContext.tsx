@@ -15,6 +15,7 @@ export interface UniversalFeedCallbacksContextProps {
   onOverlayMenuClickProp: (event: {
     nativeEvent: { pageX: number; pageY: number };
   }, menuItems: LMMenuItemsUI, postId: string) => void;
+  onTapNotificationBellProp: () => void;
 }
 
 export interface UniversalFeedCustomisableMethodsContext {
@@ -30,6 +31,7 @@ export interface UniversalFeedCustomisableMethodsContext {
   onOverlayMenuClickProp: (event: {
     nativeEvent: { pageX: number; pageY: number };
   },menuItems: LMMenuItemsUI, postId: string) => void;
+  onTapNotificationBellProp: () => void;
 }
 
 const UniversalFeedCustomisableMethodsContext = createContext<
@@ -57,7 +59,8 @@ export const UniversalFeedCustomisableMethodsContextProvider = ({
   handleDeletePostProps,
   handleReportPostProps,
   newPostButtonClickProps,
-  onOverlayMenuClickProp
+  onOverlayMenuClickProp,
+  onTapNotificationBellProp
 }: UniversalFeedCallbacksContextProps) => {
   const contextValues: UniversalFeedCustomisableMethodsContext = {
     postLikeHandlerProp,
@@ -69,7 +72,8 @@ export const UniversalFeedCustomisableMethodsContextProvider = ({
     handleDeletePostProps,
     handleReportPostProps,
     newPostButtonClickProps,
-    onOverlayMenuClickProp
+    onOverlayMenuClickProp,
+    onTapNotificationBellProp
   };
 
   return (

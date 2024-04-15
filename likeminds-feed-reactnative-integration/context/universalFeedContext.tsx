@@ -29,7 +29,11 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { showToastMessage } from "../store/actions/toast";
 import { FlatList } from "react-native";
 import { LMAttachmentUI, LMPostUI } from "../models";
-import { CREATE_POST } from "../constants/screenNames";
+import { CREATE_POST, NOTIFICATION_FEED } from "../constants/screenNames";
+import {
+  getUnreadNotificationCount,
+  notificationFeedClear,
+} from "../store/actions/notification";
 
 interface UniversalFeedContextProps {
   children: ReactNode;
@@ -58,6 +62,7 @@ export interface UniversalFeedContextValues {
   postContent: string;
   uploadingMediaAttachmentType: number;
   uploadingMediaAttachment: string;
+  unreadNotificationCount: number;
   setLocalRefresh: Dispatch<SetStateAction<boolean>>;
   setRefreshing: Dispatch<SetStateAction<boolean>>;
   setPostUploading: Dispatch<SetStateAction<boolean>>;
@@ -66,6 +71,8 @@ export interface UniversalFeedContextValues {
   postAdd: () => void;
   keyExtractor: (val) => string;
   newPostButtonClick: () => void;
+  getNotificationsCount: () => void;
+  onTapNotificationBell: () => void;
 }
 
 const UniversalFeedContext = createContext<
@@ -95,6 +102,9 @@ export const UniversalFeedContextProvider = ({
   const [showCreatePost, setShowCreatePost] = useState(true);
   const { mediaAttachmemnts, linkAttachments, postContent } = useAppSelector(
     (state) => state.createPost
+  );
+  const unreadNotificationCount = useAppSelector(
+    (state) => state.notification.activitiesCount
   );
   const uploadingMediaAttachmentType = mediaAttachmemnts[0]?.attachmentType;
   const uploadingMediaAttachment = mediaAttachmemnts[0]?.attachmentMeta.url;
@@ -225,6 +235,22 @@ export const UniversalFeedContextProvider = ({
     return `${id}`;
   };
 
+  const getNotificationsCount = async () => {
+    const unreadNotificationCountResponse = await dispatch(
+      getUnreadNotificationCount()
+    );
+    return unreadNotificationCountResponse;
+  };
+
+  useEffect(() => {
+    getNotificationsCount();
+  }, []);
+
+  const onTapNotificationBell = () => {
+    dispatch(notificationFeedClear());
+    navigation.navigate(NOTIFICATION_FEED);
+  };
+
   const contextValues: UniversalFeedContextValues = {
     navigation,
     feedData,
@@ -248,7 +274,10 @@ export const UniversalFeedContextProvider = ({
     onRefresh,
     postAdd,
     keyExtractor,
-    newPostButtonClick
+    newPostButtonClick,
+    getNotificationsCount,
+    unreadNotificationCount,
+    onTapNotificationBell,
   };
 
   return (

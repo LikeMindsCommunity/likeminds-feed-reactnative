@@ -11,7 +11,7 @@ async function invokeAPI(func: Function, payload: any, name = "") {
   const isConnected = await NetworkUtil.isNetworkAvailable();
   if (isConnected) {
     const response: any = await func;
-    return response?.data;
+    return response;
   } else {
     Alert.alert("", "Please check your internet connection");
   }
@@ -42,14 +42,14 @@ const apiMiddleware = async (next, action) => {
       next({ type: START_LOADING });
     }
     const responseBody = await invokeAPI(func, JSON.stringify(body), name);
-    if (responseBody) {
+    if (responseBody?.data || responseBody?.success) {
       successType &&
         next({
-          body: { ...responseBody },
+          body: { ...responseBody?.data},
           type: successType,
         });
 
-      return responseBody;
+      return responseBody?.data;
     }
   } catch (error: any) {
     if (Number(error.message) === 401) {

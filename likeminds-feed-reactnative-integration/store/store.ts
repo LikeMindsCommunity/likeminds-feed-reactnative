@@ -3,6 +3,7 @@ import { createPostReducer } from "./reducers/createPostReducer";
 import { feedReducer } from "./reducers/feedReducer";
 import { loaderReducer } from "./reducers/loaderReducer";
 import { loginReducer } from "./reducers/loginReducer";
+import { notificationReducer } from "./reducers/notificationReducer";
 import { postDetailReducer } from "./reducers/postDetailReducer";
 import { postLikesReducer } from "./reducers/postLikesReducer";
 
@@ -20,7 +21,8 @@ export const rootReducer = combineReducers({
     loader: loaderReducer,
     postDetail: postDetailReducer,
     createPost: createPostReducer,
-    postLikes: postLikesReducer
+    postLikes: postLikesReducer,
+    notification: notificationReducer
 });
 
 export const useAppSelector = (selector) => {
