@@ -14,9 +14,11 @@ import { MEDIA_FETCH_ERROR } from "../../../constants/Strings";
 import LMLoader from "../../LMLoader";
 import { LMButton } from "../../../uiComponents";
 import { defaultStyles } from "./styles";
+import { useAppSelector } from "../../../store/store";
 
 const LMVideo = React.memo(
   ({
+    postId,
     videoUrl,
     height,
     width,
@@ -34,6 +36,7 @@ const LMVideo = React.memo(
     showCancel,
     onCancel,
     cancelButton,
+    videoInFeed
   }: LMVideoProps) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -41,13 +44,7 @@ const LMVideo = React.memo(
     const [viewController, setViewController] = useState(showControls ? showControls : true);
     const player = useRef<VideoRef>(null);
 
-    const currentVideoUrl = ""; //todo
-    // this throw error and ask for currentVideoUrl if auto play is set true
-    if (autoPlay && !currentVideoUrl) {
-      throw new Error(
-        "Property 'currentVideoUrl' is missing in type '{ videoUrl: string; autoPlay: true; }' but required in type 'LMVideoProps'."
-      );
-    }
+    const currentVideoId = useAppSelector(state => state.feed.autoPlayVideoPostId);
 
     return (
       <View
@@ -95,20 +92,20 @@ const LMVideo = React.memo(
               },
             ])}
             paused={
-              autoPlay
-                ? currentVideoUrl === videoUrl
+              videoInFeed ? autoPlay
+                ? currentVideoId === postId
                   ? false
                   : true
-                : playingStatus
+                : playingStatus : autoPlay ? false : playingStatus
             } // handles the auto play/pause functionality
             muted={
-              autoPlay
-                ? currentVideoUrl === videoUrl
+             videoInFeed ? autoPlay
+                ? currentVideoId === postId
                   ? false
                   : true
                 : playingStatus
                 ? true
-                : false
+                : false : autoPlay ? false : playingStatus
             } // this handles the mute of the video according to the video being played
           />
         </>
@@ -135,7 +132,7 @@ const LMVideo = React.memo(
         )}
 
         {/* this renders the controls view */}
-        {viewController && (
+        {!autoPlay && (
           <TouchableOpacity
             activeOpacity={0.8}
             // todo: handle later
@@ -154,20 +151,21 @@ const LMVideo = React.memo(
             >
               <>
                 {/* this handles the toggle of play pause icon */}
-                {playingStatus ? (
-                  playButton ? (
-                    playButton
-                  ) : (
-                    <Image
-                      source={require("../../../assets/images/play_icon3x.png")}
-                      style={defaultStyles.playPauseIconSize}
-                    />
-                  )
-                ) : pauseButton ? (
+                {!playingStatus ? (
+                 pauseButton ? (
                   pauseButton
                 ) : (
                   <Image
                     source={require("../../../assets/images/pause_icon3x.png")}
+                    style={defaultStyles.playPauseIconSize}
+                  />
+                )
+                ) :
+                playButton ? (
+                  playButton
+                ) : (
+                  <Image
+                    source={require("../../../assets/images/play_icon3x.png")}
                     style={defaultStyles.playPauseIconSize}
                   />
                 )}

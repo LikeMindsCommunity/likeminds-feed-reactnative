@@ -85,6 +85,7 @@ const PostsListComponent = () => {
     handleEditPost,
     onTapLikeCount,
     onOverlayMenuClick,
+    setPostInViewport
   }: PostListContextValues = usePostListContext();
   const LMFeedContextStyles = useLMFeedStyles();
   const { postListStyle, loaderStyle } = LMFeedContextStyles;
@@ -98,6 +99,7 @@ const PostsListComponent = () => {
     handleDeletePostProps,
     handleReportPostProps,
     onOverlayMenuClickProp,
+    onSharePostClicked
   } = useUniversalFeedCustomisableMethodsContext();
   // this function returns the id of the item selected from menu list and handles further functionalities accordingly
   const onMenuItemSelect = (
@@ -165,6 +167,7 @@ const PostsListComponent = () => {
                 style={{ backgroundColor: "#e0e0e0" }}
                 onPress={() => {
                   dispatch(clearPostDetail() as any);
+                  dispatch(autoPlayPostVideo(''))
                   navigation.navigate(POST_DETAIL, [
                     item?.id,
                     NAVIGATED_FROM_POST,
@@ -224,6 +227,17 @@ const PostsListComponent = () => {
                           : onTapCommentCount(item?.id);
                       },
                     },
+                    shareButton: {
+                      onTap: () => {
+                        onSharePostClicked ? onSharePostClicked(item?.id) : {}
+                      }
+                    }
+                  }}
+                  mediaProps={{
+                    videoProps: {
+                      autoPlay: postListStyle?.media?.video?.autoPlay != undefined? postListStyle?.media?.video?.autoPlay : true,
+                      videoInFeed: true
+                    }
                   }}
                 />
               </TouchableOpacity>
@@ -237,9 +251,7 @@ const PostsListComponent = () => {
             onViewableItemsChanged={({ changed, viewableItems }) => {
               if (changed) {
                 if (viewableItems) {
-                  dispatch(
-                    autoPlayPostVideo(viewableItems?.[0]?.item?.id) as any
-                  );
+                  setPostInViewport(viewableItems?.[0]?.item?.id)
                 }
               }
             }}

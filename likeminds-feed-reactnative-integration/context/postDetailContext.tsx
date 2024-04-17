@@ -140,6 +140,7 @@ export interface PostDetailContextValues {
   keyboardFocusOnReply: boolean;
   setKeyboardFocusOnReply: Dispatch<SetStateAction<boolean>>;
   setModalPositionComment: Dispatch<SetStateAction<{ x: number; y: number }>>;
+  setModalPosition: Dispatch<SetStateAction<{ x: number; y: number }>>;
   setRouteParams: Dispatch<SetStateAction<boolean>>;
   setNavigatedFromComments: Dispatch<SetStateAction<boolean>>;
   setCommentFocus: Dispatch<SetStateAction<boolean>>;
@@ -229,9 +230,13 @@ export const PostDetailContextProvider = ({
   navigation,
   route,
 }: PostDetailContextProps) => {
+  
   const dispatch = useAppDispatch();
   const postDetail = useAppSelector((state) => state.postDetail.postDetail);
-  const modalPosition = { x: 0, y: 0 };
+  const [modalPosition, setModalPosition] = useState({
+    x: 0,
+    y: 0,
+  });
   const [showActionListModal, setShowActionListModal] = useState(false);
   const [selectedMenuItemPostId, setSelectedMenuItemPostId] = useState("");
   const [commentToAdd, setCommentToAdd] = useState("");
@@ -636,7 +641,16 @@ export const PostDetailContextProvider = ({
   // this useEffect handles the pagination of the comments
   useEffect(() => {
     getPostData();
-  }, [commentPageNumber]);
+  }, [commentPageNumber,route.params[0]]);
+
+  // this function is executed on the click of menu icon & handles the position and visibility of the modal
+  const onOverlayMenuClick = (event: {
+    nativeEvent: { pageX: number; pageY: number };
+  }) => {
+    const { pageX, pageY } = event.nativeEvent;
+    setShowActionListModal(true);
+    setModalPosition({ x: pageX, y: pageY });
+  };
 
   // this renders the postDetail view
   const renderPostDetail = () => {
@@ -652,6 +666,7 @@ export const PostDetailContextProvider = ({
             onSelected: (postId, itemId) =>
               onMenuItemSelect(postId, itemId, postDetail?.isPinned),
           },
+          onOverlayMenuClick: (event) => onOverlayMenuClick(event)
         }}
         // footer props
         footerProps={{
@@ -679,6 +694,12 @@ export const PostDetailContextProvider = ({
               setCommentFocus(true);
             },
           },
+        }}
+        mediaProps={{
+          videoProps: {
+            autoPlay: postListStyle?.media?.video?.autoPlay != undefined? postListStyle?.media?.video?.autoPlay : true,
+            videoInFeed: false
+          }
         }}
       />
     );
@@ -843,7 +864,7 @@ export const PostDetailContextProvider = ({
 
   const handleScreenBackPress = () => {
     Keyboard.dismiss();
-    navigation.navigate(UNIVERSAL_FEED);
+    navigation.goBack();
   };
 
   const contextValues: PostDetailContextValues = {
@@ -937,6 +958,7 @@ export const PostDetailContextProvider = ({
     handleEditComment,
     handleScreenBackPress,
     setModalPositionComment,
+    setModalPosition,
     onCommentOverflowMenuClick,
   };
 
