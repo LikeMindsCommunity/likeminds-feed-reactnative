@@ -22,7 +22,7 @@ notifee.onBackgroundEvent(async ({type, detail}) => {
     if (!!RootNavigation) {
       setTimeout(() => {
         RootNavigation.navigate(routes.route, routes.params); 
-      }, 2000);
+      }, 3000);
     }
   }
 });
