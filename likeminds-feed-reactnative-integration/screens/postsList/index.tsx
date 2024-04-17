@@ -89,7 +89,8 @@ const PostsListComponent = () => {
     handleReportPost,
     handleEditPost,
     onTapLikeCount,
-    onOverlayMenuClick
+    onOverlayMenuClick,
+    setPostInViewport
   }: PostListContextValues = usePostListContext();
   const LMFeedContextStyles = useLMFeedStyles();
   const { postListStyle, loaderStyle } = LMFeedContextStyles;
@@ -133,6 +134,7 @@ const onMenuItemSelect = (
                 style={{ backgroundColor: "#e0e0e0" }}
                 onPress={() => {
                   dispatch(clearPostDetail() as any);
+                  dispatch(autoPlayPostVideo(''))
                   navigation.navigate(POST_DETAIL, [
                     item?.id,
                     NAVIGATED_FROM_POST,
@@ -182,6 +184,12 @@ const onMenuItemSelect = (
                       }
                     }
                   }}
+                  mediaProps={{
+                    videoProps: {
+                      autoPlay: postListStyle?.media?.video?.autoPlay != undefined? postListStyle?.media?.video?.autoPlay : true,
+                      videoInFeed: true
+                    }
+                  }}
                 />
               </TouchableOpacity>
             )}
@@ -194,9 +202,7 @@ const onMenuItemSelect = (
             onViewableItemsChanged={({changed, viewableItems}) => {
               if (changed) {
                 if (viewableItems) {
-                  dispatch(
-                    autoPlayPostVideo(viewableItems?.[0]?.item?.id) as any,
-                  );
+                  setPostInViewport(viewableItems?.[0]?.item?.id)
                 }
               }
             }}
