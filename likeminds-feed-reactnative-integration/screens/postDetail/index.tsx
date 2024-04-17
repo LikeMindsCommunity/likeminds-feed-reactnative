@@ -248,7 +248,7 @@ const PostDetailComponent = React.memo(() => {
           headingTextStyle={customScreenHeader?.headingTextStyle}
           headingViewStyle={customScreenHeader?.headingViewStyle}
         />
-        {/* post detail view */}
+       {postDetail?.id ? <>
         {Object.keys(postDetail).length > 0 ? (
           <View
             style={StyleSheet.flatten([
@@ -651,7 +651,8 @@ const PostDetailComponent = React.memo(() => {
               }}
             />
           </View>
-        ) : null}
+        ) : null}</>: 
+        <View style={styles.loaderView}><LMLoader /></View>}
 
         {/* input field */}
         <LMInputText

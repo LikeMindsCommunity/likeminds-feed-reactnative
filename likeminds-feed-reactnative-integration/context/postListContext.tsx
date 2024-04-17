@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import {
+  autoPlayPostVideo,
   getFeed,
   likePost,
   likePostStateHandler,
@@ -51,6 +52,7 @@ import { LMPostUI } from "../models";
 import { LMLoader } from "../components";
 import { clearPostDetail } from "../store/actions/postDetail";
 import { postLikesClear } from "../store/actions/postLikes";
+import { useIsFocused } from "@react-navigation/native";
 
 interface PostListContextProps {
   children: ReactNode;
@@ -81,6 +83,8 @@ export interface PostListContextValues {
   showDeleteModal: boolean;
   showReportModal: boolean;
   feedFetching: boolean;
+  postInViewport: string;
+  setPostInViewport: Dispatch<SetStateAction<string>>;
   setFeedFetching: Dispatch<SetStateAction<boolean>>;
   setModalPosition: Dispatch<SetStateAction<{ x: number; y: number }>>;
   setShowReportModal: Dispatch<SetStateAction<boolean>>;
@@ -138,6 +142,15 @@ export const PostListContextProvider = ({
   const [feedFetching, setFeedFetching] = useState(false);
   const LMFeedContextStyles = useLMFeedStyles();
   const { loaderStyle } = LMFeedContextStyles;
+  const [postInViewport, setPostInViewport] = useState("");
+  const isFocus = useIsFocused();
+
+  // handles the auto play/pause of video in viewport
+  useEffect(() => {
+    if (postInViewport && isFocus) {
+      dispatch(autoPlayPostVideo(postInViewport));
+    }
+  }, [postInViewport, isFocus]);
 
   // this functions gets universal feed data
   const fetchFeed = async () => {
@@ -289,11 +302,13 @@ export const PostListContextProvider = ({
   // this handles the click on comment count section of footer
   const onTapCommentCount = (postId) => {
     dispatch(clearPostDetail());
+    dispatch(autoPlayPostVideo(""));
     navigation.navigate(POST_DETAIL, [postId, NAVIGATED_FROM_COMMENT]);
   };
 
   const onTapLikeCount = (id) => {
     dispatch(postLikesClear());
+    dispatch(autoPlayPostVideo(""));
     navigation.navigate(POST_LIKES_LIST, [POST_LIKES, id]);
   };
 
@@ -342,7 +357,9 @@ export const PostListContextProvider = ({
     onTapCommentCount,
     onTapLikeCount,
     onOverlayMenuClick,
-    setModalPosition
+    setModalPosition,
+    postInViewport,
+    setPostInViewport
   };
 
   return (

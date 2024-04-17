@@ -89,11 +89,12 @@ const PostsListComponent = () => {
     handleReportPost,
     handleEditPost,
     onTapLikeCount,
-    onOverlayMenuClick
+    onOverlayMenuClick,
+    setPostInViewport
   }: PostListContextValues = usePostListContext();
   const LMFeedContextStyles = useLMFeedStyles();
   const { postListStyle, loaderStyle } = LMFeedContextStyles;
-  const { postLikeHandlerProp, savePostHandlerProp, onSelectCommentCountProp, selectEditPostProp, selectPinPostProp, onTapLikeCountProps, handleDeletePostProps, handleReportPostProps, onOverlayMenuClickProp} = useUniversalFeedCustomisableMethodsContext()
+  const { postLikeHandlerProp, savePostHandlerProp, onSelectCommentCountProp, selectEditPostProp, selectPinPostProp, onTapLikeCountProps, handleDeletePostProps, handleReportPostProps, onOverlayMenuClickProp, onSharePostClicked} = useUniversalFeedCustomisableMethodsContext()
 // this function returns the id of the item selected from menu list and handles further functionalities accordingly
 const onMenuItemSelect = (
   postId: string,
@@ -133,6 +134,7 @@ const onMenuItemSelect = (
                 style={{ backgroundColor: "#e0e0e0" }}
                 onPress={() => {
                   dispatch(clearPostDetail() as any);
+                  dispatch(autoPlayPostVideo(''))
                   navigation.navigate(POST_DETAIL, [
                     item?.id,
                     NAVIGATED_FROM_POST,
@@ -176,6 +178,17 @@ const onMenuItemSelect = (
                         onSelectCommentCountProp ? onSelectCommentCountProp(item?.id) : onTapCommentCount(item?.id)
                       },
                     },
+                    shareButton: {
+                      onTap: () => {
+                        onSharePostClicked ? onSharePostClicked(item?.id) : {}
+                      }
+                    }
+                  }}
+                  mediaProps={{
+                    videoProps: {
+                      autoPlay: postListStyle?.media?.video?.autoPlay != undefined? postListStyle?.media?.video?.autoPlay : true,
+                      videoInFeed: true
+                    }
                   }}
                 />
               </TouchableOpacity>
@@ -189,9 +202,7 @@ const onMenuItemSelect = (
             onViewableItemsChanged={({changed, viewableItems}) => {
               if (changed) {
                 if (viewableItems) {
-                  dispatch(
-                    autoPlayPostVideo(viewableItems?.[0]?.item?.id) as any,
-                  );
+                  setPostInViewport(viewableItems?.[0]?.item?.id)
                 }
               }
             }}

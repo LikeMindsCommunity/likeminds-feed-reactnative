@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Image,
   Platform,
@@ -18,7 +18,7 @@ import {
   POST_UPLOAD_INPROGRESS,
   VIDEO_ATTACHMENT_TYPE,
 } from "../../constants/Strings";
-import { CREATE_POST } from "../../constants/screenNames";
+import { CREATE_POST, NOTIFICATION_FEED } from "../../constants/screenNames";
 // @ts-ignore the lib do not have TS declarations yet
 import _ from "lodash";
 import { PostsList } from "../postsList";
@@ -37,6 +37,7 @@ import { LMHeader, LMImage, LMLoader, LMVideo } from "../../components";
 import { LMIcon } from "../../uiComponents";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { LMMenuItemsUI, RootStackParamList } from "../../models";
+import { notificationFeedClear } from "../../store/actions/notification";
 
 interface UniversalFeedProps {
   children: React.ReactNode;
@@ -53,12 +54,22 @@ interface UniversalFeedProps {
   selectEditPostProp: (id: string) => void;
   onSelectCommentCountProp: (id: string) => void;
   onTapLikeCountProps: (id: string) => void;
-  handleDeletePostProps: (visible: boolean, postId: string, isCM: boolean) => void;
+  handleDeletePostProps: (
+    visible: boolean,
+    postId: string,
+    isCM: boolean
+  ) => void;
   handleReportPostProps: (postId: string) => void;
   newPostButtonClickProps: () => void;
-  onOverlayMenuClickProp: (event: {
-    nativeEvent: { pageX: number; pageY: number };
-  },menuItems: LMMenuItemsUI, postId: string) => void;
+  onOverlayMenuClickProp: (
+    event: {
+      nativeEvent: { pageX: number; pageY: number };
+    },
+    menuItems: LMMenuItemsUI,
+    postId: string
+  ) => void;
+  onTapNotificationBellProp: () => void;
+  onSharePostClicked: (id:string) => void;
 }
 
 const UniversalFeed = ({
@@ -74,23 +85,27 @@ const UniversalFeed = ({
   handleDeletePostProps,
   handleReportPostProps,
   newPostButtonClickProps,
-  onOverlayMenuClickProp
+  onOverlayMenuClickProp,
+  onTapNotificationBellProp,
+  onSharePostClicked
 }: UniversalFeedProps) => {
   return (
-      <UniversalFeedCustomisableMethodsContextProvider
-        postLikeHandlerProp={postLikeHandlerProp}
-        savePostHandlerProp={savePostHandlerProp}
-        selectEditPostProp={selectEditPostProp}
-        selectPinPostProp={selectPinPostProp}
-        onSelectCommentCountProp={onSelectCommentCountProp}
-        onTapLikeCountProps={onTapLikeCountProps}
-        handleDeletePostProps={handleDeletePostProps}
-        handleReportPostProps={handleReportPostProps}
-        newPostButtonClickProps={newPostButtonClickProps}
-        onOverlayMenuClickProp={onOverlayMenuClickProp}
-      >
-        <UniversalFeedComponent />
-      </UniversalFeedCustomisableMethodsContextProvider>
+    <UniversalFeedCustomisableMethodsContextProvider
+      postLikeHandlerProp={postLikeHandlerProp}
+      savePostHandlerProp={savePostHandlerProp}
+      selectEditPostProp={selectEditPostProp}
+      selectPinPostProp={selectPinPostProp}
+      onSelectCommentCountProp={onSelectCommentCountProp}
+      onTapLikeCountProps={onTapLikeCountProps}
+      handleDeletePostProps={handleDeletePostProps}
+      handleReportPostProps={handleReportPostProps}
+      newPostButtonClickProps={newPostButtonClickProps}
+      onOverlayMenuClickProp={onOverlayMenuClickProp}
+      onTapNotificationBellProp={onTapNotificationBellProp}
+      onSharePostClicked={onSharePostClicked}
+    >
+      <UniversalFeedComponent />
+    </UniversalFeedCustomisableMethodsContextProvider>
   );
 };
 
@@ -103,16 +118,57 @@ const UniversalFeedComponent = () => {
     navigation,
     uploadingMediaAttachment,
     uploadingMediaAttachmentType,
-    newPostButtonClick
+    newPostButtonClick,
+    unreadNotificationCount,
+    onTapNotificationBell,
   }: UniversalFeedContextValues = useUniversalFeedContext();
   const LMFeedContextStyles = useLMFeedStyles();
   const { universalFeedStyle, loaderStyle } = LMFeedContextStyles;
-  const {newPostButtonClickProps} = useUniversalFeedCustomisableMethodsContext()
+  const { newPostButtonClickProps, onTapNotificationBellProp } =
+    useUniversalFeedCustomisableMethodsContext();
 
   return (
     <SafeAreaView style={styles.mainContainer}>
       {/* header */}
-      <LMHeader heading={APP_TITLE} {...universalFeedStyle?.screenHeader} />
+      <LMHeader
+        heading={APP_TITLE}
+        rightComponent={
+          <TouchableOpacity
+            onPress={() => {
+              onTapNotificationBellProp
+                ? onTapNotificationBellProp()
+                : onTapNotificationBell();
+            }}
+          >
+            <Image
+              source={require("../../assets/images/notification_bell.png")}
+              style={{ width: 24, height: 24, resizeMode: "contain" }}
+            />
+            {unreadNotificationCount > 0 && (
+              <View
+                style={{
+                  backgroundColor: "#FB1609",
+                  borderRadius: 50,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: 18,
+                  height: 18,
+                  position: "absolute",
+                  top: -8,
+                  right: -5,
+                }}
+              >
+                <Text style={{ color: "#fff", fontSize: 12 }}>
+                  {unreadNotificationCount < 100
+                    ? unreadNotificationCount
+                    : `99+`}
+                </Text>
+              </View>
+            )}
+          </TouchableOpacity>
+        }
+        {...universalFeedStyle?.screenHeader}
+      />
       {/* post uploading section */}
       {postUploading && (
         <View style={styles.postUploadingView}>
@@ -172,7 +228,9 @@ const UniversalFeedComponent = () => {
         ]}
         // handles post uploading status and member rights to create post
         onPress={() =>
-         newPostButtonClickProps ? newPostButtonClickProps() : newPostButtonClick()
+          newPostButtonClickProps
+            ? newPostButtonClickProps()
+            : newPostButtonClick()
         }
       >
         <Image

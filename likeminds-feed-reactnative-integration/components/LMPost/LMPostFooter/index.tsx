@@ -218,7 +218,7 @@ const LMPostFooter = React.memo(() => {
             onTap={
               footerStyle?.shareButton?.onTap
                 ? footerStyle?.shareButton.onTap
-                : () => null
+                : footerProps?.shareButton?.onTap
             }
             text={footerStyle?.shareButton?.text}
             icon={{

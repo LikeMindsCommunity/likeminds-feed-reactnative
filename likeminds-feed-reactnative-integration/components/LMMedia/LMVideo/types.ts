@@ -19,5 +19,7 @@ export interface LMVideoProps {
   autoPlay?: boolean; // this represents if the video should automatically play or not
   showCancel?: boolean; // this represents the visibility of cancel button
   onCancel?: (index: string) => void; // callback function that executes on click of cancel button,
-  cancelButton?: LMButtonProps
+  cancelButton?: LMButtonProps;
+  postId?: string;
+  videoInFeed?: boolean
 }
