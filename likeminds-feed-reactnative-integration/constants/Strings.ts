@@ -61,6 +61,7 @@ export const POST_UPLOADING = 'Posting';
 export const SELECT_IMAGE = 'photo';
 export const SELECT_BOTH = 'mixed';
 export const SELECT_VIDEO = 'video';
+export const SELECT_FILE = 'file';
 
 // create post screen's text
 export const ADD_FILES = 'Attach Files';

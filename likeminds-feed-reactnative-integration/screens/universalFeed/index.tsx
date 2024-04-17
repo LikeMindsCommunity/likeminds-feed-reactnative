@@ -37,6 +37,9 @@ import { LMHeader, LMImage, LMLoader, LMVideo } from "../../components";
 import { LMIcon } from "../../uiComponents";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { LMMenuItemsUI, RootStackParamList } from "../../models";
+import { LMFeedAnalytics } from "../../analytics/LMChatAnalytics";
+import { Events } from "../../enums/Events";
+import { Keys } from "../../enums/Keys";
 
 interface UniversalFeedProps {
   children: React.ReactNode;
@@ -53,12 +56,20 @@ interface UniversalFeedProps {
   selectEditPostProp: (id: string) => void;
   onSelectCommentCountProp: (id: string) => void;
   onTapLikeCountProps: (id: string) => void;
-  handleDeletePostProps: (visible: boolean, postId: string, isCM: boolean) => void;
+  handleDeletePostProps: (
+    visible: boolean,
+    postId: string,
+    isCM: boolean
+  ) => void;
   handleReportPostProps: (postId: string) => void;
   newPostButtonClickProps: () => void;
-  onOverlayMenuClickProp: (event: {
-    nativeEvent: { pageX: number; pageY: number };
-  },menuItems: LMMenuItemsUI, postId: string) => void;
+  onOverlayMenuClickProp: (
+    event: {
+      nativeEvent: { pageX: number; pageY: number };
+    },
+    menuItems: LMMenuItemsUI,
+    postId: string
+  ) => void;
 }
 
 const UniversalFeed = ({
@@ -74,23 +85,23 @@ const UniversalFeed = ({
   handleDeletePostProps,
   handleReportPostProps,
   newPostButtonClickProps,
-  onOverlayMenuClickProp
+  onOverlayMenuClickProp,
 }: UniversalFeedProps) => {
   return (
-      <UniversalFeedCustomisableMethodsContextProvider
-        postLikeHandlerProp={postLikeHandlerProp}
-        savePostHandlerProp={savePostHandlerProp}
-        selectEditPostProp={selectEditPostProp}
-        selectPinPostProp={selectPinPostProp}
-        onSelectCommentCountProp={onSelectCommentCountProp}
-        onTapLikeCountProps={onTapLikeCountProps}
-        handleDeletePostProps={handleDeletePostProps}
-        handleReportPostProps={handleReportPostProps}
-        newPostButtonClickProps={newPostButtonClickProps}
-        onOverlayMenuClickProp={onOverlayMenuClickProp}
-      >
-        <UniversalFeedComponent />
-      </UniversalFeedCustomisableMethodsContextProvider>
+    <UniversalFeedCustomisableMethodsContextProvider
+      postLikeHandlerProp={postLikeHandlerProp}
+      savePostHandlerProp={savePostHandlerProp}
+      selectEditPostProp={selectEditPostProp}
+      selectPinPostProp={selectPinPostProp}
+      onSelectCommentCountProp={onSelectCommentCountProp}
+      onTapLikeCountProps={onTapLikeCountProps}
+      handleDeletePostProps={handleDeletePostProps}
+      handleReportPostProps={handleReportPostProps}
+      newPostButtonClickProps={newPostButtonClickProps}
+      onOverlayMenuClickProp={onOverlayMenuClickProp}
+    >
+      <UniversalFeedComponent />
+    </UniversalFeedCustomisableMethodsContextProvider>
   );
 };
 
@@ -103,11 +114,12 @@ const UniversalFeedComponent = () => {
     navigation,
     uploadingMediaAttachment,
     uploadingMediaAttachmentType,
-    newPostButtonClick
+    newPostButtonClick,
   }: UniversalFeedContextValues = useUniversalFeedContext();
   const LMFeedContextStyles = useLMFeedStyles();
   const { universalFeedStyle, loaderStyle } = LMFeedContextStyles;
-  const {newPostButtonClickProps} = useUniversalFeedCustomisableMethodsContext()
+  const { newPostButtonClickProps } =
+    useUniversalFeedCustomisableMethodsContext();
 
   return (
     <SafeAreaView style={styles.mainContainer}>
@@ -171,9 +183,12 @@ const UniversalFeedComponent = () => {
           universalFeedStyle?.newPostButtonStyle,
         ]}
         // handles post uploading status and member rights to create post
-        onPress={() =>
-         newPostButtonClickProps ? newPostButtonClickProps() : newPostButtonClick()
-        }
+        onPress={() => {
+          newPostButtonClickProps
+            ? newPostButtonClickProps()
+            : newPostButtonClick();
+          LMFeedAnalytics.track(Events.POST_CREATION_STARTED);
+        }}
       >
         <Image
           source={require("../../assets/images/add_post_icon3x.png")}

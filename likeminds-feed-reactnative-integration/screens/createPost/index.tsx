@@ -20,6 +20,7 @@ import {
   IMAGE_ATTACHMENT_TYPE,
   SAVE_POST_TEXT,
   SELECT_BOTH,
+  SELECT_FILE,
   SELECT_IMAGE,
   SELECT_VIDEO,
   VIDEO_ATTACHMENT_TYPE,
@@ -52,6 +53,10 @@ import {
   LMVideo,
 } from "../../components";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { LMFeedAnalytics } from "../../analytics/LMChatAnalytics";
+import { Events } from "../../enums/Events";
+import { Keys } from "../../enums/Keys";
+import { userTaggingDecoder } from "../../utils/decodeMentions";
 
 interface CreatePostProps {
   children: React.ReactNode;
@@ -251,6 +256,13 @@ const CreatePostComponent = () => {
                       setPostContentText(res);
                       setAllTags([]);
                       setIsUserTagging(false);
+                      LMFeedAnalytics.track(
+                        Events.USER_TAGGED_IN_POST,
+                        new Map<string, string>([
+                          [Keys.TAGGED_USER_UUID, uuid],
+                          [Keys.TAGGED_USER_COUNT, "1"],
+                        ])
+                      );
                     }}
                     style={[
                       styles.taggingListItem,
@@ -526,7 +538,7 @@ const CreatePostComponent = () => {
                 ? styles.enabledOpacity
                 : styles.disabledOpacity
             }
-            onPress={() =>
+            onPress={() => {
               onPostClickProp
                 ? onPostClickProp(
                     allAttachment,
@@ -537,8 +549,51 @@ const CreatePostComponent = () => {
                     allAttachment,
                     formattedLinkAttachments,
                     postContentText
-                  )
-            }
+                  );
+
+              const map: Map<string | undefined, string | undefined> =
+                new Map();
+              const taggedUsers: any =
+                userTaggingDecoder(postContentText);
+
+              const ogTags =
+                formattedLinkAttachments[0]?.attachmentMeta?.ogTags;
+
+              if (taggedUsers?.length > 0) {
+                map.set(Keys.USER_TAGGED, Keys.YES);
+                map.set(Keys.TAGGED_USER_COUNT, taggedUsers?.length.toString());
+                const taggedUserIds = taggedUsers
+                  .map((user) => user.route)
+                  .join(", ");
+                map.set(Keys.TAGGED_USER_UUID, taggedUserIds);
+              } else {
+                map.set(Keys.USER_TAGGED, Keys.NO);
+              }
+
+              if (ogTags !== null) {
+                map.set(Keys.LINK_ATTACHED, Keys.YES);
+                map.set(Keys.LINK, ogTags.url ?? "");
+              } else {
+                map.set(Keys.LINK_ATTACHED, Keys.NO);
+              }
+
+              // TODO for Topic Feed
+              // if (topics !== null && topics.length > 0) {
+              //   const topicsNameString = topics
+              //     .map((topic) => topic.name)
+              //     .join(", ");
+              //   map.set(Keys.TOPICS_ADDED, Keys.YES);
+              //   map.set(Keys.TOPICS, topicsNameString);
+              // } else {
+              //   map.set(Keys.TOPICS_ADDED, Keys.NO);
+              // }
+
+              map.set(Keys.IMAGE_ATTACHED, Keys.NO);
+              map.set(Keys.VIDEO_ATTACHED, Keys.NO);
+              map.set(Keys.DOCUMENT_ATTACHED, Keys.NO);
+
+              LMFeedAnalytics.track(Events.POST_CREATION_COMPLETED, map);
+            }}
           >
             {customCreatePostScreenHeader?.rightComponent ? (
               customCreatePostScreenHeader?.rightComponent
@@ -580,8 +635,11 @@ const CreatePostComponent = () => {
               handleGalleryProp
                 ? handleGalleryProp(SELECT_IMAGE)
                 : handleGallery(SELECT_IMAGE);
-              customAttachmentOptionsStyle?.onPhotoAttachmentOptionClick &&
-                customAttachmentOptionsStyle?.onPhotoAttachmentOptionClick();
+
+              LMFeedAnalytics.track(
+                Events.CLICKED_ON_ATTACHMENT,
+                new Map<string, string>([[Keys.TYPE, SELECT_IMAGE]])
+              );
             }}
           >
             <LMIcon
@@ -605,8 +663,11 @@ const CreatePostComponent = () => {
               handleGalleryProp
                 ? handleGalleryProp(SELECT_VIDEO)
                 : handleGallery(SELECT_VIDEO);
-              customAttachmentOptionsStyle?.onVideoAttachmentOptionClick &&
-                customAttachmentOptionsStyle?.onVideoAttachmentOptionClick();
+
+              LMFeedAnalytics.track(
+                Events.CLICKED_ON_ATTACHMENT,
+                new Map<string, string>([[Keys.TYPE, SELECT_VIDEO]])
+              );
             }}
           >
             <LMIcon
@@ -628,8 +689,11 @@ const CreatePostComponent = () => {
             ]}
             onPress={() => {
               handleDocumentProp ? handleDocumentProp() : handleDocument();
-              customAttachmentOptionsStyle?.onFilesAttachmentOptionClick &&
-                customAttachmentOptionsStyle?.onFilesAttachmentOptionClick();
+
+              LMFeedAnalytics.track(
+                Events.CLICKED_ON_ATTACHMENT,
+                new Map<string, string>([[Keys.TYPE, SELECT_FILE]])
+              );
             }}
           >
             <LMIcon
