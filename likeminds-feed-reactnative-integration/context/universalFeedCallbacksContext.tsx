@@ -16,6 +16,7 @@ export interface UniversalFeedCallbacksContextProps {
     nativeEvent: { pageX: number; pageY: number };
   }, menuItems: LMMenuItemsUI, postId: string) => void;
   onTapNotificationBellProp: () => void;
+  onSharePostClicked: (id:string) => void;
 }
 
 export interface UniversalFeedCustomisableMethodsContext {
@@ -32,6 +33,7 @@ export interface UniversalFeedCustomisableMethodsContext {
     nativeEvent: { pageX: number; pageY: number };
   },menuItems: LMMenuItemsUI, postId: string) => void;
   onTapNotificationBellProp: () => void;
+  onSharePostClicked: (id:string) => void;
 }
 
 const UniversalFeedCustomisableMethodsContext = createContext<
@@ -60,7 +62,8 @@ export const UniversalFeedCustomisableMethodsContextProvider = ({
   handleReportPostProps,
   newPostButtonClickProps,
   onOverlayMenuClickProp,
-  onTapNotificationBellProp
+  onTapNotificationBellProp,
+  onSharePostClicked
 }: UniversalFeedCallbacksContextProps) => {
   const contextValues: UniversalFeedCustomisableMethodsContext = {
     postLikeHandlerProp,
@@ -73,7 +76,8 @@ export const UniversalFeedCustomisableMethodsContextProvider = ({
     handleReportPostProps,
     newPostButtonClickProps,
     onOverlayMenuClickProp,
-    onTapNotificationBellProp
+    onTapNotificationBellProp,
+    onSharePostClicked
   };
 
   return (

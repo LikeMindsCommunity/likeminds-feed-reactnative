@@ -5,7 +5,7 @@ import {
   useUniversalFeedContext,
 } from '@likeminds.community/feed-rn-core';
 import {getUniqueId} from 'react-native-device-info';
-import {Alert, Platform} from 'react-native';
+import {Alert, Platform, Share} from 'react-native';
 import {validateRegisterDeviceRequest} from '../registerDeviceApi';
 import { pushAPI, token } from '../pushNotification';
 
@@ -81,10 +81,30 @@ const Feed = ({route}) => {
     onTapNotificationBell();
     console.log('after notification icon tap');
   };
+  const customShareTap = async(postId) => {
+    console.log('share', postId);
+    try {
+      const result = await Share.share({
+        // todo: static data (replace with the deeplink)
+        message: `https://www.sampleapp.com/post?post_id=${postId}`,
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      Alert.alert((error as Error).message);
+    }
+  };
 
   /// Setup notifications
   useEffect(() => {
-   token().then((res) => {
+   token().then((res) => {    
      if (!!res) {
       setFCMToken(res);
     }
@@ -117,7 +137,8 @@ const Feed = ({route}) => {
       }
       onTapNotificationBellProp={() =>
         customNotificationBellTap()
-      }></UniversalFeed>
+      }
+      onSharePostClicked={(id) => customShareTap(id)}></UniversalFeed>
   );
 };
 

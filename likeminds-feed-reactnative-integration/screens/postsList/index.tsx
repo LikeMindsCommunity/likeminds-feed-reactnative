@@ -93,7 +93,7 @@ const PostsListComponent = () => {
   }: PostListContextValues = usePostListContext();
   const LMFeedContextStyles = useLMFeedStyles();
   const { postListStyle, loaderStyle } = LMFeedContextStyles;
-  const { postLikeHandlerProp, savePostHandlerProp, onSelectCommentCountProp, selectEditPostProp, selectPinPostProp, onTapLikeCountProps, handleDeletePostProps, handleReportPostProps, onOverlayMenuClickProp} = useUniversalFeedCustomisableMethodsContext()
+  const { postLikeHandlerProp, savePostHandlerProp, onSelectCommentCountProp, selectEditPostProp, selectPinPostProp, onTapLikeCountProps, handleDeletePostProps, handleReportPostProps, onOverlayMenuClickProp, onSharePostClicked} = useUniversalFeedCustomisableMethodsContext()
 // this function returns the id of the item selected from menu list and handles further functionalities accordingly
 const onMenuItemSelect = (
   postId: string,
@@ -176,6 +176,11 @@ const onMenuItemSelect = (
                         onSelectCommentCountProp ? onSelectCommentCountProp(item?.id) : onTapCommentCount(item?.id)
                       },
                     },
+                    shareButton: {
+                      onTap: () => {
+                        onSharePostClicked ? onSharePostClicked(item?.id) : {}
+                      }
+                    }
                   }}
                 />
               </TouchableOpacity>

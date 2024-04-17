@@ -226,6 +226,7 @@ export const PostDetailContextProvider = ({
   navigation,
   route,
 }: PostDetailContextProps) => {
+  
   const dispatch = useAppDispatch();
   const postDetail = useAppSelector((state) => state.postDetail.postDetail);
   const [modalPosition, setModalPosition] = useState({
