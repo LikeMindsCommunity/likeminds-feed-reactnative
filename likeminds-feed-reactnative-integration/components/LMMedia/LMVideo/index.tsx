@@ -78,8 +78,8 @@ const LMVideo = React.memo(
             source={{ uri: videoUrl }}
             key={videoUrl}
             onLoad={() => {
-              setLoading(false);
               player.current.seek(0); // this will set first frame of video as thumbnail
+              setLoading(false);
             }}
             onError={() => setError(true)}
             repeat={looping ? looping : true}
