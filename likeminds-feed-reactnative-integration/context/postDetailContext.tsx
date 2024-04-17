@@ -672,6 +672,12 @@ export const PostDetailContextProvider = ({
             },
           },
         }}
+        mediaProps={{
+          videoProps: {
+            autoPlay: postListStyle?.media?.video?.autoPlay != undefined? postListStyle?.media?.video?.autoPlay : true,
+            videoInFeed: false
+          }
+        }}
       />
     );
   };

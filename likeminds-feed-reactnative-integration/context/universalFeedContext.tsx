@@ -16,7 +16,7 @@ import {
   AddPostRequest,
   GetFeedRequest,
 } from "@likeminds.community/feed-js";
-import { refreshFeed } from "../store/actions/feed";
+import { autoPlayPostVideo, refreshFeed } from "../store/actions/feed";
 import {
   CREATE_POST_PERMISSION,
   POST_UPLOADED,
@@ -193,6 +193,7 @@ export const UniversalFeedContextProvider = ({
 
   // this handles the functionality of new post button
   const newPostButtonClick = () => {
+    dispatch(autoPlayPostVideo(''))
     showCreatePost
       ? postUploading
         ? dispatch(
@@ -248,6 +249,7 @@ export const UniversalFeedContextProvider = ({
 
   const onTapNotificationBell = () => {
     dispatch(notificationFeedClear());
+    dispatch(autoPlayPostVideo(''))
     navigation.navigate(NOTIFICATION_FEED);
   };
 
