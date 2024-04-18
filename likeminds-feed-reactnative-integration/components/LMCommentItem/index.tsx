@@ -384,6 +384,7 @@ const LMCommentItem = React.memo(
                             onSelected: (commentId, itemId) =>
                               commentMenu.onSelected(commentId, itemId),
                           }}
+                          onCommentOverflowMenuClick={onCommentOverflowMenuClick}
                         />
                       )}
                     </>

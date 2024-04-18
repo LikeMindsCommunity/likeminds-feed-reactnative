@@ -76,7 +76,7 @@ interface PostDetailProps {
   handleScreenBackPressProp: () => void;
   onCommentOverflowMenuClickProp: (event: {
     nativeEvent: { pageX: number; pageY: number };
-  },menuItems: LMMenuItemsUI, commentId: string) => void;
+  },menuItems: LMMenuItemsUI[], commentId: string) => void;
 }
 
 const PostDetail = ({
