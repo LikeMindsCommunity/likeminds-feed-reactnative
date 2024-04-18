@@ -1,15 +1,34 @@
-import {LMOverlayProvider} from './lmOverlayProvider'
+import { LMOverlayProvider } from "./lmOverlayProvider";
 import { initMyClient } from "./setup";
 import { ContextProvider } from "./store/contextStore";
-import { UniversalFeed, PostsList, PostDetail , CreatePost, PostLikesList} from "./screens";
+import {
+  UniversalFeed,
+  PostsList,
+  PostDetail,
+  CreatePost,
+  PostLikesList,
+  TopicFeed,
+} from "./screens";
 import {
   UNIVERSAL_FEED,
   CREATE_POST,
   POSTS_LIST,
   POST_DETAIL,
-  POST_LIKES_LIST
+  POST_LIKES_LIST,
+  TOPIC_FEED,
 } from "./constants/screenNames";
-import { usePostDetailContext, useUniversalFeedContext, usePostLikesListContext, useCreatePostContext, usePostListContext, PostDetailContextProvider, PostLikesListContextProvider, PostListContextProvider, UniversalFeedContextProvider, CreatePostContextProvider } from './context';
+import {
+  usePostDetailContext,
+  useUniversalFeedContext,
+  usePostLikesListContext,
+  useCreatePostContext,
+  usePostListContext,
+  PostDetailContextProvider,
+  PostLikesListContextProvider,
+  PostListContextProvider,
+  UniversalFeedContextProvider,
+  CreatePostContextProvider,
+} from "./context";
 export {
   LMOverlayProvider,
   initMyClient,
@@ -20,6 +39,7 @@ export {
   CreatePost,
   PostLikesList,
   UNIVERSAL_FEED,
+  TOPIC_FEED,
   CREATE_POST,
   POSTS_LIST,
   POST_DETAIL,
@@ -33,5 +53,6 @@ export {
   PostDetailContextProvider,
   PostLikesListContextProvider,
   PostListContextProvider,
-  CreatePostContextProvider
+  CreatePostContextProvider,
+  TopicFeed,
 };

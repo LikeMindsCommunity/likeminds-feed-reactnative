@@ -6,6 +6,7 @@ import {
   Pressable,
   FlatList,
   StyleSheet,
+  TextStyle,
 } from "react-native";
 import React from "react";
 import { NetworkUtil, nameInitials, replaceLastMention } from "../../utils";
@@ -96,7 +97,7 @@ const CreatePost = ({
 const CreatePostComponent = () => {
   const dispatch = useAppDispatch();
   const LMFeedContextStyles = useLMFeedStyles();
-  const { postListStyle, createPostStyle, postDetailStyle } =
+  const { postListStyle, createPostStyle, postDetailStyle }: any =
     LMFeedContextStyles;
   const customTextInputStyle = createPostStyle?.createPostTextInputStyle;
   const customAddMoreAttachmentsButton =
@@ -153,7 +154,7 @@ const CreatePostComponent = () => {
   const uiRenderForPost = () => {
     return (
       <View
-        keyboardShouldPersistTaps={"handled"}
+        // keyboardShouldPersistTaps={"handled"}
         style={
           postToEdit
             ? styles.scrollViewStyleWithoutOptions
@@ -284,11 +285,13 @@ const CreatePostComponent = () => {
                       <LMText
                         children={<Text>{item?.name}</Text>}
                         maxLines={1}
-                        textStyle={[
-                          styles.taggingListText,
-                          postDetailStyle?.userTaggingListStyle
-                            ?.userTagNameStyle,
-                        ]}
+                        textStyle={
+                          [
+                            styles.taggingListText,
+                            postDetailStyle?.userTaggingListStyle
+                              ?.userTagNameStyle,
+                          ] as TextStyle
+                        }
                       />
                     </View>
                   </Pressable>
@@ -308,6 +311,7 @@ const CreatePostComponent = () => {
                   </View>
                 ) : null
               }
+              /* @ts-ignore */
               keyExtractor={(item) => {
                 return item?.id;
               }}

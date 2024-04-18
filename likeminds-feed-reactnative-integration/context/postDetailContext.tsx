@@ -63,7 +63,11 @@ import {
   savePostStateHandler,
 } from "../store/actions/feed";
 import _ from "lodash";
-import { CREATE_POST, POST_LIKES_LIST, UNIVERSAL_FEED } from "../constants/screenNames";
+import {
+  CREATE_POST,
+  POST_LIKES_LIST,
+  UNIVERSAL_FEED,
+} from "../constants/screenNames";
 import {
   detectMentions,
   mentionToRouteConverter,
@@ -97,7 +101,7 @@ export interface PostDetailContextValues {
   };
   postDetail: LMPostUI;
   modalPosition: {};
-  showActionListModal: false;
+  showActionListModal: boolean;
   selectedMenuItemPostId: string;
   commentToAdd: string;
   selectedMenuItemCommentId: string;
@@ -108,14 +112,14 @@ export interface PostDetailContextValues {
   loggedInUser: {};
   showCommentActionListModal: boolean;
   replyOnComment: {
-    textInputFocus: false;
+    textInputFocus: boolean;
     commentId: string;
   };
-  replyToUsername: "";
+  replyToUsername: string;
   localModalVisibility: boolean;
   keyboardIsVisible: boolean;
   editCommentFocus: boolean;
-  myRef: null;
+  myRef: any;
   taggedUserName: string;
   debounceTimeout: null;
   page: number;
@@ -148,7 +152,7 @@ export interface PostDetailContextValues {
   setKeyboardIsVisible: Dispatch<SetStateAction<boolean>>;
   setLocalModalVisibility: Dispatch<SetStateAction<boolean>>;
   setReplyToUsername: Dispatch<SetStateAction<string>>;
-  setReplyOnComment: Dispatch<SetStateAction<object>>;
+  setReplyOnComment: Dispatch<SetStateAction<any>>;
   setShowCommentActionListModal: Dispatch<SetStateAction<boolean>>;
   setCommentPageNumber: Dispatch<SetStateAction<number>>;
   setShowReportModal: Dispatch<SetStateAction<boolean>>;
@@ -161,7 +165,7 @@ export interface PostDetailContextValues {
   closePostActionListModal: () => void;
   closeCommentActionListModal: () => void;
   postLikeHandler: (id: string) => void;
-  debouncedLikeFunction:(id: string) => void;
+  debouncedLikeFunction: (id: string) => void;
   debouncedSaveFunction: (id: string, saved?: boolean) => void;
   savePostHandler: (id: string, saved?: boolean) => void;
   handlePinPost: (id: string, pinned?: boolean) => void;
@@ -221,6 +225,8 @@ export const PostDetailContextProvider = ({
   navigation,
   route,
 }: PostDetailContextProps) => {
+  console.log("route", route);
+
   const dispatch = useAppDispatch();
   const postDetail = useAppSelector((state) => state.postDetail.postDetail);
   const modalPosition = { x: 0, y: 0 };
@@ -261,13 +267,15 @@ export const PostDetailContextProvider = ({
   const [refreshing, setRefreshing] = useState(false);
   const [localRefresh, setLocalRefresh] = useState(false);
   const [commentFocus, setCommentFocus] = useState(false);
-  const [keyboardFocusOnReply, setKeyboardFocusOnReply] = useState(false)
+  const [keyboardFocusOnReply, setKeyboardFocusOnReply] = useState(false);
   const [routeParams, setRouteParams] = useState(
-    route.params[1] === NAVIGATED_FROM_COMMENT
+    route?.params && route?.params[1] === NAVIGATED_FROM_COMMENT
   );
-  const [navigatedFromComments, setNavigatedFromComments] = useState(route.params[1] === NAVIGATED_FROM_COMMENT)
+  const [navigatedFromComments, setNavigatedFromComments] = useState(
+    route?.params && route?.params[1] === NAVIGATED_FROM_COMMENT
+  );
   const isKeyboardVisible = Keyboard.isVisible();
-  const [showRepliesOfCommentId, setShowRepliesOfCommentId] = useState('')
+  const [showRepliesOfCommentId, setShowRepliesOfCommentId] = useState("");
 
   const LMFeedContextStyles = useLMFeedStyles();
   const { postListStyle } = LMFeedContextStyles;
@@ -280,7 +288,7 @@ export const PostDetailContextProvider = ({
     await dispatch(
       refreshPostDetail(
         GetPostRequest.builder()
-          .setpostId(route.params[0])
+          .setpostId(route?.params && route?.params[0])
           .setpage(1)
           .setpageSize(10)
           .build(),
@@ -301,8 +309,8 @@ export const PostDetailContextProvider = ({
     setShowCommentActionListModal(false);
   };
 
-   // this function is executed on the click of menu icon & handles the position and visibility of the modal
-   const onCommentOverflowMenuClick = (event: {
+  // this function is executed on the click of menu icon & handles the position and visibility of the modal
+  const onCommentOverflowMenuClick = (event: {
     nativeEvent: { pageX: number; pageY: number };
   }) => {
     const { pageX, pageY } = event.nativeEvent;
@@ -386,7 +394,7 @@ export const PostDetailContextProvider = ({
     const pinPostResponse = await dispatch(
       pinPost(PinPostRequest.builder().setpostId(payload.postId).build(), false)
     );
-    if (pinPostResponse) {
+    if (pinPostResponse !== undefined && pinPostResponse !== null) {
       dispatch(
         showToastMessage({
           isToast: true,
@@ -449,7 +457,7 @@ export const PostDetailContextProvider = ({
     setTimeout(() => {
       setEditCommentFocus(true);
     }, 100);
-  }
+  };
 
   // this function gets the detail of comment whose menu item is clicked
   const getCommentDetail = (
@@ -478,7 +486,7 @@ export const PostDetailContextProvider = ({
     const getPostResponse = await dispatch(
       getPost(
         GetPostRequest.builder()
-          .setpostId(route.params[0])
+          .setpostId(route?.params && route?.params[0])
           .setpage(commentPageNumber)
           .setpageSize(10)
           .build(),
@@ -580,7 +588,7 @@ export const PostDetailContextProvider = ({
       tempId: `${-currentDate.getTime()}`,
       commentId: commentId,
     };
-    setShowRepliesOfCommentId(replyOnComment?.commentId)
+    setShowRepliesOfCommentId(replyOnComment?.commentId);
     setCommentToAdd("");
     setReplyOnComment({ textInputFocus: false, commentId: "" });
     setKeyboardFocusOnReply(false);
@@ -621,8 +629,8 @@ export const PostDetailContextProvider = ({
             modalVisible: showActionListModal,
             onCloseModal: closePostActionListModal,
             onSelected: (postId, itemId) =>
-            onMenuItemSelect(postId, itemId, postDetail?.isPinned),
-          }
+              onMenuItemSelect(postId, itemId, postDetail?.isPinned),
+          },
         }}
         // footer props
         footerProps={{
@@ -648,8 +656,8 @@ export const PostDetailContextProvider = ({
           commentButton: {
             onTap: () => {
               setCommentFocus(true);
-            }
-          }
+            },
+          },
         }}
       />
     );
@@ -667,33 +675,33 @@ export const PostDetailContextProvider = ({
 
   // this handles the view layout with keyboard visibility
   useEffect(() => {
-   if(Platform.OS === 'android') {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      () => {
-        setKeyboardIsVisible(true);
-      }
-    );
-
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => {
-        setKeyboardIsVisible(false);
-        if (Keyboard.isVisible() === false) {
-          Keyboard.dismiss();
-          setKeyboardFocusOnReply(false);
-          setEditCommentFocus(false);
-          setCommentFocus(false);
-          setRouteParams(false);
+    if (Platform.OS === "android") {
+      const keyboardDidShowListener = Keyboard.addListener(
+        "keyboardDidShow",
+        () => {
+          setKeyboardIsVisible(true);
         }
-      }
-    );
+      );
 
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
+      const keyboardDidHideListener = Keyboard.addListener(
+        "keyboardDidHide",
+        () => {
+          setKeyboardIsVisible(false);
+          if (Keyboard.isVisible() === false) {
+            Keyboard.dismiss();
+            setKeyboardFocusOnReply(false);
+            setEditCommentFocus(false);
+            setCommentFocus(false);
+            setRouteParams(false);
+          }
+        }
+      );
+
+      return () => {
+        keyboardDidShowListener.remove();
+        keyboardDidHideListener.remove();
+      };
     }
-   }
   }, [isKeyboardVisible]);
 
   // this function calls the edit comment api
@@ -716,7 +724,7 @@ export const PostDetailContextProvider = ({
         false
       )
     );
-    if (editCommentResponse) {
+    if (editCommentResponse !== undefined) {
       setEditCommentFocus(false);
       setCommentToAdd("");
       setKeyboardFocusOnReply(false);
@@ -745,9 +753,9 @@ export const PostDetailContextProvider = ({
 
     const mentionListLength = newMentions.length;
     if (mentionListLength > 0) {
-      const timeoutID = setTimeout(async () => {
+      const timeoutID: any = setTimeout(async () => {
         setPage(1);
-        const taggingListResponse = await dispatch(
+        const taggingListResponse: any = await dispatch(
           getTaggingList(
             GetTaggingListRequest.builder()
               .setsearchName(newMentions[mentionListLength - 1])
@@ -783,7 +791,7 @@ export const PostDetailContextProvider = ({
   // this calls the tagging list api for different page number
   const loadData = async (newPage: number) => {
     setIsLoading(true);
-    const taggingListResponse = await dispatch(
+    const taggingListResponse: any = await dispatch(
       getTaggingList(
         GetTaggingListRequest.builder()
           .setsearchName(taggedUserName)
@@ -793,7 +801,7 @@ export const PostDetailContextProvider = ({
         false
       )
     );
-    if (taggingListResponse) {
+    if (taggingListResponse !== undefined) {
       setAllTags([...allTags, ...taggingListResponse.members]);
       setIsLoading(false);
     }
@@ -815,7 +823,7 @@ export const PostDetailContextProvider = ({
   const handleScreenBackPress = () => {
     Keyboard.dismiss();
     navigation.navigate(UNIVERSAL_FEED);
-  }
+  };
 
   const contextValues: PostDetailContextValues = {
     navigation,
@@ -908,7 +916,7 @@ export const PostDetailContextProvider = ({
     handleEditComment,
     handleScreenBackPress,
     setModalPositionComment,
-    onCommentOverflowMenuClick
+    onCommentOverflowMenuClick,
   };
 
   return (

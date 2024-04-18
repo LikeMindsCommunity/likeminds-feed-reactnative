@@ -1,7 +1,7 @@
-import {TextStyle} from 'react-native';
-import {LMPostMenuProps} from '../LMPost/LMPostMenu/types';
-import {LMCommentUI} from '../../models';
-import { LMTextProps,LMButtonProps } from '../../uiComponents';
+import { TextStyle } from "react-native";
+import { LMPostMenuProps } from "../LMPost/LMPostMenu/types";
+import { LMCommentUI } from "../../models";
+import { LMTextProps, LMButtonProps } from "../../uiComponents";
 
 export interface LMCommentProps {
   comment: LMCommentUI; // comment data
@@ -9,7 +9,7 @@ export interface LMCommentProps {
   likeTextButton?: LMButtonProps; // custom like text button
   onTapViewMore?: (
     page: number,
-    data: (repliesArray: Array<LMCommentUI>) => void,
+    data: (repliesArray: Array<LMCommentUI>) => void
   ) => void; // callback function to be executed on click of view more replies
   commentMaxLines?: number; // maximun lines of comment to be shown
   menuIcon?: LMButtonProps; // custom menu icon button
@@ -23,7 +23,7 @@ export interface LMCommentProps {
   onTapReplies?: (data: (repliesArray: Array<LMCommentUI>) => void) => void; // callback function to be executed on click of replies
   commentMenu: LMPostMenuProps; // this represents the post menu props;
   isRepliesVisible?: boolean;
-  onCommentOverflowMenuClick: (event: {
+  onCommentOverflowMenuClick?: (event: {
     nativeEvent: { pageX: number; pageY: number };
   }) => void;
 }

@@ -28,7 +28,10 @@ import {
 import STYLES from "../../constants/Styles";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { deletePost, deletePostStateHandler } from "../../store/actions/feed";
-import { deleteComment, deleteCommentStateHandler } from "../../store/actions/postDetail";
+import {
+  deleteComment,
+  deleteCommentStateHandler,
+} from "../../store/actions/postDetail";
 import Toast from "react-native-toast-message";
 import { showToastMessage } from "../../store/actions/toast";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -43,7 +46,10 @@ interface DeleteModalProps {
   postDetail: LMPostUI;
   commentDetail?: LMCommentUI;
   modalBackdropColor?: string;
-  navigation?: NativeStackNavigationProp<RootStackParamList, "PostDetail" | "UniversalFeed" | "PostsList">;
+  navigation?: NativeStackNavigationProp<
+    RootStackParamList,
+    "PostDetail" | "UniversalFeed" | "PostsList"
+  >;
 }
 
 const DeleteModal = ({
@@ -53,10 +59,10 @@ const DeleteModal = ({
   postDetail,
   modalBackdropColor,
   commentDetail,
-  navigation
+  navigation,
 }: DeleteModalProps) => {
   const dispatch = useAppDispatch();
-  const loggedInUser = useAppSelector(state => state.login.member);
+  const loggedInUser = useAppSelector((state) => state.login.member);
   const [deletionReason, setDeletionReason] = useState("");
   const [otherReason, setOtherReason] = useState("");
   const [showReasons, setShowReasons] = useState(false);
@@ -65,7 +71,7 @@ const DeleteModal = ({
   const postDelete = async () => {
     if (!deletionReason && loggedInUser.userUniqueId !== postDetail?.userId) {
       showToast();
-    } else if (deletionReason === 'Others' && otherReason === '') {
+    } else if (deletionReason === "Others" && otherReason === "") {
       showToast();
     } else {
       const payload = {
@@ -79,11 +85,12 @@ const DeleteModal = ({
           DeletePostRequest.builder()
             .setdeleteReason(payload.deleteReason)
             .setpostId(payload.postId)
-            .build(),false
-        ),
+            .build(),
+          false
+        )
       );
       // toast message action
-      if (deletePostResponse) {
+      if (deletePostResponse !== undefined) {
         setDeletionReason("");
         navigation?.goBack();
         dispatch(
@@ -126,8 +133,9 @@ const DeleteModal = ({
               .setcommentId(payload.commentId)
               .setpostId(payload.postId)
               .setreason(payload.deleteReason)
-              .build(), false
-          ),
+              .build(),
+            false
+          )
         );
         setDeletionReason("");
         await dispatch(
@@ -156,8 +164,8 @@ const DeleteModal = ({
   // this show the toast message over the modal
   const showToast = () => {
     Toast.show({
-      position: 'bottom',
-      type: 'deleteToastView',
+      position: "bottom",
+      type: "deleteToastView",
       autoHide: true,
       visibilityTime: 1500,
     });
@@ -170,7 +178,9 @@ const DeleteModal = ({
         <View>
           <View style={styles.modalView}>
             <Text style={styles.filterText}>
-              {deletionReason === 'Others' ? ENTER_REASON_FOR_DELETION : DELETE_REASON_SELECTION}
+              {deletionReason === "Others"
+                ? ENTER_REASON_FOR_DELETION
+                : DELETE_REASON_SELECTION}
             </Text>
           </View>
         </View>

@@ -1,13 +1,13 @@
-import React from 'react'
-import DetailScreen from './detailScreen'
-import { PostDetailContextProvider } from '@likeminds.community/feed-rn-core'
+import React from 'react';
+import DetailScreen from './detailScreen';
+import {PostDetailContextProvider} from '@likeminds.community/feed-rn-core';
 
 const DetailWrapper = ({navigation, route}) => {
   return (
     <PostDetailContextProvider navigation={navigation} route={route}>
       <DetailScreen />
     </PostDetailContextProvider>
-  )
-}
+  );
+};
 
-export default DetailWrapper
+export default DetailWrapper;

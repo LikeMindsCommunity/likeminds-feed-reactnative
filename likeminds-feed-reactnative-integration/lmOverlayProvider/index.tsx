@@ -1,7 +1,6 @@
-
 import React from "react";
 import { LMOverlayProviderProps } from "./types";
-import {LMFeedProvider} from '../lmFeedProvider'
+import { LMFeedProvider } from "../lmFeedProvider";
 import { StyleSheet, View } from "react-native";
 import { ContextProvider } from "../store/contextStore";
 
@@ -9,19 +8,18 @@ export const LMOverlayProvider = ({
   myClient,
   children,
   userName,
-  userUniqueId
+  userUniqueId,
 }: LMOverlayProviderProps) => {
   return (
-    <ContextProvider children={children}>
+    <ContextProvider>
       <LMFeedProvider
         myClient={myClient}
         userName={userName}
         userUniqueId={userUniqueId}
-        children={children}
       >
         <View style={styles.flexStyling}>{children}</View>
       </LMFeedProvider>
-      </ContextProvider>
+    </ContextProvider>
   );
 };
 

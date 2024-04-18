@@ -9,7 +9,7 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
 import { POST_LIKES_LIST, UNIVERSAL_FEED } from "../../constants/screenNames";
@@ -71,12 +71,16 @@ interface PostDetailProps {
   addNewReplyProp: (postId: string, commentId: string) => void;
   commentLikeHandlerProp: (postId: string, commentId: string) => void;
   handleReportCommentProp: (commentId: string) => void;
-  handleDeleteCommentProp: (visible: boolean,commentId: string) => void;
+  handleDeleteCommentProp: (visible: boolean, commentId: string) => void;
   handleEditCommentProp: (commentId: string) => void;
   handleScreenBackPressProp: () => void;
-  onCommentOverflowMenuClickProp: (event: {
-    nativeEvent: { pageX: number; pageY: number };
-  },menuItems: LMMenuItemsUI, commentId: string) => void;
+  onCommentOverflowMenuClickProp: (
+    event: {
+      nativeEvent: { pageX: number; pageY: number };
+    },
+    menuItems: LMMenuItemsUI,
+    commentId: string
+  ) => void;
 }
 
 const PostDetail = ({
@@ -91,23 +95,22 @@ const PostDetail = ({
   handleEditCommentProp,
   handleReportCommentProp,
   handleScreenBackPressProp,
-  onCommentOverflowMenuClickProp
+  onCommentOverflowMenuClickProp,
 }: PostDetailProps) => {
   return (
-  
-      <PostDetailCustomisableMethodsContextProvider
-        getCommentsRepliesProp={getCommentsRepliesProp}
-        commentLikeHandlerProp={commentLikeHandlerProp}
-        addNewCommentProp={addNewCommentProp}
-        addNewReplyProp={addNewReplyProp}
-        handleDeleteCommentProp={handleDeleteCommentProp}
-        handleEditCommentProp={handleEditCommentProp}
-        handleReportCommentProp={handleReportCommentProp}
-        handleScreenBackPressProp={handleScreenBackPressProp}
-        onCommentOverflowMenuClickProp={onCommentOverflowMenuClickProp}
-      >
-        <PostDetailComponent />
-      </PostDetailCustomisableMethodsContextProvider>
+    <PostDetailCustomisableMethodsContextProvider
+      getCommentsRepliesProp={getCommentsRepliesProp}
+      commentLikeHandlerProp={commentLikeHandlerProp}
+      addNewCommentProp={addNewCommentProp}
+      addNewReplyProp={addNewReplyProp}
+      handleDeleteCommentProp={handleDeleteCommentProp}
+      handleEditCommentProp={handleEditCommentProp}
+      handleReportCommentProp={handleReportCommentProp}
+      handleScreenBackPressProp={handleScreenBackPressProp}
+      onCommentOverflowMenuClickProp={onCommentOverflowMenuClickProp}
+    >
+      <PostDetailComponent />
+    </PostDetailCustomisableMethodsContextProvider>
   );
 };
 
@@ -167,11 +170,11 @@ const PostDetailComponent = React.memo(() => {
     handleReportComment,
     handleEditComment,
     handleScreenBackPress,
-    onCommentOverflowMenuClick
+    onCommentOverflowMenuClick,
   }: PostDetailContextValues = usePostDetailContext();
 
   const LMFeedContextStyles = useLMFeedStyles();
-  const { postDetailStyle, postListStyle } = LMFeedContextStyles;
+  const { postDetailStyle, postListStyle }: any = LMFeedContextStyles;
   const {
     getCommentsRepliesProp,
     commentLikeHandlerProp,
@@ -181,7 +184,7 @@ const PostDetailComponent = React.memo(() => {
     handleEditCommentProp,
     handleReportCommentProp,
     handleScreenBackPressProp,
-    onCommentOverflowMenuClickProp
+    onCommentOverflowMenuClickProp,
   } = usePostDetailCustomisableMethodsContext();
   const postHeaderStyle = postListStyle?.header;
   const customScreenHeader = postDetailStyle?.screenHeader;
@@ -203,7 +206,7 @@ const PostDetailComponent = React.memo(() => {
     }
     if (itemId === DELETE_COMMENT_MENU_ITEM) {
       handleDeleteCommentProp
-        ? handleDeleteCommentProp(true,commentId)
+        ? handleDeleteCommentProp(true, commentId)
         : handleDeleteComment(true);
     }
     if (itemId === EDIT_COMMENT_MENU_ITEM) {
@@ -240,7 +243,9 @@ const PostDetailComponent = React.memo(() => {
               : ""
           }
           onBackPress={() => {
-            handleScreenBackPressProp ? handleScreenBackPressProp() : handleScreenBackPress();
+            handleScreenBackPressProp
+              ? handleScreenBackPressProp()
+              : handleScreenBackPress();
           }}
           rightComponent={customScreenHeader?.rightComponent}
           backIcon={customScreenHeader?.backIcon}
@@ -441,7 +446,15 @@ const PostDetailComponent = React.memo(() => {
                             timeStampStyle={
                               customCommentItemStyle?.timeStampStyle
                             }
-                            onCommentOverflowMenuClick={(event) => {onCommentOverflowMenuClickProp ? onCommentOverflowMenuClickProp(event, item?.menuItems, item?.id) : onCommentOverflowMenuClick(event)}}
+                            onCommentOverflowMenuClick={(event) => {
+                              onCommentOverflowMenuClickProp
+                                ? onCommentOverflowMenuClickProp(
+                                    event,
+                                    item?.menuItems[0],
+                                    item?.id
+                                  )
+                                : onCommentOverflowMenuClick(event);
+                            }}
                           />
                         )}
                       </>

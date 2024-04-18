@@ -18,7 +18,7 @@ import {
   POST_UPLOAD_INPROGRESS,
   VIDEO_ATTACHMENT_TYPE,
 } from "../../constants/Strings";
-import { CREATE_POST } from "../../constants/screenNames";
+import { CREATE_POST, TOPIC_FEED } from "../../constants/screenNames";
 // @ts-ignore the lib do not have TS declarations yet
 import _ from "lodash";
 import { PostsList } from "../postsList";
@@ -53,12 +53,20 @@ interface UniversalFeedProps {
   selectEditPostProp: (id: string) => void;
   onSelectCommentCountProp: (id: string) => void;
   onTapLikeCountProps: (id: string) => void;
-  handleDeletePostProps: (visible: boolean, postId: string, isCM: boolean) => void;
+  handleDeletePostProps: (
+    visible: boolean,
+    postId: string,
+    isCM: boolean
+  ) => void;
   handleReportPostProps: (postId: string) => void;
   newPostButtonClickProps: () => void;
-  onOverlayMenuClickProp: (event: {
-    nativeEvent: { pageX: number; pageY: number };
-  },menuItems: LMMenuItemsUI, postId: string) => void;
+  onOverlayMenuClickProp: (
+    event: {
+      nativeEvent: { pageX: number; pageY: number };
+    },
+    menuItems: LMMenuItemsUI,
+    postId: string
+  ) => void;
 }
 
 const UniversalFeed = ({
@@ -74,23 +82,23 @@ const UniversalFeed = ({
   handleDeletePostProps,
   handleReportPostProps,
   newPostButtonClickProps,
-  onOverlayMenuClickProp
+  onOverlayMenuClickProp,
 }: UniversalFeedProps) => {
   return (
-      <UniversalFeedCustomisableMethodsContextProvider
-        postLikeHandlerProp={postLikeHandlerProp}
-        savePostHandlerProp={savePostHandlerProp}
-        selectEditPostProp={selectEditPostProp}
-        selectPinPostProp={selectPinPostProp}
-        onSelectCommentCountProp={onSelectCommentCountProp}
-        onTapLikeCountProps={onTapLikeCountProps}
-        handleDeletePostProps={handleDeletePostProps}
-        handleReportPostProps={handleReportPostProps}
-        newPostButtonClickProps={newPostButtonClickProps}
-        onOverlayMenuClickProp={onOverlayMenuClickProp}
-      >
-        <UniversalFeedComponent />
-      </UniversalFeedCustomisableMethodsContextProvider>
+    <UniversalFeedCustomisableMethodsContextProvider
+      postLikeHandlerProp={postLikeHandlerProp}
+      savePostHandlerProp={savePostHandlerProp}
+      selectEditPostProp={selectEditPostProp}
+      selectPinPostProp={selectPinPostProp}
+      onSelectCommentCountProp={onSelectCommentCountProp}
+      onTapLikeCountProps={onTapLikeCountProps}
+      handleDeletePostProps={handleDeletePostProps}
+      handleReportPostProps={handleReportPostProps}
+      newPostButtonClickProps={newPostButtonClickProps}
+      onOverlayMenuClickProp={onOverlayMenuClickProp}
+    >
+      <UniversalFeedComponent />
+    </UniversalFeedCustomisableMethodsContextProvider>
   );
 };
 
@@ -103,16 +111,28 @@ const UniversalFeedComponent = () => {
     navigation,
     uploadingMediaAttachment,
     uploadingMediaAttachmentType,
-    newPostButtonClick
+    newPostButtonClick,
   }: UniversalFeedContextValues = useUniversalFeedContext();
   const LMFeedContextStyles = useLMFeedStyles();
   const { universalFeedStyle, loaderStyle } = LMFeedContextStyles;
-  const {newPostButtonClickProps} = useUniversalFeedCustomisableMethodsContext()
+  const { newPostButtonClickProps } =
+    useUniversalFeedCustomisableMethodsContext();
+
+  const handleAllTopicPress = () => {
+    /* @ts-ignore */
+    return navigation.navigate(TOPIC_FEED);
+  };
 
   return (
     <SafeAreaView style={styles.mainContainer}>
       {/* header */}
       <LMHeader heading={APP_TITLE} {...universalFeedStyle?.screenHeader} />
+      {/* all topics filter */}
+      <TouchableOpacity onPress={() => handleAllTopicPress()}>
+        <Text style={{ fontSize: 16, color: "#222020", margin: 20 }}>
+          All Topics
+        </Text>
+      </TouchableOpacity>
       {/* post uploading section */}
       {postUploading && (
         <View style={styles.postUploadingView}>
@@ -172,7 +192,9 @@ const UniversalFeedComponent = () => {
         ]}
         // handles post uploading status and member rights to create post
         onPress={() =>
-         newPostButtonClickProps ? newPostButtonClickProps() : newPostButtonClick()
+          newPostButtonClickProps
+            ? newPostButtonClickProps()
+            : newPostButtonClick()
         }
       >
         <Image

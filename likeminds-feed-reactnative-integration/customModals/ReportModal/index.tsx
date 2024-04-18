@@ -116,7 +116,7 @@ const ReportModal = ({
         )
       );
       // toast message action
-      if (postReportResponse) {
+      if (postReportResponse !== undefined) {
         dispatch(
           showToastMessage({
             isToast: true,
@@ -141,8 +141,8 @@ const ReportModal = ({
   // this functions make the toast visible
   const showToast = () => {
     Toast.show({
-      position: 'bottom',
-      type: 'reportToastView',
+      position: "bottom",
+      type: "reportToastView",
       autoHide: true,
       visibilityTime: 1500,
     });

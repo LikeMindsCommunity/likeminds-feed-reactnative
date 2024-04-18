@@ -303,7 +303,7 @@ export const PostListContextProvider = ({
     const pinPostResponse = await dispatch(
       pinPost(PinPostRequest.builder().setpostId(payload.postId).build(), false)
     );
-    if (pinPostResponse) {
+    if (pinPostResponse !== undefined) {
       dispatch(
         showToastMessage({
           isToast: true,

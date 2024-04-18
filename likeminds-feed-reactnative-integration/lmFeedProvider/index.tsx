@@ -54,11 +54,11 @@ export const LMFeedProvider = ({
   loaderStyle,
   postDetailStyle,
   postLikesListStyle,
-  createPostStyle
+  createPostStyle,
 }: LMFeedProviderProps): React.JSX.Element => {
   const [isInitiated, setIsInitiated] = useState(false);
-  const dispatch  = useAppDispatch();
-  const showToast = useAppSelector(state => state.loader.isToast);
+  const dispatch = useAppDispatch();
+  const showToast = useAppSelector((state) => state.loader.isToast);
 
   useEffect(() => {
     //setting client in Client class
@@ -77,7 +77,7 @@ export const LMFeedProvider = ({
           true
         )
       );
-      if (initiateResponse) {
+      if (initiateResponse !== undefined && initiateResponse !== null) {
         // calling getMemberState API
         await dispatch(getMemberState());
       }
@@ -101,11 +101,11 @@ export const LMFeedProvider = ({
           loaderStyle,
           postDetailStyle,
           postLikesListStyle,
-          createPostStyle
+          createPostStyle,
         }}
       >
         <View style={styles.flexStyling}>{children}</View>
-      {showToast && <LMToast />}
+        {showToast && <LMToast />}
       </LMFeedStylesContext.Provider>
     </LMFeedContext.Provider>
   ) : (

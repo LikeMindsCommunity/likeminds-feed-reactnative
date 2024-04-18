@@ -20,7 +20,6 @@ const LMPost = ({
   return (
     <LMPostContextProvider
       navigation={navigation}
-      children={children}
       post={post}
       headerProps={headerProps}
       footerProps={footerProps}
@@ -41,13 +40,9 @@ const LMPostComponent = React.memo(() => {
       {(post?.text ||
         post?.attachments?.find(
           (item) => item?.attachmentType === LINK_ATTACHMENT_TYPE
-        )?.attachmentType === LINK_ATTACHMENT_TYPE) && (
-        <LMPostContent />
-      )}
+        )?.attachmentType === LINK_ATTACHMENT_TYPE) && <LMPostContent />}
       {/* post media */}
-      {post?.attachments && post?.attachments.length > 0 && (
-        <LMPostMedia />
-      )}
+      {post?.attachments && post?.attachments.length > 0 && <LMPostMedia />}
       {/* post footer */}
       <LMPostFooter />
     </View>
