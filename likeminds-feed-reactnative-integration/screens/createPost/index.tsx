@@ -53,7 +53,7 @@ import {
   LMVideo,
 } from "../../components";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { LMFeedAnalytics } from "../../analytics/LMChatAnalytics";
+import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Events } from "../../enums/Events";
 import { Keys } from "../../enums/Keys";
 import { userTaggingDecoder } from "../../utils/decodeMentions";

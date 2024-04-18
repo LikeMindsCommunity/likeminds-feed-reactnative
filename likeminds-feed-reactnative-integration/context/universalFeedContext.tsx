@@ -31,7 +31,7 @@ import {
   getUnreadNotificationCount,
   notificationFeedClear,
 } from "../store/actions/notification";
-import { LMFeedAnalytics } from "../analytics/LMChatAnalytics";
+import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
 import { Events } from "../enums/Events";
 import { Keys } from "../enums/Keys";
 

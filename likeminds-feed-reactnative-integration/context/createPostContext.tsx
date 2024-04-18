@@ -53,7 +53,7 @@ import { showToastMessage } from "../store/actions/toast";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../models/RootStackParamsList";
 import { LMAttachmentUI, LMOGTagsUI, LMPostUI, LMUserUI } from "../models";
-import { LMFeedAnalytics } from "../analytics/LMChatAnalytics";
+import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
 import { Events } from "../enums/Events";
 import { Keys } from "../enums/Keys";
 

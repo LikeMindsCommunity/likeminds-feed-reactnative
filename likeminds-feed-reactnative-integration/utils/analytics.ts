@@ -1,4 +1,4 @@
-import { LMFeedAnalytics } from "../analytics/LMChatAnalytics";
+import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
 import { COMMENT_TYPE, POST_TYPE, REPLY_TYPE } from "../constants/Strings";
 import { Events } from "../enums/Events";
 import { Keys } from "../enums/Keys";
@@ -16,8 +16,8 @@ interface ReportAnalyticsType {
 // to get post type
 export const getPostType = (attachments) => {
   let postTypeString;
-  if (attachments == null || attachments.length > 0) return "text";
-  switch (attachments[0].attachmentType) {
+  if (attachments == null || attachments?.length > 0) return "text";
+  switch (attachments[0]?.attachmentType) {
     case 1: // Image
       postTypeString = "image";
       break;

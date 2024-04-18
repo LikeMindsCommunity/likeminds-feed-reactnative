@@ -79,7 +79,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../models/RootStackParamsList";
 import LMPost from "../components/LMPost/LMPost";
 import { LMCommentUI, LMPostUI, LMUserUI } from "../models";
-import { LMFeedAnalytics } from "../analytics/LMChatAnalytics";
+import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
 import { Events } from "../enums/Events";
 import { Keys } from "../enums/Keys";
 import { getPostType } from "../utils/analytics";
@@ -188,7 +188,7 @@ export interface PostDetailContextValues {
   getCommentDetail: (
     comments?: LMCommentUI[],
     id?: string
-  ) => LMCommentUI | undefined;
+  ) => { commentDetail: LMCommentUI; parentCommentId?: string } | undefined;
   getPostData: () => void;
   getCommentsReplies: (
     postId: string,
@@ -475,7 +475,7 @@ export const PostDetailContextProvider = ({
   };
 
   const handleEditComment = async (commentId) => {
-    const commentDetail = getCommentDetail(postDetail?.replies, commentId);
+    const { commentDetail } = getCommentDetail(postDetail?.replies, commentId);
     // converts the mentions route to mention values
     const convertedComment = routeToMentionConverter(
       commentDetail?.text ? commentDetail.text : ""
@@ -487,20 +487,23 @@ export const PostDetailContextProvider = ({
   };
 
   // this function gets the detail of comment whose menu item is clicked
-  const getCommentDetail = (
-    comments?: LMCommentUI[],
-    id?: string
-  ): LMCommentUI | undefined => {
+  const getCommentDetail = (comments?: LMCommentUI[], id?: string) => {
     const commentId = id ? id : selectedMenuItemCommentId;
+    let commentDetail;
     if (comments) {
       for (const reply of comments) {
         if (reply.id === commentId) {
-          return reply; // Found the reply in the current level
+          commentDetail = { commentDetail: reply };
+          return commentDetail; // Found the reply in the current level
         }
         if (reply.replies && reply.replies.length > 0) {
           const nestedReply = getCommentDetail(reply.replies, commentId);
           if (nestedReply) {
-            return nestedReply; // Found the reply in the child replies
+            commentDetail = {
+              commentDetail: nestedReply,
+              parentCommentId: reply?.id,
+            };
+            return commentDetail; // Found the reply in the child replies
           }
         }
       }

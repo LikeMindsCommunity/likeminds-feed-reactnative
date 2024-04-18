@@ -6,6 +6,6 @@ export class LMFeedAnalytics {
     eventProperties?: Map<string | undefined, string | undefined>
   ) {
     const lmFeedInterface = CallBack.lmFeedInterface;
-    lmFeedInterface.onEventTriggered(eventName, eventProperties);
+    lmFeedInterface?.onEventTriggered(eventName, eventProperties);
   }
 }

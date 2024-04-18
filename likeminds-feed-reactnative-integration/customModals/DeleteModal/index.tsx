@@ -37,7 +37,7 @@ import { showToastMessage } from "../../store/actions/toast";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../models/RootStackParamsList";
 import { LMCommentUI, LMPostUI } from "../../models";
-import { LMFeedAnalytics } from "../../analytics/LMChatAnalytics";
+import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Events } from "../../enums/Events";
 import { Keys } from "../../enums/Keys";
 import { getPostType } from "../../utils/analytics";
@@ -50,6 +50,7 @@ interface DeleteModalProps {
   postDetail: LMPostUI;
   commentDetail?: LMCommentUI;
   modalBackdropColor?: string;
+  parentCommentId?: string;
   navigation?: NativeStackNavigationProp<
     RootStackParamList,
     "PostDetail" | "UniversalFeed" | "PostsList"
@@ -63,6 +64,7 @@ const DeleteModal = ({
   postDetail,
   modalBackdropColor,
   commentDetail,
+  parentCommentId,
   navigation,
 }: DeleteModalProps) => {
   const dispatch = useAppDispatch();
@@ -140,8 +142,7 @@ const DeleteModal = ({
         commentId: commentDetail?.id ? commentDetail.id : "",
         postId: commentDetail?.postId ? commentDetail.postId : "",
       };
-      
-      
+
       displayModal(false);
       dispatch(deleteCommentStateHandler(payload));
       try {
@@ -156,16 +157,17 @@ const DeleteModal = ({
           )
         );
 
-        if(commentDetail?.level && commentDetail?.level > 0){
+        if (commentDetail?.level && commentDetail?.level > 0) {
           LMFeedAnalytics.track(
             Events.REPLY_DELETED,
             new Map<string, string>([
               [Keys.POST_ID, payload.postId],
-              [Keys.COMMENT_ID, payload.commentId]
-              [Keys.COMMENT_REPLY_ID, payload.commentId],
+              [Keys.COMMENT_ID, parentCommentId][
+                (Keys.COMMENT_REPLY_ID, payload.commentId)
+              ],
             ])
           );
-        }else{
+        } else {
           LMFeedAnalytics.track(
             Events.COMMENT_DELETED,
             new Map<string, string>([

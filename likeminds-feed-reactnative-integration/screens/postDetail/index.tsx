@@ -51,7 +51,7 @@ import {
   LMText,
 } from "../../uiComponents";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { LMFeedAnalytics } from "../../analytics/LMChatAnalytics";
+import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Events } from "../../enums/Events";
 import { Keys } from "../../enums/Keys";
 
@@ -81,7 +81,7 @@ interface PostDetailProps {
     event: {
       nativeEvent: { pageX: number; pageY: number };
     },
-    menuItems: LMMenuItemsUI,
+    menuItems: LMMenuItemsUI[],
     commentId: string
   ) => void;
 }
@@ -782,7 +782,10 @@ const PostDetailComponent = React.memo(() => {
           }
           deleteType={selectedMenuItemPostId ? POST_TYPE : COMMENT_TYPE}
           postDetail={postDetail}
-          commentDetail={getCommentDetail(postDetail?.replies)}
+          commentDetail={getCommentDetail(postDetail?.replies)?.commentDetail}
+          parentCommentId={
+            getCommentDetail(postDetail?.replies)?.parentCommentId
+          }
           navigation={navigation}
         />
       )}
@@ -793,7 +796,7 @@ const PostDetailComponent = React.memo(() => {
           closeModal={() => setShowReportModal(false)}
           reportType={selectedMenuItemPostId ? POST_TYPE : COMMENT_TYPE}
           postDetail={postDetail}
-          commentDetail={getCommentDetail(postDetail?.replies)}
+          commentDetail={getCommentDetail(postDetail?.replies)?.commentDetail}
         />
       )}
     </SafeAreaView>

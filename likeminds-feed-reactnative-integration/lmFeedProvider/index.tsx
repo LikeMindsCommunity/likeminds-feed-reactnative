@@ -23,10 +23,10 @@ export const LMFeedStylesContext = createContext<ThemeContextProps | undefined>(
   undefined
 );
 
-// Create a context for LMChatProvider
+// Create a context for LMFeedProvider
 const LMFeedContext = createContext<LMFeedClient | undefined>(undefined);
 
-// Create a hook to use the LMChatContext
+// Create a hook to use the LMFeedContext
 export const useLMFeed = () => {
   const context = useContext(LMFeedContext);
   if (!context) {

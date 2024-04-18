@@ -37,7 +37,7 @@ import { LMHeader, LMImage, LMLoader, LMVideo } from "../../components";
 import { LMIcon } from "../../uiComponents";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { LMMenuItemsUI, RootStackParamList } from "../../models";
-import { LMFeedAnalytics } from "../../analytics/LMChatAnalytics";
+import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Events } from "../../enums/Events";
 import { Keys } from "../../enums/Keys";
 import { notificationFeedClear } from "../../store/actions/notification";

@@ -41,7 +41,7 @@ import { LMPostUI } from "../../models";
 import { LMLoader } from "../../components";
 import { autoPlayPostVideo } from "../../store/actions/feed";
 import { Events } from "../../enums/Events";
-import { LMFeedAnalytics } from "../../analytics/LMChatAnalytics";
+import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Keys } from "../../enums/Keys";
 import { getPostType } from "../../utils/analytics";
 
