@@ -121,12 +121,13 @@ const LMNotificationFeedItem = React.memo(
                 styles.activityText,
                 notificationFeedStyle?.activityTextStyles,
               ])}
+              maxLines={2}
             >
               {activity.activityText.replace(/<<([^|]+)\|[^>]+>>/g, "$1")}
             </LMText>
             <LMText
               textStyle={StyleSheet.flatten([
-                notificationFeedStyle?.timestampTextStyles,
+                styles.notificationTimeStamp, notificationFeedStyle?.timestampTextStyles
               ])}
             >
               {timeStamp(Number(activity.updatedAt))} ago

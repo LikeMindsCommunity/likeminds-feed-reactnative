@@ -57,7 +57,6 @@ interface UniversalFeedProps {
   handleDeletePostProps: (
     visible: boolean,
     postId: string,
-    isCM: boolean
   ) => void;
   handleReportPostProps: (postId: string) => void;
   newPostButtonClickProps: () => void;

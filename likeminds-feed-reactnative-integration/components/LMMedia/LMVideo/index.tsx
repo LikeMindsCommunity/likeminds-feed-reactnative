@@ -83,6 +83,7 @@ const LMVideo = React.memo(
             resizeMode={boxFit ? boxFit : defaultStyles.videoStyle.resizeMode}
             playWhenInactive={false}
             playInBackground={false}
+            ignoreSilentSwitch="obey"
             style={StyleSheet.flatten([
               videoStyle,
               {

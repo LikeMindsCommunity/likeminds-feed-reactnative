@@ -32,6 +32,7 @@ import { useLMFeedStyles } from "../lmFeedProvider";
 import {
   addComment,
   addCommentStateHandler,
+  clearPostDetail,
   editComment,
   editCommentStateHandler,
   getComments,
@@ -842,6 +843,7 @@ export const PostDetailContextProvider = ({
   const handleScreenBackPress = () => {
     Keyboard.dismiss();
     navigation.goBack();
+    dispatch(clearPostDetail())
   };
 
   const contextValues: PostDetailContextValues = {

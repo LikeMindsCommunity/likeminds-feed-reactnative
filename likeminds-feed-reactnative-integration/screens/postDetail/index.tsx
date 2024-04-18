@@ -1,4 +1,5 @@
 import {
+  BackHandler,
   FlatList,
   Image,
   Keyboard,
@@ -10,7 +11,7 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import { POST_LIKES_LIST, UNIVERSAL_FEED } from "../../constants/screenNames";
 import {
   COMMENT_LIKES,
@@ -32,7 +33,7 @@ import {
 } from "../../utils";
 import { useLMFeedStyles } from "../../lmFeedProvider";
 import { useAppDispatch } from "../../store/store";
-import { clearComments } from "../../store/actions/postDetail";
+import { clearComments, clearPostDetail } from "../../store/actions/postDetail";
 import {
   PostDetailContextProvider,
   PostDetailContextValues,
@@ -213,6 +214,19 @@ const PostDetailComponent = React.memo(() => {
     }
   };
 
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        navigation.goBack()
+        dispatch(clearPostDetail())
+        return true;
+      }
+    );
+    return () => backHandler.remove();
+
+  }, [])
+
   return (
     <SafeAreaView edges={["left", "right", "top"]} style={styles.flexView}>
       <KeyboardAvoidingView
@@ -248,7 +262,8 @@ const PostDetailComponent = React.memo(() => {
           headingTextStyle={customScreenHeader?.headingTextStyle}
           headingViewStyle={customScreenHeader?.headingViewStyle}
         />
-       {postDetail?.id ? <>
+       {postDetail?.id != '' ? <>
+        {postDetail?.id ? <>
         {Object.keys(postDetail).length > 0 ? (
           <View
             style={StyleSheet.flatten([
@@ -735,7 +750,9 @@ const PostDetailComponent = React.memo(() => {
               }, // The mention style in the input
             },
           ]}
-        />
+        /></>: <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
+          <Text>Post not available</Text>
+          </View>}
       </KeyboardAvoidingView>
 
       {/* delete post modal */}

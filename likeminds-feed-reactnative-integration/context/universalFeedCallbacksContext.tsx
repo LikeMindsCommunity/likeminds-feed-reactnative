@@ -9,7 +9,7 @@ export interface UniversalFeedCallbacksContextProps {
   selectEditPostProp: (id: string) => void;
   onSelectCommentCountProp: (id: string) => void;
   onTapLikeCountProps: (id: string) => void;
-  handleDeletePostProps: (visible: boolean, postId: string, isCM: boolean) => void;
+  handleDeletePostProps: (visible: boolean, postId: string) => void;
   handleReportPostProps: (postId: string) => void;
   newPostButtonClickProps: () => void;
   onOverlayMenuClickProp: (event: {
@@ -26,7 +26,7 @@ export interface UniversalFeedCustomisableMethodsContext {
   selectEditPostProp: (id: string) => void;
   onSelectCommentCountProp: (id: string) => void;
   onTapLikeCountProps: (id: string) => void;
-  handleDeletePostProps: (visible: boolean, postId: string, isCM: boolean) => void;
+  handleDeletePostProps: (visible: boolean, postId: string) => void;
   handleReportPostProps: (postId: string) => void;
   newPostButtonClickProps: () => void;
   onOverlayMenuClickProp: (event: {
