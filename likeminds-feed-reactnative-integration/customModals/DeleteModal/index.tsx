@@ -103,7 +103,7 @@ const DeleteModal = ({
               !payload.deleteReason ? "Member" : "Community Manager",
             ],
             [Keys.UUID, postDetail?.user?.sdkClientInfo.uuid],
-            [Keys.POST_ID, payload.postId],
+            [Keys.POST_ID, payload?.postId],
             [Keys.POST_TYPE, getPostType(postDetail?.attachments)],
           ])
         );
@@ -140,6 +140,8 @@ const DeleteModal = ({
         commentId: commentDetail?.id ? commentDetail.id : "",
         postId: commentDetail?.postId ? commentDetail.postId : "",
       };
+      
+      
       displayModal(false);
       dispatch(deleteCommentStateHandler(payload));
       try {
@@ -159,7 +161,8 @@ const DeleteModal = ({
             Events.REPLY_DELETED,
             new Map<string, string>([
               [Keys.POST_ID, payload.postId],
-              [Keys.COMMENT_ID, payload.commentId],
+              [Keys.COMMENT_ID, payload.commentId]
+              [Keys.COMMENT_REPLY_ID, payload.commentId],
             ])
           );
         }else{

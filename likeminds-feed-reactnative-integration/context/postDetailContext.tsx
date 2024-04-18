@@ -118,6 +118,7 @@ export interface PostDetailContextValues {
   replyOnComment: {
     textInputFocus: false;
     commentId: string;
+    userId: string;
   };
   replyToUsername: "";
   localModalVisibility: boolean;
@@ -230,7 +231,6 @@ export const PostDetailContextProvider = ({
   navigation,
   route,
 }: PostDetailContextProps) => {
-  
   const dispatch = useAppDispatch();
   const postDetail = useAppSelector((state) => state.postDetail.postDetail);
   const [modalPosition, setModalPosition] = useState({
@@ -255,6 +255,7 @@ export const PostDetailContextProvider = ({
   const [replyOnComment, setReplyOnComment] = useState({
     textInputFocus: false,
     commentId: "",
+    userId: "",
   });
   const [replyToUsername, setReplyToUsername] = useState("");
   const [localModalVisibility, setLocalModalVisibility] =
@@ -437,7 +438,7 @@ export const PostDetailContextProvider = ({
         LMFeedAnalytics.track(
           event,
           new Map<string, string>([
-            [Keys.CREATED_BY_ID, postDetail.user.sdkClientInfo.uuid],
+            [Keys.CREATED_BY_ID, postDetail?.user?.sdkClientInfo?.uuid],
             [Keys.POST_ID, postId],
             [Keys.POST_TYPE, getPostType(postDetail?.attachments)],
           ])
@@ -455,7 +456,7 @@ export const PostDetailContextProvider = ({
       LMFeedAnalytics.track(
         Events.POST_EDITED,
         new Map<string, string>([
-          [Keys.UUID, postDetail.user.sdkClientInfo.uuid],
+          [Keys.UUID, postDetail?.user?.sdkClientInfo?.uuid],
           [Keys.POST_ID, postId],
           [Keys.POST_TYPE, getPostType(postDetail?.attachments)],
         ])
@@ -600,6 +601,13 @@ export const PostDetailContextProvider = ({
       )
     );
     Keyboard.dismiss();
+    LMFeedAnalytics.track(
+      Events.COMMENT_POSTED,
+      new Map<string, string>([
+        [Keys.POST_ID, postDetail?.id],
+        [Keys.COMMENT_ID, commentAddResponse?.comment?.Id],
+      ])
+    );
     return commentAddResponse;
   };
 
@@ -616,7 +624,7 @@ export const PostDetailContextProvider = ({
     };
     setShowRepliesOfCommentId(replyOnComment?.commentId);
     setCommentToAdd("");
-    setReplyOnComment({ textInputFocus: false, commentId: "" });
+    setReplyOnComment({ textInputFocus: false, commentId: "", userId: "" });
     setKeyboardFocusOnReply(false);
     setEditCommentFocus(false);
     setCommentFocus(false);
@@ -635,13 +643,23 @@ export const PostDetailContextProvider = ({
       )
     );
     Keyboard.dismiss();
+
+    LMFeedAnalytics.track(
+      Events.REPLY_POSTED,
+      new Map<string, string>([
+        [Keys.UUID, replyOnComment?.userId],
+        [Keys.POST_ID, postDetail?.id],
+        [Keys.COMMENT_ID, replyOnComment?.commentId],
+        [Keys.COMMENT_REPLY_ID, replyAddResponse?.comment?.Id],
+      ])
+    );
     return replyAddResponse;
   };
 
   // this useEffect handles the pagination of the comments
   useEffect(() => {
     getPostData();
-  }, [commentPageNumber,route.params[0]]);
+  }, [commentPageNumber, route.params[0]]);
 
   // this function is executed on the click of menu icon & handles the position and visibility of the modal
   const onOverlayMenuClick = (event: {
@@ -666,7 +684,7 @@ export const PostDetailContextProvider = ({
             onSelected: (postId, itemId) =>
               onMenuItemSelect(postId, itemId, postDetail?.isPinned),
           },
-          onOverlayMenuClick: (event) => onOverlayMenuClick(event)
+          onOverlayMenuClick: (event) => onOverlayMenuClick(event),
         }}
         // footer props
         footerProps={{
@@ -697,9 +715,12 @@ export const PostDetailContextProvider = ({
         }}
         mediaProps={{
           videoProps: {
-            autoPlay: postListStyle?.media?.video?.autoPlay != undefined? postListStyle?.media?.video?.autoPlay : true,
-            videoInFeed: false
-          }
+            autoPlay:
+              postListStyle?.media?.video?.autoPlay != undefined
+                ? postListStyle?.media?.video?.autoPlay
+                : true,
+            videoInFeed: false,
+          },
         }}
       />
     );

@@ -1,6 +1,6 @@
 export enum Keys {
   POST_ID = "post_id",
-  UUID = 'uuid',
+  UUID = "uuid",
   TYPE = "type",
   POST_TYPE = "post_type",
   FEED_TYPE = "feed_type",
@@ -30,4 +30,5 @@ export enum Keys {
   YES = "yes",
   NO = "no",
   TOPICS_ADDED = "topics_added",
+  UNIVERSAL_FEED = "universal_feed",
 }

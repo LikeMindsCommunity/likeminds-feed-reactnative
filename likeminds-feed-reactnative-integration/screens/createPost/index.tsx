@@ -551,48 +551,52 @@ const CreatePostComponent = () => {
                     postContentText
                   );
 
-              const map: Map<string | undefined, string | undefined> =
-                new Map();
-              const taggedUsers: any =
-                userTaggingDecoder(postContentText);
+              if (!postToEdit) {
+                const map: Map<string | undefined, string | undefined> =
+                  new Map();
+                const taggedUsers: any = userTaggingDecoder(postContentText);
 
-              const ogTags =
-                formattedLinkAttachments[0]?.attachmentMeta?.ogTags;
+                const ogTags =
+                  formattedLinkAttachments[0]?.attachmentMeta?.ogTags;
 
-              if (taggedUsers?.length > 0) {
-                map.set(Keys.USER_TAGGED, Keys.YES);
-                map.set(Keys.TAGGED_USER_COUNT, taggedUsers?.length.toString());
-                const taggedUserIds = taggedUsers
-                  .map((user) => user.route)
-                  .join(", ");
-                map.set(Keys.TAGGED_USER_UUID, taggedUserIds);
-              } else {
-                map.set(Keys.USER_TAGGED, Keys.NO);
+                if (taggedUsers?.length > 0) {
+                  map.set(Keys.USER_TAGGED, Keys.YES);
+                  map.set(
+                    Keys.TAGGED_USER_COUNT,
+                    taggedUsers?.length.toString()
+                  );
+                  const taggedUserIds = taggedUsers
+                    .map((user) => user.route)
+                    .join(", ");
+                  map.set(Keys.TAGGED_USER_UUID, taggedUserIds);
+                } else {
+                  map.set(Keys.USER_TAGGED, Keys.NO);
+                }
+
+                if (ogTags !== null) {
+                  map.set(Keys.LINK_ATTACHED, Keys.YES);
+                  map.set(Keys.LINK, ogTags?.url ?? "");
+                } else {
+                  map.set(Keys.LINK_ATTACHED, Keys.NO);
+                }
+
+                // TODO for Topic Feed
+                // if (topics !== null && topics.length > 0) {
+                //   const topicsNameString = topics
+                //     .map((topic) => topic.name)
+                //     .join(", ");
+                //   map.set(Keys.TOPICS_ADDED, Keys.YES);
+                //   map.set(Keys.TOPICS, topicsNameString);
+                // } else {
+                //   map.set(Keys.TOPICS_ADDED, Keys.NO);
+                // }
+
+                map.set(Keys.IMAGE_ATTACHED, Keys.NO);
+                map.set(Keys.VIDEO_ATTACHED, Keys.NO);
+                map.set(Keys.DOCUMENT_ATTACHED, Keys.NO);
+
+                LMFeedAnalytics.track(Events.POST_CREATION_COMPLETED, map);
               }
-
-              if (ogTags !== null) {
-                map.set(Keys.LINK_ATTACHED, Keys.YES);
-                map.set(Keys.LINK, ogTags.url ?? "");
-              } else {
-                map.set(Keys.LINK_ATTACHED, Keys.NO);
-              }
-
-              // TODO for Topic Feed
-              // if (topics !== null && topics.length > 0) {
-              //   const topicsNameString = topics
-              //     .map((topic) => topic.name)
-              //     .join(", ");
-              //   map.set(Keys.TOPICS_ADDED, Keys.YES);
-              //   map.set(Keys.TOPICS, topicsNameString);
-              // } else {
-              //   map.set(Keys.TOPICS_ADDED, Keys.NO);
-              // }
-
-              map.set(Keys.IMAGE_ATTACHED, Keys.NO);
-              map.set(Keys.VIDEO_ATTACHED, Keys.NO);
-              map.set(Keys.DOCUMENT_ATTACHED, Keys.NO);
-
-              LMFeedAnalytics.track(Events.POST_CREATION_COMPLETED, map);
             }}
           >
             {customCreatePostScreenHeader?.rightComponent ? (
