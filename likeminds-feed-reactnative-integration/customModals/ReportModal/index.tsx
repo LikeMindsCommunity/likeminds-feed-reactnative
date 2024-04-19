@@ -119,12 +119,15 @@ const ReportModal = ({
       );
       // toast message action
       if (postReportResponse) {
+        let reportReason = reportTags.find((item) => item?.id === selectedId);
         let params = {
           reportType: reportType,
           createdByUuid: postDetail?.user.sdkClientInfo.uuid,
           postId: postDetail?.id,
           reportReason:
-            selectedId !== -1 ? reportTags[selectedId] : otherReason,
+            selectedId !== -1 && selectedId !== 11
+              ? reportReason?.name
+              : otherReason,
           postType: getPostType(postDetail?.attachments),
           commentId: commentDetail ? commentDetail?.id : undefined,
           commentReplyId:

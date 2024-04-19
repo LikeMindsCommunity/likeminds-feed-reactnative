@@ -41,6 +41,7 @@ import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Events } from "../../enums/Events";
 import { Keys } from "../../enums/Keys";
 import { getPostType } from "../../utils/analytics";
+import { UNIVERSAL_FEED } from "../../constants/screenNames";
 
 // delete modal's props
 interface DeleteModalProps {
@@ -110,7 +111,13 @@ const DeleteModal = ({
           ])
         );
         setDeletionReason("");
-        navigation?.goBack();
+        if(navigation){
+          const routes = navigation?.getState()?.routes;
+          const routesLength = routes?.length
+          if(routesLength > 0 && routes[routesLength - 1]?.name !== UNIVERSAL_FEED){
+            navigation?.goBack()
+          }
+        }
         dispatch(
           showToastMessage({
             isToast: true,

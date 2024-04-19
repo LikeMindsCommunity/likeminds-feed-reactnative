@@ -12,7 +12,7 @@ export async function validateRegisterDeviceRequest(
   const params = {
     token: request.token,
   };
-  await fetch('https://betaauth.likeminds.community/user/device/push', {
+  await fetch('https://auth.likeminds.community/user/device/push', {
     method: 'POST',
     headers: {
       'x-device-id': request.deviceId,
