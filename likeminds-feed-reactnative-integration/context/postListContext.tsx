@@ -108,7 +108,7 @@ export interface PostListContextValues {
   onTapLikeCount: (id: string) => void;
   onOverlayMenuClick: (event: {
     nativeEvent: { pageX: number; pageY: number };
-  }) => void;
+  }, postId: string) => void;
 }
 
 const PostListContext = createContext<PostListContextValues | undefined>(
@@ -258,7 +258,8 @@ export const PostListContextProvider = ({
   // this function is executed on the click of menu icon & handles the position and visibility of the modal
   const onOverlayMenuClick = (event: {
     nativeEvent: { pageX: number; pageY: number };
-  }) => {
+  }, postId : string) => {
+    setSelectedMenuItemPostId(postId)
     const { pageX, pageY } = event.nativeEvent;
     setShowActionListModal(true);
     setModalPosition({ x: pageX, y: pageY });

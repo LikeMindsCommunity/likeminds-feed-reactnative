@@ -11,6 +11,7 @@ import React, {
 import { useAppDispatch, useAppSelector } from "../store/store";
 
 import {
+  COMMENT_TYPE,
   DELETE_COMMENT_MENU_ITEM,
   DELETE_POST_MENU_ITEM,
   EDIT_COMMENT_MENU_ITEM,
@@ -20,6 +21,7 @@ import {
   POST_LIKES,
   POST_PIN_SUCCESS,
   POST_SAVED_SUCCESS,
+  POST_TYPE,
   POST_UNPIN_SUCCESS,
   POST_UNSAVED_SUCCESS,
   REPORT_COMMENT_MENU_ITEM,
@@ -134,6 +136,8 @@ export interface PostDetailContextValues {
   navigatedFromComments: boolean;
   isKeyboardVisible: boolean;
   keyboardFocusOnReply: boolean;
+  overlayMenuType: string;
+  setOverlayMenuType:  Dispatch<SetStateAction<string>>;
   setKeyboardFocusOnReply: Dispatch<SetStateAction<boolean>>;
   setModalPositionComment: Dispatch<SetStateAction<{ x: number; y: number }>>;
   setModalPosition: Dispatch<SetStateAction<{ x: number; y: number }>>;
@@ -164,7 +168,6 @@ export interface PostDetailContextValues {
   setShowActionListModal: Dispatch<SetStateAction<boolean>>;
   onRefresh: () => void;
   closePostActionListModal: () => void;
-  closeCommentActionListModal: () => void;
   postLikeHandler: (id: string) => void;
   debouncedLikeFunction: (id: string) => void;
   debouncedSaveFunction: (id: string, saved?: boolean) => void;
@@ -204,7 +207,7 @@ export interface PostDetailContextValues {
   handleScreenBackPress: () => void;
   onCommentOverflowMenuClick: (event: {
     nativeEvent: { pageX: number; pageY: number };
-  }) => void;
+  }, commentId:string) => void;
 }
 
 const PostDetailContext = createContext<PostDetailContextValues | undefined>(
@@ -279,6 +282,7 @@ export const PostDetailContextProvider = ({
   );
   const isKeyboardVisible = Keyboard.isVisible();
   const [showRepliesOfCommentId, setShowRepliesOfCommentId] = useState("");
+  const [overlayMenuType, setOverlayMenuType] = useState('')
 
   const LMFeedContextStyles = useLMFeedStyles();
   const { postListStyle } = LMFeedContextStyles;
@@ -307,18 +311,15 @@ export const PostDetailContextProvider = ({
     setShowActionListModal(false);
   };
 
-  // this function closes the comment action list modal
-  const closeCommentActionListModal = () => {
-    setShowCommentActionListModal(false);
-  };
-
   // this function is executed on the click of menu icon & handles the position and visibility of the modal
   const onCommentOverflowMenuClick = (event: {
     nativeEvent: { pageX: number; pageY: number };
-  }) => {
+  }, commentId: string) => {
+    setOverlayMenuType(COMMENT_TYPE)
+    setSelectedMenuItemCommentId(commentId)
     const { pageX, pageY } = event.nativeEvent;
-    setShowCommentActionListModal(true);
-    setModalPositionComment({ x: pageX, y: pageY });
+    setShowActionListModal(true);
+    setModalPosition({ x: pageX, y: pageY });
   };
 
   // debounce on like post function
@@ -623,7 +624,9 @@ export const PostDetailContextProvider = ({
   // this function is executed on the click of menu icon & handles the position and visibility of the modal
   const onOverlayMenuClick = (event: {
     nativeEvent: { pageX: number; pageY: number };
-  }) => {
+  }, postId:string) => {
+    setOverlayMenuType(POST_TYPE)
+    setSelectedMenuItemPostId(postId)
     const { pageX, pageY } = event.nativeEvent;
     setShowActionListModal(true);
     setModalPosition({ x: pageX, y: pageY });
@@ -636,14 +639,7 @@ export const PostDetailContextProvider = ({
         post={postDetail}
         // header props
         headerProps={{
-          postMenu: {
-            modalPosition: modalPosition,
-            modalVisible: showActionListModal,
-            onCloseModal: closePostActionListModal,
-            onSelected: (postId, itemId) =>
-              onMenuItemSelect(postId, itemId, postDetail?.isPinned),
-          },
-          onOverlayMenuClick: (event) => onOverlayMenuClick(event)
+          onOverlayMenuClick: (event) => onOverlayMenuClick(event, postDetail?.id)
         }}
         // footer props
         footerProps={{
@@ -908,7 +904,6 @@ export const PostDetailContextProvider = ({
     setShowActionListModal,
     onRefresh,
     closePostActionListModal,
-    closeCommentActionListModal,
     postLikeHandler,
     debouncedLikeFunction,
     debouncedSaveFunction,
@@ -937,6 +932,8 @@ export const PostDetailContextProvider = ({
     setModalPositionComment,
     setModalPosition,
     onCommentOverflowMenuClick,
+    overlayMenuType,
+    setOverlayMenuType,
   };
 
   return (

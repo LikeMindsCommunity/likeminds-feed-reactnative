@@ -1,7 +1,6 @@
 import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import React, { useState } from "react";
 import { timeStamp } from "../../../utils";
-import LMPostMenu from "../LMPostMenu";
 import { LMIcon, LMText, LMProfilePicture } from "../../../uiComponents";
 import { nameInitials } from "../../../utils";
 import { styles } from "./styles";
@@ -17,12 +16,6 @@ const LMPostHeader = React.memo(() => {
   const customPostHeaderStyle = postListStyle?.header
   const memberData = useAppSelector((state) => state.login.member);
 
-  const [modalPosition, setModalPosition] = useState(
-    headerProps?.postMenu?.modalPosition
-  );
-  const [showPostMenuModal, setShowPostMenuModal] = useState(
-    headerProps?.postMenu?.modalVisible
-  );
   const showMenuIcon =
     customPostHeaderStyle?.showMenuIcon != undefined
       ? customPostHeaderStyle?.showMenuIcon
@@ -32,10 +25,6 @@ const LMPostHeader = React.memo(() => {
       ? customPostHeaderStyle?.showMemberStateLabel
       : true;
 
-  // this function closes the menu list modal
-  const closePostMenuModal = () => {
-    headerProps?.postMenu?.onCloseModal();
-  };
 
   // this function is executed on the click of menu icon & handles the position and visibility of the modal
   const onThreedotsClick = (event: {
@@ -211,18 +200,6 @@ const LMPostHeader = React.memo(() => {
         </TouchableOpacity>
       </View>
 
-      {/* menu list modal */}
-      <LMPostMenu
-        postId={post?.id}
-        menuItems={post?.menuItems}
-        onSelected={headerProps?.postMenu?.onSelected}
-        modalPosition={headerProps?.postMenu?.modalPosition}
-        modalVisible={ headerProps?.postMenu?.modalVisible}
-        onCloseModal={closePostMenuModal}
-        menuItemTextStyle={customPostHeaderStyle?.postMenu?.menuItemTextStyle}
-        menuViewStyle={customPostHeaderStyle?.postMenu?.menuViewStyle}
-        backdropColor={customPostHeaderStyle?.postMenu?.backdropColor}
-      />
     </View>
   );
 });

@@ -73,7 +73,7 @@ const Feed = ({route}) => {
   };
   const customOverlayMenuCick = (event, menuItems, postId) => {
     console.log('before menuItemClick', menuItems, postId);
-    onOverlayMenuClick(event);
+    onOverlayMenuClick(event, postId);
     console.log('after menuItemClick');
   };
   const customNotificationBellTap = () => {
@@ -104,7 +104,7 @@ const Feed = ({route}) => {
 
   /// Setup notifications
   useEffect(() => {
-   token().then((res) => {        
+   token().then((res) => {            
      if (!!res) {
       setFCMToken(res);
     }

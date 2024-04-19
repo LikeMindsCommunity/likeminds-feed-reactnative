@@ -65,7 +65,7 @@ interface UniversalFeedProps {
     event: {
       nativeEvent: { pageX: number; pageY: number };
     },
-    menuItems: LMMenuItemsUI,
+    menuItems: LMMenuItemsUI[],
     postId: string
   ) => void;
   onTapNotificationBellProp: () => void;
