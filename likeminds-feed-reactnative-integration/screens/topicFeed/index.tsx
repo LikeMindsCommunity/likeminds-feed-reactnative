@@ -5,14 +5,17 @@ import { styles } from "./styles";
 import STYLES from "../../constants/Styles";
 import {
   ActivityIndicator,
+  FlatList,
   Image,
   Text,
   TextInput,
+  TextStyle,
   TouchableOpacity,
   View,
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
+import { useAppSelector } from "../../store/store";
 
 const TopicFeed = () => {
   const myClient = Client.myClient;
@@ -22,6 +25,7 @@ const TopicFeed = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [count, setCount] = useState(1);
   const [page, setPage] = useState(1);
+  const user = useAppSelector((state: any) => state.login.member);
 
   const navigation = useNavigation<StackNavigationProp<any>>();
 
@@ -204,6 +208,42 @@ const TopicFeed = () => {
     }
   }, [isSearch]);
 
+  async function updateData(newPage: number) {
+    const payload: any = {
+      isEnabled: false,
+      search: search,
+      searchType: null,
+      page: newPage,
+      pageSize: 10,
+    };
+    const response = await myClient?.getTopics(payload);
+    return response?.data;
+  }
+
+  const loadData = async (newPage: number) => {
+    setIsLoading(true);
+    const res = await updateData(newPage);
+    if (res) {
+      setTopics([...topics, ...res?.topics]);
+      setIsLoading(false);
+    }
+  };
+
+  const handleLoadMore = async () => {
+    if (!isLoading) {
+      const arr = topics;
+      if (
+        arr?.length % 10 === 0 &&
+        arr?.length > 0 &&
+        arr?.length === 10 * page
+      ) {
+        const newPage = page + 1;
+        loadData(newPage);
+        setPage(newPage);
+      }
+    }
+  };
+
   const renderFooter = () => {
     return isLoading ? (
       <View style={{ paddingVertical: Layout.normalize(20) }}>
@@ -212,9 +252,97 @@ const TopicFeed = () => {
     ) : null;
   };
 
+  const LoaderComponent = () => {
+    return (
+      <View
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: 0,
+          bottom: 0,
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "white",
+          opacity: 0.5,
+        }}
+      >
+        <ActivityIndicator size="large" color={STYLES.$COLORS.SECONDARY} />
+      </View>
+    );
+  };
+
   return (
     <View style={styles.page}>
-      {/* <Text style={{color:'black',fontSize:24}}>hey there</Text> */}
+      <FlatList
+        data={topics}
+        extraData={{
+          value: [user, topics],
+        }}
+        renderItem={({ item }: any) => {
+          return (
+            <View key={item?.id} style={styles.participants}>
+              <Image
+                source={
+                  item?.imageUrl
+                    ? { uri: item?.imageUrl }
+                    : require("../../assets/images/default_pic.png")
+                }
+                style={styles.avatar}
+              />
+              <View style={styles.infoContainer}>
+                <Text
+                  style={
+                    [
+                      styles.title,
+                      // userNameStyles?.color && {
+                      //   color: userNameStyles?.color,
+                      // },
+                      // userNameStyles?.fontSize && {
+                      //   fontSize: userNameStyles?.fontSize,
+                      // },
+                      // userNameStyles?.fontFamily && {
+                      //   fontFamily: userNameStyles?.fontFamily,
+                      // },
+                    ] as TextStyle
+                  }
+                  numberOfLines={1}
+                >
+                  {item?.name}
+                  {item?.customTitle ? (
+                    <Text
+                      style={
+                        [
+                          styles.messageCustomTitle,
+                          // userTitleStyles?.color && {
+                          //   color: userTitleStyles?.color,
+                          // },
+                          // userTitleStyles?.fontSize && {
+                          //   fontSize: userTitleStyles?.fontSize,
+                          // },
+                          // userTitleStyles?.fontFamily && {
+                          //   fontFamily: userTitleStyles?.fontFamily,
+                          // },
+                        ] as TextStyle
+                      }
+                    >{` • ${item?.customTitle}`}</Text>
+                  ) : null}
+                </Text>
+              </View>
+            </View>
+          );
+        }}
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.1}
+        ListFooterComponent={renderFooter}
+        keyExtractor={(item: any) => item?.id?.toString()}
+      />
+      {topics?.length === 0 && (
+        <View style={[styles.justifyCenter]}>
+          <Text style={styles.title}>No search results found</Text>
+        </View>
+      )}
+      {count > 0 && <LoaderComponent />}
     </View>
   );
 };
