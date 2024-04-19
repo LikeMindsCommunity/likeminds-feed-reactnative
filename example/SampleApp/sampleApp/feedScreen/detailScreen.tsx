@@ -47,7 +47,7 @@ const DetailScreen = ({navigation}) => {
   };
   const customCommentOverlayMenuCick = (event, menuItems, commentId) => {
     console.log('before comment menuItemClick',commentId, menuItems);
-    onCommentOverflowMenuClick(event);
+    onCommentOverflowMenuClick(event, commentId);
     console.log('after comment menuItemClick');
   };
   return (

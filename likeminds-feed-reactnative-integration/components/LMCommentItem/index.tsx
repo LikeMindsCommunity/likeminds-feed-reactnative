@@ -15,7 +15,6 @@ import {
   PARENT_LEVEL_COMMENT,
   VIEW_MORE_TEXT,
 } from "../../constants/Strings";
-import LMPostMenu from "../LMPost/LMPostMenu";
 import LMLoader from "../LMLoader";
 import { LMCommentUI } from "../../models";
 import { styles } from "./styles";
@@ -38,7 +37,6 @@ const LMCommentItem = React.memo(
     timeStampStyle,
     viewMoreRepliesProps,
     onTapReplies,
-    commentMenu,
     isRepliesVisible,
     onCommentOverflowMenuClick
   }: LMCommentProps) => {
@@ -55,12 +53,6 @@ const LMCommentItem = React.memo(
     );
     const [repliesArray, setRepliesArray] = useState<LMCommentUI[]>([]);
     const [replyPageNumber, setReplyPageNumber] = useState(2);
-    const [modalPosition, setModalPosition] = useState(
-      commentMenu?.modalPosition
-    );
-    const [showPostMenuModal, setShowPostMenuModal] = useState(
-      commentMenu?.modalVisible
-    );
     const customLikeIcon = likeIconButton?.icon
 
     // this handles the show more functionality
@@ -123,14 +115,9 @@ const LMCommentItem = React.memo(
     // this function is executed on the click of menu icon & handles the position and visibility of the modal
     const onOverflowMenuClick = (event: {
       nativeEvent: { pageX: number; pageY: number };
-    }) => {
-      onCommentOverflowMenuClick(event)   
+    },commentId:string) => {
+      onCommentOverflowMenuClick(event, commentId)   
       menuIcon && menuIcon?.onTap();
-    };
-
-    // this function closes the menu list modal
-    const closeCommentMenuModal = () => {
-      commentMenu?.onCloseModal();
     };
 
     // this sets the comment's like value and likeCount locally
@@ -186,8 +173,8 @@ const LMCommentItem = React.memo(
           {/* menu icon */}
           {comment?.menuItems?.length > 0 && (
             <LMButton
-              onTap={onOverflowMenuClick}
-              icon={{
+            onTap={(event) => onOverflowMenuClick(event, comment?.id)}
+            icon={{
                 assetPath: menuIcon?.icon?.assetPath
                   ? menuIcon.icon.assetPath
                   : require("../../assets/images/three_dots3x.png"),
@@ -375,16 +362,8 @@ const LMCommentItem = React.memo(
                           likeTextButton={{
                             onTap: () => likeTextButton?.onTap(item?.id),
                           }}
-                          commentMenu={{
-                            postId: item?.id,
-                            menuItems: item?.menuItems,
-                            modalPosition: commentMenu.modalPosition,
-                            modalVisible: commentMenu.modalVisible,
-                            onCloseModal: commentMenu.onCloseModal,
-                            onSelected: (commentId, itemId) =>
-                              commentMenu.onSelected(commentId, itemId),
-                          }}
-                          onCommentOverflowMenuClick={onCommentOverflowMenuClick}
+                        
+                          onCommentOverflowMenuClick={(event) => onOverflowMenuClick(event, item?.id)}
                         />
                       )}
                     </>
@@ -438,18 +417,6 @@ const LMCommentItem = React.memo(
           </View>
         )}
 
-        {/* menu list modal */}
-        <LMPostMenu
-          postId={comment?.id}
-          menuItems={comment?.menuItems}
-          onSelected={commentMenu?.onSelected}
-          modalPosition={commentMenu?.modalPosition}
-          modalVisible={commentMenu?.modalVisible}
-          onCloseModal={closeCommentMenuModal}
-          menuItemTextStyle={commentMenu?.menuItemTextStyle}
-          menuViewStyle={commentMenu?.menuViewStyle}
-          backdropColor={commentMenu?.backdropColor}
-        />
       </View>
     );
   }

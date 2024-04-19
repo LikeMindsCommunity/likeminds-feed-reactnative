@@ -1,4 +1,4 @@
-import { LMActivityUI } from "models";
+import { LMActivityUI } from "../../models";
 import { convertNotificationsFeed } from "../../viewDataModels";
 import {
   MARK_READ_NOTIFICATION_SUCCESS,
@@ -60,7 +60,7 @@ export function notificationReducer(state = initialState, action) {
       const { users = {} } = action.body;
       // model converter function
       const notifications = convertNotificationsFeed(action.body);
-      return { ...state, feed: notifications, users: users };
+      return { ...state, activities: notifications, users: users };
     }
     default:
       return state;

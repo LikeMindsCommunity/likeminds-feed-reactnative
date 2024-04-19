@@ -52,6 +52,7 @@ import {
   LMText,
 } from "../../uiComponents";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import LMPostMenu from "../../customModals/LMPostMenu";
 
 interface PostDetailProps {
   children: React.ReactNode;
@@ -131,7 +132,6 @@ const PostDetailComponent = React.memo(() => {
     modalPositionComment,
     localModalVisibility,
     showCommentActionListModal,
-    closeCommentActionListModal,
     commentLikeHandler,
     setCommentPageNumber,
     commentPageNumber,
@@ -168,7 +168,12 @@ const PostDetailComponent = React.memo(() => {
     handleReportComment,
     handleEditComment,
     handleScreenBackPress,
-    onCommentOverflowMenuClick
+    onCommentOverflowMenuClick,
+    modalPosition,
+    showActionListModal,
+    closePostActionListModal,
+    onMenuItemSelect,
+    overlayMenuType
   }: PostDetailContextValues = usePostDetailContext();
 
   const LMFeedContextStyles = useLMFeedStyles();
@@ -392,22 +397,6 @@ const PostDetailComponent = React.memo(() => {
                                     ?.textStyle
                                 : styles.viewMoreText,
                             }}
-                            // comment menu item props
-                            commentMenu={{
-                              postId: item?.id,
-                              menuItems: item?.menuItems,
-                              modalPosition: modalPositionComment,
-                              modalVisible: showCommentActionListModal,
-                              onCloseModal: closeCommentActionListModal,
-                              onSelected: (commentId, itemId) =>
-                                onCommentMenuItemSelect(commentId, itemId),
-                              menuItemTextStyle:
-                                postHeaderStyle?.postMenu?.menuItemTextStyle,
-                              menuViewStyle:
-                                postHeaderStyle?.postMenu?.menuViewStyle,
-                              backdropColor:
-                                postHeaderStyle?.postMenu?.backdropColor,
-                            }}
                             menuIcon={{
                               ...postHeaderStyle?.menuIcon,
                               onTap: () => {
@@ -456,7 +445,7 @@ const PostDetailComponent = React.memo(() => {
                             timeStampStyle={
                               customCommentItemStyle?.timeStampStyle
                             }
-                            onCommentOverflowMenuClick={(event) => {onCommentOverflowMenuClickProp ? onCommentOverflowMenuClickProp(event, item?.menuItems, item?.id) : onCommentOverflowMenuClick(event)}}
+                            onCommentOverflowMenuClick={(event, commentId) => {onCommentOverflowMenuClickProp ? onCommentOverflowMenuClickProp(event, item?.menuItems, commentId) : onCommentOverflowMenuClick(event, commentId)}}
                           />
                         )}
                       </>
@@ -780,6 +769,20 @@ const PostDetailComponent = React.memo(() => {
           commentDetail={getCommentDetail(postDetail?.replies)}
         />
       )}
+       {/* menu list modal */}
+       {showActionListModal && <LMPostMenu
+         post={overlayMenuType === POST_TYPE ? postDetail : getCommentDetail(postDetail?.replies)}
+         onSelected={(postId, itemId, isPinned) =>
+           {
+             overlayMenuType === POST_TYPE ?  onMenuItemSelect(postId, itemId, isPinned): onCommentMenuItemSelect(postId, itemId)
+            }}
+        modalPosition={modalPosition}
+        modalVisible={ showActionListModal}
+        onCloseModal={closePostActionListModal}
+        menuItemTextStyle={postListStyle?.header?.postMenu?.menuItemTextStyle}
+        menuViewStyle={postListStyle?.header?.postMenu?.menuViewStyle}
+        backdropColor={postListStyle?.header?.postMenu?.backdropColor}
+      />}
     </SafeAreaView>
   );
 });

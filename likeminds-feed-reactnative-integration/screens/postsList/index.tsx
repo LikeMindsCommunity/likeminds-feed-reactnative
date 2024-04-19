@@ -43,6 +43,7 @@ import LMPost from "../../components/LMPost/LMPost";
 import { LMPostUI } from "../../models";
 import { LMLoader } from "../../components";
 import { autoPlayPostVideo } from "../../store/actions/feed";
+import LMPostMenu from "../../customModals/LMPostMenu";
 
 const PostsList = ({ route, children }: any) => {
   const {
@@ -146,15 +147,7 @@ const onMenuItemSelect = (
                   post={item}
                   // header props
                   headerProps={{
-                    postMenu: {
-                      modalPosition: modalPosition,
-                      modalVisible: showActionListModal,
-                      onCloseModal: closePostActionListModal,
-                      onSelected: (postId, itemId) =>
-                       {
-                       onMenuItemSelect(postId, itemId, item?.isPinned)},
-                    },
-                    onOverlayMenuClick: (event) => {onOverlayMenuClickProp ? onOverlayMenuClickProp(event,item?.menuItems, item?.id) : onOverlayMenuClick(event)}
+                    onOverlayMenuClick: (event) => {onOverlayMenuClickProp ? onOverlayMenuClickProp(event,item?.menuItems, item?.id) : onOverlayMenuClick(event, item.id)}
                   }}
                   // footer props
                   footerProps={{
@@ -238,6 +231,19 @@ const onMenuItemSelect = (
           postDetail={getPostDetail()}
         />
       )}
+      {/* menu list modal */}
+      {showActionListModal && <LMPostMenu
+        post={getPostDetail()}
+        onSelected={(postId, itemId, isPinned) =>
+          {
+          onMenuItemSelect(postId, itemId, isPinned)}}
+        modalPosition={modalPosition}
+        modalVisible={ showActionListModal}
+        onCloseModal={closePostActionListModal}
+        menuItemTextStyle={postListStyle?.header?.postMenu?.menuItemTextStyle}
+        menuViewStyle={postListStyle?.header?.postMenu?.menuViewStyle}
+        backdropColor={postListStyle?.header?.postMenu?.backdropColor}
+      />}
     </>
   );
 };
