@@ -25,7 +25,9 @@ const TopicFeed = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [count, setCount] = useState(1);
   const [page, setPage] = useState(1);
-  const user = useAppSelector((state: any) => state.login.member);
+  const [selectedTopics, setSelectedTopics] = useState([] as any);
+  const [searchedTopics, setsearchedTopics] = useState([] as any);
+  const [searchPage, setSearchPage] = useState(1);
 
   const navigation = useNavigation<StackNavigationProp<any>>();
 
@@ -54,7 +56,7 @@ const TopicFeed = () => {
                   fontFamily: STYLES.$FONT_TYPES.BOLD,
                 }}
               >
-                {"Participants"}
+                {"Select Topic"}
               </Text>
               {/* <Text
                 style={{
@@ -137,17 +139,17 @@ const TopicFeed = () => {
     });
   };
 
-  const fetchParticipants = async () => {
+  const fetchTopics = async () => {
     const apiRes = await myClient?.getTopics({
-      isEnabled: false,
+      isEnabled: true,
       search: search,
-      searchType: null,
+      searchType: "name",
       page: 1,
       pageSize: 10,
     } as any);
-    console.log("apiRes", apiRes);
-
     const res = apiRes?.data;
+    console.log("res", res);
+
     // LMChatAnalytics.track(
     //   Events.VIEW_CHATROOM_PARTICIPANTS,
     //   new Map<string, string>([
@@ -160,9 +162,9 @@ const TopicFeed = () => {
     setCount(0);
     if (!!res && res?.topics.length === 10) {
       const apiResponse = await myClient?.getTopics({
-        isEnabled: false,
+        isEnabled: true,
         search: search,
-        searchType: null,
+        searchType: "name",
         page: 2,
         pageSize: 10,
       } as any);
@@ -173,7 +175,7 @@ const TopicFeed = () => {
   };
 
   useLayoutEffect(() => {
-    fetchParticipants();
+    fetchTopics();
     setInitialHeader();
   }, [navigation]);
 
@@ -194,7 +196,7 @@ const TopicFeed = () => {
   useEffect(() => {
     const delay = setTimeout(() => {
       if (isSearch) {
-        fetchParticipants();
+        fetchTopics();
       }
     }, 500);
     return () => clearTimeout(delay);
@@ -210,9 +212,9 @@ const TopicFeed = () => {
 
   async function updateData(newPage: number) {
     const payload: any = {
-      isEnabled: false,
+      isEnabled: true,
       search: search,
-      searchType: null,
+      searchType: "name",
       page: newPage,
       pageSize: 10,
     };
@@ -276,20 +278,22 @@ const TopicFeed = () => {
     <View style={styles.page}>
       <FlatList
         data={topics}
-        extraData={{
-          value: [user, topics],
-        }}
         renderItem={({ item }: any) => {
           return (
-            <View key={item?.id} style={styles.participants}>
-              <Image
-                source={
-                  item?.imageUrl
-                    ? { uri: item?.imageUrl }
-                    : require("../../assets/images/default_pic.png")
+            <TouchableOpacity
+              onPress={() => {
+                if (!selectedTopics.includes(item?.Id)) {
+                  setSelectedTopics([...selectedTopics, item?.Id]);
+                } else {
+                  const filteredArr = selectedTopics.filter((val: any) => {
+                    return val !== item?.Id;
+                  });
+                  setSelectedTopics([...filteredArr]);
                 }
-                style={styles.avatar}
-              />
+              }}
+              key={item?.Id}
+              style={styles.participants}
+            >
               <View style={styles.infoContainer}>
                 <Text
                   style={
@@ -329,19 +333,48 @@ const TopicFeed = () => {
                   ) : null}
                 </Text>
               </View>
-            </View>
+              <View>
+                {selectedTopics.includes(item?.Id) ? (
+                  <View style={styles.selected}>
+                    <Image
+                      source={require("../../assets/images/white_tick3x.png")}
+                      style={styles.smallIcon}
+                    />
+                  </View>
+                ) : null}
+              </View>
+            </TouchableOpacity>
           );
+        }}
+        extraData={{
+          value: [searchedTopics, topics, selectedTopics],
         }}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.1}
         ListFooterComponent={renderFooter}
-        keyExtractor={(item: any) => item?.id?.toString()}
+        keyExtractor={(item: any) => item?.Id?.toString()}
       />
-      {topics?.length === 0 && (
+      {isSearch && searchedTopics?.length === 0 && (
         <View style={[styles.justifyCenter]}>
           <Text style={styles.title}>No search results found</Text>
         </View>
       )}
+
+      {selectedTopics.length > 0 ? (
+        <TouchableOpacity
+          onPress={() => {
+            if (selectedTopics.length > 0) {
+              // sendInvites();
+            }
+          }}
+          style={styles.sendBtn}
+        >
+          <Image
+            source={require("../../assets/images/send_arrow3x.png")}
+            style={styles.sendIcon}
+          />
+        </TouchableOpacity>
+      ) : null}
       {count > 0 && <LoaderComponent />}
     </View>
   );
