@@ -35,7 +35,7 @@ import {
  * @param data: [GetFeedResponse]
  * @returns list of [LMPostUI]
  */
-export function convertUniversalFeedPosts(data: GetFeedResponse): LMPostUI[] {
+export function convertUniversalFeedPosts(data: any): LMPostUI[] {
   const postData = data.posts;
   const userData = data.users;
   return postData?.map((item: IPost) => {
