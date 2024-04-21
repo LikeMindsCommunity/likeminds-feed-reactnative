@@ -1,14 +1,16 @@
 import React from 'react';
 import {
-  PostDetailContextProvider,
   TopicFeed,
+  UniversalFeedContextProvider,
 } from '@likeminds.community/feed-rn-core';
 
 const TopicFeedWrapper = ({navigation, route}) => {
+  console.log('heree');
+
   return (
-    <PostDetailContextProvider navigation={navigation} route={route}>
+    <UniversalFeedContextProvider navigation={navigation} route={route}>
       <TopicFeed />
-    </PostDetailContextProvider>
+    </UniversalFeedContextProvider>
   );
 };
 

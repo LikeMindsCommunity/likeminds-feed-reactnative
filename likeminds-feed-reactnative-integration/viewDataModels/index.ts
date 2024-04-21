@@ -6,18 +6,30 @@ import {
   IOgTag,
   IPost,
   IUser,
-} from '@likeminds.community/feed-js';
-import {GetPostLikesResponse} from '@likeminds.community/feed-js/dist/post/model/GetPostLikesResponse';
-import Like from '@likeminds.community/feed-js/dist/post/model/Like';
-import {DocumentMetaData, ImageVideoMetaData} from '../models/addPostMetaData';
+} from "@likeminds.community/feed-js-beta";
+import { GetPostLikesResponse } from "@likeminds.community/feed-js-beta/dist/post/model/GetPostLikesResponse";
+import Like from "@likeminds.community/feed-js-beta/dist/post/model/Like";
+import {
+  DocumentMetaData,
+  ImageVideoMetaData,
+} from "../models/addPostMetaData";
 import {
   DOCUMENT_ATTACHMENT_TYPE,
   IMAGE_ATTACHMENT_TYPE,
   LINK_ATTACHMENT_TYPE,
   VIDEO_ATTACHMENT_TYPE,
-} from '../constants/Strings';
-import {IComment} from '@likeminds.community/feed-js';
-import { LMAttachmentMetaUI, LMAttachmentUI, LMLikeUI, LMMenuItemsUI, LMOGTagsUI, LMPostUI, LMSDKClientInfoUI, LMUserUI } from '../models';
+} from "../constants/Strings";
+import { IComment } from "@likeminds.community/feed-js-beta";
+import {
+  LMAttachmentMetaUI,
+  LMAttachmentUI,
+  LMLikeUI,
+  LMMenuItemsUI,
+  LMOGTagsUI,
+  LMPostUI,
+  LMSDKClientInfoUI,
+  LMUserUI,
+} from "../models";
 
 /**
  * @param data: [GetFeedResponse]
@@ -38,7 +50,7 @@ export function convertUniversalFeedPosts(data: GetFeedResponse): LMPostUI[] {
  */
 export function convertToLMPostUI(
   post: IPost,
-  user: {[key: string]: LMUserUI},
+  user: { [key: string]: LMUserUI }
 ): LMPostUI {
   const postData: LMPostUI = {
     id: post.Id,
@@ -62,6 +74,7 @@ export function convertToLMPostUI(
     userId: post.userId,
     uuid: post.uuid,
     user: convertToLMUserUI(user[post.userId]),
+    topics: post.topics,
   };
   return postData;
 }
@@ -84,7 +97,7 @@ export function convertToLMAttachmentsUI(data: Attachment[]): LMAttachmentUI[] {
  * @returns LMAttachmentMetaUI
  */
 export function convertToLMAttachmentMetaUI(
-  data: AttachmentMeta,
+  data: AttachmentMeta
 ): LMAttachmentMetaUI {
   const attachmentMetaData: LMAttachmentMetaUI = {
     duration: data.duration,
@@ -117,7 +130,7 @@ export function convertToLMOgTagsUI(data: IOgTag): LMOGTagsUI {
  * @returns [LMMenuItemsUI]
  */
 export function convertToLMMenuItemsUI(data: IMenuItem[]): LMMenuItemsUI[] {
-  return data?.map(item => {
+  return data?.map((item) => {
     return {
       title: item.title,
       id: item.id,
@@ -179,7 +192,7 @@ export function convertToLMLikesList(data: GetPostLikesResponse): LMLikeUI[] {
  */
 export function convertToLMLikeUI(
   likes: Like,
-  users: {[key: string]: LMUserUI},
+  users: { [key: string]: LMUserUI }
 ): LMLikeUI {
   const likesData: LMLikeUI = {
     id: likes?.id,
@@ -197,19 +210,19 @@ export function convertToLMLikeUI(
  * @returns list of [LMAttachmentUI]
  */
 export function convertImageVideoMetaData(
-  data: ImageVideoMetaData[],
+  data: ImageVideoMetaData[]
 ): LMAttachmentUI[] {
-  const convertedImageVideoMetaData = data?.map(item => {
+  const convertedImageVideoMetaData = data?.map((item) => {
     return {
       attachmentMeta: {
-        entityId: '',
+        entityId: "",
         format: item?.type,
         name: item?.fileName,
         ogTags: {
-          description: '',
-          title: '',
-          url: '',
-          image: '',
+          description: "",
+          title: "",
+          url: "",
+          image: "",
         },
         size: item?.fileSize,
         duration: Math.round(item?.duration ? item.duration : 0),
@@ -229,19 +242,19 @@ export function convertImageVideoMetaData(
  * @returns list of [LMAttachmentUI]
  */
 export function convertDocumentMetaData(
-  data: DocumentMetaData[],
+  data: DocumentMetaData[]
 ): LMAttachmentUI[] {
-  const convertedDocumentMetaData = data?.map(item => {
+  const convertedDocumentMetaData = data?.map((item) => {
     return {
       attachmentMeta: {
-        entityId: '',
+        entityId: "",
         format: item?.type,
         name: item?.name,
         ogTags: {
-          description: '',
-          title: '',
-          url: '',
-          image: '',
+          description: "",
+          title: "",
+          url: "",
+          image: "",
         },
         size: item?.size,
         duration: 0,
@@ -259,12 +272,12 @@ export function convertDocumentMetaData(
  * @returns list of [LMAttachmentUI]
  */
 export function convertLinkMetaData(data: LMOGTagsUI[]): LMAttachmentUI[] {
-  const convertedLinkMetaData = data?.map(item => {
+  const convertedLinkMetaData = data?.map((item) => {
     return {
       attachmentMeta: {
-        entityId: '',
-        format: '',
-        name: '',
+        entityId: "",
+        format: "",
+        name: "",
         ogTags: {
           description: item?.description,
           title: item?.title,
@@ -274,7 +287,7 @@ export function convertLinkMetaData(data: LMOGTagsUI[]): LMAttachmentUI[] {
         size: 0,
         duration: 0,
         pageCount: 0,
-        url: '',
+        url: "",
       },
       attachmentType: LINK_ATTACHMENT_TYPE, // You need to specify the attachment type.
     };
@@ -291,7 +304,7 @@ export function convertLinkMetaData(data: LMOGTagsUI[]): LMAttachmentUI[] {
 export function convertToLMCommentUI(
   postId: string,
   data: IComment[],
-  user: {[key: string]: LMUserUI},
+  user: { [key: string]: LMUserUI }
 ): any[] {
   return data?.map((item: IComment) => {
     return {

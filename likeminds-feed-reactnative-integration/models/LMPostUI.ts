@@ -1,7 +1,7 @@
-import {LMAttachmentUI} from './LMAttachmentUI';
-import {LMCommentUI} from './LMCommentUI';
-import {LMMenuItemsUI} from './LMMenuItemsUI';
-import {LMUserUI} from './LMUserUI';
+import { LMAttachmentUI } from "./LMAttachmentUI";
+import { LMCommentUI } from "./LMCommentUI";
+import { LMMenuItemsUI } from "./LMMenuItemsUI";
+import { LMUserUI } from "./LMUserUI";
 
 // data model for post UI
 export interface LMPostUI {
@@ -22,4 +22,5 @@ export interface LMPostUI {
   userId: string;
   uuid: string;
   user: LMUserUI;
+  topics: string[];
 }

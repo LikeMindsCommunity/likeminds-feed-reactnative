@@ -16,6 +16,7 @@ import {
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 import { useAppSelector } from "../../store/store";
+import { useUniversalFeedContext } from "../../context/universalFeedContext";
 
 const TopicFeed = () => {
   const myClient = Client.myClient;
@@ -25,9 +26,13 @@ const TopicFeed = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [count, setCount] = useState(1);
   const [page, setPage] = useState(1);
-  const [selectedTopics, setSelectedTopics] = useState([] as any);
   const [searchedTopics, setsearchedTopics] = useState([] as any);
   const [searchPage, setSearchPage] = useState(1);
+  const [newTopics, setNewTopics] = useState([] as any);
+
+  const { updateSelectedTopics } = useUniversalFeedContext();
+
+  console.log("newTopics", newTopics);
 
   const navigation = useNavigation<StackNavigationProp<any>>();
 
@@ -282,13 +287,13 @@ const TopicFeed = () => {
           return (
             <TouchableOpacity
               onPress={() => {
-                if (!selectedTopics.includes(item?.Id)) {
-                  setSelectedTopics([...selectedTopics, item?.Id]);
+                if (!newTopics.includes(item?.Id)) {
+                  setNewTopics([...newTopics, item?.Id]);
                 } else {
-                  const filteredArr = selectedTopics.filter((val: any) => {
+                  const filteredArr = newTopics.filter((val: any) => {
                     return val !== item?.Id;
                   });
-                  setSelectedTopics([...filteredArr]);
+                  setNewTopics([...filteredArr]);
                 }
               }}
               key={item?.Id}
@@ -334,7 +339,7 @@ const TopicFeed = () => {
                 </Text>
               </View>
               <View>
-                {selectedTopics.includes(item?.Id) ? (
+                {newTopics.includes(item?.Id) ? (
                   <View style={styles.selected}>
                     <Image
                       source={require("../../assets/images/white_tick3x.png")}
@@ -347,7 +352,7 @@ const TopicFeed = () => {
           );
         }}
         extraData={{
-          value: [searchedTopics, topics, selectedTopics],
+          value: [searchedTopics, topics, newTopics],
         }}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.1}
@@ -360,11 +365,14 @@ const TopicFeed = () => {
         </View>
       )}
 
-      {selectedTopics.length > 0 ? (
+      {newTopics.length > 0 ? (
         <TouchableOpacity
           onPress={() => {
-            if (selectedTopics.length > 0) {
+            if (newTopics.length > 0) {
               // sendInvites();
+              // updatenewTopics(newTopics)
+              updateSelectedTopics(newTopics);
+              navigation.goBack();
             }
           }}
           style={styles.sendBtn}

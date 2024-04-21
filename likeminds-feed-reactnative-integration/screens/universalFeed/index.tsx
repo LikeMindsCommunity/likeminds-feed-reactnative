@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Image,
   Platform,
   SafeAreaView,
+  ScrollView,
   Text,
   TouchableOpacity,
   View,
@@ -112,27 +113,104 @@ const UniversalFeedComponent = () => {
     uploadingMediaAttachment,
     uploadingMediaAttachmentType,
     newPostButtonClick,
-  }: UniversalFeedContextValues = useUniversalFeedContext();
+  }: // selectedTopics
+  UniversalFeedContextValues = useUniversalFeedContext();
   const LMFeedContextStyles = useLMFeedStyles();
   const { universalFeedStyle, loaderStyle } = LMFeedContextStyles;
   const { newPostButtonClickProps } =
     useUniversalFeedCustomisableMethodsContext();
+
+  // console.log("selectedTopics",selectedTopics);
+
+  // useEffect(() => {
+  //   console.log("selectedTopicsUniversal",selectedTopics);
+  // },[selectedTopics])
+
+  const [items, setItems] = useState([
+    {
+      id: "65f306a3cde6ba99e44c3586",
+      name: "topic name",
+    },
+    {
+      id: "65f306c0cde6ba99e44c3587",
+      name: "topic name-3",
+    },
+    {
+      id: "65f306c0cde6ba99e44c3588",
+      name: "topic name-1",
+    },
+    {
+      id: "65f306c0cde6ba99e44c3589",
+      name: "topic name-2",
+    },
+    {
+      id: "66225e7a03a62c83c4e3d019",
+      name: "Books hey there",
+    },
+  ]);
+
+  //   const selectedTopic = [{
+  //     id:1,
+  //     name:'book'
+  //   },
+  //   {
+  //     id:2,
+  //     name:'country'
+  //   },
+  //   {
+  //     id:3,
+  //     name:'hello'
+  //   }
+  // ]
 
   const handleAllTopicPress = () => {
     /* @ts-ignore */
     return navigation.navigate(TOPIC_FEED);
   };
 
+  const removeItem = (index: any) => {
+    const newItems = [...items]; // Create a copy of the array
+    newItems.splice(index, 1); // Remove the item at the specified index
+    setItems(newItems); // Update the state with the new array
+  };
+
   return (
-    <SafeAreaView style={styles.mainContainer}>
+    <View style={styles.mainContainer}>
       {/* header */}
       <LMHeader heading={APP_TITLE} {...universalFeedStyle?.screenHeader} />
       {/* all topics filter */}
-      <TouchableOpacity onPress={() => handleAllTopicPress()}>
-        <Text style={{ fontSize: 16, color: "#222020", margin: 20 }}>
-          All Topics
-        </Text>
-      </TouchableOpacity>
+      {items.length > 0 ? (
+        <ScrollView style={{ flexGrow: 0, margin: 10 }} horizontal={true}>
+          <View style={{ flexDirection: "row" }}>
+            {items.map((item, index) => (
+              <View key={index} style={{ margin: 5 }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    borderWidth: 1,
+                    padding: 10,
+                  }}
+                >
+                  <Text style={{ marginRight: 5, color: "black" }}>
+                    {item?.name}
+                  </Text>
+                  <TouchableOpacity onPress={() => removeItem(index)}>
+                    {/* Your cross icon component */}
+                    <Text style={{ color: "black" }}>X</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ))}
+          </View>
+        </ScrollView>
+      ) : (
+        <TouchableOpacity onPress={() => handleAllTopicPress()}>
+          <Text style={{ fontSize: 16, color: "#222020", margin: 20 }}>
+            All Topics
+          </Text>
+        </TouchableOpacity>
+      )}
       {/* post uploading section */}
       {postUploading && (
         <View style={styles.postUploadingView}>
@@ -179,7 +257,7 @@ const UniversalFeedComponent = () => {
         </View>
       )}
       {/* posts list section */}
-      <PostsList />
+      <PostsList items={items} />
       {/* create post button section */}
       <TouchableOpacity
         activeOpacity={0.8}
@@ -209,7 +287,7 @@ const UniversalFeedComponent = () => {
           NEW POST
         </Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 

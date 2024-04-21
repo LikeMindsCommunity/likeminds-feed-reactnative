@@ -41,12 +41,12 @@ import { LMPostUI } from "../../models";
 import { LMLoader } from "../../components";
 import { autoPlayPostVideo } from "../../store/actions/feed";
 
-const PostsList = ({ route, children }: any) => {
+const PostsList = ({ route, children, items }: any) => {
   const { navigation }: UniversalFeedContextValues = useUniversalFeedContext();
-  return <PostsListComponent />;
+  return <PostsListComponent topics={items} />;
 };
 
-const PostsListComponent = () => {
+const PostsListComponent = ({ topics }: any) => {
   const dispatch = useAppDispatch();
   const {
     listRef,
@@ -123,7 +123,7 @@ const PostsListComponent = () => {
   };
 
   return (
-    <>
+    <View style={{ flex: 1 }}>
       {/* posts list section */}
       {!feedFetching ? (
         feedData?.length > 0 ? (
@@ -135,75 +135,91 @@ const PostsListComponent = () => {
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
             data={feedData}
-            renderItem={({ item }: { item: LMPostUI }) => (
-              <TouchableOpacity
-                activeOpacity={0.8}
-                style={{ backgroundColor: "#e0e0e0" }}
-                onPress={() => {
-                  dispatch(clearPostDetail() as any);
-                  navigation.navigate(POST_DETAIL, [
-                    item?.id,
-                    NAVIGATED_FROM_POST,
-                  ]);
-                }}
-                key={item?.id}
-              >
-                <LMPost
-                  post={item}
-                  // header props
-                  headerProps={{
-                    postMenu: {
-                      modalPosition: modalPosition,
-                      modalVisible: showActionListModal,
-                      onCloseModal: closePostActionListModal,
-                      onSelected: (postId, itemId) => {
-                        onMenuItemSelect(postId, itemId, item?.isPinned);
-                      },
-                    },
-                    onOverlayMenuClick: (event) => {
-                      onOverlayMenuClickProp
-                        ? onOverlayMenuClickProp(
-                            event,
-                            item?.menuItems[0],
-                            item?.id
-                          )
-                        : onOverlayMenuClick(event);
-                    },
-                  }}
-                  // footer props
-                  footerProps={{
-                    likeIconButton: {
-                      onTap: () => {
-                        postLikeHandlerProp
-                          ? postLikeHandlerProp(item?.id)
-                          : postLikeHandler(item?.id);
-                      },
-                    },
-                    saveButton: {
-                      onTap: () => {
-                        savePostHandlerProp
-                          ? savePostHandlerProp(item?.id, item?.isSaved)
-                          : savePostHandler(item?.id, item?.isSaved);
-                      },
-                    },
-                    likeTextButton: {
-                      onTap: () => {
-                        onTapLikeCountProps
-                          ? onTapLikeCountProps(item?.id)
-                          : onTapLikeCount(item?.id);
-                      },
-                    },
-                    commentButton: {
-                      onTap: () => {
-                        onSelectCommentCountProp
-                          ? onSelectCommentCountProp(item?.id)
-                          : onTapCommentCount(item?.id);
-                      },
-                    },
-                  }}
-                />
-              </TouchableOpacity>
-            )}
+            renderItem={({ item }: { item: LMPostUI }) => {
+              // Log the item before rendering
+
+              // Check if the item's topic matches any name in the topics array
+              const isTopicMatched =
+                item?.topics?.length > 0 &&
+                topics.length > 0 &&
+                item?.topics?.some((topicId) =>
+                  topics.some((topic) => topic.id === topicId)
+                );
+
+              if (isTopicMatched || topics.length === 0) {
+                return (
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={{ backgroundColor: "#e0e0e0" }}
+                    onPress={() => {
+                      dispatch(clearPostDetail() as any);
+                      navigation.navigate(POST_DETAIL, [
+                        item?.id,
+                        NAVIGATED_FROM_POST,
+                      ]);
+                    }}
+                    key={item?.id}
+                  >
+                    <LMPost
+                      post={item}
+                      // header props
+                      headerProps={{
+                        postMenu: {
+                          modalPosition: modalPosition,
+                          modalVisible: showActionListModal,
+                          onCloseModal: closePostActionListModal,
+                          onSelected: (postId, itemId) => {
+                            onMenuItemSelect(postId, itemId, item?.isPinned);
+                          },
+                        },
+                        onOverlayMenuClick: (event) => {
+                          onOverlayMenuClickProp
+                            ? onOverlayMenuClickProp(
+                                event,
+                                item?.menuItems[0],
+                                item?.id
+                              )
+                            : onOverlayMenuClick(event);
+                        },
+                      }}
+                      // footer props
+                      footerProps={{
+                        likeIconButton: {
+                          onTap: () => {
+                            postLikeHandlerProp
+                              ? postLikeHandlerProp(item?.id)
+                              : postLikeHandler(item?.id);
+                          },
+                        },
+                        saveButton: {
+                          onTap: () => {
+                            savePostHandlerProp
+                              ? savePostHandlerProp(item?.id, item?.isSaved)
+                              : savePostHandler(item?.id, item?.isSaved);
+                          },
+                        },
+                        likeTextButton: {
+                          onTap: () => {
+                            onTapLikeCountProps
+                              ? onTapLikeCountProps(item?.id)
+                              : onTapLikeCount(item?.id);
+                          },
+                        },
+                        commentButton: {
+                          onTap: () => {
+                            onSelectCommentCountProp
+                              ? onSelectCommentCountProp(item?.id)
+                              : onTapCommentCount(item?.id);
+                          },
+                        },
+                      }}
+                    />
+                  </TouchableOpacity>
+                );
+              } else {
+                return null;
+              }
+            }}
             onEndReachedThreshold={0.3}
             onEndReached={handleLoadMore}
             keyExtractor={(item) => {
@@ -251,7 +267,7 @@ const PostsListComponent = () => {
           postDetail={getPostDetail()}
         />
       )}
-    </>
+    </View>
   );
 };
 

@@ -7,8 +7,9 @@ import {
   FlatList,
   StyleSheet,
   TextStyle,
+  Image,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { NetworkUtil, nameInitials, replaceLastMention } from "../../utils";
 import { useAppDispatch } from "../../store/store";
 import {
@@ -53,6 +54,7 @@ import {
   LMVideo,
 } from "../../components";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { TOPIC_FEED } from "../../constants/screenNames";
 
 interface CreatePostProps {
   children: React.ReactNode;
@@ -143,6 +145,52 @@ const CreatePostComponent = () => {
     handleScreenBackPress,
   }: CreatePostContextValues = useCreatePostContext();
 
+  const handleAllTopicPress = () => {
+    /* @ts-ignore */
+    return navigation.navigate(TOPIC_FEED);
+  };
+
+  const [items, setItems] = useState([
+    {
+      id: 1,
+      name: "book",
+    },
+    {
+      id: 2,
+      name: "country",
+    },
+    {
+      id: 3,
+      name: "hello",
+    },
+    {
+      id: 4,
+      name: "hola",
+    },
+    {
+      id: 5,
+      name: "bhola",
+    },
+    {
+      id: 6,
+      name: "hello",
+    },
+    {
+      id: 7,
+      name: "hello",
+    },
+    {
+      id: 8,
+      name: "hello",
+    },
+  ]);
+
+  const removeItem = (index: any) => {
+    const newItems = [...items]; // Create a copy of the array
+    newItems.splice(index, 1); // Remove the item at the specified index
+    setItems(newItems); // Update the state with the new array
+  };
+
   const {
     handleDocumentProp,
     handleGalleryProp,
@@ -183,6 +231,67 @@ const CreatePostComponent = () => {
             }
           />
         </View>
+        {items.length > 0 ? (
+          <View
+            style={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+              marginHorizontal: 10,
+              marginTop: 10,
+            }}
+          >
+            {items.map((item, index) => (
+              <View
+                key={index}
+                style={{
+                  margin: 5,
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <View style={{ borderWidth: 1, padding: 7 }}>
+                  <Text style={{ color: "black" }}>{item?.name}</Text>
+                </View>
+                {index === items.length - 1 && (
+                  <View style={{ borderWidth: 1, padding: 7, marginLeft: 10 }}>
+                    <TouchableOpacity onPress={() => handleAllTopicPress()}>
+                      <Image
+                        source={require("../../assets/images/edit_icon3x.png")}
+                        style={styles.editIcon}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
+            ))}
+          </View>
+        ) : (
+          <View
+            style={{
+              flex: 1,
+              alignItems: "flex-start",
+              justifyContent: "flex-start",
+            }}
+          >
+            <TouchableOpacity onPress={() => handleAllTopicPress()}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: "#5046E5",
+                  margin: 20,
+                  padding: 7,
+                  backgroundColor: "hsla(244, 75%, 59%, 0.1)",
+                  borderRadius: 5,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                + Select Topics
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        <View style={styles.border}></View>
         {/* text input field */}
         <LMInputText
           {...customTextInputStyle}

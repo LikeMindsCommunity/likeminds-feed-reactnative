@@ -12,7 +12,10 @@ import React, {
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { mentionToRouteConverter, uploadFilesToAWS } from "../utils";
 import { addPost, setUploadAttachments } from "../store/actions/createPost";
-import { AddPostRequest, GetFeedRequest } from "@likeminds.community/feed-js";
+import {
+  AddPostRequest,
+  GetFeedRequest,
+} from "@likeminds.community/feed-js-beta";
 import { refreshFeed } from "../store/actions/feed";
 import {
   CREATE_POST_PERMISSION,
@@ -63,6 +66,9 @@ export interface UniversalFeedContextValues {
   postAdd: () => void;
   keyExtractor: (val) => string;
   newPostButtonClick: () => void;
+  selectedTopics: any;
+  // setSelectedTopics:any;
+  updateSelectedTopics: any;
 }
 
 const UniversalFeedContext = createContext<
@@ -99,6 +105,19 @@ export const UniversalFeedContextProvider = ({
   const [refreshing, setRefreshing] = useState(false);
   const [localRefresh, setLocalRefresh] = useState(false);
   const listRef = useRef<FlatList<LMPostUI>>(null);
+  let selectedTopics: any = [];
+  // const [selectedTopics, setSelectedTopics] = useState([] as any);
+
+  const updateSelectedTopics = (newTopics: any) => {
+    console.log("newTopicsParam", newTopics);
+    //  setSelectedTopics([...newTopics])
+    selectedTopics = newTopics;
+    logUpdatedSelectedTOpic();
+  };
+
+  const logUpdatedSelectedTOpic = () => {
+    console.log("selectedTopicsContext", selectedTopics);
+  };
 
   useEffect(() => {
     if (accessToken) {
@@ -246,6 +265,9 @@ export const UniversalFeedContextProvider = ({
     postAdd,
     keyExtractor,
     newPostButtonClick,
+    selectedTopics,
+    // setSelectedTopics,
+    updateSelectedTopics,
   };
 
   return (
