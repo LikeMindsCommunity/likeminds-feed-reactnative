@@ -48,7 +48,7 @@ const LMPostMenu = React.memo(
                 top:
                   modalPosition.y > layout.window.height / 2
                     ? Platform.OS === "ios"
-                      ? post.menuItems.length > 1
+                      ? post?.menuItems?.length > 1
                         ? modalPosition.y - 110
                         : modalPosition.y - 65
                       : modalPosition.y - 15

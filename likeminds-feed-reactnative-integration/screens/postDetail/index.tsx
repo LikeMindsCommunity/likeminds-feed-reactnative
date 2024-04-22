@@ -793,7 +793,7 @@ const PostDetailComponent = React.memo(() => {
           post={
             overlayMenuType === POST_TYPE
               ? postDetail
-              : getCommentDetail(postDetail?.replies)
+              : getCommentDetail(postDetail?.replies)?.commentDetail
           }
           onSelected={(postId, itemId, isPinned) => {
             overlayMenuType === POST_TYPE

@@ -111,11 +111,14 @@ const DeleteModal = ({
           ])
         );
         setDeletionReason("");
-        if(navigation){
+        if (navigation) {
           const routes = navigation?.getState()?.routes;
-          const routesLength = routes?.length
-          if(routesLength > 0 && routes[routesLength - 1]?.name !== UNIVERSAL_FEED){
-            navigation?.goBack()
+          const routesLength = routes?.length;
+          if (
+            routesLength > 0 &&
+            routes[routesLength - 1]?.name !== UNIVERSAL_FEED
+          ) {
+            navigation?.goBack();
           }
         }
         dispatch(
@@ -169,9 +172,8 @@ const DeleteModal = ({
             Events.REPLY_DELETED,
             new Map<string, string>([
               [Keys.POST_ID, payload.postId],
-              [Keys.COMMENT_ID, parentCommentId][
-                (Keys.COMMENT_REPLY_ID, payload.commentId)
-              ],
+              [Keys.COMMENT_ID, parentCommentId],
+              [Keys.COMMENT_REPLY_ID, payload.commentId],
             ])
           );
         } else {

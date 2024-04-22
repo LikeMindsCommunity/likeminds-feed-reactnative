@@ -142,7 +142,7 @@ export interface PostDetailContextValues {
   isKeyboardVisible: boolean;
   keyboardFocusOnReply: boolean;
   overlayMenuType: string;
-  setOverlayMenuType:  Dispatch<SetStateAction<string>>;
+  setOverlayMenuType: Dispatch<SetStateAction<string>>;
   setKeyboardFocusOnReply: Dispatch<SetStateAction<boolean>>;
   setModalPositionComment: Dispatch<SetStateAction<{ x: number; y: number }>>;
   setModalPosition: Dispatch<SetStateAction<{ x: number; y: number }>>;
@@ -210,9 +210,12 @@ export interface PostDetailContextValues {
   showRepliesOfCommentId: string;
   setShowRepliesOfCommentId: Dispatch<SetStateAction<string>>;
   handleScreenBackPress: () => void;
-  onCommentOverflowMenuClick: (event: {
-    nativeEvent: { pageX: number; pageY: number };
-  }, commentId:string) => void;
+  onCommentOverflowMenuClick: (
+    event: {
+      nativeEvent: { pageX: number; pageY: number };
+    },
+    commentId: string
+  ) => void;
 }
 
 const PostDetailContext = createContext<PostDetailContextValues | undefined>(
@@ -287,7 +290,7 @@ export const PostDetailContextProvider = ({
   );
   const isKeyboardVisible = Keyboard.isVisible();
   const [showRepliesOfCommentId, setShowRepliesOfCommentId] = useState("");
-  const [overlayMenuType, setOverlayMenuType] = useState('')
+  const [overlayMenuType, setOverlayMenuType] = useState("");
 
   const LMFeedContextStyles = useLMFeedStyles();
   const { postListStyle } = LMFeedContextStyles;
@@ -317,11 +320,14 @@ export const PostDetailContextProvider = ({
   };
 
   // this function is executed on the click of menu icon & handles the position and visibility of the modal
-  const onCommentOverflowMenuClick = (event: {
-    nativeEvent: { pageX: number; pageY: number };
-  }, commentId: string) => {
-    setOverlayMenuType(COMMENT_TYPE)
-    setSelectedMenuItemCommentId(commentId)
+  const onCommentOverflowMenuClick = (
+    event: {
+      nativeEvent: { pageX: number; pageY: number };
+    },
+    commentId: string
+  ) => {
+    setOverlayMenuType(COMMENT_TYPE);
+    setSelectedMenuItemCommentId(commentId);
     const { pageX, pageY } = event.nativeEvent;
     setShowActionListModal(true);
     setModalPosition({ x: pageX, y: pageY });
@@ -501,7 +507,7 @@ export const PostDetailContextProvider = ({
           const nestedReply = getCommentDetail(reply.replies, commentId);
           if (nestedReply) {
             commentDetail = {
-              commentDetail: nestedReply,
+              commentDetail: nestedReply?.commentDetail,
               parentCommentId: reply?.id,
             };
             return commentDetail; // Found the reply in the child replies
@@ -666,11 +672,14 @@ export const PostDetailContextProvider = ({
   }, [commentPageNumber, route.params[0]]);
 
   // this function is executed on the click of menu icon & handles the position and visibility of the modal
-  const onOverlayMenuClick = (event: {
-    nativeEvent: { pageX: number; pageY: number };
-  }, postId:string) => {
-    setOverlayMenuType(POST_TYPE)
-    setSelectedMenuItemPostId(postId)
+  const onOverlayMenuClick = (
+    event: {
+      nativeEvent: { pageX: number; pageY: number };
+    },
+    postId: string
+  ) => {
+    setOverlayMenuType(POST_TYPE);
+    setSelectedMenuItemPostId(postId);
     const { pageX, pageY } = event.nativeEvent;
     setShowActionListModal(true);
     setModalPosition({ x: pageX, y: pageY });
@@ -683,7 +692,8 @@ export const PostDetailContextProvider = ({
         post={postDetail}
         // header props
         headerProps={{
-          onOverlayMenuClick: (event) => onOverlayMenuClick(event, postDetail?.id)
+          onOverlayMenuClick: (event) =>
+            onOverlayMenuClick(event, postDetail?.id),
         }}
         // footer props
         footerProps={{
