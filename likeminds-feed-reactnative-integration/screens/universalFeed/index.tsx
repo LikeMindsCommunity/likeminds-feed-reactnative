@@ -72,7 +72,7 @@ interface UniversalFeedProps {
     postId: string
   ) => void;
   onTapNotificationBellProp: () => void;
-  onSharePostClicked: (id:string) => void;
+  onSharePostClicked: (id: string) => void;
 }
 
 const UniversalFeed = ({
@@ -90,7 +90,7 @@ const UniversalFeed = ({
   newPostButtonClickProps,
   onOverlayMenuClickProp,
   onTapNotificationBellProp,
-  onSharePostClicked
+  onSharePostClicked,
 }: UniversalFeedProps) => {
   return (
     <UniversalFeedCustomisableMethodsContextProvider
@@ -141,6 +141,8 @@ const UniversalFeedComponent = () => {
               onTapNotificationBellProp
                 ? onTapNotificationBellProp()
                 : onTapNotificationBell();
+
+              LMFeedAnalytics.track(Events.NOTIFICATION_PAGE_OPENED);
             }}
           >
             <Image

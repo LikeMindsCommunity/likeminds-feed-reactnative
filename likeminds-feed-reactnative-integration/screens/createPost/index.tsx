@@ -273,14 +273,6 @@ const CreatePostComponent = () => {
                             ],
                           ])
                         );
-                      } else {
-                        LMFeedAnalytics.track(
-                          Events.USER_TAGGED_IN_POST,
-                          new Map<string, string>([
-                            [Keys.TAGGED_USER_UUID, uuid],
-                            [Keys.TAGGED_USER_COUNT, "1"],
-                          ])
-                        );
                       }
                     }}
                     style={[
