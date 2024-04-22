@@ -115,16 +115,14 @@ const PostsListComponent = () => {
         ? selectPinPostProp(postId, pinnedValue)
         : handlePinPost(postId, pinnedValue);
       let event = pinnedValue ? Events.POST_UNPINNED : Events.POST_PINNED;
-      if (pinnedValue) {
-        LMFeedAnalytics.track(
-          event,
-          new Map<string, string>([
-            [Keys.CREATED_BY_ID, postDetail?.user?.sdkClientInfo?.uuid],
-            [Keys.POST_ID, postId],
-            [Keys.POST_TYPE, getPostType(postDetail?.attachments)],
-          ])
-        );
-      }
+      LMFeedAnalytics.track(
+        event,
+        new Map<string, string>([
+          [Keys.UUID, postDetail?.user?.sdkClientInfo?.uuid],
+          [Keys.POST_ID, postId],
+          [Keys.POST_TYPE, getPostType(postDetail?.attachments)],
+        ])
+      );
     }
     if (itemId === REPORT_POST_MENU_ITEM) {
       handleReportPostProps
@@ -288,7 +286,7 @@ const PostsListComponent = () => {
         <LMPostMenu
           post={getPostDetail()}
           onSelected={(postId, itemId, isPinned) => {
-            onMenuItemSelect(postId, itemId, isPinned);
+            onMenuItemSelect(postId, itemId, isPinned, getPostDetail());
           }}
           modalPosition={modalPosition}
           modalVisible={showActionListModal}
