@@ -770,7 +770,10 @@ const PostDetailComponent = React.memo(() => {
           }
           deleteType={selectedMenuItemPostId ? POST_TYPE : COMMENT_TYPE}
           postDetail={postDetail}
-          commentDetail={getCommentDetail(postDetail?.replies)}
+          commentDetail={getCommentDetail(postDetail?.replies)?.commentDetail}
+          parentCommentId={
+            getCommentDetail(postDetail?.replies)?.parentCommentId
+          }
           navigation={navigation}
         />
       )}
@@ -781,7 +784,7 @@ const PostDetailComponent = React.memo(() => {
           closeModal={() => setShowReportModal(false)}
           reportType={selectedMenuItemPostId ? POST_TYPE : COMMENT_TYPE}
           postDetail={postDetail}
-          commentDetail={getCommentDetail(postDetail?.replies)}
+          commentDetail={getCommentDetail(postDetail?.replies)?.commentDetail}
         />
       )}
       {/* menu list modal */}
