@@ -4,6 +4,9 @@ import { LMButton } from "../../../uiComponents";
 import { styles } from "./styles";
 import { LMPostContextValues, useLMPostContext } from "../../../context";
 import { useLMFeedStyles } from "../../../lmFeedProvider";
+import { LMFeedAnalytics } from "../../../analytics/LMFeedAnalytics";
+import { Events } from "../../../enums/Events";
+import { Keys } from "../../../enums/Keys";
 
 const LMPostFooter = React.memo(() => {
   const { post, footerProps }: LMPostContextValues = useLMPostContext();
@@ -25,8 +28,17 @@ const LMPostFooter = React.memo(() => {
     setLikeCount(post?.likesCount);
   }, [post?.isLiked, post?.likesCount]);
   const likesCountHandler = () => {
+    // customisabilty one
     footerStyle?.likeIconButton?.onTap && footerStyle?.likeIconButton?.onTap();
+
+    // prop drill one
     footerProps?.likeIconButton?.onTap();
+
+    LMFeedAnalytics.track(
+      Events.POST_LIKED,
+      new Map<string, string>([[Keys.POST_ID, post?.id]])
+    );
+
     //  todo : handle later
     // setLiked(!liked);
     // if (liked) {

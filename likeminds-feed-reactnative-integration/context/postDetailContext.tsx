@@ -83,6 +83,10 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../models/RootStackParamsList";
 import LMPost from "../components/LMPost/LMPost";
 import { LMCommentUI, LMPostUI, LMUserUI } from "../models";
+import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
+import { Events } from "../enums/Events";
+import { Keys } from "../enums/Keys";
+import { getPostType } from "../utils/analytics";
 
 interface PostDetailContextProps {
   children: ReactNode;
@@ -118,6 +122,7 @@ export interface PostDetailContextValues {
   replyOnComment: {
     textInputFocus: false;
     commentId: string;
+    userId: string;
   };
   replyToUsername: "";
   localModalVisibility: boolean;
@@ -139,7 +144,7 @@ export interface PostDetailContextValues {
   isKeyboardVisible: boolean;
   keyboardFocusOnReply: boolean;
   overlayMenuType: string;
-  setOverlayMenuType:  Dispatch<SetStateAction<string>>;
+  setOverlayMenuType: Dispatch<SetStateAction<string>>;
   setKeyboardFocusOnReply: Dispatch<SetStateAction<boolean>>;
   setModalPositionComment: Dispatch<SetStateAction<{ x: number; y: number }>>;
   setModalPosition: Dispatch<SetStateAction<{ x: number; y: number }>>;
@@ -188,7 +193,7 @@ export interface PostDetailContextValues {
   getCommentDetail: (
     comments?: LMCommentUI[],
     id?: string
-  ) => LMCommentUI | undefined;
+  ) => { commentDetail: LMCommentUI; parentCommentId?: string } | undefined;
   getPostData: () => void;
   getCommentsReplies: (
     postId: string,
@@ -207,9 +212,12 @@ export interface PostDetailContextValues {
   showRepliesOfCommentId: string;
   setShowRepliesOfCommentId: Dispatch<SetStateAction<string>>;
   handleScreenBackPress: () => void;
-  onCommentOverflowMenuClick: (event: {
-    nativeEvent: { pageX: number; pageY: number };
-  }, commentId:string) => void;
+  onCommentOverflowMenuClick: (
+    event: {
+      nativeEvent: { pageX: number; pageY: number };
+    },
+    commentId: string
+  ) => void;
 }
 
 const PostDetailContext = createContext<PostDetailContextValues | undefined>(
@@ -231,7 +239,6 @@ export const PostDetailContextProvider = ({
   navigation,
   route,
 }: PostDetailContextProps) => {
-  
   const dispatch = useAppDispatch();
   const postDetail = useAppSelector((state) => state.postDetail.postDetail);
   const [modalPosition, setModalPosition] = useState({
@@ -256,6 +263,7 @@ export const PostDetailContextProvider = ({
   const [replyOnComment, setReplyOnComment] = useState({
     textInputFocus: false,
     commentId: "",
+    userId: "",
   });
   const [replyToUsername, setReplyToUsername] = useState("");
   const [localModalVisibility, setLocalModalVisibility] =
@@ -284,7 +292,7 @@ export const PostDetailContextProvider = ({
   );
   const isKeyboardVisible = Keyboard.isVisible();
   const [showRepliesOfCommentId, setShowRepliesOfCommentId] = useState("");
-  const [overlayMenuType, setOverlayMenuType] = useState('')
+  const [overlayMenuType, setOverlayMenuType] = useState("");
 
   const LMFeedContextStyles = useLMFeedStyles();
   const { postListStyle } = LMFeedContextStyles;
@@ -314,11 +322,14 @@ export const PostDetailContextProvider = ({
   };
 
   // this function is executed on the click of menu icon & handles the position and visibility of the modal
-  const onCommentOverflowMenuClick = (event: {
-    nativeEvent: { pageX: number; pageY: number };
-  }, commentId: string) => {
-    setOverlayMenuType(COMMENT_TYPE)
-    setSelectedMenuItemCommentId(commentId)
+  const onCommentOverflowMenuClick = (
+    event: {
+      nativeEvent: { pageX: number; pageY: number };
+    },
+    commentId: string
+  ) => {
+    setOverlayMenuType(COMMENT_TYPE);
+    setSelectedMenuItemCommentId(commentId);
     const { pageX, pageY } = event.nativeEvent;
     setShowActionListModal(true);
     setModalPosition({ x: pageX, y: pageY });
@@ -432,6 +443,15 @@ export const PostDetailContextProvider = ({
     setSelectedMenuItemPostId(postId);
     if (itemId === PIN_POST_MENU_ITEM || itemId === UNPIN_POST_MENU_ITEM) {
       handlePinPost(postId, pinnedValue);
+      let event = pinnedValue ? Events.POST_UNPINNED : Events.POST_PINNED;
+      LMFeedAnalytics.track(
+        event,
+        new Map<string, string>([
+          [Keys.UUID, postDetail?.user?.sdkClientInfo?.uuid],
+          [Keys.POST_ID, postId],
+          [Keys.POST_TYPE, getPostType(postDetail?.attachments)],
+        ])
+      );
     }
     if (itemId === REPORT_POST_MENU_ITEM) {
       handleReportPost();
@@ -442,6 +462,14 @@ export const PostDetailContextProvider = ({
     if (itemId === EDIT_POST_MENU_ITEM) {
       dispatch(autoPlayPostVideo(''))
       navigation.navigate(CREATE_POST, { postId });
+      LMFeedAnalytics.track(
+        Events.POST_EDITED,
+        new Map<string, string>([
+          [Keys.UUID, postDetail?.user?.sdkClientInfo?.uuid],
+          [Keys.POST_ID, postId],
+          [Keys.POST_TYPE, getPostType(postDetail?.attachments)],
+        ])
+      );
     }
   };
 
@@ -457,7 +485,7 @@ export const PostDetailContextProvider = ({
   };
 
   const handleEditComment = async (commentId) => {
-    const commentDetail = getCommentDetail(postDetail?.replies, commentId);
+    const { commentDetail } = getCommentDetail(postDetail?.replies, commentId);
     // converts the mentions route to mention values
     const convertedComment = routeToMentionConverter(
       commentDetail?.text ? commentDetail.text : ""
@@ -469,20 +497,23 @@ export const PostDetailContextProvider = ({
   };
 
   // this function gets the detail of comment whose menu item is clicked
-  const getCommentDetail = (
-    comments?: LMCommentUI[],
-    id?: string
-  ): LMCommentUI | undefined => {
+  const getCommentDetail = (comments?: LMCommentUI[], id?: string) => {
     const commentId = id ? id : selectedMenuItemCommentId;
+    let commentDetail;
     if (comments) {
       for (const reply of comments) {
         if (reply.id === commentId) {
-          return reply; // Found the reply in the current level
+          commentDetail = { commentDetail: reply };
+          return commentDetail; // Found the reply in the current level
         }
         if (reply.replies && reply.replies.length > 0) {
           const nestedReply = getCommentDetail(reply.replies, commentId);
           if (nestedReply) {
-            return nestedReply; // Found the reply in the child replies
+            commentDetail = {
+              commentDetail: nestedReply?.commentDetail,
+              parentCommentId: reply?.id,
+            };
+            return commentDetail; // Found the reply in the child replies
           }
         }
       }
@@ -583,6 +614,13 @@ export const PostDetailContextProvider = ({
       )
     );
     Keyboard.dismiss();
+    LMFeedAnalytics.track(
+      Events.COMMENT_POSTED,
+      new Map<string, string>([
+        [Keys.POST_ID, postDetail?.id],
+        [Keys.COMMENT_ID, commentAddResponse?.comment?.Id],
+      ])
+    );
     return commentAddResponse;
   };
 
@@ -599,7 +637,7 @@ export const PostDetailContextProvider = ({
     };
     setShowRepliesOfCommentId(replyOnComment?.commentId);
     setCommentToAdd("");
-    setReplyOnComment({ textInputFocus: false, commentId: "" });
+    setReplyOnComment({ textInputFocus: false, commentId: "", userId: "" });
     setKeyboardFocusOnReply(false);
     setEditCommentFocus(false);
     setCommentFocus(false);
@@ -618,20 +656,33 @@ export const PostDetailContextProvider = ({
       )
     );
     Keyboard.dismiss();
+
+    LMFeedAnalytics.track(
+      Events.REPLY_POSTED,
+      new Map<string, string>([
+        [Keys.UUID, replyOnComment?.userId],
+        [Keys.POST_ID, postDetail?.id],
+        [Keys.COMMENT_ID, replyOnComment?.commentId],
+        [Keys.COMMENT_REPLY_ID, replyAddResponse?.comment?.Id],
+      ])
+    );
     return replyAddResponse;
   };
 
   // this useEffect handles the pagination of the comments
   useEffect(() => {
     getPostData();
-  }, [commentPageNumber,route.params[0]]);
+  }, [commentPageNumber, route.params[0]]);
 
   // this function is executed on the click of menu icon & handles the position and visibility of the modal
-  const onOverlayMenuClick = (event: {
-    nativeEvent: { pageX: number; pageY: number };
-  }, postId:string) => {
-    setOverlayMenuType(POST_TYPE)
-    setSelectedMenuItemPostId(postId)
+  const onOverlayMenuClick = (
+    event: {
+      nativeEvent: { pageX: number; pageY: number };
+    },
+    postId: string
+  ) => {
+    setOverlayMenuType(POST_TYPE);
+    setSelectedMenuItemPostId(postId);
     const { pageX, pageY } = event.nativeEvent;
     setShowActionListModal(true);
     setModalPosition({ x: pageX, y: pageY });
@@ -644,7 +695,8 @@ export const PostDetailContextProvider = ({
         post={postDetail}
         // header props
         headerProps={{
-          onOverlayMenuClick: (event) => onOverlayMenuClick(event, postDetail?.id)
+          onOverlayMenuClick: (event) =>
+            onOverlayMenuClick(event, postDetail?.id),
         }}
         // footer props
         footerProps={{
@@ -675,9 +727,12 @@ export const PostDetailContextProvider = ({
         }}
         mediaProps={{
           videoProps: {
-            autoPlay: postListStyle?.media?.video?.autoPlay != undefined? postListStyle?.media?.video?.autoPlay : true,
-            videoInFeed: false
-          }
+            autoPlay:
+              postListStyle?.media?.video?.autoPlay != undefined
+                ? postListStyle?.media?.video?.autoPlay
+                : true,
+            videoInFeed: false,
+          },
         }}
       />
     );

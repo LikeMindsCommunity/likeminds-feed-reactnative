@@ -37,6 +37,9 @@ import { LMHeader, LMImage, LMLoader, LMVideo } from "../../components";
 import { LMIcon } from "../../uiComponents";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { LMMenuItemsUI, RootStackParamList } from "../../models";
+import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
+import { Events } from "../../enums/Events";
+import { Keys } from "../../enums/Keys";
 import { notificationFeedClear } from "../../store/actions/notification";
 
 interface UniversalFeedProps {
@@ -68,7 +71,7 @@ interface UniversalFeedProps {
     postId: string
   ) => void;
   onTapNotificationBellProp: () => void;
-  onSharePostClicked: (id:string) => void;
+  onSharePostClicked: (id: string) => void;
 }
 
 const UniversalFeed = ({
@@ -86,7 +89,7 @@ const UniversalFeed = ({
   newPostButtonClickProps,
   onOverlayMenuClickProp,
   onTapNotificationBellProp,
-  onSharePostClicked
+  onSharePostClicked,
 }: UniversalFeedProps) => {
   return (
     <UniversalFeedCustomisableMethodsContextProvider
@@ -137,6 +140,8 @@ const UniversalFeedComponent = () => {
               onTapNotificationBellProp
                 ? onTapNotificationBellProp()
                 : onTapNotificationBell();
+
+              LMFeedAnalytics.track(Events.NOTIFICATION_PAGE_OPENED);
             }}
           >
             <Image
@@ -227,11 +232,12 @@ const UniversalFeedComponent = () => {
           universalFeedStyle?.newPostButtonStyle,
         ]}
         // handles post uploading status and member rights to create post
-        onPress={() =>
+        onPress={() => {
           newPostButtonClickProps
             ? newPostButtonClickProps()
-            : newPostButtonClick()
-        }
+            : newPostButtonClick();
+          LMFeedAnalytics.track(Events.POST_CREATION_STARTED);
+        }}
       >
         <Image
           source={require("../../assets/images/add_post_icon3x.png")}
