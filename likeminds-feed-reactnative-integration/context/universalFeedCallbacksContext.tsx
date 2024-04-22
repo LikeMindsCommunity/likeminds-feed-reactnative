@@ -14,7 +14,7 @@ export interface UniversalFeedCallbacksContextProps {
   newPostButtonClickProps: () => void;
   onOverlayMenuClickProp: (event: {
     nativeEvent: { pageX: number; pageY: number };
-  }, menuItems: LMMenuItemsUI, postId: string) => void;
+  }, menuItems: LMMenuItemsUI[], postId: string) => void;
   onTapNotificationBellProp: () => void;
   onSharePostClicked: (id:string) => void;
 }
@@ -31,7 +31,7 @@ export interface UniversalFeedCustomisableMethodsContext {
   newPostButtonClickProps: () => void;
   onOverlayMenuClickProp: (event: {
     nativeEvent: { pageX: number; pageY: number };
-  },menuItems: LMMenuItemsUI, postId: string) => void;
+  },menuItems: LMMenuItemsUI[], postId: string) => void;
   onTapNotificationBellProp: () => void;
   onSharePostClicked: (id:string) => void;
 }

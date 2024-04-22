@@ -7,13 +7,12 @@ import {
 } from "react-native";
 import React from "react";
 import { LMPostMenuProps } from "./types";
-import layout from "../../../constants/Layout";
-import {LMText} from "../../../uiComponents";
+import layout from "../../constants/Layout";
+import {LMText} from "../../uiComponents";
 import { styles } from "./styles";
 
 const LMPostMenu = React.memo(({
-  postId,
-  menuItems,
+  post,
   onSelected,
   modalVisible,
   onCloseModal,
@@ -46,7 +45,7 @@ const LMPostMenu = React.memo(({
               top:
                 modalPosition.y > layout.window.height / 2
                   ? Platform.OS === "ios"
-                    ? menuItems.length > 1
+                    ? post.menuItems.length > 1
                       ? modalPosition.y - 110
                       : modalPosition.y - 65
                     : modalPosition.y - 15
@@ -55,14 +54,14 @@ const LMPostMenu = React.memo(({
           ])}
         >
           {/* Menu List Items */}
-          {menuItems &&
-            menuItems?.map((item, index) => {
+          {post.menuItems &&
+            post.menuItems?.map((item, index) => {
               return (
                 <TouchableOpacity
                   activeOpacity={0.8}
                   key={index}
                   onPress={() => {
-                    onSelected(postId, item.id);
+                    onSelected(post.id, item.id, post?.isPinned);
                     onCloseModal();
                   }}
                 >

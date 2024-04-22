@@ -40,10 +40,7 @@ import LMPost from "../../components/LMPost/LMPost";
 import { LMPostUI } from "../../models";
 import { LMLoader } from "../../components";
 import { autoPlayPostVideo } from "../../store/actions/feed";
-import { Events } from "../../enums/Events";
-import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
-import { Keys } from "../../enums/Keys";
-import { getPostType } from "../../utils/analytics";
+import LMPostMenu from "../../customModals/LMPostMenu";
 
 const PostsList = ({ route, children }: any) => {
   const { navigation }: UniversalFeedContextValues = useUniversalFeedContext();
@@ -85,7 +82,7 @@ const PostsListComponent = () => {
     handleEditPost,
     onTapLikeCount,
     onOverlayMenuClick,
-    setPostInViewport
+    setPostInViewport,
   }: PostListContextValues = usePostListContext();
   const LMFeedContextStyles = useLMFeedStyles();
   const { postListStyle, loaderStyle } = LMFeedContextStyles;
@@ -99,7 +96,7 @@ const PostsListComponent = () => {
     handleDeletePostProps,
     handleReportPostProps,
     onOverlayMenuClickProp,
-    onSharePostClicked
+    onSharePostClicked,
   } = useUniversalFeedCustomisableMethodsContext();
   // this function returns the id of the item selected from menu list and handles further functionalities accordingly
   const onMenuItemSelect = (
@@ -167,7 +164,7 @@ const PostsListComponent = () => {
                 style={{ backgroundColor: "#e0e0e0" }}
                 onPress={() => {
                   dispatch(clearPostDetail() as any);
-                  dispatch(autoPlayPostVideo(''))
+                  dispatch(autoPlayPostVideo(""));
                   navigation.navigate(POST_DETAIL, [
                     item?.id,
                     NAVIGATED_FROM_POST,
@@ -179,14 +176,6 @@ const PostsListComponent = () => {
                   post={item}
                   // header props
                   headerProps={{
-                    postMenu: {
-                      modalPosition: modalPosition,
-                      modalVisible: showActionListModal,
-                      onCloseModal: closePostActionListModal,
-                      onSelected: (postId, itemId) => {
-                        onMenuItemSelect(postId, itemId, item?.isPinned, item);
-                      },
-                    },
                     onOverlayMenuClick: (event) => {
                       onOverlayMenuClickProp
                         ? onOverlayMenuClickProp(
@@ -194,7 +183,7 @@ const PostsListComponent = () => {
                             item?.menuItems,
                             item?.id
                           )
-                        : onOverlayMenuClick(event);
+                        : onOverlayMenuClick(event, item.id);
                     },
                   }}
                   // footer props
@@ -229,15 +218,18 @@ const PostsListComponent = () => {
                     },
                     shareButton: {
                       onTap: () => {
-                        onSharePostClicked ? onSharePostClicked(item?.id) : {}
-                      }
-                    }
+                        onSharePostClicked ? onSharePostClicked(item?.id) : {};
+                      },
+                    },
                   }}
                   mediaProps={{
                     videoProps: {
-                      autoPlay: postListStyle?.media?.video?.autoPlay != undefined? postListStyle?.media?.video?.autoPlay : true,
-                      videoInFeed: true
-                    }
+                      autoPlay:
+                        postListStyle?.media?.video?.autoPlay != undefined
+                          ? postListStyle?.media?.video?.autoPlay
+                          : true,
+                      videoInFeed: true,
+                    },
                   }}
                 />
               </TouchableOpacity>
@@ -251,7 +243,7 @@ const PostsListComponent = () => {
             onViewableItemsChanged={({ changed, viewableItems }) => {
               if (changed) {
                 if (viewableItems) {
-                  setPostInViewport(viewableItems?.[0]?.item?.id)
+                  setPostInViewport(viewableItems?.[0]?.item?.id);
                 }
               }
             }}
@@ -285,6 +277,21 @@ const PostsListComponent = () => {
           closeModal={() => setShowReportModal(false)}
           reportType={POST_TYPE}
           postDetail={getPostDetail()}
+        />
+      )}
+      {/* menu list modal */}
+      {showActionListModal && (
+        <LMPostMenu
+          post={getPostDetail()}
+          onSelected={(postId, itemId, isPinned) => {
+            onMenuItemSelect(postId, itemId, isPinned);
+          }}
+          modalPosition={modalPosition}
+          modalVisible={showActionListModal}
+          onCloseModal={closePostActionListModal}
+          menuItemTextStyle={postListStyle?.header?.postMenu?.menuItemTextStyle}
+          menuViewStyle={postListStyle?.header?.postMenu?.menuViewStyle}
+          backdropColor={postListStyle?.header?.postMenu?.backdropColor}
         />
       )}
     </>

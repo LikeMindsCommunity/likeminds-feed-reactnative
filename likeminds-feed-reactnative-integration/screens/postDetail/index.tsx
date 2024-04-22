@@ -9,7 +9,6 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
 import { POST_LIKES_LIST, UNIVERSAL_FEED } from "../../constants/screenNames";
@@ -23,6 +22,7 @@ import {
   VIEW_MORE_TEXT,
 } from "../../constants/Strings";
 import { DeleteModal, ReportModal } from "../../customModals";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { styles } from "./styles";
 import Layout from "../../constants/Layout";
 import {
@@ -51,6 +51,7 @@ import {
   LMText,
 } from "../../uiComponents";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import LMPostMenu from "../../customModals/LMPostMenu";
 
 interface PostDetailProps {
   children: React.ReactNode;
@@ -133,7 +134,6 @@ const PostDetailComponent = React.memo(() => {
     modalPositionComment,
     localModalVisibility,
     showCommentActionListModal,
-    closeCommentActionListModal,
     commentLikeHandler,
     setCommentPageNumber,
     commentPageNumber,
@@ -171,6 +171,11 @@ const PostDetailComponent = React.memo(() => {
     handleEditComment,
     handleScreenBackPress,
     onCommentOverflowMenuClick,
+    modalPosition,
+    showActionListModal,
+    closePostActionListModal,
+    onMenuItemSelect,
+    overlayMenuType,
   }: PostDetailContextValues = usePostDetailContext();
 
   const LMFeedContextStyles = useLMFeedStyles();
@@ -361,7 +366,6 @@ const PostDetailComponent = React.memo(() => {
                                     setReplyOnComment({
                                       textInputFocus: true,
                                       commentId: item?.id,
-                                      userId: item?.user?.sdkClientInfo?.uuid,
                                     });
                                     setReplyToUsername(item?.user?.name);
                                     customCommentItemStyle?.replyTextProps
@@ -385,30 +389,12 @@ const PostDetailComponent = React.memo(() => {
                                         ?.viewMoreRepliesProps?.textStyle
                                     : styles.viewMoreText,
                                 }}
-                                // comment menu item props
-                                commentMenu={{
-                                  postId: item?.id,
-                                  menuItems: item?.menuItems,
-                                  modalPosition: modalPositionComment,
-                                  modalVisible: showCommentActionListModal,
-                                  onCloseModal: closeCommentActionListModal,
-                                  onSelected: (commentId, itemId) =>
-                                    onCommentMenuItemSelect(commentId, itemId),
-                                  menuItemTextStyle:
-                                    postHeaderStyle?.postMenu
-                                      ?.menuItemTextStyle,
-                                  menuViewStyle:
-                                    postHeaderStyle?.postMenu?.menuViewStyle,
-                                  backdropColor:
-                                    postHeaderStyle?.postMenu?.backdropColor,
-                                }}
                                 menuIcon={{
                                   ...postHeaderStyle?.menuIcon,
                                   onTap: () => {
                                     setReplyOnComment({
                                       textInputFocus: false,
                                       commentId: "",
-                                      userId: "",
                                     });
                                     postHeaderStyle?.menuIcon?.onTap();
                                   },
@@ -451,14 +437,20 @@ const PostDetailComponent = React.memo(() => {
                                 timeStampStyle={
                                   customCommentItemStyle?.timeStampStyle
                                 }
-                                onCommentOverflowMenuClick={(event) => {
+                                onCommentOverflowMenuClick={(
+                                  event,
+                                  commentId
+                                ) => {
                                   onCommentOverflowMenuClickProp
                                     ? onCommentOverflowMenuClickProp(
                                         event,
                                         item?.menuItems,
-                                        item?.id
+                                        commentId
                                       )
-                                    : onCommentOverflowMenuClick(event);
+                                    : onCommentOverflowMenuClick(
+                                        event,
+                                        commentId
+                                      );
                                 }}
                               />
                             )}
@@ -539,7 +531,6 @@ const PostDetailComponent = React.memo(() => {
                     setReplyOnComment({
                       textInputFocus: false,
                       commentId: "",
-                      userId: "",
                     })
                   }
                   style={customReplyingViewStyle?.cancelReplyIcon?.boxStyle}
@@ -779,10 +770,7 @@ const PostDetailComponent = React.memo(() => {
           }
           deleteType={selectedMenuItemPostId ? POST_TYPE : COMMENT_TYPE}
           postDetail={postDetail}
-          commentDetail={getCommentDetail(postDetail?.replies)?.commentDetail}
-          parentCommentId={
-            getCommentDetail(postDetail?.replies)?.parentCommentId
-          }
+          commentDetail={getCommentDetail(postDetail?.replies)}
           navigation={navigation}
         />
       )}
@@ -793,7 +781,28 @@ const PostDetailComponent = React.memo(() => {
           closeModal={() => setShowReportModal(false)}
           reportType={selectedMenuItemPostId ? POST_TYPE : COMMENT_TYPE}
           postDetail={postDetail}
-          commentDetail={getCommentDetail(postDetail?.replies)?.commentDetail}
+          commentDetail={getCommentDetail(postDetail?.replies)}
+        />
+      )}
+      {/* menu list modal */}
+      {showActionListModal && (
+        <LMPostMenu
+          post={
+            overlayMenuType === POST_TYPE
+              ? postDetail
+              : getCommentDetail(postDetail?.replies)
+          }
+          onSelected={(postId, itemId, isPinned) => {
+            overlayMenuType === POST_TYPE
+              ? onMenuItemSelect(postId, itemId, isPinned)
+              : onCommentMenuItemSelect(postId, itemId);
+          }}
+          modalPosition={modalPosition}
+          modalVisible={showActionListModal}
+          onCloseModal={closePostActionListModal}
+          menuItemTextStyle={postListStyle?.header?.postMenu?.menuItemTextStyle}
+          menuViewStyle={postListStyle?.header?.postMenu?.menuViewStyle}
+          backdropColor={postListStyle?.header?.postMenu?.backdropColor}
         />
       )}
     </SafeAreaView>
