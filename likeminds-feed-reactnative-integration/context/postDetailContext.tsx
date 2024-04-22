@@ -58,6 +58,7 @@ import {
   SavePostRequest,
 } from "@likeminds.community/feed-js";
 import {
+  autoPlayPostVideo,
   likePost,
   likePostStateHandler,
   pinPost,
@@ -412,6 +413,7 @@ export const PostDetailContextProvider = ({
 
   // this function handles the functionality on the report option of post
   const handleReportPost = async () => {
+    dispatch(autoPlayPostVideo(''))
     setShowReportModal(true);
   };
 
@@ -438,12 +440,14 @@ export const PostDetailContextProvider = ({
       handleDeletePost(true);
     }
     if (itemId === EDIT_POST_MENU_ITEM) {
+      dispatch(autoPlayPostVideo(''))
       navigation.navigate(CREATE_POST, { postId });
     }
   };
 
   // this function handles the functionality on the report option of comment
   const handleReportComment = async () => {
+    dispatch(autoPlayPostVideo(''))
     setShowReportModal(true);
   };
 

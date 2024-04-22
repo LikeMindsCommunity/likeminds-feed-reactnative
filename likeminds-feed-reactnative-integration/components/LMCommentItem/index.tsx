@@ -103,7 +103,7 @@ const LMCommentItem = React.memo(
       ) : showText ? (
         <Text></Text>
       ) : (
-        <Text>See More</Text>
+        <Text style={styles.showMoreText}>See More</Text>
       ),
       textStyle: showMoreProps?.textStyle,
     };

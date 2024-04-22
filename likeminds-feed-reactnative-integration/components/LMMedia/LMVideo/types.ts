@@ -21,5 +21,7 @@ export interface LMVideoProps {
   onCancel?: (index: string) => void; // callback function that executes on click of cancel button,
   cancelButton?: LMButtonProps;
   postId?: string;
-  videoInFeed?: boolean
+  videoInFeed?: boolean;
+  videoInCarousel?: boolean;
+  currentVideoInCarousel?: string
 }

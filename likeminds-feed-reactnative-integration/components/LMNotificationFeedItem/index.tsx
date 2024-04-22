@@ -38,6 +38,25 @@ const LMNotificationFeedItem = React.memo(
     const attachmentIconStyle =
       notificationFeedStyle?.activityAttachmentImageStyle;
 
+      const BOLD_STYLE = "BOLD_STYLE"
+      const NORMAL_STYLE = "NORMAL_STYLE"
+      const routeRegex = /<<(.*?)>>/g;
+      const activityTextArray = [{
+        content: '',
+        styleType: ''
+      }];
+
+      const segments = activity.activityText.split(routeRegex);
+      segments.forEach(segment => {
+        const match = segment.match(/(.*?)\|.*?/);
+        if (match) {
+          const matchedContent = match[1];
+          activityTextArray.push({content: matchedContent, styleType: BOLD_STYLE})
+        }else {
+          activityTextArray.push({content: segment, styleType: NORMAL_STYLE})
+        }
+      })      
+
     return (
       <View
         style={StyleSheet.flatten([
@@ -123,7 +142,9 @@ const LMNotificationFeedItem = React.memo(
               ])}
               maxLines={2}
             >
-              {activity.activityText.replace(/<<([^|]+)\|[^>]+>>/g, "$1")}
+              {activityTextArray.map((item) => (
+                item?.styleType === BOLD_STYLE ? <Text style={{fontWeight:'500'}}>{item?.content}</Text> : <Text>{item?.content}</Text>
+              ))}
             </LMText>
             <LMText
               textStyle={StyleSheet.flatten([

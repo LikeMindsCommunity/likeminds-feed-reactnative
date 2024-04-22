@@ -191,6 +191,7 @@ const UniversalFeedComponent = () => {
                 height={styles.uploadingImageVideoBox.height}
                 showControls={false}
                 boxFit="contain"
+                autoPlay={false}
               />
             )}
             {uploadingMediaAttachmentType === DOCUMENT_ATTACHMENT_TYPE && (

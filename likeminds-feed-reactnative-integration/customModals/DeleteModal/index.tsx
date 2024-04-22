@@ -257,6 +257,7 @@ const DeleteModal = ({
                         style={styles.otherTextInput}
                         placeholder={REASON_FOR_DELETION_PLACEHOLDER}
                         value={otherReason}
+                        placeholderTextColor={'grey'}
                       />
                     ) : null}
 

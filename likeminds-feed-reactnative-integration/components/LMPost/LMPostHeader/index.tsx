@@ -6,7 +6,6 @@ import { nameInitials } from "../../../utils";
 import { styles } from "./styles";
 import { LMPostContextValues, useLMPostContext } from "../../../context";
 import { useLMFeedStyles } from "../../../lmFeedProvider";
-import { STATE_ADMIN } from "../../../constants/Strings";
 import { useAppSelector } from "../../../store/store";
 
 const LMPostHeader = React.memo(() => {
@@ -77,7 +76,7 @@ const LMPostHeader = React.memo(() => {
                 {post?.user?.name}
               </LMText>
               {/* member state label view */}
-              {showMemberStateLabel && memberData?.state === STATE_ADMIN && (
+              {showMemberStateLabel && post?.user?.customTitle != '' && (
                 <View
                   style={StyleSheet.flatten([
                     styles.labelView,
@@ -89,7 +88,7 @@ const LMPostHeader = React.memo(() => {
                       styles.labelText,
                       customPostHeaderStyle?.memberStateTextStyle,
                     ])}
-                  >{`Admin`}</LMText>
+                  >{post?.user?.customTitle}</LMText>
                 </View>
               )}
             </View>

@@ -119,6 +119,10 @@ const LMCarousel = React.memo(({
                     }
               }
               cancelButton={cancelButton}
+              videoInFeed={videoItem?.videoInFeed}
+              videoInCarousel={true}
+              currentVideoInCarousel={attachments[activeIndex]?.attachmentMeta?.url}
+              postId={videoItem?.postId}
             />
           )}
         </View>
