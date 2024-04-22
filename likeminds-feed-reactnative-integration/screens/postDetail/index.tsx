@@ -53,7 +53,6 @@ import {
 } from "../../uiComponents";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import LMPostMenu from "../../customModals/LMPostMenu";
-import { useEffect } from "react/cjs/react.production.min";
 import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Events } from "../../enums/Events";
 import { Keys } from "../../enums/Keys";
@@ -300,8 +299,8 @@ const PostDetailComponent = React.memo(() => {
                         ? navigatedFromComments
                           ? Layout.normalize(64)
                           : Layout.normalize(84)
-                        : Layout.normalize(64),
-                  },
+                        : Layout.normalize(64) : Layout.normalize(64) : Layout.normalize(64)
+                  }
                 ])}
               >
                 <>
@@ -689,7 +688,7 @@ const PostDetailComponent = React.memo(() => {
               </View>
             ) : null}
           </>
-        ) : (
+         : (
           <View style={styles.loaderView}>
             <LMLoader />
           </View>
