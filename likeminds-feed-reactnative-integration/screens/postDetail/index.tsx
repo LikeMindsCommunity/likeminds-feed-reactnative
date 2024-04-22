@@ -52,6 +52,10 @@ import {
 } from "../../uiComponents";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import LMPostMenu from "../../customModals/LMPostMenu";
+import { useEffect } from "react/cjs/react.production.min";
+import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
+import { Events } from "../../enums/Events";
+import { Keys } from "../../enums/Keys";
 
 interface PostDetailProps {
   children: React.ReactNode;
@@ -220,6 +224,15 @@ const PostDetailComponent = React.memo(() => {
         : handleEditComment(commentId);
     }
   };
+
+  useEffect(() => {
+    if (postDetail?.replies?.length > 0) {
+      LMFeedAnalytics.track(
+        Events.COMMENT_LIST_OPEN,
+        new Map<string, string>([[Keys.POST_ID, postDetail?.id]])
+      );
+    }
+  }, [postDetail?.replies?.length]);
 
   return (
     <SafeAreaView edges={["left", "right", "top"]} style={styles.flexView}>

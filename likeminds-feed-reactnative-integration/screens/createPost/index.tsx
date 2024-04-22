@@ -17,6 +17,7 @@ import {
   ADD_POST_TEXT,
   ADD_VIDEOS,
   CREATE_POST_PLACEHOLDER_TEXT,
+  DOCUMENT_ATTACHMENT_TYPE,
   IMAGE_ATTACHMENT_TYPE,
   SAVE_POST_TEXT,
   SELECT_BOTH,
@@ -256,6 +257,7 @@ const CreatePostComponent = () => {
                       setPostContentText(res);
                       setAllTags([]);
                       setIsUserTagging(false);
+
                       const taggedUsers = userTaggingDecoder(res);
                       if (taggedUsers?.length > 0) {
                         const taggedUserIds = taggedUsers
@@ -576,6 +578,7 @@ const CreatePostComponent = () => {
                 const ogTags =
                   formattedLinkAttachments[0]?.attachmentMeta?.ogTags;
 
+                // To fire user tagged analytics event
                 if (taggedUsers?.length > 0) {
                   map.set(Keys.USER_TAGGED, Keys.YES);
                   map.set(
@@ -590,7 +593,8 @@ const CreatePostComponent = () => {
                   map.set(Keys.USER_TAGGED, Keys.NO);
                 }
 
-                if (ogTags !== null) {
+                // To fire link analytics event
+                if (ogTags) {
                   map.set(Keys.LINK_ATTACHED, Keys.YES);
                   map.set(Keys.LINK, ogTags?.url ?? "");
                 } else {
@@ -608,9 +612,48 @@ const CreatePostComponent = () => {
                 //   map.set(Keys.TOPICS_ADDED, Keys.NO);
                 // }
 
-                map.set(Keys.IMAGE_ATTACHED, Keys.NO);
-                map.set(Keys.VIDEO_ATTACHED, Keys.NO);
-                map.set(Keys.DOCUMENT_ATTACHED, Keys.NO);
+                // To fire media analytics event
+                let imageCount = 0;
+                let videoCount = 0;
+                let documentCount = 0;
+                for (let i = 0; i < allAttachment.length; i++) {
+                  if (
+                    allAttachment[i].attachmentType === IMAGE_ATTACHMENT_TYPE
+                  ) {
+                    imageCount++;
+                  } else if (
+                    allAttachment[i].attachmentType === VIDEO_ATTACHMENT_TYPE
+                  ) {
+                    videoCount++;
+                  } else if (
+                    allAttachment[i].attachmentType === DOCUMENT_ATTACHMENT_TYPE
+                  ) {
+                    documentCount++;
+                  }
+                }
+
+                // sends image attached event if imageCount > 0
+                if (imageCount > 0) {
+                  map.set(Keys.IMAGE_ATTACHED, Keys.YES);
+                  map.set(Keys.IMAGE_COUNT, `${imageCount}`);
+                } else {
+                  map.set(Keys.IMAGE_ATTACHED, Keys.NO);
+                }
+                // sends video attached event if videoCount > 0
+                if (videoCount > 0) {
+                  map.set(Keys.VIDEO_ATTACHED, Keys.YES);
+                  map.set(Keys.VIDEO_COUNT, `${videoCount}`);
+                } else {
+                  map.set(Keys.VIDEO_ATTACHED, Keys.NO);
+                }
+
+                // sends document attached event if documentCount > 0
+                if (documentCount > 0) {
+                  map.set(Keys.DOCUMENT_ATTACHED, Keys.YES);
+                  map.set(Keys.DOCUMENT_COUNT, `${documentCount}`);
+                } else {
+                  map.set(Keys.DOCUMENT_ATTACHED, Keys.NO);
+                }
 
                 LMFeedAnalytics.track(Events.POST_CREATION_COMPLETED, map);
               }
