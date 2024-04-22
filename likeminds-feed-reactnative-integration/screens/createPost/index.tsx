@@ -3,10 +3,8 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Text,
-  ScrollView,
   Pressable,
   FlatList,
-  Alert,
   StyleSheet,
 } from "react-native";
 import React from "react";
@@ -19,9 +17,11 @@ import {
   ADD_POST_TEXT,
   ADD_VIDEOS,
   CREATE_POST_PLACEHOLDER_TEXT,
+  DOCUMENT_ATTACHMENT_TYPE,
   IMAGE_ATTACHMENT_TYPE,
   SAVE_POST_TEXT,
   SELECT_BOTH,
+  SELECT_FILE,
   SELECT_IMAGE,
   SELECT_VIDEO,
   VIDEO_ATTACHMENT_TYPE,
@@ -54,6 +54,10 @@ import {
   LMVideo,
 } from "../../components";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
+import { Events } from "../../enums/Events";
+import { Keys } from "../../enums/Keys";
+import { userTaggingDecoder } from "../../utils/decodeMentions";
 
 interface CreatePostProps {
   children: React.ReactNode;
@@ -66,7 +70,11 @@ interface CreatePostProps {
   };
   handleGalleryProp: (type: string) => void;
   handleDocumentProp: () => void;
-  onPostClickProp: (allMedia:Array<LMAttachmentUI>, linkData: Array<LMAttachmentUI>, content: string) => void;
+  onPostClickProp: (
+    allMedia: Array<LMAttachmentUI>,
+    linkData: Array<LMAttachmentUI>,
+    content: string
+  ) => void;
   handleScreenBackPressProp: () => void;
 }
 
@@ -77,18 +85,17 @@ const CreatePost = ({
   handleDocumentProp,
   handleGalleryProp,
   onPostClickProp,
-  handleScreenBackPressProp
+  handleScreenBackPressProp,
 }: CreatePostProps) => {
   return (
-  
-      <CreatePostCustomisableMethodsContextProvider
-        handleDocumentProp={handleDocumentProp}
-        handleGalleryProp={handleGalleryProp}
-        onPostClickProp={onPostClickProp}
-        handleScreenBackPressProp={handleScreenBackPressProp}
-      >
-        <CreatePostComponent />
-      </CreatePostCustomisableMethodsContextProvider>
+    <CreatePostCustomisableMethodsContextProvider
+      handleDocumentProp={handleDocumentProp}
+      handleGalleryProp={handleGalleryProp}
+      onPostClickProp={onPostClickProp}
+      handleScreenBackPressProp={handleScreenBackPressProp}
+    >
+      <CreatePostComponent />
+    </CreatePostCustomisableMethodsContextProvider>
   );
 };
 
@@ -97,12 +104,13 @@ const CreatePostComponent = () => {
   const LMFeedContextStyles = useLMFeedStyles();
   const { postListStyle, createPostStyle, postDetailStyle } =
     LMFeedContextStyles;
-    const customTextInputStyle = createPostStyle?.createPostTextInputStyle
-    const customAddMoreAttachmentsButton = createPostStyle?.addMoreAttachmentsButton
-    const customCreatePostScreenHeader = createPostStyle?.createPostScreenHeader
-    const customAttachmentOptionsStyle = createPostStyle?.attachmentOptionsStyle
-    const postHeaderStyle = postListStyle?.header
-    const postMediaStyle = postListStyle?.media
+  const customTextInputStyle = createPostStyle?.createPostTextInputStyle;
+  const customAddMoreAttachmentsButton =
+    createPostStyle?.addMoreAttachmentsButton;
+  const customCreatePostScreenHeader = createPostStyle?.createPostScreenHeader;
+  const customAttachmentOptionsStyle = createPostStyle?.attachmentOptionsStyle;
+  const postHeaderStyle = postListStyle?.header;
+  const postMediaStyle = postListStyle?.media;
   const {
     navigation,
     postToEdit,
@@ -137,20 +145,20 @@ const CreatePostComponent = () => {
     postDetail,
     postEdit,
     onPostClick,
-    handleScreenBackPress
+    handleScreenBackPress,
   }: CreatePostContextValues = useCreatePostContext();
 
   const {
     handleDocumentProp,
     handleGalleryProp,
     onPostClickProp,
-    handleScreenBackPressProp
+    handleScreenBackPressProp,
   } = useCreatePostCustomisableMethodsContext();
 
   // this renders the post detail UI
   const uiRenderForPost = () => {
     return (
-      <ScrollView
+      <View
         keyboardShouldPersistTaps={"handled"}
         style={
           postToEdit
@@ -198,8 +206,7 @@ const CreatePostComponent = () => {
             customTextInputStyle?.inputTextStyle,
           ]}
           multilineField={
-            customTextInputStyle?.multilineField !=
-            undefined
+            customTextInputStyle?.multilineField != undefined
               ? customTextInputStyle?.multilineField
               : true
           }
@@ -236,7 +243,6 @@ const CreatePostComponent = () => {
           >
             <FlatList
               data={[...allTags]}
-              nestedScrollEnabled={true}
               renderItem={({ item }: { item: LMUserUI }) => {
                 return (
                   <Pressable
@@ -251,6 +257,23 @@ const CreatePostComponent = () => {
                       setPostContentText(res);
                       setAllTags([]);
                       setIsUserTagging(false);
+
+                      const taggedUsers = userTaggingDecoder(res);
+                      if (taggedUsers?.length > 0) {
+                        const taggedUserIds = taggedUsers
+                          .map((user) => user.route)
+                          .join(", ");
+                        LMFeedAnalytics.track(
+                          Events.USER_TAGGED_IN_POST,
+                          new Map<string, string>([
+                            [Keys.TAGGED_USER_UUID, taggedUserIds],
+                            [
+                              Keys.TAGGED_USER_COUNT,
+                              taggedUsers?.length.toString(),
+                            ],
+                          ])
+                        );
+                      }
                     }}
                     style={[
                       styles.taggingListItem,
@@ -262,8 +285,8 @@ const CreatePostComponent = () => {
                       {...postHeaderStyle?.profilePicture}
                       fallbackText={{
                         ...postHeaderStyle?.profilePicture?.fallbackText,
-                        children: postHeaderStyle?.profilePicture
-                          ?.fallbackText?.children ? (
+                        children: postHeaderStyle?.profilePicture?.fallbackText
+                          ?.children ? (
                           postHeaderStyle?.profilePicture?.fallbackText
                             ?.children
                         ) : (
@@ -272,8 +295,7 @@ const CreatePostComponent = () => {
                       }}
                       fallbackTextBoxStyle={[
                         styles.taggingListProfileBoxStyle,
-                        postHeaderStyle?.profilePicture
-                          ?.fallbackTextBoxStyle,
+                        postHeaderStyle?.profilePicture?.fallbackTextBoxStyle,
                       ]}
                       size={
                         postHeaderStyle?.profilePicture?.size
@@ -447,9 +469,13 @@ const CreatePostComponent = () => {
             <LMButton
               onTap={() => {
                 formattedMediaAttachments.length > 0
-                  ? handleGalleryProp ? handleGalleryProp(SELECT_BOTH) : handleGallery(SELECT_BOTH)
+                  ? handleGalleryProp
+                    ? handleGalleryProp(SELECT_BOTH)
+                    : handleGallery(SELECT_BOTH)
                   : formattedDocumentAttachments.length > 0
-                  ? handleDocumentProp ? handleDocumentProp() : handleDocument()
+                  ? handleDocumentProp
+                    ? handleDocumentProp()
+                    : handleDocument()
                   : {},
                   customAddMoreAttachmentsButton?.onTap();
               }}
@@ -469,12 +495,10 @@ const CreatePostComponent = () => {
                 customAddMoreAttachmentsButton?.buttonStyle,
               ])}
               placement={customAddMoreAttachmentsButton?.placement}
-              isClickable={
-                customAddMoreAttachmentsButton?.isClickable
-              }
+              isClickable={customAddMoreAttachmentsButton?.isClickable}
             />
           )}
-      </ScrollView>
+      </View>
     );
   };
 
@@ -489,7 +513,9 @@ const CreatePostComponent = () => {
             : true
         }
         onBackPress={() => {
-          handleScreenBackPressProp ? handleScreenBackPressProp() : handleScreenBackPress()
+          handleScreenBackPressProp
+            ? handleScreenBackPressProp()
+            : handleScreenBackPress();
         }}
         heading={
           postToEdit
@@ -523,7 +549,107 @@ const CreatePostComponent = () => {
                 ? styles.enabledOpacity
                 : styles.disabledOpacity
             }
-            onPress={() => onPostClickProp ? onPostClickProp(allAttachment,formattedLinkAttachments, postContentText) : onPostClick(allAttachment,formattedLinkAttachments, postContentText)}
+            onPress={() => {
+              onPostClickProp
+                ? onPostClickProp(
+                    allAttachment,
+                    formattedLinkAttachments,
+                    postContentText
+                  )
+                : onPostClick(
+                    allAttachment,
+                    formattedLinkAttachments,
+                    postContentText
+                  );
+
+              if (!postToEdit) {
+                const map: Map<string | undefined, string | undefined> =
+                  new Map();
+                const taggedUsers: any = userTaggingDecoder(postContentText);
+
+                const ogTags =
+                  formattedLinkAttachments[0]?.attachmentMeta?.ogTags;
+
+                // To fire user tagged analytics event
+                if (taggedUsers?.length > 0) {
+                  map.set(Keys.USER_TAGGED, Keys.YES);
+                  map.set(
+                    Keys.TAGGED_USER_COUNT,
+                    taggedUsers?.length.toString()
+                  );
+                  const taggedUserIds = taggedUsers
+                    .map((user) => user.route)
+                    .join(", ");
+                  map.set(Keys.TAGGED_USER_UUID, taggedUserIds);
+                } else {
+                  map.set(Keys.USER_TAGGED, Keys.NO);
+                }
+
+                // To fire link analytics event
+                if (ogTags) {
+                  map.set(Keys.LINK_ATTACHED, Keys.YES);
+                  map.set(Keys.LINK, ogTags?.url ?? "");
+                } else {
+                  map.set(Keys.LINK_ATTACHED, Keys.NO);
+                }
+
+                // TODO for Topic Feed
+                // if (topics !== null && topics.length > 0) {
+                //   const topicsNameString = topics
+                //     .map((topic) => topic.name)
+                //     .join(", ");
+                //   map.set(Keys.TOPICS_ADDED, Keys.YES);
+                //   map.set(Keys.TOPICS, topicsNameString);
+                // } else {
+                //   map.set(Keys.TOPICS_ADDED, Keys.NO);
+                // }
+
+                // To fire media analytics event
+                let imageCount = 0;
+                let videoCount = 0;
+                let documentCount = 0;
+                for (let i = 0; i < allAttachment.length; i++) {
+                  if (
+                    allAttachment[i].attachmentType === IMAGE_ATTACHMENT_TYPE
+                  ) {
+                    imageCount++;
+                  } else if (
+                    allAttachment[i].attachmentType === VIDEO_ATTACHMENT_TYPE
+                  ) {
+                    videoCount++;
+                  } else if (
+                    allAttachment[i].attachmentType === DOCUMENT_ATTACHMENT_TYPE
+                  ) {
+                    documentCount++;
+                  }
+                }
+
+                // sends image attached event if imageCount > 0
+                if (imageCount > 0) {
+                  map.set(Keys.IMAGE_ATTACHED, Keys.YES);
+                  map.set(Keys.IMAGE_COUNT, `${imageCount}`);
+                } else {
+                  map.set(Keys.IMAGE_ATTACHED, Keys.NO);
+                }
+                // sends video attached event if videoCount > 0
+                if (videoCount > 0) {
+                  map.set(Keys.VIDEO_ATTACHED, Keys.YES);
+                  map.set(Keys.VIDEO_COUNT, `${videoCount}`);
+                } else {
+                  map.set(Keys.VIDEO_ATTACHED, Keys.NO);
+                }
+
+                // sends document attached event if documentCount > 0
+                if (documentCount > 0) {
+                  map.set(Keys.DOCUMENT_ATTACHED, Keys.YES);
+                  map.set(Keys.DOCUMENT_COUNT, `${documentCount}`);
+                } else {
+                  map.set(Keys.DOCUMENT_ATTACHED, Keys.NO);
+                }
+
+                LMFeedAnalytics.track(Events.POST_CREATION_COMPLETED, map);
+              }
+            }}
           >
             {customCreatePostScreenHeader?.rightComponent ? (
               customCreatePostScreenHeader?.rightComponent
@@ -562,10 +688,14 @@ const CreatePostComponent = () => {
               customAttachmentOptionsStyle?.photoAttachmentView,
             ]}
             onPress={() => {
-              handleGalleryProp ? handleGalleryProp(SELECT_IMAGE) :handleGallery(SELECT_IMAGE);
-              customAttachmentOptionsStyle
-                ?.onPhotoAttachmentOptionClick &&
-                customAttachmentOptionsStyle?.onPhotoAttachmentOptionClick();
+              handleGalleryProp
+                ? handleGalleryProp(SELECT_IMAGE)
+                : handleGallery(SELECT_IMAGE);
+
+              LMFeedAnalytics.track(
+                Events.CLICKED_ON_ATTACHMENT,
+                new Map<string, string>([[Keys.TYPE, SELECT_IMAGE]])
+              );
             }}
           >
             <LMIcon
@@ -575,8 +705,7 @@ const CreatePostComponent = () => {
             <LMText
               children={<Text>{ADD_IMAGES}</Text>}
               textStyle={styles.selectionOptionstext}
-              {...customAttachmentOptionsStyle
-                ?.photoAttachmentTextStyle}
+              {...customAttachmentOptionsStyle?.photoAttachmentTextStyle}
             />
           </TouchableOpacity>
           {/* add video button */}
@@ -587,10 +716,14 @@ const CreatePostComponent = () => {
               customAttachmentOptionsStyle?.videoAttachmentView,
             ]}
             onPress={() => {
-              handleGalleryProp ? handleGalleryProp(SELECT_VIDEO) : handleGallery(SELECT_VIDEO);
-              customAttachmentOptionsStyle
-                ?.onVideoAttachmentOptionClick &&
-                customAttachmentOptionsStyle?.onVideoAttachmentOptionClick();
+              handleGalleryProp
+                ? handleGalleryProp(SELECT_VIDEO)
+                : handleGallery(SELECT_VIDEO);
+
+              LMFeedAnalytics.track(
+                Events.CLICKED_ON_ATTACHMENT,
+                new Map<string, string>([[Keys.TYPE, SELECT_VIDEO]])
+              );
             }}
           >
             <LMIcon
@@ -600,8 +733,7 @@ const CreatePostComponent = () => {
             <LMText
               children={<Text>{ADD_VIDEOS}</Text>}
               textStyle={styles.selectionOptionstext}
-              {...customAttachmentOptionsStyle
-                ?.videoAttachmentTextStyle}
+              {...customAttachmentOptionsStyle?.videoAttachmentTextStyle}
             />
           </TouchableOpacity>
           {/* add files button */}
@@ -613,9 +745,11 @@ const CreatePostComponent = () => {
             ]}
             onPress={() => {
               handleDocumentProp ? handleDocumentProp() : handleDocument();
-              customAttachmentOptionsStyle
-                ?.onFilesAttachmentOptionClick &&
-                customAttachmentOptionsStyle?.onFilesAttachmentOptionClick();
+
+              LMFeedAnalytics.track(
+                Events.CLICKED_ON_ATTACHMENT,
+                new Map<string, string>([[Keys.TYPE, SELECT_FILE]])
+              );
             }}
           >
             <LMIcon
@@ -625,8 +759,7 @@ const CreatePostComponent = () => {
             <LMText
               children={<Text>{ADD_FILES}</Text>}
               textStyle={styles.selectionOptionstext}
-              {...customAttachmentOptionsStyle
-                ?.filesAttachmentTextStyle}
+              {...customAttachmentOptionsStyle?.filesAttachmentTextStyle}
             />
           </TouchableOpacity>
         </View>
