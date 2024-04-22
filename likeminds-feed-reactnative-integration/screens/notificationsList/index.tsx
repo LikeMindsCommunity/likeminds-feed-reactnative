@@ -75,7 +75,7 @@ const LMFeedNotificationFeedListView = () => {
               width: Layout.normalize(150),
             }}
           />
-          <Text>Oops! You don't have any no notifications yet.</Text>
+          <Text>Oops! You don't have any notifications yet.</Text>
         </View>
       )}
     </>

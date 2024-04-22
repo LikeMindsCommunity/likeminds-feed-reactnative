@@ -119,24 +119,23 @@ const decode = (
   }
 };
 
-export const userTaggingDecoder = (text: string | undefined) => {
+export const userTaggingDecoder = (text) => {
   if (!text) {
-    return;
+    return [];
   }
-  const arr: Array<{ key: string; route: string | null }> = [];
-  const parts = text?.split(REGEX_USER_SPLITTING);
 
-  if (parts) {
-    for (const matchResult of parts) {
-      if (matchResult.match(REGEX_USER_TAGGING)) {
-        const match = REGEX_USER_TAGGING.exec(matchResult);
-        if (match !== null) {
-          if (match?.groups) {
-            const { name, route }: any = match.groups || "";
-            arr.push({ key: name, route: route });
-          }
-        }
-      }
+  const arr: { name: string; route: string }[] = [];
+  const REGEX_USER_SPLITTING = /(@\[.*?\]\((.*?)\))/g;
+  const REGEX_USER_TAGGING =
+    /@\[(?<name>.*?)\]\((?:user_profile\/)?(?<route>.*?)\)/;
+
+  const parts = text.split(REGEX_USER_SPLITTING);
+
+  for (const matchResult of parts) {
+    const match = matchResult.match(REGEX_USER_TAGGING);
+    if (match) {
+      const { name, route } = match.groups;
+      arr.push({ name, route });
     }
   }
 

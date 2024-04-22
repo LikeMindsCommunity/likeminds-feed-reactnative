@@ -256,13 +256,30 @@ const CreatePostComponent = () => {
                       setPostContentText(res);
                       setAllTags([]);
                       setIsUserTagging(false);
-                      LMFeedAnalytics.track(
-                        Events.USER_TAGGED_IN_POST,
-                        new Map<string, string>([
-                          [Keys.TAGGED_USER_UUID, uuid],
-                          [Keys.TAGGED_USER_COUNT, "1"],
-                        ])
-                      );
+                      const taggedUsers = userTaggingDecoder(res);
+                      if (taggedUsers?.length > 0) {
+                        const taggedUserIds = taggedUsers
+                          .map((user) => user.route)
+                          .join(", ");
+                        LMFeedAnalytics.track(
+                          Events.USER_TAGGED_IN_POST,
+                          new Map<string, string>([
+                            [Keys.TAGGED_USER_UUID, taggedUserIds],
+                            [
+                              Keys.TAGGED_USER_COUNT,
+                              taggedUsers?.length.toString(),
+                            ],
+                          ])
+                        );
+                      } else {
+                        LMFeedAnalytics.track(
+                          Events.USER_TAGGED_IN_POST,
+                          new Map<string, string>([
+                            [Keys.TAGGED_USER_UUID, uuid],
+                            [Keys.TAGGED_USER_COUNT, "1"],
+                          ])
+                        );
+                      }
                     }}
                     style={[
                       styles.taggingListItem,
