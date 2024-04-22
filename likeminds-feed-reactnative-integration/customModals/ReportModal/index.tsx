@@ -22,7 +22,6 @@ import {
   POST_TYPE,
   REASON_FOR_DELETION_PLACEHOLDER,
   REPLY_REPORT_ENTITY_TYPE,
-  REPLY_TYPE,
   REPORTED_SUCCESSFULLY,
   REPORT_INSTRUSTION,
   REPORT_PROBLEM,
@@ -37,7 +36,6 @@ import Toast from "react-native-toast-message";
 import { showToastMessage } from "../../store/actions/toast";
 import { LMLoader } from "../../components";
 import { LMCommentUI, LMPostUI } from "../../models";
-import { getPostType, reportAnalytics } from "../../utils/analytics";
 
 // interface for post report api request
 interface ReportRequest {
@@ -119,22 +117,6 @@ const ReportModal = ({
       );
       // toast message action
       if (postReportResponse) {
-        let reportReason = reportTags.find((item) => item?.id === selectedId);
-        let params = {
-          reportType: reportType,
-          createdByUuid: postDetail?.user.sdkClientInfo.uuid,
-          postId: postDetail?.id,
-          reportReason:
-            selectedId !== -1 && selectedId !== 11
-              ? reportReason?.name
-              : otherReason,
-          postType: getPostType(postDetail?.attachments),
-          commentId: commentDetail ? commentDetail?.id : undefined,
-          commentReplyId:
-            reportType === REPLY_TYPE ? commentDetail?.id : undefined,
-        };
-        reportAnalytics(params);
-
         dispatch(
           showToastMessage({
             isToast: true,
@@ -159,8 +141,8 @@ const ReportModal = ({
   // this functions make the toast visible
   const showToast = () => {
     Toast.show({
-      position: "bottom",
-      type: "reportToastView",
+      position: 'bottom',
+      type: 'reportToastView',
       autoHide: true,
       visibilityTime: 1500,
     });

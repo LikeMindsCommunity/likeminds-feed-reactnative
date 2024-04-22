@@ -10,7 +10,6 @@ export const LMOverlayProvider = ({
   children,
   userName,
   userUniqueId,
-  lmFeedInterface,
   universalFeedStyle,
   postListStyle,
   loaderStyle,
@@ -33,7 +32,6 @@ export const LMOverlayProvider = ({
         loaderStyle={loaderStyle}
         createPostStyle={createPostStyle}
         notificationFeedStyle={notificationFeedStyle}
-        lmFeedInterface={lmFeedInterface}
       >
         <View style={styles.flexStyling}>{children}</View>
       </LMFeedProvider>

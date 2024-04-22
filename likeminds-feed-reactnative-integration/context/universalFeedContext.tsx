@@ -12,7 +12,10 @@ import React, {
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { mentionToRouteConverter, uploadFilesToAWS } from "../utils";
 import { addPost, setUploadAttachments } from "../store/actions/createPost";
-import { AddPostRequest, GetFeedRequest } from "@likeminds.community/feed-js";
+import {
+  AddPostRequest,
+  GetFeedRequest,
+} from "@likeminds.community/feed-js";
 import { autoPlayPostVideo, refreshFeed } from "../store/actions/feed";
 import {
   CREATE_POST_PERMISSION,
@@ -31,9 +34,6 @@ import {
   getUnreadNotificationCount,
   notificationFeedClear,
 } from "../store/actions/notification";
-import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
-import { Events } from "../enums/Events";
-import { Keys } from "../enums/Keys";
 
 interface UniversalFeedContextProps {
   children: ReactNode;
@@ -143,14 +143,6 @@ export const UniversalFeedContextProvider = ({
     setRefreshing(false);
   };
 
-  // Analytics event
-  useEffect(() => {
-    LMFeedAnalytics.track(
-      Events.FEED_OPENED,
-      new Map<string, string>([[Keys.FEED_TYPE, Keys.UNIVERSAL_FEED]])
-    );
-  }, []);
-
   // this function adds a new post
   const postAdd = async () => {
     // replace the mentions with route
@@ -201,7 +193,7 @@ export const UniversalFeedContextProvider = ({
 
   // this handles the functionality of new post button
   const newPostButtonClick = () => {
-    dispatch(autoPlayPostVideo(""));
+    dispatch(autoPlayPostVideo(''))
     showCreatePost
       ? postUploading
         ? dispatch(
@@ -257,7 +249,7 @@ export const UniversalFeedContextProvider = ({
 
   const onTapNotificationBell = () => {
     dispatch(notificationFeedClear());
-    dispatch(autoPlayPostVideo(""));
+    dispatch(autoPlayPostVideo(''))
     navigation.navigate(NOTIFICATION_FEED);
   };
 

@@ -350,7 +350,6 @@ export interface LMFeedProviderProps {
   children: React.ReactNode;
   userName: string;
   userUniqueId: string;
-  lmFeedInterface?: any;
   themeStyles?: ThemeStyles;
   universalFeedStyle?: UniversalFeedStyleProps;
   postListStyle?: PostListStyleProps;

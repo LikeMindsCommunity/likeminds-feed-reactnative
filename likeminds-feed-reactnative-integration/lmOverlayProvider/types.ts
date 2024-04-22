@@ -7,7 +7,6 @@ export interface LMOverlayProviderProps {
   children: React.ReactNode;
   userName: string;
   userUniqueId: string;
-  lmFeedInterface?: any;
   universalFeedStyle?: UniversalFeedStyleProps;
   postListStyle?: PostListStyleProps;
   loaderStyle?: LoaderStyleProps;

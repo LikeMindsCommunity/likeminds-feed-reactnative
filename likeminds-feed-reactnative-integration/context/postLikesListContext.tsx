@@ -8,9 +8,6 @@ import { commentLikes, postLikes } from "../store/actions/postLikes";
 import { COMMENT_LIKES, POST_LIKES } from "../constants/Strings";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../models/RootStackParamsList";
-import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
-import { Events } from "../enums/Events";
-import { Keys } from "../enums/Keys";
 
 interface PostLikesListContextProps {
   children: ReactNode;
@@ -53,16 +50,6 @@ export const PostLikesListContextProvider = ({
 }: PostLikesListContextProps) => {
   const dispatch = useAppDispatch();
   const { postLike, totalLikes } = useAppSelector((state) => state.postLikes);
-
-  // Analytics event
-  useEffect(() => {
-    if (route.params[0] === POST_LIKES) {
-      LMFeedAnalytics.track(
-        Events.LIKE_LIST_OPEN,
-        new Map<string, string>([[Keys.POST_ID, route.params[1]]])
-      );
-    }
-  }, []);
 
   // this function calls the post likes api
   const postLikesList = async (id: string) => {

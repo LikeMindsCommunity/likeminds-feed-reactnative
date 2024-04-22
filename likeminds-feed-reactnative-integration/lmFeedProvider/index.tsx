@@ -17,17 +17,16 @@ import { LMFeedProviderProps, ThemeContextProps } from "./types";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { getMemberState, initiateUser } from "../store/actions/login";
 import { LMToast } from "../components";
-import { CallBack } from "../callBacks/callBackClass";
 
 // Create the theme context
 export const LMFeedStylesContext = createContext<ThemeContextProps | undefined>(
   undefined
 );
 
-// Create a context for LMFeedProvider
+// Create a context for LMChatProvider
 const LMFeedContext = createContext<LMFeedClient | undefined>(undefined);
 
-// Create a hook to use the LMFeedContext
+// Create a hook to use the LMChatContext
 export const useLMFeed = () => {
   const context = useContext(LMFeedContext);
   if (!context) {
@@ -49,7 +48,6 @@ export const LMFeedProvider = ({
   children,
   userName,
   userUniqueId,
-  lmFeedInterface,
   themeStyles,
   universalFeedStyle,
   postListStyle,
@@ -67,9 +65,6 @@ export const LMFeedProvider = ({
     //setting client in Client class
     Client.setMyClient(myClient);
     Credentials.setCredentials(userName, userUniqueId);
-    if(lmFeedInterface){
-      CallBack.setLMFeedInterface(lmFeedInterface);
-    } 
 
     // storing myClient followed by community details
     const callInitApi = async () => {

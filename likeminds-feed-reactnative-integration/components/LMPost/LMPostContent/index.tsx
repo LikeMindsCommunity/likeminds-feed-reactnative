@@ -11,38 +11,36 @@ import { styles } from "./styles";
 import decode from "../../../utils/decodeMentions";
 import { LMPostContextValues, useLMPostContext } from "../../../context";
 import { useLMFeedStyles } from "../../../lmFeedProvider";
-import MoreLessComponent from "../LMPostText";
 
 const LMPostContent = React.memo(() => {
   const { post }: LMPostContextValues = useLMPostContext();
   const LMFeedContextStyles = useLMFeedStyles();
   const { postListStyle } = LMFeedContextStyles;
-  const postContentStyle = postListStyle?.postContent;
+  const postContentStyle = postListStyle?.postContent
 
   const MAX_LINES = postContentStyle?.visibleLines
     ? postContentStyle?.visibleLines
     : MAX_DEFAULT_POST_CONTENT_LINES;
-  const [truncatedText, setTruncatedText] = useState("");
+  const [showText, setShowText] = useState(false);
+  const [numberOfLines, setNumberOfLines] = useState<number>();
+  const [showMoreButton, setShowMoreButton] = useState(false);
 
   // this handles the show more functionality
   const onTextLayout = (event: {
     nativeEvent: { lines: string | TextLayoutLine[] };
   }) => {
-    //get all lines
-    const { lines } = event.nativeEvent;
-    let text = "";
-
-    //get lines after it truncate
-    if( lines.length >= MAX_LINES ){
-      if (Array.isArray(lines)) {
-        text = lines
-          .splice(0, MAX_LINES)
-          .map((line) => line.text)
-          .join("");
-      }
-      setTruncatedText(text);
+    if (event.nativeEvent.lines.length > MAX_LINES && !showText) {
+      setShowMoreButton(true);
+      setNumberOfLines(MAX_LINES);
     }
   };
+
+  // this handles the visiblity of whole post content and trimmed text upto maximum line
+  useEffect(() => {
+    if (showMoreButton) {
+      setNumberOfLines(showText ? undefined : MAX_LINES);
+    }
+  }, [showText, showMoreButton, MAX_LINES]);
 
   return (
     <View
@@ -52,22 +50,38 @@ const LMPostContent = React.memo(() => {
       ])}
     >
       {/* post content text */}
-      {truncatedText ? (
-        <MoreLessComponent
-          truncatedText={truncatedText}
-          fullText={post?.text}
-        />
-      ) : (
-        <LMText
-          maxLines={MAX_LINES}
-          textStyle={StyleSheet.flatten([
-            styles.contentText,
-            postContentStyle?.textStyle,
-          ])}
-          onTextLayout={(e) => onTextLayout(e)}
+      <LMText
+        maxLines={numberOfLines}
+        textStyle={StyleSheet.flatten([
+          styles.contentText,
+          postContentStyle?.textStyle
+        ])}
+        onTextLayout={(e) => onTextLayout(e)}
+      >
+        {decode(post?.text, true)}
+      </LMText>
+      {/* show more button section */}
+      {showMoreButton && (
+        <TouchableOpacity
+          activeOpacity={0.8}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          disabled={showText ? true : false}
+          onPress={() => setShowText(!showText)}
+          accessibilityRole="button"
         >
-          {decode(post?.text, true)}
-        </LMText>
+          <LMText
+            textStyle={StyleSheet.flatten([
+              styles.showMoreText,
+              postContentStyle?.showMoreText?.textStyle,
+            ])}
+          >
+            {showText
+              ? ""
+              : postContentStyle?.showMoreText?.children
+              ? postContentStyle?.showMoreText.children
+              : "See More"}
+          </LMText>
+        </TouchableOpacity>
       )}
     </View>
   );
