@@ -15,10 +15,19 @@ import {
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
-import { useAppSelector } from "../../store/store";
+import { useAppDispatch, useAppSelector } from "../../store/store";
 import { useUniversalFeedContext } from "../../context/universalFeedContext";
+import {
+  SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
+  SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
+} from "../../store/types/types";
 
 const TopicFeed = () => {
+  const navigation = useNavigation<StackNavigationProp<any>>();
+  let routes = navigation.getState()?.routes;
+  let previousRoute = routes[routes?.length - 2];
+  console.log("previousRoute", previousRoute);
+
   const myClient = Client.myClient;
   const [topics, setTopics] = useState({} as any);
   const [isSearch, setIsSearch] = useState(false);
@@ -30,11 +39,34 @@ const TopicFeed = () => {
   const [searchPage, setSearchPage] = useState(1);
   const [newTopics, setNewTopics] = useState([] as any);
 
-  const { updateSelectedTopics } = useUniversalFeedContext();
+  const dispatch = useAppDispatch();
 
-  console.log("newTopics", newTopics);
+  const selectedTopics = useAppSelector(
+    (state) => state.feed.selectedTopicsForCreatePostScreen
+  );
 
-  const navigation = useNavigation<StackNavigationProp<any>>();
+  useEffect(() => {
+    if (selectedTopics?.length > 0) {
+      setNewTopics(selectedTopics);
+    }
+  }, [selectedTopics]);
+
+  const handleUpdateAndNavigateBack = async () => {
+    console.log("newTopicsFinale", newTopics);
+
+    if (previousRoute?.name === "UniversalFeed") {
+      await dispatch({
+        type: SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
+        body: { topics: newTopics },
+      });
+    } else if (previousRoute?.name === "CreatePost") {
+      await dispatch({
+        type: SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
+        body: { topics: newTopics },
+      });
+    }
+    navigation.goBack();
+  };
 
   const setInitialHeader = () => {
     navigation.setOptions({
@@ -63,15 +95,15 @@ const TopicFeed = () => {
               >
                 {"Select Topic"}
               </Text>
-              {/* <Text
+              <Text
                 style={{
                   color: STYLES.$COLORS.MSG,
                   fontSize: STYLES.$FONT_SIZES.SMALL,
                   fontFamily: STYLES.$FONT_TYPES.LIGHT,
                 }}
               >
-                {`${totalChatroomCount} participants`}
-              </Text> */}
+                {`${newTopics?.length} selected`}
+              </Text>
             </View>
           ) : null}
         </View>
@@ -153,8 +185,6 @@ const TopicFeed = () => {
       pageSize: 10,
     } as any);
     const res = apiRes?.data;
-    console.log("res", res);
-
     // LMChatAnalytics.track(
     //   Events.VIEW_CHATROOM_PARTICIPANTS,
     //   new Map<string, string>([
@@ -183,6 +213,10 @@ const TopicFeed = () => {
     fetchTopics();
     setInitialHeader();
   }, [navigation]);
+
+  useEffect(() => {
+    setInitialHeader();
+  }, [newTopics]);
 
   useEffect(() => {
     if (isSearch) {
@@ -369,10 +403,7 @@ const TopicFeed = () => {
         <TouchableOpacity
           onPress={() => {
             if (newTopics.length > 0) {
-              // sendInvites();
-              // updatenewTopics(newTopics)
-              updateSelectedTopics(newTopics);
-              navigation.goBack();
+              handleUpdateAndNavigateBack();
             }
           }}
           style={styles.sendBtn}

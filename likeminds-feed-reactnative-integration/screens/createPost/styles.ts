@@ -83,10 +83,15 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   editIcon: {
-    height: Layout.normalize(18),
-    width: Layout.normalize(18),
+    height: Layout.normalize(25),
+    width: Layout.normalize(25),
     resizeMode: "contain",
-    tintColor: STYLES.$COLORS.SECONDARY,
+    tintColor: "#5046E5",
+    backgroundColor: "hsla(244, 75%, 59%, 0.1)",
+    borderRadius: 5,
+    paddingLeft: 30,
+    paddingRight: 30,
+    padding: 18,
   },
   border: {
     borderBottomWidth: 1,

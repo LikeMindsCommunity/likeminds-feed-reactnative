@@ -9,9 +9,9 @@ import {
   TextStyle,
   Image,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NetworkUtil, nameInitials, replaceLastMention } from "../../utils";
-import { useAppDispatch } from "../../store/store";
+import { useAppDispatch, useAppSelector } from "../../store/store";
 import {
   ADD_FILES,
   ADD_IMAGES,
@@ -150,46 +150,20 @@ const CreatePostComponent = () => {
     return navigation.navigate(TOPIC_FEED);
   };
 
-  const [items, setItems] = useState([
-    {
-      id: 1,
-      name: "book",
-    },
-    {
-      id: 2,
-      name: "country",
-    },
-    {
-      id: 3,
-      name: "hello",
-    },
-    {
-      id: 4,
-      name: "hola",
-    },
-    {
-      id: 5,
-      name: "bhola",
-    },
-    {
-      id: 6,
-      name: "hello",
-    },
-    {
-      id: 7,
-      name: "hello",
-    },
-    {
-      id: 8,
-      name: "hello",
-    },
-  ]);
+  const [mappedTopics, setMappedTopics] = useState([] as any);
+  const selectedTopics = useAppSelector(
+    (state) => state.feed.selectedTopicsForCreatePostScreen
+  );
+  const topics = useAppSelector((state) => state.feed.topics);
 
-  const removeItem = (index: any) => {
-    const newItems = [...items]; // Create a copy of the array
-    newItems.splice(index, 1); // Remove the item at the specified index
-    setItems(newItems); // Update the state with the new array
-  };
+  useEffect(() => {
+    // Create a new state array named mappedTopics
+    const filteredTopicArray = selectedTopics.map((topicId) => ({
+      id: topicId,
+      name: topics[topicId]?.name || "Unknown", // Use optional chaining and provide a default name if not found
+    }));
+    setMappedTopics(filteredTopicArray);
+  }, [selectedTopics]);
 
   const {
     handleDocumentProp,
@@ -231,29 +205,36 @@ const CreatePostComponent = () => {
             }
           />
         </View>
-        {items.length > 0 ? (
+        {mappedTopics.length > 0 ? (
           <View
             style={{
               flexDirection: "row",
               flexWrap: "wrap",
-              marginHorizontal: 10,
-              marginTop: 10,
+              marginLeft: 15,
+              marginTop: 15,
             }}
           >
-            {items.map((item, index) => (
+            {mappedTopics.map((item, index) => (
               <View
                 key={index}
-                style={{
-                  margin: 5,
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
+                style={{ flexDirection: "row", alignItems: "center" }}
               >
-                <View style={{ borderWidth: 1, padding: 7 }}>
-                  <Text style={{ color: "black" }}>{item?.name}</Text>
+                <View>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      color: "#5046E5",
+                      padding: 7,
+                      backgroundColor: "hsla(244, 75%, 59%, 0.1)",
+                      borderRadius: 5,
+                      margin: 5,
+                    }}
+                  >
+                    {item?.name}
+                  </Text>
                 </View>
-                {index === items.length - 1 && (
-                  <View style={{ borderWidth: 1, padding: 7, marginLeft: 10 }}>
+                {index === mappedTopics.length - 1 && (
+                  <View style={{ padding: 7 }}>
                     <TouchableOpacity onPress={() => handleAllTopicPress()}>
                       <Image
                         source={require("../../assets/images/edit_icon3x.png")}
@@ -268,9 +249,11 @@ const CreatePostComponent = () => {
         ) : (
           <View
             style={{
-              flex: 1,
-              alignItems: "flex-start",
-              justifyContent: "flex-start",
+              flexDirection: "row",
+              flexWrap: "wrap",
+              marginLeft: 15,
+              marginTop: 15,
+              alignItems: "center",
             }}
           >
             <TouchableOpacity onPress={() => handleAllTopicPress()}>
@@ -278,7 +261,6 @@ const CreatePostComponent = () => {
                 style={{
                   fontSize: 16,
                   color: "#5046E5",
-                  margin: 20,
                   padding: 7,
                   backgroundColor: "hsla(244, 75%, 59%, 0.1)",
                   borderRadius: 5,

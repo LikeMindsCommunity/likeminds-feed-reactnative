@@ -34,33 +34,32 @@ const LMPost = ({
 const LMPostComponent = React.memo(() => {
   const { post } = useLMPostContext();
   const allTopics = useAppSelector((state) => state.feed.topics);
+
   return (
     <View style={styles.mainContainer}>
       {/* post header */}
       <LMPostHeader />
       {post?.topics?.length > 0 ? (
-        <View
-          style={{
-            flexDirection: "row",
-            flexWrap: "wrap",
-            marginHorizontal: 10,
-            marginTop: 10,
-          }}
-        >
+        <View style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 10 }}>
           {post?.topics?.map((item, index) => {
             // Find the corresponding topic object from allTopics
             const topicObject = allTopics[item];
             return (
-              <View
-                key={index}
-                style={{
-                  margin: 5,
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                <View style={{ borderWidth: 1, padding: 7 }}>
-                  <Text style={{ color: "black" }}>{topicObject?.name}</Text>
+              <View key={index}>
+                <View>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      color: "#5046E5",
+                      marginLeft: 15,
+                      marginTop: 10,
+                      padding: 7,
+                      backgroundColor: "hsla(244, 75%, 59%, 0.1)",
+                      borderRadius: 5,
+                    }}
+                  >
+                    {topicObject?.name}
+                  </Text>
                 </View>
               </View>
             );

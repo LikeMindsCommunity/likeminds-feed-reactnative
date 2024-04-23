@@ -24,7 +24,7 @@ import { CREATE_POST, TOPIC_FEED } from "../../constants/screenNames";
 import _ from "lodash";
 import { PostsList } from "../postsList";
 import { useLMFeedStyles } from "../../lmFeedProvider";
-import { useAppDispatch } from "../../store/store";
+import { useAppDispatch, useAppSelector } from "../../store/store";
 import {
   UniversalFeedContextProvider,
   UniversalFeedContextValues,
@@ -113,55 +113,25 @@ const UniversalFeedComponent = () => {
     uploadingMediaAttachment,
     uploadingMediaAttachmentType,
     newPostButtonClick,
-  }: // selectedTopics
-  UniversalFeedContextValues = useUniversalFeedContext();
+  }: UniversalFeedContextValues = useUniversalFeedContext();
   const LMFeedContextStyles = useLMFeedStyles();
   const { universalFeedStyle, loaderStyle } = LMFeedContextStyles;
   const { newPostButtonClickProps } =
     useUniversalFeedCustomisableMethodsContext();
+  const [mappedTopics, setMappedTopics] = useState([] as any);
+  const selectedTopics = useAppSelector(
+    (state) => state.feed.selectedTopicsForUniversalFeedScreen
+  );
+  const topics = useAppSelector((state) => state.feed.topics);
 
-  // console.log("selectedTopics",selectedTopics);
-
-  // useEffect(() => {
-  //   console.log("selectedTopicsUniversal",selectedTopics);
-  // },[selectedTopics])
-
-  const [items, setItems] = useState([
-    {
-      id: "65f306a3cde6ba99e44c3586",
-      name: "topic name",
-    },
-    {
-      id: "65f306c0cde6ba99e44c3587",
-      name: "topic name-3",
-    },
-    {
-      id: "65f306c0cde6ba99e44c3588",
-      name: "topic name-1",
-    },
-    {
-      id: "65f306c0cde6ba99e44c3589",
-      name: "topic name-2",
-    },
-    {
-      id: "66225e7a03a62c83c4e3d019",
-      name: "Books hey there",
-    },
-  ]);
-
-  //   const selectedTopic = [{
-  //     id:1,
-  //     name:'book'
-  //   },
-  //   {
-  //     id:2,
-  //     name:'country'
-  //   },
-  //   {
-  //     id:3,
-  //     name:'hello'
-  //   }
-  // ]
+  useEffect(() => {
+    // Create a new state array named mappedTopics
+    const filteredTopicArray = selectedTopics.map((topicId) => ({
+      id: topicId,
+      name: topics[topicId]?.name || "Unknown", // Use optional chaining and provide a default name if not found
+    }));
+    setMappedTopics(filteredTopicArray);
+  }, [selectedTopics]);
 
   const handleAllTopicPress = () => {
     /* @ts-ignore */
@@ -169,9 +139,9 @@ const UniversalFeedComponent = () => {
   };
 
   const removeItem = (index: any) => {
-    const newItems = [...items]; // Create a copy of the array
+    const newItems = [...mappedTopics]; // Create a copy of the array
     newItems.splice(index, 1); // Remove the item at the specified index
-    setItems(newItems); // Update the state with the new array
+    setMappedTopics(newItems); // Update the state with the new array
   };
 
   return (
@@ -179,25 +149,32 @@ const UniversalFeedComponent = () => {
       {/* header */}
       <LMHeader heading={APP_TITLE} {...universalFeedStyle?.screenHeader} />
       {/* all topics filter */}
-      {items.length > 0 ? (
+      {mappedTopics.length > 0 ? (
         <ScrollView style={{ flexGrow: 0, margin: 10 }} horizontal={true}>
           <View style={{ flexDirection: "row" }}>
-            {items.map((item, index) => (
+            {mappedTopics.map((item, index) => (
               <View key={index} style={{ margin: 5 }}>
                 <View
                   style={{
                     flexDirection: "row",
                     alignItems: "center",
-                    borderWidth: 1,
-                    padding: 10,
+                    padding: 7,
+                    borderWidth: 0.5,
+                    borderColor: "#5046E5",
+                    borderRadius: 5,
                   }}
                 >
-                  <Text style={{ marginRight: 5, color: "black" }}>
+                  <Text
+                    style={{ fontSize: 16, color: "#5046E5", marginRight: 5 }}
+                  >
                     {item?.name}
                   </Text>
                   <TouchableOpacity onPress={() => removeItem(index)}>
                     {/* Your cross icon component */}
-                    <Text style={{ color: "black" }}>X</Text>
+                    <Image
+                      source={require("../../assets/images/cross_tag3x.png")}
+                      style={{ tintColor: "#5046E5", width: 25, height: 25 }}
+                    />
                   </TouchableOpacity>
                 </View>
               </View>
@@ -257,7 +234,7 @@ const UniversalFeedComponent = () => {
         </View>
       )}
       {/* posts list section */}
-      <PostsList items={items} />
+      <PostsList items={mappedTopics} />
       {/* create post button section */}
       <TouchableOpacity
         activeOpacity={0.8}

@@ -20,6 +20,9 @@ import {
   CREATE_COMMENT_SUCCESS,
   DELETE_COMMENT_STATE,
   AUTO_PLAY_POST_VIDEO,
+  SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
+  SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
+  CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
 } from "../types/types";
 import { LMPostUI } from "../../models";
 
@@ -29,6 +32,8 @@ export interface FeedReducerState {
   reportTags: {};
   autoPlayVideoPostId: "";
   topics: {};
+  selectedTopicsForUniversalFeedScreen: [];
+  selectedTopicsForCreatePostScreen: [];
 }
 
 export const initialState: FeedReducerState = {
@@ -37,9 +42,31 @@ export const initialState: FeedReducerState = {
   reportTags: {},
   autoPlayVideoPostId: "",
   topics: {},
+  selectedTopicsForUniversalFeedScreen: [],
+  selectedTopicsForCreatePostScreen: [],
 };
 export const feedReducer = (state = initialState, action) => {
   switch (action.type) {
+    case SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN: {
+      const { topics = {} } = action.body;
+      return {
+        ...state,
+        selectedTopicsForUniversalFeedScreen: topics,
+      };
+    }
+    case SELECTED_TOPICS_FOR_CREATE_POST_SCREEN: {
+      const { topics = {} } = action.body;
+      return {
+        ...state,
+        selectedTopicsForCreatePostScreen: topics,
+      };
+    }
+    case CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN: {
+      return {
+        ...state,
+        selectedTopicsForCreatePostScreen: [],
+      };
+    }
     case UNIVERSAL_FEED_SUCCESS: {
       const { users = {} } = action.body;
       let feedData = state.feed;
@@ -55,7 +82,10 @@ export const feedReducer = (state = initialState, action) => {
         ...state,
         feed: feedData,
         users: usersData,
-        topics: topicsArray,
+        topics:
+          Object.keys(state.topics).length > Object.keys(topicsArray).length
+            ? state.topics
+            : topicsArray,
       };
     }
     case UNIVERSAL_FEED_REFRESH_SUCCESS: {
