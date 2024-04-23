@@ -56,6 +56,10 @@ export const styles = StyleSheet.create({
     width: Layout.normalize(25),
     resizeMode: "contain",
   },
+  border: {
+    borderBottomWidth: 1.5,
+    borderBottomColor: "#D0D8E2",
+  },
   search: {
     height: Layout.normalize(20),
     width: Layout.normalize(20),

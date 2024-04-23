@@ -45,6 +45,8 @@ const TopicFeed = () => {
     (state) => state.feed.selectedTopicsForCreatePostScreen
   );
 
+  console.log("newTopics", newTopics);
+
   useEffect(() => {
     if (selectedTopics?.length > 0) {
       setNewTopics(selectedTopics);
@@ -95,15 +97,17 @@ const TopicFeed = () => {
               >
                 {"Select Topic"}
               </Text>
-              <Text
-                style={{
-                  color: STYLES.$COLORS.MSG,
-                  fontSize: STYLES.$FONT_SIZES.SMALL,
-                  fontFamily: STYLES.$FONT_TYPES.LIGHT,
-                }}
-              >
-                {`${newTopics?.length} selected`}
-              </Text>
+              {newTopics?.length > 0 && newTopics[0] !== "0" && (
+                <Text
+                  style={{
+                    color: STYLES.$COLORS.MSG,
+                    fontSize: STYLES.$FONT_SIZES.SMALL,
+                    fontFamily: STYLES.$FONT_TYPES.LIGHT,
+                  }}
+                >
+                  {`${newTopics?.length} selected`}
+                </Text>
+              )}
             </View>
           ) : null}
         </View>
@@ -193,7 +197,10 @@ const TopicFeed = () => {
     //     [Keys.SOURCE, Sources.CHATROOM_OVERFLOW_MENU],
     //   ])
     // );
-    setTopics(res?.topics);
+    if (previousRoute?.name === "UniversalFeed") {
+      const updatedTopics = [{ Id: "0", name: "All Topics" }, ...res?.topics];
+      setTopics(updatedTopics);
+    } else setTopics(res?.topics);
     setCount(0);
     if (!!res && res?.topics.length === 10) {
       const apiResponse = await myClient?.getTopics({
@@ -319,70 +326,68 @@ const TopicFeed = () => {
         data={topics}
         renderItem={({ item }: any) => {
           return (
-            <TouchableOpacity
-              onPress={() => {
-                if (!newTopics.includes(item?.Id)) {
-                  setNewTopics([...newTopics, item?.Id]);
-                } else {
-                  const filteredArr = newTopics.filter((val: any) => {
-                    return val !== item?.Id;
-                  });
-                  setNewTopics([...filteredArr]);
-                }
-              }}
-              key={item?.Id}
-              style={styles.participants}
-            >
-              <View style={styles.infoContainer}>
-                <Text
-                  style={
-                    [
-                      styles.title,
-                      // userNameStyles?.color && {
-                      //   color: userNameStyles?.color,
-                      // },
-                      // userNameStyles?.fontSize && {
-                      //   fontSize: userNameStyles?.fontSize,
-                      // },
-                      // userNameStyles?.fontFamily && {
-                      //   fontFamily: userNameStyles?.fontFamily,
-                      // },
-                    ] as TextStyle
-                  }
-                  numberOfLines={1}
-                >
-                  {item?.name}
-                  {item?.customTitle ? (
-                    <Text
-                      style={
-                        [
-                          styles.messageCustomTitle,
-                          // userTitleStyles?.color && {
-                          //   color: userTitleStyles?.color,
-                          // },
-                          // userTitleStyles?.fontSize && {
-                          //   fontSize: userTitleStyles?.fontSize,
-                          // },
-                          // userTitleStyles?.fontFamily && {
-                          //   fontFamily: userTitleStyles?.fontFamily,
-                          // },
-                        ] as TextStyle
+            <>
+              <TouchableOpacity
+                onPress={() => {
+                  if (item?.Id === "0") {
+                    setNewTopics([item?.Id]);
+                  } else {
+                    if (newTopics.includes("0")) {
+                      const filteredArr = newTopics.filter(
+                        (val: any) => val !== "0"
+                      );
+                      setNewTopics([...filteredArr, item?.Id]);
+                    } else {
+                      if (!newTopics.includes(item?.Id)) {
+                        setNewTopics([...newTopics, item?.Id]);
+                      } else {
+                        const filteredArr = newTopics.filter(
+                          (val: any) => val !== item?.Id
+                        );
+                        setNewTopics([...filteredArr]);
                       }
-                    >{` • ${item?.customTitle}`}</Text>
+                    }
+                  }
+                }}
+                key={item?.Id}
+                style={styles.participants}
+              >
+                <View style={styles.infoContainer}>
+                  <Text
+                    style={
+                      [
+                        styles.title,
+                        // userNameStyles?.color && {
+                        //   color: userNameStyles?.color,
+                        // },
+                        // userNameStyles?.fontSize && {
+                        //   fontSize: userNameStyles?.fontSize,
+                        // },
+                        // userNameStyles?.fontFamily && {
+                        //   fontFamily: userNameStyles?.fontFamily,
+                        // },
+                      ] as TextStyle
+                    }
+                    numberOfLines={1}
+                  >
+                    {item?.name}
+                  </Text>
+                </View>
+                <View>
+                  {newTopics.includes(item?.Id) ? (
+                    <View style={styles.selected}>
+                      <Image
+                        source={require("../../assets/images/white_tick3x.png")}
+                        style={styles.smallIcon}
+                      />
+                    </View>
                   ) : null}
-                </Text>
-              </View>
-              <View>
-                {newTopics.includes(item?.Id) ? (
-                  <View style={styles.selected}>
-                    <Image
-                      source={require("../../assets/images/white_tick3x.png")}
-                      style={styles.smallIcon}
-                    />
-                  </View>
-                ) : null}
-              </View>
-            </TouchableOpacity>
+                </View>
+              </TouchableOpacity>
+              {item?.name === "All Topics" && (
+                <View style={styles.border}></View>
+              )}
+            </>
           );
         }}
         extraData={{
