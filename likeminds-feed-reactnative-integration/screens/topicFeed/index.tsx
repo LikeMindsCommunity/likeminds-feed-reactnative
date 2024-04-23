@@ -26,7 +26,6 @@ const TopicFeed = () => {
   const navigation = useNavigation<StackNavigationProp<any>>();
   let routes = navigation.getState()?.routes;
   let previousRoute = routes[routes?.length - 2];
-  console.log("previousRoute", previousRoute);
 
   const myClient = Client.myClient;
   const [topics, setTopics] = useState({} as any);
@@ -45,8 +44,6 @@ const TopicFeed = () => {
     (state) => state.feed.selectedTopicsForCreatePostScreen
   );
 
-  console.log("newTopics", newTopics);
-
   useEffect(() => {
     if (selectedTopics?.length > 0) {
       setNewTopics(selectedTopics);
@@ -54,12 +51,17 @@ const TopicFeed = () => {
   }, [selectedTopics]);
 
   const handleUpdateAndNavigateBack = async () => {
-    console.log("newTopicsFinale", newTopics);
-
     if (previousRoute?.name === "UniversalFeed") {
+      let body;
+      if (newTopics[0] === "0") {
+        const topicIds = topics.slice(1).map((topic) => topic.Id);
+        body = { topics: topicIds };
+      } else {
+        body = { topics: newTopics };
+      }
       await dispatch({
         type: SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
-        body: { topics: newTopics },
+        body,
       });
     } else if (previousRoute?.name === "CreatePost") {
       await dispatch({
