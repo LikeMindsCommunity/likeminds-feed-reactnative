@@ -1,5 +1,5 @@
 import { View, Text, FlatList, RefreshControl, Image } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { LMLoader, LMNotificationFeedItem } from "../../components";
 import {
   useNotificationFeedContext,
@@ -10,6 +10,7 @@ import { useLMFeedStyles } from "../../lmFeedProvider";
 import Layout from "../../constants/Layout";
 
 const LMFeedNotificationFeedListView = () => {
+  const [showLoader, setShowLoader] = useState(true);
   const {
     notifications,
     handleActivityOnTap,
@@ -25,14 +26,20 @@ const LMFeedNotificationFeedListView = () => {
   const LMFeedContextStyles = useLMFeedStyles();
   const { loaderStyle } = LMFeedContextStyles;
 
+  useEffect(() => {
+    setTimeout(() => {
+      setShowLoader(false);
+    }, 500);
+  }, []);
+
   return (
     <>
-      {!notifications ? (
+      {showLoader ? (
         <View style={styles.loaderView}>
           <LMLoader {...loaderStyle} />
         </View>
       ) : null}
-      {notifications?.length > 0 ? (
+      {notifications?.length > 0 && !showLoader ? (
         <FlatList
           refreshing={refreshing}
           refreshControl={
@@ -59,7 +66,7 @@ const LMFeedNotificationFeedListView = () => {
             <>{isLoading && <LMLoader {...loaderStyle} />}</>
           }
         />
-      ) : (
+      ) : !showLoader ? (
         <View
           style={{
             flex: 1,
@@ -77,7 +84,7 @@ const LMFeedNotificationFeedListView = () => {
           />
           <Text>Oops! You don't have any notifications yet.</Text>
         </View>
-      )}
+      ) : null}
     </>
   );
 };
