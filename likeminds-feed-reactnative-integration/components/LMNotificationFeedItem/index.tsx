@@ -45,7 +45,7 @@ const LMNotificationFeedItem = React.memo(
       notificationFeedStyle?.activityAttachmentImageStyle;
 
     const [truncatedText, setTruncatedText] = useState("");
-    const MAX_LINES = 3;
+    const MAX_LINES = 2;
 
     // this handles the show more functionality
     const onTextLayout = (event: {
@@ -185,12 +185,13 @@ const LMNotificationFeedItem = React.memo(
                 ])}
                 onTextLayout={(e) => onTextLayout(e)}
               >
-                {activityTextArray.map((item) =>
-                  item?.styleType === BOLD_STYLE ? (
-                    <Text style={{ fontWeight: "500" }}>{item?.content}</Text>
+                {activityTextArray.map((item, index) =>{
+                  return item?.styleType === BOLD_STYLE ? (
+                    <Text key={index} style={{ fontWeight: "500" }}>{item?.content}</Text>
                   ) : (
-                    <Text>{item?.content}</Text>
+                    <Text key={index}>{item?.content}</Text>
                   )
+                }
                 )}
               </LMText>
             )}
