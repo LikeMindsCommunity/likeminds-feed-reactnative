@@ -1,5 +1,5 @@
-import { View, TouchableOpacity, StyleSheet, Text } from "react-native";
-import React from "react";
+import { View, TouchableOpacity, StyleSheet, Text, TextLayoutLine } from "react-native";
+import React, { useState } from "react";
 import STYLES from "../../constants/Styles";
 import { LMNotificationFeedItemProps } from "./types";
 import { LMIcon, LMText, LMProfilePicture } from "../../uiComponents";
@@ -23,11 +23,11 @@ const LMNotificationFeedItem = React.memo(
       ? activityAttachments[0]?.attachmentType
       : "";
     //creating profile picture props as per customization
-    const profilePictureStyle = notificationFeedStyle?.userImageStyles
+    const profilePictureStyle = notificationFeedStyle?.userImageStyles;
     const updatedProfilePictureProps = {
       fallbackText: {
         children: <Text>{nameInitials(activity.activityByUser.name)}</Text>,
-        textStyle: profilePictureStyle?.fallbackTextStyle
+        textStyle: profilePictureStyle?.fallbackTextStyle,
       },
       size: 50,
       imageUrl: activity.activityByUser.imageUrl,
@@ -37,6 +37,29 @@ const LMNotificationFeedItem = React.memo(
     const unreadBackgroundColor = notificationFeedStyle?.unreadBackgroundColor;
     const attachmentIconStyle =
       notificationFeedStyle?.activityAttachmentImageStyle;
+
+    const [truncatedText, setTruncatedText] = useState("");
+    const MAX_LINES = 3;
+
+    // this handles the show more functionality
+    const onTextLayout = (event: {
+      nativeEvent: { lines: string | TextLayoutLine[] };
+    }) => {
+      //get all lines
+      const { lines } = event.nativeEvent;
+      let text = "";
+
+      //get lines after it truncate
+      if (lines.length >= MAX_LINES) {
+        if (Array.isArray(lines)) {
+          text = lines
+            .splice(0, MAX_LINES)
+            .map((line) => line.text)
+            .join("");
+        }
+        setTruncatedText(text);
+      }
+    };
 
     return (
       <View
@@ -116,14 +139,26 @@ const LMNotificationFeedItem = React.memo(
 
           {/* activity content text */}
           <View style={styles.contentView}>
-            <LMText
-              textStyle={StyleSheet.flatten([
-                styles.activityText,
-                notificationFeedStyle?.activityTextStyles,
-              ])}
-            >
-              {activity.activityText.replace(/<<([^|]+)\|[^>]+>>/g, "$1")}
-            </LMText>
+            {truncatedText ? (
+              <LMText
+                textStyle={StyleSheet.flatten([
+                  styles.activityText,
+                  notificationFeedStyle?.activityTextStyles,
+                ])}
+              >
+                {`${truncatedText}...`}
+              </LMText>
+            ) : (
+              <LMText
+                textStyle={StyleSheet.flatten([
+                  styles.activityText,
+                  notificationFeedStyle?.activityTextStyles,
+                ])}
+                onTextLayout={(e) => onTextLayout(e)}
+              >
+                {activity.activityText.replace(/<<([^|]+)\|[^>]+>>/g, "$1")}
+              </LMText>
+            )}
             <LMText
               textStyle={StyleSheet.flatten([
                 notificationFeedStyle?.timestampTextStyles,

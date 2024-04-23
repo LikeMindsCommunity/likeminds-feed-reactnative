@@ -46,7 +46,6 @@ import {
 import { LMAttachmentUI, LMUserUI, RootStackParamList } from "../../models";
 import {
   LMCarousel,
-  LMDocument,
   LMHeader,
   LMImage,
   LMLinkPreview,
@@ -58,6 +57,7 @@ import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Events } from "../../enums/Events";
 import { Keys } from "../../enums/Keys";
 import { userTaggingDecoder } from "../../utils/decodeMentions";
+import LMScrollDocument from "../../components/LMMedia/LMScrollDocument";
 
 interface CreatePostProps {
   children: React.ReactNode;
@@ -419,7 +419,7 @@ const CreatePostComponent = () => {
           {/* selected document view section */}
           {formattedDocumentAttachments &&
             formattedDocumentAttachments.length >= 1 && (
-              <LMDocument
+              <LMScrollDocument
                 {...postMediaStyle?.document}
                 attachments={formattedDocumentAttachments}
                 showCancel={
