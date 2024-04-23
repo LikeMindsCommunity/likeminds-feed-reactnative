@@ -1,5 +1,11 @@
-import { View, TouchableOpacity, StyleSheet, Text } from "react-native";
-import React from "react";
+import {
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  Text,
+  TextLayoutLine,
+} from "react-native";
+import React, { useState } from "react";
 import STYLES from "../../constants/Styles";
 import { LMNotificationFeedItemProps } from "./types";
 import { LMIcon, LMText, LMProfilePicture } from "../../uiComponents";
@@ -23,11 +29,11 @@ const LMNotificationFeedItem = React.memo(
       ? activityAttachments[0]?.attachmentType
       : "";
     //creating profile picture props as per customization
-    const profilePictureStyle = notificationFeedStyle?.userImageStyles
+    const profilePictureStyle = notificationFeedStyle?.userImageStyles;
     const updatedProfilePictureProps = {
       fallbackText: {
         children: <Text>{nameInitials(activity.activityByUser.name)}</Text>,
-        textStyle: profilePictureStyle?.fallbackTextStyle
+        textStyle: profilePictureStyle?.fallbackTextStyle,
       },
       size: 50,
       imageUrl: activity.activityByUser.imageUrl,
@@ -38,24 +44,51 @@ const LMNotificationFeedItem = React.memo(
     const attachmentIconStyle =
       notificationFeedStyle?.activityAttachmentImageStyle;
 
-      const BOLD_STYLE = "BOLD_STYLE"
-      const NORMAL_STYLE = "NORMAL_STYLE"
-      const routeRegex = /<<(.*?)>>/g;
-      const activityTextArray = [{
-        content: '',
-        styleType: ''
-      }];
+    const [truncatedText, setTruncatedText] = useState("");
+    const MAX_LINES = 2;
 
-      const segments = activity.activityText.split(routeRegex);
-      segments.forEach(segment => {
-        const match = segment.match(/(.*?)\|.*?/);
-        if (match) {
-          const matchedContent = match[1];
-          activityTextArray.push({content: matchedContent, styleType: BOLD_STYLE})
-        }else {
-          activityTextArray.push({content: segment, styleType: NORMAL_STYLE})
+    // this handles the show more functionality
+    const onTextLayout = (event: {
+      nativeEvent: { lines: string | TextLayoutLine[] };
+    }) => {
+      //get all lines
+      const { lines } = event.nativeEvent;
+      let text = "";
+
+      //get lines after it truncate
+      if (lines.length >= MAX_LINES) {
+        if (Array.isArray(lines)) {
+          text = lines
+            .splice(0, MAX_LINES)
+            .map((line) => line.text)
+            .join("");
         }
-      })      
+        setTruncatedText(text);
+      }
+    };
+    const BOLD_STYLE = "BOLD_STYLE";
+    const NORMAL_STYLE = "NORMAL_STYLE";
+    const routeRegex = /<<(.*?)>>/g;
+    const activityTextArray = [
+      {
+        content: "",
+        styleType: "",
+      },
+    ];
+
+    const segments = activity.activityText.split(routeRegex);
+    segments.forEach((segment) => {
+      const match = segment.match(/(.*?)\|.*?/);
+      if (match) {
+        const matchedContent = match[1];
+        activityTextArray.push({
+          content: matchedContent,
+          styleType: BOLD_STYLE,
+        });
+      } else {
+        activityTextArray.push({ content: segment, styleType: NORMAL_STYLE });
+      }
+    });
 
     return (
       <View
@@ -135,20 +168,38 @@ const LMNotificationFeedItem = React.memo(
 
           {/* activity content text */}
           <View style={styles.contentView}>
+            {truncatedText ? (
+              <LMText
+                textStyle={StyleSheet.flatten([
+                  styles.activityText,
+                  notificationFeedStyle?.activityTextStyles,
+                ])}
+              >
+                {`${truncatedText}...`}
+              </LMText>
+            ) : (
+              <LMText
+                textStyle={StyleSheet.flatten([
+                  styles.activityText,
+                  notificationFeedStyle?.activityTextStyles,
+                ])}
+                onTextLayout={(e) => onTextLayout(e)}
+              >
+                {activityTextArray.map((item, index) =>{
+                  return item?.styleType === BOLD_STYLE ? (
+                    <Text key={index} style={{ fontWeight: "500" }}>{item?.content}</Text>
+                  ) : (
+                    <Text key={index}>{item?.content}</Text>
+                  )
+                }
+                )}
+              </LMText>
+            )}
+
             <LMText
               textStyle={StyleSheet.flatten([
-                styles.activityText,
-                notificationFeedStyle?.activityTextStyles,
-              ])}
-              maxLines={2}
-            >
-              {activityTextArray.map((item) => (
-                item?.styleType === BOLD_STYLE ? <Text style={{fontWeight:'500'}}>{item?.content}</Text> : <Text>{item?.content}</Text>
-              ))}
-            </LMText>
-            <LMText
-              textStyle={StyleSheet.flatten([
-                styles.notificationTimeStamp, notificationFeedStyle?.timestampTextStyles
+                styles.notificationTimeStamp,
+                notificationFeedStyle?.timestampTextStyles,
               ])}
             >
               {timeStamp(Number(activity.updatedAt))} ago
