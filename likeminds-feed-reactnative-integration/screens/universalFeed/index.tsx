@@ -60,7 +60,6 @@ interface UniversalFeedProps {
   handleDeletePostProps: (
     visible: boolean,
     postId: string,
-    isCM: boolean
   ) => void;
   handleReportPostProps: (postId: string) => void;
   newPostButtonClickProps: () => void;
@@ -197,6 +196,7 @@ const UniversalFeedComponent = () => {
                 height={styles.uploadingImageVideoBox.height}
                 showControls={false}
                 boxFit="contain"
+                autoPlay={false}
               />
             )}
             {uploadingMediaAttachmentType === DOCUMENT_ATTACHMENT_TYPE && (

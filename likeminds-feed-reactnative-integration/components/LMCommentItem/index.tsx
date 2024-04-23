@@ -66,7 +66,7 @@ const LMCommentItem = React.memo(
     useEffect(() => {
       if (isRepliesVisible) {
         setShowReplies(true)
-        onTapReplies((data: Array<LMCommentUI>) => setRepliesArray(data));
+        onTapReplies && onTapReplies((data: Array<LMCommentUI>) => setRepliesArray(data));
       }
     }, [isRepliesVisible]);
 
@@ -103,7 +103,7 @@ const LMCommentItem = React.memo(
       ) : showText ? (
         <Text></Text>
       ) : (
-        <Text>See More</Text>
+        <Text style={styles.showMoreText}>See More</Text>
       ),
       textStyle: showMoreProps?.textStyle,
     };
@@ -198,16 +198,16 @@ const LMCommentItem = React.memo(
                     ? likeIconButton.activeIcon.assetPath
                     : require("../../assets/images/heart_red_icon3x.png")
                   : customLikeIcon?.assetPath
-                  ? likeIconButton.icon.assetPath
+                  ? likeIconButton?.icon?.assetPath
                   : require("../../assets/images/heart_icon3x.png"),
                 iconUrl: customLikeIcon?.iconUrl,
                 iconStyle: customLikeIcon?.iconStyle,
                 color: customLikeIcon?.color,
                 height: customLikeIcon?.height
-                  ? likeIconButton.icon.height
+                  ? likeIconButton?.icon?.height
                   : 20.5,
                 width: customLikeIcon?.width
-                  ? likeIconButton.icon.width
+                  ? likeIconButton?.icon?.width
                   : 20.5,
                 boxFit: customLikeIcon?.boxFit,
                 boxStyle: customLikeIcon?.boxStyle,

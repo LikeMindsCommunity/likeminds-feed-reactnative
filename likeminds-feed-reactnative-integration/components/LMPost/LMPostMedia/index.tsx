@@ -125,6 +125,7 @@ const LMPostMedia = React.memo(() => {
                   ? mediaProps?.videoProps?.autoPlay
                   : true,
               videoInFeed: mediaProps?.videoProps?.videoInFeed,
+              postId: post?.id
             }}
           />
         ) : (

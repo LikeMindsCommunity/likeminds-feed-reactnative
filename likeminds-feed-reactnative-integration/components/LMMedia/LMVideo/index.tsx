@@ -36,15 +36,21 @@ const LMVideo = React.memo(
     showCancel,
     onCancel,
     cancelButton,
-    videoInFeed
+    videoInFeed,
+    videoInCarousel,
+    currentVideoInCarousel,
   }: LMVideoProps) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [playingStatus, setPlayingStatus] = useState(true);
-    const [viewController, setViewController] = useState(showControls ? showControls : true);
+    const [viewController, setViewController] = useState(
+      showControls ? showControls : true
+    );
     const player = useRef<VideoRef>(null);
 
-    const currentVideoId = useAppSelector(state => state.feed.autoPlayVideoPostId);
+    const currentVideoId = useAppSelector(
+      (state) => state.feed.autoPlayVideoPostId
+    );
 
     return (
       <View
@@ -83,6 +89,7 @@ const LMVideo = React.memo(
             resizeMode={boxFit ? boxFit : defaultStyles.videoStyle.resizeMode}
             playWhenInactive={false}
             playInBackground={false}
+            ignoreSilentSwitch="obey"
             style={StyleSheet.flatten([
               videoStyle,
               {
@@ -92,20 +99,44 @@ const LMVideo = React.memo(
               },
             ])}
             paused={
-              videoInFeed ? autoPlay
-                ? currentVideoId === postId
-                  ? false
-                  : true
-                : playingStatus : autoPlay ? false : playingStatus
+              videoInFeed
+                ? autoPlay
+                  ? currentVideoId === postId
+                    ? videoInCarousel
+                      ? currentVideoInCarousel === videoUrl
+                        ? false
+                        : true
+                      : false
+                    : true
+                  : playingStatus
+                : autoPlay
+                ? videoInCarousel
+                  ? currentVideoInCarousel === videoUrl
+                    ? false
+                    : true
+                  : false
+                : playingStatus
             } // handles the auto play/pause functionality
             muted={
-             videoInFeed ? autoPlay
-                ? currentVideoId === postId
-                  ? false
-                  : true
+              videoInFeed
+                ? autoPlay
+                  ? currentVideoId === postId
+                    ? videoInCarousel
+                      ? currentVideoInCarousel === videoUrl
+                        ? false
+                        : true
+                      : false
+                    : true
+                  : playingStatus
+                  ? true
+                  : false
+                : autoPlay
+                ? videoInCarousel
+                  ? currentVideoInCarousel === videoUrl
+                    ? false
+                    : true
+                  : false
                 : playingStatus
-                ? true
-                : false : autoPlay ? false : playingStatus
             } // this handles the mute of the video according to the video being played
           />
         </>
@@ -115,7 +146,14 @@ const LMVideo = React.memo(
             {cancelButton ? (
               <LMButton
                 {...cancelButton}
-                onTap={onCancel ? () => {onCancel(videoUrl);cancelButton?.onTap()} : () => null}
+                onTap={
+                  onCancel
+                    ? () => {
+                        onCancel(videoUrl);
+                        cancelButton?.onTap();
+                      }
+                    : () => null
+                }
               />
             ) : (
               <LMButton
@@ -152,16 +190,15 @@ const LMVideo = React.memo(
               <>
                 {/* this handles the toggle of play pause icon */}
                 {!playingStatus ? (
-                 pauseButton ? (
-                  pauseButton
-                ) : (
-                  <Image
-                    source={require("../../../assets/images/pause_icon3x.png")}
-                    style={defaultStyles.playPauseIconSize}
-                  />
-                )
-                ) :
-                playButton ? (
+                  pauseButton ? (
+                    pauseButton
+                  ) : (
+                    <Image
+                      source={require("../../../assets/images/pause_icon3x.png")}
+                      style={defaultStyles.playPauseIconSize}
+                    />
+                  )
+                ) : playButton ? (
                   playButton
                 ) : (
                   <Image
