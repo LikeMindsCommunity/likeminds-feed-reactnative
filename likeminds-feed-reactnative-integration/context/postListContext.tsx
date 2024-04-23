@@ -330,6 +330,7 @@ export const PostListContextProvider = ({
 
   // this function handles the functionality on the report option
   const handleReportPost = async () => {
+    dispatch(autoPlayPostVideo(''))
     setShowReportModal(true);
   };
 
@@ -340,6 +341,7 @@ export const PostListContextProvider = ({
 
   // this function handles the click on edit option of overlayMenu
   const handleEditPost = (postId) => {
+    dispatch(autoPlayPostVideo(''))
     navigation.navigate(CREATE_POST, { postId });
   };
 

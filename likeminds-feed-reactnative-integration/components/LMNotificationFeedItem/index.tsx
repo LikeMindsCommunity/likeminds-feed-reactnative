@@ -1,4 +1,10 @@
-import { View, TouchableOpacity, StyleSheet, Text, TextLayoutLine } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  Text,
+  TextLayoutLine,
+} from "react-native";
 import React, { useState } from "react";
 import STYLES from "../../constants/Styles";
 import { LMNotificationFeedItemProps } from "./types";
@@ -60,6 +66,29 @@ const LMNotificationFeedItem = React.memo(
         setTruncatedText(text);
       }
     };
+    const BOLD_STYLE = "BOLD_STYLE";
+    const NORMAL_STYLE = "NORMAL_STYLE";
+    const routeRegex = /<<(.*?)>>/g;
+    const activityTextArray = [
+      {
+        content: "",
+        styleType: "",
+      },
+    ];
+
+    const segments = activity.activityText.split(routeRegex);
+    segments.forEach((segment) => {
+      const match = segment.match(/(.*?)\|.*?/);
+      if (match) {
+        const matchedContent = match[1];
+        activityTextArray.push({
+          content: matchedContent,
+          styleType: BOLD_STYLE,
+        });
+      } else {
+        activityTextArray.push({ content: segment, styleType: NORMAL_STYLE });
+      }
+    });
 
     return (
       <View
@@ -156,11 +185,19 @@ const LMNotificationFeedItem = React.memo(
                 ])}
                 onTextLayout={(e) => onTextLayout(e)}
               >
-                {activity.activityText.replace(/<<([^|]+)\|[^>]+>>/g, "$1")}
+                {activityTextArray.map((item) =>
+                  item?.styleType === BOLD_STYLE ? (
+                    <Text style={{ fontWeight: "500" }}>{item?.content}</Text>
+                  ) : (
+                    <Text>{item?.content}</Text>
+                  )
+                )}
               </LMText>
             )}
+
             <LMText
               textStyle={StyleSheet.flatten([
+                styles.notificationTimeStamp,
                 notificationFeedStyle?.timestampTextStyles,
               ])}
             >

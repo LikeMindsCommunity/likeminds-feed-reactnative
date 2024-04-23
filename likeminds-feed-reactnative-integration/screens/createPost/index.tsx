@@ -411,6 +411,8 @@ const CreatePostComponent = () => {
                       removeSingleAttachment();
                       postMediaStyle?.video?.onCancel();
                     }}
+                    autoPlay= {postMediaStyle?.video?.autoPlay != undefined ? postMediaStyle?.video?.autoPlay : true}
+                    videoInFeed={false}
                   />
                 )}
               </>

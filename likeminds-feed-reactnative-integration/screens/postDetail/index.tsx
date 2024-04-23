@@ -1,4 +1,5 @@
 import {
+  BackHandler,
   FlatList,
   Image,
   Keyboard,
@@ -10,7 +11,7 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import { POST_LIKES_LIST, UNIVERSAL_FEED } from "../../constants/screenNames";
 import {
   COMMENT_LIKES,
@@ -32,7 +33,7 @@ import {
 } from "../../utils";
 import { useLMFeedStyles } from "../../lmFeedProvider";
 import { useAppDispatch } from "../../store/store";
-import { clearComments } from "../../store/actions/postDetail";
+import { clearComments, clearPostDetail } from "../../store/actions/postDetail";
 import {
   PostDetailContextProvider,
   PostDetailContextValues,
@@ -52,7 +53,6 @@ import {
 } from "../../uiComponents";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import LMPostMenu from "../../customModals/LMPostMenu";
-import { useEffect } from "react/cjs/react.production.min";
 import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Events } from "../../enums/Events";
 import { Keys } from "../../enums/Keys";
@@ -234,6 +234,18 @@ const PostDetailComponent = React.memo(() => {
     }
   }, [postDetail?.replies?.length]);
 
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        navigation.goBack()
+        dispatch(clearPostDetail())
+        return true;
+      }
+    );
+    return () => backHandler.remove();
+  }, [])
+
   return (
     <SafeAreaView edges={["left", "right", "top"]} style={styles.flexView}>
       <KeyboardAvoidingView
@@ -271,30 +283,24 @@ const PostDetailComponent = React.memo(() => {
           headingTextStyle={customScreenHeader?.headingTextStyle}
           headingViewStyle={customScreenHeader?.headingViewStyle}
         />
-        {postDetail?.id ? (
-          <>
-            {Object.keys(postDetail).length > 0 ? (
-              <View
-                style={StyleSheet.flatten([
-                  styles.mainContainer,
-                  {
-                    paddingBottom:
-                      allTags && isUserTagging
-                        ? 0
-                        : replyOnComment.textInputFocus
-                        ? Platform.OS === "android"
-                          ? keyboardFocusOnReply
-                            ? navigatedFromComments
-                              ? Layout.normalize(94)
-                              : Layout.normalize(114)
-                            : Layout.normalize(94)
-                          : Layout.normalize(94)
-                        : keyboardIsVisible
+       {postDetail?.id != '' ? <>
+        {postDetail?.id ? <>
+        {Object.keys(postDetail).length > 0 ? (
+          <View
+            style={StyleSheet.flatten([
+              styles.mainContainer,
+              {
+                paddingBottom:
+                  allTags && isUserTagging
+                    ? 0
+                    : replyOnComment.textInputFocus
+                    ? Platform.OS === "android"
+                      ? keyboardFocusOnReply
                         ? navigatedFromComments
                           ? Layout.normalize(64)
                           : Layout.normalize(84)
-                        : Layout.normalize(64),
-                  },
+                        : Layout.normalize(64) : Layout.normalize(64) : Layout.normalize(64)
+                  }
                 ])}
               >
                 <>
@@ -682,7 +688,7 @@ const PostDetailComponent = React.memo(() => {
               </View>
             ) : null}
           </>
-        ) : (
+         : (
           <View style={styles.loaderView}>
             <LMLoader />
           </View>
@@ -769,7 +775,9 @@ const PostDetailComponent = React.memo(() => {
               }, // The mention style in the input
             },
           ]}
-        />
+        /></>: <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
+          <Text>Post not available</Text>
+          </View>}
       </KeyboardAvoidingView>
 
       {/* delete post modal */}
