@@ -11,13 +11,14 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { POST_LIKES_LIST, UNIVERSAL_FEED } from "../../constants/screenNames";
 import {
   COMMENT_LIKES,
   COMMENT_TYPE,
   DELETE_COMMENT_MENU_ITEM,
   EDIT_COMMENT_MENU_ITEM,
+  POST_LIKES,
   POST_TYPE,
   REPORT_COMMENT_MENU_ITEM,
   VIEW_MORE_TEXT,
@@ -43,7 +44,7 @@ import {
 } from "../../context";
 import { postLikesClear } from "../../store/actions/postLikes";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { LMCommentItem, LMHeader, LMLoader } from "../../components";
+import { LMCommentItem, LMHeader, LMLoader, LMPost } from "../../components";
 import { LMMenuItemsUI, LMUserUI, RootStackParamList } from "../../models";
 import {
   LMIcon,
@@ -86,6 +87,7 @@ interface PostDetailProps {
     menuItems: LMMenuItemsUI[],
     commentId: string
   ) => void;
+  onSharePostClicked: (id: string) => void;
 }
 
 const PostDetail = ({
@@ -101,6 +103,7 @@ const PostDetail = ({
   handleReportCommentProp,
   handleScreenBackPressProp,
   onCommentOverflowMenuClickProp,
+  onSharePostClicked,
 }: PostDetailProps) => {
   return (
     <PostDetailCustomisableMethodsContextProvider
@@ -113,6 +116,7 @@ const PostDetail = ({
       handleReportCommentProp={handleReportCommentProp}
       handleScreenBackPressProp={handleScreenBackPressProp}
       onCommentOverflowMenuClickProp={onCommentOverflowMenuClickProp}
+      onSharePostClicked={onSharePostClicked}
     >
       <PostDetailComponent />
     </PostDetailCustomisableMethodsContextProvider>
@@ -131,7 +135,6 @@ const PostDetailComponent = React.memo(() => {
     replyOnComment,
     onRefresh,
     getCommentDetail,
-    renderPostDetail,
     getCommentsReplies,
     setReplyOnComment,
     setReplyToUsername,
@@ -180,6 +183,14 @@ const PostDetailComponent = React.memo(() => {
     closePostActionListModal,
     onMenuItemSelect,
     overlayMenuType,
+    handlePostLoadMore,
+    renderLoader,
+    setCommentFocus,
+    onOverlayMenuClick,
+    postLikeHandler,
+    savePostHandler,
+    showLoader,
+    setShowLoader,
   }: PostDetailContextValues = usePostDetailContext();
 
   const LMFeedContextStyles = useLMFeedStyles();
@@ -194,6 +205,7 @@ const PostDetailComponent = React.memo(() => {
     handleReportCommentProp,
     handleScreenBackPressProp,
     onCommentOverflowMenuClickProp,
+    onSharePostClicked,
   } = usePostDetailCustomisableMethodsContext();
   const postHeaderStyle = postListStyle?.header;
   const customScreenHeader = postDetailStyle?.screenHeader;
@@ -225,6 +237,61 @@ const PostDetailComponent = React.memo(() => {
     }
   };
 
+  // this renders the postDetail view
+  const renderPostDetail = () => {
+    return (
+      <LMPost
+        post={postDetail}
+        // header props
+        headerProps={{
+          onOverlayMenuClick: (event) =>
+            onOverlayMenuClick(event, postDetail?.id),
+        }}
+        // footer props
+        footerProps={{
+          likeIconButton: {
+            onTap: () => {
+              postLikeHandler(postDetail?.id);
+            },
+          },
+          saveButton: {
+            onTap: () => {
+              savePostHandler(postDetail?.id, postDetail?.isSaved);
+            },
+          },
+          likeTextButton: {
+            onTap: () => {
+              dispatch(postLikesClear());
+              navigation.navigate(POST_LIKES_LIST, [
+                POST_LIKES,
+                postDetail?.id,
+              ]);
+            },
+          },
+          commentButton: {
+            onTap: () => {
+              setCommentFocus(true);
+            },
+          },
+          shareButton: {
+            onTap: () => {
+              onSharePostClicked ? onSharePostClicked(postDetail?.id) : {};
+            },
+          },
+        }}
+        mediaProps={{
+          videoProps: {
+            autoPlay:
+              postListStyle?.media?.video?.autoPlay != undefined
+                ? postListStyle?.media?.video?.autoPlay
+                : true,
+            videoInFeed: false,
+          },
+        }}
+      />
+    );
+  };
+
   useEffect(() => {
     if (postDetail?.replies?.length > 0) {
       LMFeedAnalytics.track(
@@ -236,16 +303,21 @@ const PostDetailComponent = React.memo(() => {
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
+      "hardwareBackPress",
       () => {
-        navigation.goBack()
-        dispatch(clearPostDetail())
+        navigation.goBack();
+        dispatch(clearPostDetail());
         return true;
       }
     );
     return () => backHandler.remove();
-  }, [])
+  }, []);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setShowLoader(false);
+    }, 1000);
+  }, []);
   return (
     <SafeAreaView edges={["left", "right", "top"]} style={styles.flexView}>
       <KeyboardAvoidingView
@@ -283,24 +355,32 @@ const PostDetailComponent = React.memo(() => {
           headingTextStyle={customScreenHeader?.headingTextStyle}
           headingViewStyle={customScreenHeader?.headingViewStyle}
         />
-       {postDetail?.id != '' ? <>
-        {postDetail?.id ? <>
-        {Object.keys(postDetail).length > 0 ? (
-          <View
-            style={StyleSheet.flatten([
-              styles.mainContainer,
-              {
-                paddingBottom:
-                  allTags && isUserTagging
-                    ? 0
-                    : replyOnComment.textInputFocus
-                    ? Platform.OS === "android"
-                      ? keyboardFocusOnReply
-                        ? navigatedFromComments
-                          ? Layout.normalize(64)
-                          : Layout.normalize(84)
-                        : Layout.normalize(64) : Layout.normalize(64) : Layout.normalize(64)
-                  }
+        {/* {postDetail?.id != '' ? < */}
+        {showLoader ? (
+          <View style={styles.loaderView}>
+            <LMLoader />
+          </View>
+        ) : null}
+        {postDetail?.id && !showLoader ? (
+          <>
+            {Object.keys(postDetail).length > 0 ? (
+              <View
+                style={StyleSheet.flatten([
+                  styles.mainContainer,
+                  {
+                    paddingBottom:
+                      allTags && isUserTagging
+                        ? 0
+                        : replyOnComment.textInputFocus
+                        ? Platform.OS === "android"
+                          ? keyboardFocusOnReply
+                            ? navigatedFromComments
+                              ? Layout.normalize(64)
+                              : Layout.normalize(84)
+                            : Layout.normalize(64)
+                          : Layout.normalize(64)
+                        : Layout.normalize(64),
+                  },
                 ])}
               >
                 <>
@@ -503,8 +583,9 @@ const PostDetailComponent = React.memo(() => {
                       }
                       onEndReachedThreshold={0.3}
                       onEndReached={() => {
-                        setCommentPageNumber(commentPageNumber + 1);
+                        handlePostLoadMore();
                       }}
+                      ListFooterComponent={renderLoader}
                     />
                   </View>
                 </>
@@ -687,97 +768,100 @@ const PostDetailComponent = React.memo(() => {
                 />
               </View>
             ) : null}
-          </>
-         : (
-          <View style={styles.loaderView}>
-            <LMLoader />
-          </View>
-        )}
 
-        {/* input field */}
-        <LMInputText
-          {...customCommentTextInput}
-          inputText={commentToAdd}
-          onType={handleInputChange}
-          inputTextStyle={[
-            styles.textInputStyle,
-            {
-              bottom: keyboardIsVisible
-                ? navigatedFromComments
-                  ? Layout.normalize(0)
-                  : Layout.normalize(25)
-                : 0,
-            },
-            customCommentTextInput?.inputTextStyle,
-          ]}
-          autoFocus={
-            customCommentTextInput?.autoFocus != undefined
-              ? customCommentTextInput?.autoFocus
-              : routeParams
-              ? true
-              : keyboardFocusOnReply
-              ? true
-              : editCommentFocus
-              ? true
-              : commentFocus
-          }
-          placeholderText={
-            customCommentTextInput?.placeholderText
-              ? customCommentTextInput?.placeholderText
-              : "Write a comment"
-          }
-          placeholderTextColor={
-            customCommentTextInput?.placeholderTextColor
-              ? customCommentTextInput?.placeholderTextColor
-              : "#9B9B9B"
-          }
-          inputRef={myRef}
-          rightIcon={{
-            ...customCommentTextInput?.rightIcon,
-            onTap: () => {
-              customCommentTextInput?.rightIcon?.onTap();
-              commentToAdd
-                ? editCommentFocus
-                  ? commentEdit()
-                  : replyOnComment.textInputFocus
-                  ? addNewReplyProp
-                    ? addNewReplyProp(postDetail?.id, replyOnComment.commentId)
-                    : addNewReply(postDetail?.id, replyOnComment.commentId)
-                  : addNewCommentProp
-                  ? addNewCommentProp(postDetail?.id)
-                  : addNewComment(postDetail?.id)
-                : {};
-              setAllTags([]);
-              setIsUserTagging(false);
-            },
-            icon: {
-              assetPath: require("../../assets/images/send_icon3x.png"),
-              iconStyle: { opacity: commentToAdd ? 1 : 0.7 },
-              ...customCommentTextInput?.rightIcon?.icon,
-            },
-            isClickable: commentToAdd
-              ? customCommentTextInput?.rightIcon?.isClickable != undefined
-                ? customCommentTextInput?.rightIcon?.isClickable
-                : true
-              : false,
-          }}
-          multilineField={
-            customCommentTextInput?.multilineField != undefined
-              ? customCommentTextInput?.multilineField
-              : true
-          }
-          partTypes={[
-            {
-              trigger: "@", // Should be a single character like '@' or '#'
-              textStyle: {
-                color: "blue",
-                ...customCommentTextInput?.mentionTextStyle,
-              }, // The mention style in the input
-            },
-          ]}
-        /></>: <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
-          <Text>Post not available</Text>
-          </View>}
+            {/* input field */}
+            <LMInputText
+              {...customCommentTextInput}
+              inputText={commentToAdd}
+              onType={handleInputChange}
+              inputTextStyle={[
+                styles.textInputStyle,
+                {
+                  bottom: keyboardIsVisible
+                    ? navigatedFromComments
+                      ? Layout.normalize(0)
+                      : Layout.normalize(25)
+                    : 0,
+                },
+                customCommentTextInput?.inputTextStyle,
+              ]}
+              autoFocus={
+                customCommentTextInput?.autoFocus != undefined
+                  ? customCommentTextInput?.autoFocus
+                  : routeParams
+                  ? true
+                  : keyboardFocusOnReply
+                  ? true
+                  : editCommentFocus
+                  ? true
+                  : commentFocus
+              }
+              placeholderText={
+                customCommentTextInput?.placeholderText
+                  ? customCommentTextInput?.placeholderText
+                  : "Write a comment"
+              }
+              placeholderTextColor={
+                customCommentTextInput?.placeholderTextColor
+                  ? customCommentTextInput?.placeholderTextColor
+                  : "#9B9B9B"
+              }
+              inputRef={myRef}
+              rightIcon={{
+                ...customCommentTextInput?.rightIcon,
+                onTap: () => {
+                  customCommentTextInput?.rightIcon?.onTap();
+                  commentToAdd
+                    ? editCommentFocus
+                      ? commentEdit()
+                      : replyOnComment.textInputFocus
+                      ? addNewReplyProp
+                        ? addNewReplyProp(
+                            postDetail?.id,
+                            replyOnComment.commentId
+                          )
+                        : addNewReply(postDetail?.id, replyOnComment.commentId)
+                      : addNewCommentProp
+                      ? addNewCommentProp(postDetail?.id)
+                      : addNewComment(postDetail?.id)
+                    : {};
+                  setAllTags([]);
+                  setIsUserTagging(false);
+                },
+                icon: {
+                  assetPath: require("../../assets/images/send_icon3x.png"),
+                  iconStyle: { opacity: commentToAdd ? 1 : 0.7 },
+                  ...customCommentTextInput?.rightIcon?.icon,
+                },
+                isClickable: commentToAdd
+                  ? customCommentTextInput?.rightIcon?.isClickable != undefined
+                    ? customCommentTextInput?.rightIcon?.isClickable
+                    : true
+                  : false,
+              }}
+              multilineField={
+                customCommentTextInput?.multilineField != undefined
+                  ? customCommentTextInput?.multilineField
+                  : true
+              }
+              partTypes={[
+                {
+                  trigger: "@", // Should be a single character like '@' or '#'
+                  textStyle: {
+                    color: "blue",
+                    ...customCommentTextInput?.mentionTextStyle,
+                  }, // The mention style in the input
+                },
+              ]}
+            />
+          </>
+        ) : !showLoader ? (
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
+            <Text>Deleted Post</Text>
+          </View>
+        ) : null}
       </KeyboardAvoidingView>
 
       {/* delete post modal */}

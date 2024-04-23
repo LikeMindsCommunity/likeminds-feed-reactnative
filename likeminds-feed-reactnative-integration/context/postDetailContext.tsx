@@ -7,6 +7,7 @@ import React, {
   useEffect,
   useState,
   useRef,
+  JSX
 } from "react";
 import { useAppDispatch, useAppSelector } from "../store/store";
 
@@ -29,7 +30,7 @@ import {
   SOMETHING_WENT_WRONG,
   UNPIN_POST_MENU_ITEM,
 } from "../constants/Strings";
-import { Keyboard, Platform, TextInput } from "react-native";
+import { Keyboard, Platform, TextInput, View } from "react-native";
 import { useLMFeedStyles } from "../lmFeedProvider";
 import {
   addComment,
@@ -87,6 +88,8 @@ import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
 import { Events } from "../enums/Events";
 import { Keys } from "../enums/Keys";
 import { getPostType } from "../utils/analytics";
+import { LMLoader } from "../components";
+import Layout from "../constants/Layout";
 
 interface PostDetailContextProps {
   children: ReactNode;
@@ -136,6 +139,7 @@ export interface PostDetailContextValues {
   allTags: Array<LMUserUI>;
   isUserTagging: boolean;
   isLoading: boolean;
+  isPostLoading:boolean;
   refreshing: boolean;
   localRefresh: boolean;
   commentFocus: boolean;
@@ -144,6 +148,7 @@ export interface PostDetailContextValues {
   isKeyboardVisible: boolean;
   keyboardFocusOnReply: boolean;
   overlayMenuType: string;
+  showLoader: boolean;
   setOverlayMenuType: Dispatch<SetStateAction<string>>;
   setKeyboardFocusOnReply: Dispatch<SetStateAction<boolean>>;
   setModalPositionComment: Dispatch<SetStateAction<{ x: number; y: number }>>;
@@ -153,7 +158,9 @@ export interface PostDetailContextValues {
   setCommentFocus: Dispatch<SetStateAction<boolean>>;
   setLocalRefresh: Dispatch<SetStateAction<boolean>>;
   setRefreshing: Dispatch<SetStateAction<boolean>>;
+  setShowLoader: Dispatch<SetStateAction<boolean>>;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
+  setIsPostLoading: Dispatch<SetStateAction<boolean>>;
   setIsUserTagging: Dispatch<SetStateAction<boolean>>;
   setAllTags: Dispatch<SetStateAction<Array<LMUserUI>>>;
   setUserTaggingListHeight: Dispatch<SetStateAction<number>>;
@@ -194,7 +201,7 @@ export interface PostDetailContextValues {
     comments?: LMCommentUI[],
     id?: string
   ) => { commentDetail: LMCommentUI; parentCommentId?: string } | undefined;
-  getPostData: () => void;
+  getPostData: (page: number) => void;
   getCommentsReplies: (
     postId: string,
     commentId: string,
@@ -204,7 +211,10 @@ export interface PostDetailContextValues {
   commentLikeHandler: (postId: string, commentId: string) => void;
   addNewComment: (postId: string) => void;
   addNewReply: (postId: string, commentId: string) => void;
-  renderPostDetail: () => void;
+  onOverlayMenuClick: ( event: {
+    nativeEvent: { pageX: number; pageY: number };
+  },
+  postId: string) => void;
   commentEdit: () => void;
   handleInputChange: (event: string) => void;
   loadData: (newPage: number) => void;
@@ -218,6 +228,8 @@ export interface PostDetailContextValues {
     },
     commentId: string
   ) => void;
+  handlePostLoadMore: () => void;
+  renderLoader: () => JSX.Element | null;
 }
 
 const PostDetailContext = createContext<PostDetailContextValues | undefined>(
@@ -280,6 +292,7 @@ export const PostDetailContextProvider = ({
   const [allTags, setAllTags] = useState<Array<LMUserUI>>([]);
   const [isUserTagging, setIsUserTagging] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isPostLoading, setIsPostLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [localRefresh, setLocalRefresh] = useState(false);
   const [commentFocus, setCommentFocus] = useState(false);
@@ -293,9 +306,11 @@ export const PostDetailContextProvider = ({
   const isKeyboardVisible = Keyboard.isVisible();
   const [showRepliesOfCommentId, setShowRepliesOfCommentId] = useState("");
   const [overlayMenuType, setOverlayMenuType] = useState("");
+  const [isPaginationStopped, setIsPaginationStopped] = useState(false);
+  const [showLoader, setShowLoader] = useState(true);
 
   const LMFeedContextStyles = useLMFeedStyles();
-  const { postListStyle } = LMFeedContextStyles;
+  const { postListStyle ,loaderStyle} = LMFeedContextStyles;
 
   // this function is executed on pull to refresh
   const onRefresh = async () => {
@@ -522,17 +537,18 @@ export const PostDetailContextProvider = ({
   };
 
   // this function calls the getPost api
-  const getPostData = async () => {
+  const getPostData = async (pageNum) => {
     const getPostResponse = await dispatch(
       getPost(
         GetPostRequest.builder()
           .setpostId(route.params[0])
-          .setpage(commentPageNumber)
+          .setpage(pageNum)
           .setpageSize(10)
           .build(),
         false
       )
     );
+    setShowLoader(false)
     return getPostResponse;
   };
 
@@ -671,8 +687,12 @@ export const PostDetailContextProvider = ({
 
   // this useEffect handles the pagination of the comments
   useEffect(() => {
-    getPostData();
-  }, [commentPageNumber, route.params[0]]);
+    setShowLoader(true)
+    dispatch(autoPlayPostVideo('')) 
+    dispatch(clearPostDetail())   
+    const initialPage = 1;
+    getPostData(initialPage);
+  }, [route.params[0]]);
 
   // this function is executed on the click of menu icon & handles the position and visibility of the modal
   const onOverlayMenuClick = (
@@ -688,55 +708,6 @@ export const PostDetailContextProvider = ({
     setModalPosition({ x: pageX, y: pageY });
   };
 
-  // this renders the postDetail view
-  const renderPostDetail = () => {
-    return (
-      <LMPost
-        post={postDetail}
-        // header props
-        headerProps={{
-          onOverlayMenuClick: (event) =>
-            onOverlayMenuClick(event, postDetail?.id),
-        }}
-        // footer props
-        footerProps={{
-          likeIconButton: {
-            onTap: () => {
-              postLikeHandler(postDetail?.id);
-            },
-          },
-          saveButton: {
-            onTap: () => {
-              savePostHandler(postDetail?.id, postDetail?.isSaved);
-            },
-          },
-          likeTextButton: {
-            onTap: () => {
-              dispatch(postLikesClear());
-              navigation.navigate(POST_LIKES_LIST, [
-                POST_LIKES,
-                postDetail?.id,
-              ]);
-            },
-          },
-          commentButton: {
-            onTap: () => {
-              setCommentFocus(true);
-            },
-          },
-        }}
-        mediaProps={{
-          videoProps: {
-            autoPlay:
-              postListStyle?.media?.video?.autoPlay != undefined
-                ? postListStyle?.media?.video?.autoPlay
-                : true,
-            videoInFeed: false,
-          },
-        }}
-      />
-    );
-  };
 
   // Update localModalVisibility when showDeleteModal visibility changes
   useEffect(() => {
@@ -901,6 +872,38 @@ export const PostDetailContextProvider = ({
     dispatch(clearPostDetail())
   };
 
+    //pagination loader in the footer
+    const renderLoader = () => {
+      return isPostLoading ? (
+        <View style={{ paddingVertical: Layout.normalize(20) }}>
+          <LMLoader {...loaderStyle?.loader} />
+        </View>
+      ) : null;
+    };
+
+  const loadPostData = async (newPage: number) => {
+    setIsPostLoading(true);
+    setTimeout(async () => {
+      const res: any = await getPostData(newPage);
+      if (res) {                
+        if (res?.post?.replies?.length === 0) {
+          setIsPaginationStopped(true);
+        }
+        setIsPostLoading(false);
+      }
+    }, 200);
+  };
+
+  const handlePostLoadMore = async () => {    
+    if (!isPostLoading && !isPaginationStopped) {
+      const newPage = commentPageNumber + 1;
+      setCommentPageNumber((page) => {
+        return page + 1;
+      });
+      loadPostData(newPage);
+    }
+  };
+
   const contextValues: PostDetailContextValues = {
     navigation,
     route,
@@ -937,7 +940,9 @@ export const PostDetailContextProvider = ({
     isKeyboardVisible,
     keyboardFocusOnReply,
     setKeyboardFocusOnReply,
+    isPostLoading,
 
+    setIsPostLoading,
     setRouteParams,
     setNavigatedFromComments,
     setCommentFocus,
@@ -981,7 +986,7 @@ export const PostDetailContextProvider = ({
     commentLikeHandler,
     addNewComment,
     addNewReply,
-    renderPostDetail,
+    onOverlayMenuClick,
     commentEdit,
     handleInputChange,
     loadData,
@@ -995,6 +1000,10 @@ export const PostDetailContextProvider = ({
     onCommentOverflowMenuClick,
     overlayMenuType,
     setOverlayMenuType,
+    handlePostLoadMore,
+    renderLoader,
+    showLoader,
+    setShowLoader
   };
 
   return (
