@@ -160,7 +160,6 @@ const CreatePostComponent = () => {
   const uiRenderForPost = () => {
     return (
       <ScrollView
-        keyboardShouldPersistTaps={"handled"}
         style={
           postToEdit
             ? styles.scrollViewStyleWithoutOptions
