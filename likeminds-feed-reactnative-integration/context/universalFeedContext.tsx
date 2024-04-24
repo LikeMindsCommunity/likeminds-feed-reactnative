@@ -12,11 +12,8 @@ import React, {
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { mentionToRouteConverter, uploadFilesToAWS } from "../utils";
 import { addPost, setUploadAttachments } from "../store/actions/createPost";
-import {
-  AddPostRequest,
-  GetFeedRequest,
-} from "@likeminds.community/feed-js-beta";
-import { refreshFeed } from "../store/actions/feed";
+import { AddPostRequest, GetFeedRequest } from "@likeminds.community/feed-js";
+import { autoPlayPostVideo, refreshFeed } from "../store/actions/feed";
 import {
   CREATE_POST_PERMISSION,
   POST_UPLOADED,
@@ -29,7 +26,14 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { showToastMessage } from "../store/actions/toast";
 import { FlatList } from "react-native";
 import { LMAttachmentUI, LMPostUI } from "../models";
-import { CREATE_POST } from "../constants/screenNames";
+import { CREATE_POST, NOTIFICATION_FEED } from "../constants/screenNames";
+import {
+  getUnreadNotificationCount,
+  notificationFeedClear,
+} from "../store/actions/notification";
+import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
+import { Events } from "../enums/Events";
+import { Keys } from "../enums/Keys";
 
 interface UniversalFeedContextProps {
   children: ReactNode;
@@ -58,6 +62,7 @@ export interface UniversalFeedContextValues {
   postContent: string;
   uploadingMediaAttachmentType: number;
   uploadingMediaAttachment: string;
+  unreadNotificationCount: number;
   setLocalRefresh: Dispatch<SetStateAction<boolean>>;
   setRefreshing: Dispatch<SetStateAction<boolean>>;
   setPostUploading: Dispatch<SetStateAction<boolean>>;
@@ -66,6 +71,8 @@ export interface UniversalFeedContextValues {
   postAdd: () => void;
   keyExtractor: (val) => string;
   newPostButtonClick: () => void;
+  getNotificationsCount: () => void;
+  onTapNotificationBell: () => void;
 }
 
 const UniversalFeedContext = createContext<
@@ -95,6 +102,9 @@ export const UniversalFeedContextProvider = ({
   const [showCreatePost, setShowCreatePost] = useState(true);
   const { mediaAttachmemnts, linkAttachments, postContent, topics } =
     useAppSelector((state) => state.createPost);
+  const unreadNotificationCount = useAppSelector(
+    (state) => state.notification.activitiesCount
+  );
   const uploadingMediaAttachmentType = mediaAttachmemnts[0]?.attachmentType;
   const uploadingMediaAttachment = mediaAttachmemnts[0]?.attachmentMeta.url;
 
@@ -131,6 +141,14 @@ export const UniversalFeedContextProvider = ({
     setLocalRefresh(false);
     setRefreshing(false);
   };
+
+  // Analytics event
+  useEffect(() => {
+    LMFeedAnalytics.track(
+      Events.FEED_OPENED,
+      new Map<string, string>([[Keys.FEED_TYPE, Keys.UNIVERSAL_FEED]])
+    );
+  }, []);
 
   // this function adds a new post
   const postAdd = async () => {
@@ -186,6 +204,7 @@ export const UniversalFeedContextProvider = ({
 
   // this handles the functionality of new post button
   const newPostButtonClick = () => {
+    dispatch(autoPlayPostVideo(""));
     showCreatePost
       ? postUploading
         ? dispatch(
@@ -229,6 +248,23 @@ export const UniversalFeedContextProvider = ({
     return `${id}`;
   };
 
+  const getNotificationsCount = async () => {
+    const unreadNotificationCountResponse = await dispatch(
+      getUnreadNotificationCount()
+    );
+    return unreadNotificationCountResponse;
+  };
+
+  useEffect(() => {
+    getNotificationsCount();
+  }, []);
+
+  const onTapNotificationBell = () => {
+    dispatch(notificationFeedClear());
+    dispatch(autoPlayPostVideo(""));
+    navigation.navigate(NOTIFICATION_FEED);
+  };
+
   const contextValues: UniversalFeedContextValues = {
     navigation,
     feedData,
@@ -253,6 +289,9 @@ export const UniversalFeedContextProvider = ({
     postAdd,
     keyExtractor,
     newPostButtonClick,
+    getNotificationsCount,
+    unreadNotificationCount,
+    onTapNotificationBell,
   };
 
   return (

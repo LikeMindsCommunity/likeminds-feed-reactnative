@@ -40,6 +40,8 @@ node_modules/
 npm-debug.log
 yarn-error.log
 package-lock.json
+/android/app/google-services.json
+/ios/GoogleService-Info.plist
 
 # fastlane
 #
@@ -66,3 +68,5 @@ package-lock.json
 
 # testing
 /coverage
+
+GoogleService-Info.plist

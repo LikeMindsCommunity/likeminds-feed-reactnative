@@ -7,6 +7,7 @@ import { useReducerWithMiddleware } from "../hooks/useReducerWithMiddleware";
 import { rootReducer } from "./store";
 import { CreatePostReducerState , initialState as CreatePostInitialState} from "./reducers/createPostReducer";
 import { PostLikesReducerState, initialState as PostLikesInitialState } from "./reducers/postLikesReducer";
+import { NotificationReducerState , initialState as NotificationInitialState} from "./reducers/notificationReducer";
 
 // Define your state type
 export interface ContextState {
@@ -15,7 +16,8 @@ export interface ContextState {
   loader: LoaderReducerState;
   postDetail: PostDetailReducerState;
   createPost: CreatePostReducerState;
-  postLikes: PostLikesReducerState
+  postLikes: PostLikesReducerState;
+  notification: NotificationReducerState
 }
 interface AppContextProps {
   state: ContextState;
@@ -33,7 +35,8 @@ export const ContextProvider = ({ children }) => {
     loader: LoaderInitialState,
     postDetail: PostDetailInitialState,
     createPost: CreatePostInitialState,
-    postLikes: PostLikesInitialState
+    postLikes: PostLikesInitialState,
+    notification: NotificationInitialState
   };
 
   const [state, dispatch] = useReducerWithMiddleware(rootReducer as any, initialState);

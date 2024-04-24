@@ -19,7 +19,11 @@ import {
   POST_UPLOAD_INPROGRESS,
   VIDEO_ATTACHMENT_TYPE,
 } from "../../constants/Strings";
-import { CREATE_POST, TOPIC_FEED } from "../../constants/screenNames";
+import {
+  CREATE_POST,
+  TOPIC_FEED,
+  NOTIFICATION_FEED,
+} from "../../constants/screenNames";
 // @ts-ignore the lib do not have TS declarations yet
 import _ from "lodash";
 import { PostsList } from "../postsList";
@@ -38,6 +42,10 @@ import { LMHeader, LMImage, LMLoader, LMVideo } from "../../components";
 import { LMIcon } from "../../uiComponents";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { LMMenuItemsUI, RootStackParamList } from "../../models";
+import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
+import { Events } from "../../enums/Events";
+import { Keys } from "../../enums/Keys";
+import { notificationFeedClear } from "../../store/actions/notification";
 
 interface UniversalFeedProps {
   children: React.ReactNode;
@@ -54,20 +62,18 @@ interface UniversalFeedProps {
   selectEditPostProp: (id: string) => void;
   onSelectCommentCountProp: (id: string) => void;
   onTapLikeCountProps: (id: string) => void;
-  handleDeletePostProps: (
-    visible: boolean,
-    postId: string,
-    isCM: boolean
-  ) => void;
+  handleDeletePostProps: (visible: boolean, postId: string) => void;
   handleReportPostProps: (postId: string) => void;
   newPostButtonClickProps: () => void;
   onOverlayMenuClickProp: (
     event: {
       nativeEvent: { pageX: number; pageY: number };
     },
-    menuItems: LMMenuItemsUI,
+    menuItems: LMMenuItemsUI[],
     postId: string
   ) => void;
+  onTapNotificationBellProp: () => void;
+  onSharePostClicked: (id: string) => void;
 }
 
 const UniversalFeed = ({
@@ -84,6 +90,8 @@ const UniversalFeed = ({
   handleReportPostProps,
   newPostButtonClickProps,
   onOverlayMenuClickProp,
+  onTapNotificationBellProp,
+  onSharePostClicked,
 }: UniversalFeedProps) => {
   return (
     <UniversalFeedCustomisableMethodsContextProvider
@@ -97,6 +105,8 @@ const UniversalFeed = ({
       handleReportPostProps={handleReportPostProps}
       newPostButtonClickProps={newPostButtonClickProps}
       onOverlayMenuClickProp={onOverlayMenuClickProp}
+      onTapNotificationBellProp={onTapNotificationBellProp}
+      onSharePostClicked={onSharePostClicked}
     >
       <UniversalFeedComponent />
     </UniversalFeedCustomisableMethodsContextProvider>
@@ -113,10 +123,12 @@ const UniversalFeedComponent = () => {
     uploadingMediaAttachment,
     uploadingMediaAttachmentType,
     newPostButtonClick,
+    unreadNotificationCount,
+    onTapNotificationBell,
   }: UniversalFeedContextValues = useUniversalFeedContext();
   const LMFeedContextStyles = useLMFeedStyles();
   const { universalFeedStyle, loaderStyle } = LMFeedContextStyles;
-  const { newPostButtonClickProps } =
+  const { newPostButtonClickProps, onTapNotificationBellProp } =
     useUniversalFeedCustomisableMethodsContext();
   const [mappedTopics, setMappedTopics] = useState([] as any);
   const selectedTopics = useAppSelector(
@@ -211,6 +223,7 @@ const UniversalFeedComponent = () => {
                 height={styles.uploadingImageVideoBox.height}
                 showControls={false}
                 boxFit="contain"
+                autoPlay={false}
               />
             )}
             {uploadingMediaAttachmentType === DOCUMENT_ATTACHMENT_TYPE && (
@@ -246,11 +259,12 @@ const UniversalFeedComponent = () => {
           universalFeedStyle?.newPostButtonStyle,
         ]}
         // handles post uploading status and member rights to create post
-        onPress={() =>
+        onPress={() => {
           newPostButtonClickProps
             ? newPostButtonClickProps()
-            : newPostButtonClick()
-        }
+            : newPostButtonClick();
+          LMFeedAnalytics.track(Events.POST_CREATION_STARTED);
+        }}
       >
         <Image
           source={require("../../assets/images/add_post_icon3x.png")}

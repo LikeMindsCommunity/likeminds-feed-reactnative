@@ -54,6 +54,9 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../models/RootStackParamsList";
 import { LMAttachmentUI, LMOGTagsUI, LMPostUI, LMUserUI } from "../models";
 import { CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN } from "../store/types/types";
+import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
+import { Events } from "../enums/Events";
+import { Keys } from "../enums/Keys";
 
 interface CreatePostContextProps {
   children: ReactNode;
@@ -238,6 +241,36 @@ export const CreatePostContextProvider = ({
             ...selectedImagesVideos,
           ]);
         }
+
+        // To fire analytics event
+        let imageCount = 0;
+        let videoCount = 0;
+        for (let i = 0; i < selectedImagesVideos.length; i++) {
+          if (
+            selectedImagesVideos[i].attachmentType === IMAGE_ATTACHMENT_TYPE
+          ) {
+            imageCount++;
+          } else if (
+            selectedImagesVideos[i].attachmentType === VIDEO_ATTACHMENT_TYPE
+          ) {
+            videoCount++;
+          }
+        }
+
+        // sends image attached event if imageCount > 0
+        if (imageCount > 0) {
+          LMFeedAnalytics.track(
+            Events.IMAGE_ATTACHED_TO_POST,
+            new Map<string, string>([[Keys.IMAGE_COUNT, `${imageCount}`]])
+          );
+        }
+        // sends image attached event if videoCount > 0
+        if (videoCount > 0) {
+          LMFeedAnalytics.track(
+            Events.VIDEO_ATTACHED_TO_POST,
+            new Map<string, string>([[Keys.VIDEO_COUNT, `${videoCount}`]])
+          );
+        }
       }
     });
   };
@@ -249,8 +282,6 @@ export const CreatePostContextProvider = ({
     content: string,
     topics: string[]
   ) => {
-    console.log("topicsFromContext", topics, content);
-
     const isConnected = await NetworkUtil.isNetworkAvailable();
     if (isConnected) {
       postToEdit
@@ -287,6 +318,12 @@ export const CreatePostContextProvider = ({
         }
       }
       const selectedDocuments = convertDocumentMetaData(mediaWithSizeCheck);
+      LMFeedAnalytics.track(
+        Events.DOCUMENT_ATTACHED_TO_POST,
+        new Map<string, string>([
+          [Keys.DOCUMENT_COUNT, `${selectedDocuments.length}`],
+        ])
+      );
       // checks the count of the files attached
       if (selectedDocuments.length + formattedDocumentAttachments.length > 10) {
         setFormattedDocumentAttachments([...formattedDocumentAttachments]);
@@ -399,11 +436,18 @@ export const CreatePostContextProvider = ({
               const convertedLinkData = await convertLinkMetaData(
                 filteredResponses
               );
+              const link = convertedLinkData[0]?.attachmentMeta?.ogTags?.url;
               setFormattedLinkAttachments(convertedLinkData);
               if (!closedOnce) {
                 setShowLinkPreview(true);
               } else {
                 setFormattedLinkAttachments([]);
+              }
+              if (link) {
+                LMFeedAnalytics.track(
+                  Events.LINK_ATTACHED_IN_POST,
+                  new Map<string, string>([[Keys.LINK, link]])
+                );
               }
             }
             // Do something with the array of non-undefined responses

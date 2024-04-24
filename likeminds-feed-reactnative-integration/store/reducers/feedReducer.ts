@@ -101,7 +101,9 @@ export const feedReducer = (state = initialState, action) => {
         (item: LMPostUI) => item?.id === action.body
       );
       // removes that post from the data
-      updatedFeed.splice(deletedPostIndex, 1);
+      if (deletedPostIndex != -1) {
+        updatedFeed.splice(deletedPostIndex, 1);
+      }
       return { ...state, feed: updatedFeed };
     }
     case REPORT_TAGS_SUCCESS: {
@@ -116,26 +118,28 @@ export const feedReducer = (state = initialState, action) => {
       );
 
       // this updates the isPinned value
-      updatedFeed[pinnedPostIndex].isPinned =
-        !updatedFeed[pinnedPostIndex].isPinned;
-      // this gets the index of pin/unpin from menu item
-      const menuItemIndex = updatedFeed[pinnedPostIndex].menuItems.findIndex(
-        (item: any) => item.id === PIN_POST_ID || item.id === UNPIN_POST_ID
-      );
+      if (pinnedPostIndex != -1) {
+        updatedFeed[pinnedPostIndex].isPinned =
+          !updatedFeed[pinnedPostIndex].isPinned;
+        // this gets the index of pin/unpin from menu item
+        const menuItemIndex = updatedFeed[pinnedPostIndex].menuItems.findIndex(
+          (item: any) => item.id === PIN_POST_ID || item.id === UNPIN_POST_ID
+        );
 
-      if (menuItemIndex != -1) {
-        if (updatedFeed[pinnedPostIndex].isPinned) {
-          //  this updates the menuItem title to unpin
-          updatedFeed[pinnedPostIndex].menuItems[menuItemIndex].id =
-            UNPIN_POST_ID;
-          updatedFeed[pinnedPostIndex].menuItems[menuItemIndex].title =
-            UNPIN_THIS_POST;
-        } else {
-          //  this updates the menuItem title to pin
-          updatedFeed[pinnedPostIndex].menuItems[menuItemIndex].id =
-            PIN_POST_ID;
-          updatedFeed[pinnedPostIndex].menuItems[menuItemIndex].title =
-            PIN_THIS_POST;
+        if (menuItemIndex != -1) {
+          if (updatedFeed[pinnedPostIndex].isPinned) {
+            //  this updates the menuItem title to unpin
+            updatedFeed[pinnedPostIndex].menuItems[menuItemIndex].id =
+              UNPIN_POST_ID;
+            updatedFeed[pinnedPostIndex].menuItems[menuItemIndex].title =
+              UNPIN_THIS_POST;
+          } else {
+            //  this updates the menuItem title to pin
+            updatedFeed[pinnedPostIndex].menuItems[menuItemIndex].id =
+              PIN_POST_ID;
+            updatedFeed[pinnedPostIndex].menuItems[menuItemIndex].title =
+              PIN_THIS_POST;
+          }
         }
       }
 
@@ -148,16 +152,18 @@ export const feedReducer = (state = initialState, action) => {
         (item: LMPostUI) => item?.id === action.body
       );
       // this updates the isLiked value
-      updatedFeed[likedPostIndex].isLiked =
-        !updatedFeed[likedPostIndex].isLiked;
-      if (updatedFeed[likedPostIndex].isLiked) {
-        // increase the like count
-        updatedFeed[likedPostIndex].likesCount =
-          updatedFeed[likedPostIndex].likesCount + 1;
-      } else {
-        // decrease the like count
-        updatedFeed[likedPostIndex].likesCount =
-          updatedFeed[likedPostIndex].likesCount - 1;
+      if (likedPostIndex != -1) {
+        updatedFeed[likedPostIndex].isLiked =
+          !updatedFeed[likedPostIndex].isLiked;
+        if (updatedFeed[likedPostIndex].isLiked) {
+          // increase the like count
+          updatedFeed[likedPostIndex].likesCount =
+            updatedFeed[likedPostIndex].likesCount + 1;
+        } else {
+          // decrease the like count
+          updatedFeed[likedPostIndex].likesCount =
+            updatedFeed[likedPostIndex].likesCount - 1;
+        }
       }
       return { ...state, feed: updatedFeed };
     }
@@ -168,8 +174,10 @@ export const feedReducer = (state = initialState, action) => {
         (item: any) => item?.id === action.body
       );
       // this updates the isSaved value
-      updatedFeed[savedPostIndex].isSaved =
-        !updatedFeed[savedPostIndex].isSaved;
+      if (savedPostIndex != -1) {
+        updatedFeed[savedPostIndex].isSaved =
+          !updatedFeed[savedPostIndex].isSaved;
+      }
 
       return { ...state, feed: updatedFeed };
     }

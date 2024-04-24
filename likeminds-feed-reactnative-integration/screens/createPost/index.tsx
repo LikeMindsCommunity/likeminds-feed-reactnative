@@ -8,6 +8,7 @@ import {
   StyleSheet,
   TextStyle,
   Image,
+  ScrollView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { NetworkUtil, nameInitials, replaceLastMention } from "../../utils";
@@ -19,9 +20,11 @@ import {
   ADD_POST_TEXT,
   ADD_VIDEOS,
   CREATE_POST_PLACEHOLDER_TEXT,
+  DOCUMENT_ATTACHMENT_TYPE,
   IMAGE_ATTACHMENT_TYPE,
   SAVE_POST_TEXT,
   SELECT_BOTH,
+  SELECT_FILE,
   SELECT_IMAGE,
   SELECT_VIDEO,
   VIDEO_ATTACHMENT_TYPE,
@@ -56,6 +59,10 @@ import {
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TOPIC_FEED } from "../../constants/screenNames";
 import { CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN } from "../../store/types/types";
+import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
+import { Events } from "../../enums/Events";
+import { Keys } from "../../enums/Keys";
+import { userTaggingDecoder } from "../../utils/decodeMentions";
 
 interface CreatePostProps {
   children: React.ReactNode;
@@ -167,8 +174,6 @@ const CreatePostComponent = () => {
   }, [selectedTopics]);
 
   const handleOnPress = () => {
-    console.log("selectedTopics", selectedTopics);
-
     onPostClickProp
       ? onPostClickProp(
           allAttachment,
@@ -182,6 +187,84 @@ const CreatePostComponent = () => {
           postContentText,
           selectedTopics
         );
+
+    if (!postToEdit) {
+      const map: Map<string | undefined, string | undefined> = new Map();
+      const taggedUsers: any = userTaggingDecoder(postContentText);
+
+      const ogTags = formattedLinkAttachments[0]?.attachmentMeta?.ogTags;
+
+      // To fire user tagged analytics event
+      if (taggedUsers?.length > 0) {
+        map.set(Keys.USER_TAGGED, Keys.YES);
+        map.set(Keys.TAGGED_USER_COUNT, taggedUsers?.length.toString());
+        const taggedUserIds = taggedUsers.map((user) => user.route).join(", ");
+        map.set(Keys.TAGGED_USER_UUID, taggedUserIds);
+      } else {
+        map.set(Keys.USER_TAGGED, Keys.NO);
+      }
+
+      // To fire link analytics event
+      if (ogTags) {
+        map.set(Keys.LINK_ATTACHED, Keys.YES);
+        map.set(Keys.LINK, ogTags?.url ?? "");
+      } else {
+        map.set(Keys.LINK_ATTACHED, Keys.NO);
+      }
+
+      // TODO for Topic Feed
+      // if (topics !== null && topics.length > 0) {
+      //   const topicsNameString = topics
+      //     .map((topic) => topic.name)
+      //     .join(", ");
+      //   map.set(Keys.TOPICS_ADDED, Keys.YES);
+      //   map.set(Keys.TOPICS, topicsNameString);
+      // } else {
+      //   map.set(Keys.TOPICS_ADDED, Keys.NO);
+      // }
+
+      // To fire media analytics event
+      let imageCount = 0;
+      let videoCount = 0;
+      let documentCount = 0;
+      for (let i = 0; i < allAttachment.length; i++) {
+        if (allAttachment[i].attachmentType === IMAGE_ATTACHMENT_TYPE) {
+          imageCount++;
+        } else if (allAttachment[i].attachmentType === VIDEO_ATTACHMENT_TYPE) {
+          videoCount++;
+        } else if (
+          allAttachment[i].attachmentType === DOCUMENT_ATTACHMENT_TYPE
+        ) {
+          documentCount++;
+        }
+      }
+
+      // sends image attached event if imageCount > 0
+      if (imageCount > 0) {
+        map.set(Keys.IMAGE_ATTACHED, Keys.YES);
+        map.set(Keys.IMAGE_COUNT, `${imageCount}`);
+      } else {
+        map.set(Keys.IMAGE_ATTACHED, Keys.NO);
+      }
+      // sends video attached event if videoCount > 0
+      if (videoCount > 0) {
+        map.set(Keys.VIDEO_ATTACHED, Keys.YES);
+        map.set(Keys.VIDEO_COUNT, `${videoCount}`);
+      } else {
+        map.set(Keys.VIDEO_ATTACHED, Keys.NO);
+      }
+
+      // sends document attached event if documentCount > 0
+      if (documentCount > 0) {
+        map.set(Keys.DOCUMENT_ATTACHED, Keys.YES);
+        map.set(Keys.DOCUMENT_COUNT, `${documentCount}`);
+      } else {
+        map.set(Keys.DOCUMENT_ATTACHED, Keys.NO);
+      }
+
+      LMFeedAnalytics.track(Events.POST_CREATION_COMPLETED, map);
+    }
+
     dispatch({
       type: CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
     });
@@ -197,8 +280,7 @@ const CreatePostComponent = () => {
   // this renders the post detail UI
   const uiRenderForPost = () => {
     return (
-      <View
-        // keyboardShouldPersistTaps={"handled"}
+      <ScrollView
         style={
           postToEdit
             ? styles.scrollViewStyleWithoutOptions
@@ -365,6 +447,23 @@ const CreatePostComponent = () => {
                       setPostContentText(res);
                       setAllTags([]);
                       setIsUserTagging(false);
+
+                      const taggedUsers = userTaggingDecoder(res);
+                      if (taggedUsers?.length > 0) {
+                        const taggedUserIds = taggedUsers
+                          .map((user) => user.route)
+                          .join(", ");
+                        LMFeedAnalytics.track(
+                          Events.USER_TAGGED_IN_POST,
+                          new Map<string, string>([
+                            [Keys.TAGGED_USER_UUID, taggedUserIds],
+                            [
+                              Keys.TAGGED_USER_COUNT,
+                              taggedUsers?.length.toString(),
+                            ],
+                          ])
+                        );
+                      }
                     }}
                     style={[
                       styles.taggingListItem,
@@ -505,6 +604,12 @@ const CreatePostComponent = () => {
                       removeSingleAttachment();
                       postMediaStyle?.video?.onCancel();
                     }}
+                    autoPlay={
+                      postMediaStyle?.video?.autoPlay != undefined
+                        ? postMediaStyle?.video?.autoPlay
+                        : true
+                    }
+                    videoInFeed={false}
                   />
                 )}
               </>
@@ -592,7 +697,7 @@ const CreatePostComponent = () => {
               isClickable={customAddMoreAttachmentsButton?.isClickable}
             />
           )}
-      </View>
+      </ScrollView>
     );
   };
 
@@ -685,8 +790,11 @@ const CreatePostComponent = () => {
               handleGalleryProp
                 ? handleGalleryProp(SELECT_IMAGE)
                 : handleGallery(SELECT_IMAGE);
-              customAttachmentOptionsStyle?.onPhotoAttachmentOptionClick &&
-                customAttachmentOptionsStyle?.onPhotoAttachmentOptionClick();
+
+              LMFeedAnalytics.track(
+                Events.CLICKED_ON_ATTACHMENT,
+                new Map<string, string>([[Keys.TYPE, SELECT_IMAGE]])
+              );
             }}
           >
             <LMIcon
@@ -710,8 +818,11 @@ const CreatePostComponent = () => {
               handleGalleryProp
                 ? handleGalleryProp(SELECT_VIDEO)
                 : handleGallery(SELECT_VIDEO);
-              customAttachmentOptionsStyle?.onVideoAttachmentOptionClick &&
-                customAttachmentOptionsStyle?.onVideoAttachmentOptionClick();
+
+              LMFeedAnalytics.track(
+                Events.CLICKED_ON_ATTACHMENT,
+                new Map<string, string>([[Keys.TYPE, SELECT_VIDEO]])
+              );
             }}
           >
             <LMIcon
@@ -733,8 +844,11 @@ const CreatePostComponent = () => {
             ]}
             onPress={() => {
               handleDocumentProp ? handleDocumentProp() : handleDocument();
-              customAttachmentOptionsStyle?.onFilesAttachmentOptionClick &&
-                customAttachmentOptionsStyle?.onFilesAttachmentOptionClick();
+
+              LMFeedAnalytics.track(
+                Events.CLICKED_ON_ATTACHMENT,
+                new Map<string, string>([[Keys.TYPE, SELECT_FILE]])
+              );
             }}
           >
             <LMIcon

@@ -40,6 +40,11 @@ import LMPost from "../../components/LMPost/LMPost";
 import { LMPostUI } from "../../models";
 import { LMLoader } from "../../components";
 import { autoPlayPostVideo } from "../../store/actions/feed";
+import LMPostMenu from "../../customModals/LMPostMenu";
+import { Events } from "../../enums/Events";
+import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
+import { Keys } from "../../enums/Keys";
+import { getPostType } from "../../utils/analytics";
 
 const PostsList = ({ route, children, items }: any) => {
   const { navigation }: UniversalFeedContextValues = useUniversalFeedContext();
@@ -81,6 +86,7 @@ const PostsListComponent = ({ topics }: any) => {
     handleEditPost,
     onTapLikeCount,
     onOverlayMenuClick,
+    setPostInViewport,
   }: PostListContextValues = usePostListContext();
   const LMFeedContextStyles = useLMFeedStyles();
   const { postListStyle, loaderStyle } = LMFeedContextStyles;
@@ -94,18 +100,29 @@ const PostsListComponent = ({ topics }: any) => {
     handleDeletePostProps,
     handleReportPostProps,
     onOverlayMenuClickProp,
+    onSharePostClicked,
   } = useUniversalFeedCustomisableMethodsContext();
   // this function returns the id of the item selected from menu list and handles further functionalities accordingly
   const onMenuItemSelect = (
     postId: string,
     itemId?: number,
-    pinnedValue?: boolean
+    pinnedValue?: boolean,
+    postDetail?: LMPostUI
   ) => {
     setSelectedMenuItemPostId(postId);
     if (itemId === PIN_POST_MENU_ITEM || itemId === UNPIN_POST_MENU_ITEM) {
       selectPinPostProp
         ? selectPinPostProp(postId, pinnedValue)
         : handlePinPost(postId, pinnedValue);
+      let event = pinnedValue ? Events.POST_UNPINNED : Events.POST_PINNED;
+      LMFeedAnalytics.track(
+        event,
+        new Map<string, string>([
+          [Keys.UUID, postDetail?.user?.sdkClientInfo?.uuid],
+          [Keys.POST_ID, postId],
+          [Keys.POST_TYPE, getPostType(postDetail?.attachments)],
+        ])
+      );
     }
     if (itemId === REPORT_POST_MENU_ITEM) {
       handleReportPostProps
@@ -119,6 +136,14 @@ const PostsListComponent = ({ topics }: any) => {
     }
     if (itemId === EDIT_POST_MENU_ITEM) {
       selectEditPostProp ? selectEditPostProp(postId) : handleEditPost(postId);
+      LMFeedAnalytics.track(
+        Events.POST_EDITED,
+        new Map<string, string>([
+          [Keys.UUID, postDetail?.user?.sdkClientInfo.uuid],
+          [Keys.POST_ID, postId],
+          [Keys.POST_TYPE, getPostType(postDetail?.attachments)],
+        ])
+      );
     }
   };
 
@@ -176,10 +201,10 @@ const PostsListComponent = ({ topics }: any) => {
                           onOverlayMenuClickProp
                             ? onOverlayMenuClickProp(
                                 event,
-                                item?.menuItems[0],
+                                item?.menuItems,
                                 item?.id
                               )
-                            : onOverlayMenuClick(event);
+                            : onOverlayMenuClick(event, item?.id);
                         },
                       }}
                       // footer props
@@ -229,9 +254,7 @@ const PostsListComponent = ({ topics }: any) => {
             onViewableItemsChanged={({ changed, viewableItems }) => {
               if (changed) {
                 if (viewableItems) {
-                  dispatch(
-                    autoPlayPostVideo(viewableItems?.[0]?.item?.id) as any
-                  );
+                  setPostInViewport(viewableItems?.[0]?.item?.id);
                 }
               }
             }}
@@ -265,6 +288,21 @@ const PostsListComponent = ({ topics }: any) => {
           closeModal={() => setShowReportModal(false)}
           reportType={POST_TYPE}
           postDetail={getPostDetail()}
+        />
+      )}
+      {/* menu list modal */}
+      {showActionListModal && (
+        <LMPostMenu
+          post={getPostDetail()}
+          onSelected={(postId, itemId, isPinned) => {
+            onMenuItemSelect(postId, itemId, isPinned, getPostDetail());
+          }}
+          modalPosition={modalPosition}
+          modalVisible={showActionListModal}
+          onCloseModal={closePostActionListModal}
+          menuItemTextStyle={postListStyle?.header?.postMenu?.menuItemTextStyle}
+          menuViewStyle={postListStyle?.header?.postMenu?.menuViewStyle}
+          backdropColor={postListStyle?.header?.postMenu?.backdropColor}
         />
       )}
     </View>

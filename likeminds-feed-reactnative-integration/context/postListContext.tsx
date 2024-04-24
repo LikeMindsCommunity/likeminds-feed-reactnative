@@ -10,6 +10,7 @@ import React, {
 } from "react";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import {
+  autoPlayPostVideo,
   getFeed,
   likePost,
   likePostStateHandler,
@@ -56,6 +57,7 @@ import { ActivityIndicator, View } from "react-native";
 import Layout from "../constants/Layout";
 import STYLES from "../constants/Styles";
 import { useUniversalFeedContext } from "../context/universalFeedContext";
+import { useIsFocused } from "@react-navigation/native";
 
 interface PostListContextProps {
   children: ReactNode;
@@ -86,6 +88,8 @@ export interface PostListContextValues {
   showDeleteModal: boolean;
   showReportModal: boolean;
   feedFetching: boolean;
+  postInViewport: string;
+  setPostInViewport: Dispatch<SetStateAction<string>>;
   setFeedFetching: Dispatch<SetStateAction<boolean>>;
   setModalPosition: Dispatch<SetStateAction<{ x: number; y: number }>>;
   setShowReportModal: Dispatch<SetStateAction<boolean>>;
@@ -110,7 +114,7 @@ export interface PostListContextValues {
   onTapLikeCount: (id: string) => void;
   onOverlayMenuClick: (event: {
     nativeEvent: { pageX: number; pageY: number };
-  }) => void;
+  }, postId: string) => void;
 }
 
 const PostListContext = createContext<PostListContextValues | undefined>(
@@ -149,6 +153,15 @@ export const PostListContextProvider = ({
   const { localRefresh } = useUniversalFeedContext();
 
   const PAGE_SIZE = 20;
+  const [postInViewport, setPostInViewport] = useState("");
+  const isFocus = useIsFocused();
+
+  // handles the auto play/pause of video in viewport
+  useEffect(() => {
+    if (postInViewport && isFocus) {
+      dispatch(autoPlayPostVideo(postInViewport));
+    }
+  }, [postInViewport, isFocus]);
 
   // this functions gets universal feed data
   const fetchFeed = async (page: number) => {
@@ -288,7 +301,8 @@ export const PostListContextProvider = ({
   // this function is executed on the click of menu icon & handles the position and visibility of the modal
   const onOverlayMenuClick = (event: {
     nativeEvent: { pageX: number; pageY: number };
-  }) => {
+  }, postId : string) => {
+    setSelectedMenuItemPostId(postId)
     const { pageX, pageY } = event.nativeEvent;
     setShowActionListModal(true);
     setModalPosition({ x: pageX, y: pageY });
@@ -316,6 +330,7 @@ export const PostListContextProvider = ({
 
   // this function handles the functionality on the report option
   const handleReportPost = async () => {
+    dispatch(autoPlayPostVideo(''))
     setShowReportModal(true);
   };
 
@@ -326,17 +341,20 @@ export const PostListContextProvider = ({
 
   // this function handles the click on edit option of overlayMenu
   const handleEditPost = (postId) => {
+    dispatch(autoPlayPostVideo(''))
     navigation.navigate(CREATE_POST, { postId });
   };
 
   // this handles the click on comment count section of footer
   const onTapCommentCount = (postId) => {
     dispatch(clearPostDetail());
+    dispatch(autoPlayPostVideo(""));
     navigation.navigate(POST_DETAIL, [postId, NAVIGATED_FROM_COMMENT]);
   };
 
   const onTapLikeCount = (id) => {
     dispatch(postLikesClear());
+    dispatch(autoPlayPostVideo(""));
     navigation.navigate(POST_LIKES_LIST, [POST_LIKES, id]);
   };
 
@@ -392,6 +410,8 @@ export const PostListContextProvider = ({
     onTapLikeCount,
     onOverlayMenuClick,
     setModalPosition,
+    postInViewport,
+    setPostInViewport
   };
 
   return (

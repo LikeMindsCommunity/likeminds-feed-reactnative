@@ -18,7 +18,7 @@ import { LMPostContextValues, useLMPostContext } from "../../../context";
 import { useLMFeedStyles } from "../../../lmFeedProvider";
 
 const LMPostMedia = React.memo(() => {
-  const { post }: LMPostContextValues = useLMPostContext();
+  const { post, mediaProps }: LMPostContextValues = useLMPostContext();
   const LMFeedContextStyles = useLMFeedStyles();
   const { postListStyle } = LMFeedContextStyles;
   const customPostMediaStyle: any = postListStyle?.media;
@@ -51,7 +51,14 @@ const LMPostMedia = React.memo(() => {
                   : ""
                 : ""
             }
+            postId={post?.id}
             {...customPostMediaStyle?.video}
+            autoPlay={
+              mediaProps?.videoProps?.autoPlay != undefined
+                ? mediaProps?.videoProps?.autoPlay
+                : true
+            }
+            videoInFeed={mediaProps?.videoProps?.videoInFeed}
           />
         );
       }
@@ -117,7 +124,15 @@ const LMPostMedia = React.memo(() => {
             attachments={getData(IMAGE_ATTACHMENT_TYPE, VIDEO_ATTACHMENT_TYPE)}
             {...customPostMediaStyle?.carousel}
             imageItem={customPostMediaStyle?.image}
-            videoItem={customPostMediaStyle?.video}
+            videoItem={{
+              ...customPostMediaStyle?.video,
+              autoPlay:
+                mediaProps?.videoProps?.autoPlay != undefined
+                  ? mediaProps?.videoProps?.autoPlay
+                  : true,
+              videoInFeed: mediaProps?.videoProps?.videoInFeed,
+              postId: post?.id,
+            }}
           />
         ) : (
           // this section renders if there are multiple attachments but the image or video attachments are less than 2
@@ -135,7 +150,14 @@ const LMPostMedia = React.memo(() => {
             ) && (
               <LMVideo
                 videoUrl={getUrl(VIDEO_ATTACHMENT_TYPE)}
+                postId={post?.id}
                 {...customPostMediaStyle?.video}
+                autoPlay={
+                  mediaProps?.videoProps?.autoPlay != undefined
+                    ? mediaProps?.videoProps?.autoPlay
+                    : true
+                }
+                videoInFeed={mediaProps?.videoProps?.videoInFeed}
               />
             )}
             {post?.attachments?.find(

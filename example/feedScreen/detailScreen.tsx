@@ -1,5 +1,6 @@
 import React from 'react';
 import {PostDetail, usePostDetailContext} from '@likeminds.community/feed-rn-core';
+import { Alert, Platform, Share } from 'react-native';
 
 const DetailScreen = ({navigation}) => {
   const {route, getCommentsReplies, addNewComment, addNewReply, commentLikeHandler, handleDeleteComment, handleEditComment, handleReportComment, handleScreenBackPress, onCommentOverflowMenuClick} = usePostDetailContext();
@@ -47,8 +48,28 @@ const DetailScreen = ({navigation}) => {
   };
   const customCommentOverlayMenuCick = (event, menuItems, commentId) => {
     console.log('before comment menuItemClick',commentId, menuItems);
-    onCommentOverflowMenuClick(event);
+    onCommentOverflowMenuClick(event, commentId);
     console.log('after comment menuItemClick');
+  };
+  const customShareTap = async(postId) => {
+    console.log('share', postId);
+    try {
+      const result = await Share.share({
+        // todo: static data (replace with the deeplink)
+        message: Platform.OS === 'ios' ? `www.sampleapp.com://post?post_id=${postId}`: `https://www.sampleapp.com/post?post_id=${postId}`,
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      Alert.alert((error as Error).message);
+    }
   };
   return (
     <PostDetail
@@ -63,6 +84,7 @@ const DetailScreen = ({navigation}) => {
       handleReportCommentProp={(commentId) => customOnCommentReport(commentId)}
       handleScreenBackPressProp={() => customBackHandler()}
       onCommentOverflowMenuClickProp={(event, menuItems, commentId) => customCommentOverlayMenuCick(event, menuItems, commentId)}
+      onSharePostClicked={(id) => customShareTap(id)}
     />
   );
 };

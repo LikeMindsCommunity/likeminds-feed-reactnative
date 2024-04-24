@@ -37,6 +37,11 @@ import { showToastMessage } from "../../store/actions/toast";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../models/RootStackParamsList";
 import { LMCommentUI, LMPostUI } from "../../models";
+import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
+import { Events } from "../../enums/Events";
+import { Keys } from "../../enums/Keys";
+import { getPostType } from "../../utils/analytics";
+import { UNIVERSAL_FEED } from "../../constants/screenNames";
 
 // delete modal's props
 interface DeleteModalProps {
@@ -46,6 +51,7 @@ interface DeleteModalProps {
   postDetail: LMPostUI;
   commentDetail?: LMCommentUI;
   modalBackdropColor?: string;
+  parentCommentId?: string;
   navigation?: NativeStackNavigationProp<
     RootStackParamList,
     "PostDetail" | "UniversalFeed" | "PostsList"
@@ -59,6 +65,7 @@ const DeleteModal = ({
   postDetail,
   modalBackdropColor,
   commentDetail,
+  parentCommentId,
   navigation,
 }: DeleteModalProps) => {
   const dispatch = useAppDispatch();
@@ -90,9 +97,30 @@ const DeleteModal = ({
         )
       );
       // toast message action
-      if (deletePostResponse !== undefined) {
+      if (deletePostResponse) {
+        LMFeedAnalytics.track(
+          Events.POST_DELETED,
+          new Map<string, string>([
+            [
+              Keys.USER_STATE,
+              !payload.deleteReason ? "Member" : "Community Manager",
+            ],
+            [Keys.UUID, postDetail?.user?.sdkClientInfo.uuid],
+            [Keys.POST_ID, payload?.postId],
+            [Keys.POST_TYPE, getPostType(postDetail?.attachments)],
+          ])
+        );
         setDeletionReason("");
-        navigation?.goBack();
+        if (navigation) {
+          const routes = navigation?.getState()?.routes;
+          const routesLength = routes?.length;
+          if (
+            routesLength > 0 &&
+            routes[routesLength - 1]?.name !== UNIVERSAL_FEED
+          ) {
+            navigation?.goBack();
+          }
+        }
         dispatch(
           showToastMessage({
             isToast: true,
@@ -124,6 +152,7 @@ const DeleteModal = ({
         commentId: commentDetail?.id ? commentDetail.id : "",
         postId: commentDetail?.postId ? commentDetail.postId : "",
       };
+
       displayModal(false);
       dispatch(deleteCommentStateHandler(payload));
       try {
@@ -137,6 +166,25 @@ const DeleteModal = ({
             false
           )
         );
+
+        if (commentDetail?.level && commentDetail?.level > 0) {
+          LMFeedAnalytics.track(
+            Events.REPLY_DELETED,
+            new Map<string, string>([
+              [Keys.POST_ID, payload.postId],
+              [Keys.COMMENT_ID, parentCommentId],
+              [Keys.COMMENT_REPLY_ID, payload.commentId],
+            ])
+          );
+        } else {
+          LMFeedAnalytics.track(
+            Events.COMMENT_DELETED,
+            new Map<string, string>([
+              [Keys.POST_ID, payload.postId],
+              [Keys.COMMENT_ID, payload.commentId],
+            ])
+          );
+        }
         setDeletionReason("");
         await dispatch(
           showToastMessage({
@@ -267,6 +315,7 @@ const DeleteModal = ({
                         style={styles.otherTextInput}
                         placeholder={REASON_FOR_DELETION_PLACEHOLDER}
                         value={otherReason}
+                        placeholderTextColor={"grey"}
                       />
                     ) : null}
 

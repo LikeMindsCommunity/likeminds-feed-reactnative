@@ -1,5 +1,4 @@
 import { TextStyle } from "react-native";
-import { LMPostMenuProps } from "../LMPost/LMPostMenu/types";
 import { LMCommentUI } from "../../models";
 import { LMTextProps, LMButtonProps } from "../../uiComponents";
 
@@ -21,9 +20,11 @@ export interface LMCommentProps {
   timeStampStyle?: TextStyle; // props for time stamp text
   viewMoreRepliesProps?: LMTextProps; // props for view more text
   onTapReplies?: (data: (repliesArray: Array<LMCommentUI>) => void) => void; // callback function to be executed on click of replies
-  commentMenu: LMPostMenuProps; // this represents the post menu props;
   isRepliesVisible?: boolean;
-  onCommentOverflowMenuClick?: (event: {
-    nativeEvent: { pageX: number; pageY: number };
-  }) => void;
+  onCommentOverflowMenuClick?: (
+    event: {
+      nativeEvent: { pageX: number; pageY: number };
+    },
+    commentId: string
+  ) => void;
 }

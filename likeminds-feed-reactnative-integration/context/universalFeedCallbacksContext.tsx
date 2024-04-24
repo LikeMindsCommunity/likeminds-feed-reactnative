@@ -9,20 +9,18 @@ export interface UniversalFeedCallbacksContextProps {
   selectEditPostProp: (id: string) => void;
   onSelectCommentCountProp: (id: string) => void;
   onTapLikeCountProps: (id: string) => void;
-  handleDeletePostProps: (
-    visible: boolean,
-    postId: string,
-    isCM?: boolean
-  ) => void;
+  handleDeletePostProps: (visible: boolean, postId: string) => void;
   handleReportPostProps: (postId: string) => void;
   newPostButtonClickProps: () => void;
   onOverlayMenuClickProp: (
     event: {
       nativeEvent: { pageX: number; pageY: number };
     },
-    menuItems: LMMenuItemsUI,
+    menuItems: LMMenuItemsUI[],
     postId: string
   ) => void;
+  onTapNotificationBellProp: () => void;
+  onSharePostClicked: (id: string) => void;
 }
 
 export interface UniversalFeedCustomisableMethodsContext {
@@ -32,20 +30,18 @@ export interface UniversalFeedCustomisableMethodsContext {
   selectEditPostProp: (id: string) => void;
   onSelectCommentCountProp: (id: string) => void;
   onTapLikeCountProps: (id: string) => void;
-  handleDeletePostProps: (
-    visible: boolean,
-    postId: string,
-    isCM?: boolean
-  ) => void;
+  handleDeletePostProps: (visible: boolean, postId: string) => void;
   handleReportPostProps: (postId: string) => void;
   newPostButtonClickProps: () => void;
   onOverlayMenuClickProp: (
     event: {
       nativeEvent: { pageX: number; pageY: number };
     },
-    menuItems: LMMenuItemsUI,
+    menuItems: LMMenuItemsUI[],
     postId: string
   ) => void;
+  onTapNotificationBellProp: () => void;
+  onSharePostClicked: (id: string) => void;
 }
 
 const UniversalFeedCustomisableMethodsContext = createContext<
@@ -74,6 +70,8 @@ export const UniversalFeedCustomisableMethodsContextProvider = ({
   handleReportPostProps,
   newPostButtonClickProps,
   onOverlayMenuClickProp,
+  onTapNotificationBellProp,
+  onSharePostClicked,
 }: UniversalFeedCallbacksContextProps) => {
   const contextValues: UniversalFeedCustomisableMethodsContext = {
     postLikeHandlerProp,
@@ -86,6 +84,8 @@ export const UniversalFeedCustomisableMethodsContextProvider = ({
     handleReportPostProps,
     newPostButtonClickProps,
     onOverlayMenuClickProp,
+    onTapNotificationBellProp,
+    onSharePostClicked,
   };
 
   return (

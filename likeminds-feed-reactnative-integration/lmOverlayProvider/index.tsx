@@ -9,6 +9,14 @@ export const LMOverlayProvider = ({
   children,
   userName,
   userUniqueId,
+  lmFeedInterface,
+  universalFeedStyle,
+  postListStyle,
+  loaderStyle,
+  postDetailStyle,
+  postLikesListStyle,
+  createPostStyle,
+  notificationFeedStyle,
 }: LMOverlayProviderProps) => {
   return (
     <ContextProvider>
@@ -16,6 +24,15 @@ export const LMOverlayProvider = ({
         myClient={myClient}
         userName={userName}
         userUniqueId={userUniqueId}
+        children={children}
+        universalFeedStyle={universalFeedStyle}
+        postDetailStyle={postDetailStyle}
+        postListStyle={postListStyle}
+        postLikesListStyle={postLikesListStyle}
+        loaderStyle={loaderStyle}
+        createPostStyle={createPostStyle}
+        notificationFeedStyle={notificationFeedStyle}
+        lmFeedInterface={lmFeedInterface}
       >
         <View style={styles.flexStyling}>{children}</View>
       </LMFeedProvider>

@@ -2,13 +2,15 @@ import {
   Attachment,
   AttachmentMeta,
   GetFeedResponse,
+  IActivities,
+  IActivity,
   IMenuItem,
   IOgTag,
   IPost,
   IUser,
-} from "@likeminds.community/feed-js-beta";
-import { GetPostLikesResponse } from "@likeminds.community/feed-js-beta/dist/post/model/GetPostLikesResponse";
-import Like from "@likeminds.community/feed-js-beta/dist/post/model/Like";
+} from "@likeminds.community/feed-js";
+import { GetPostLikesResponse } from "@likeminds.community/feed-js/dist/post/model/GetPostLikesResponse";
+import Like from "@likeminds.community/feed-js/dist/post/model/Like";
 import {
   DocumentMetaData,
   ImageVideoMetaData,
@@ -19,8 +21,10 @@ import {
   LINK_ATTACHMENT_TYPE,
   VIDEO_ATTACHMENT_TYPE,
 } from "../constants/Strings";
-import { IComment } from "@likeminds.community/feed-js-beta";
+import { IComment } from "@likeminds.community/feed-js";
 import {
+  LMActivityEntityUI,
+  LMActivityUI,
   LMAttachmentMetaUI,
   LMAttachmentUI,
   LMLikeUI,
@@ -30,6 +34,7 @@ import {
   LMSDKClientInfoUI,
   LMUserUI,
 } from "../models";
+import { GetNotificationFeedResponse } from "@likeminds.community/feed-js/dist/notificationFeed/model/GetNotificationFeedResponse";
 
 /**
  * @param data: [GetFeedResponse]
@@ -325,4 +330,77 @@ export function convertToLMCommentUI(
       user: convertToLMUserUI(user[item.userId]),
     };
   });
+}
+
+/**
+ * @param data: [IActivities]
+ * @returns list of [LMActivityUI]
+ */
+export function convertNotificationsFeed(data: IActivities): LMActivityUI[] {
+  const notificationData = data.activities;
+  const userData = data.users;
+  return notificationData?.map((item) => {
+    return convertToLMActivityUI(item, userData);
+  });
+}
+
+/**
+ * @param post: [IActivity]
+ * @param user: [Map] of String to User
+ * @returns LMActivityUI
+ */
+export function convertToLMActivityUI(
+  activity: IActivity,
+  users: { [key: string]: LMUserUI }
+): LMActivityUI {
+  const notificationData: LMActivityUI = {
+    id: activity.Id,
+    isRead: activity.isRead,
+    actionOn: activity.actionOn,
+    actionBy: activity.actionBy,
+    entityType: activity.entityType,
+    entityId: activity.entityId,
+    entityOwnerId: activity.entityOwnerId,
+    action: activity.action,
+    cta: activity.cta,
+    activityText: activity.activityText,
+    activityEntityData: convertToLMActivityEntityUI(
+      activity.activityEntityData
+    ),
+    activityByUser: convertToLMUserUI(
+      users[activity.actionBy[activity.actionBy.length - 1]]
+    ),
+    createdAt: activity.createdAt,
+    updatedAt: activity.updatedAt,
+    uuid: activity.uuid,
+  };
+  return notificationData;
+}
+
+/**
+ * @param data
+ * @returns LMActivityEntityUI
+ */
+export function convertToLMActivityEntityUI(data): LMActivityEntityUI {
+  const activityEntityData: LMActivityEntityUI = {
+    id: data?.Id,
+    text: data?.text,
+    deleteReason: data?.deleteReason,
+    deletedBy: data?.deletedBy,
+    heading: data?.heading,
+    attachments: data?.attachments,
+    communityId: data?.communityId,
+    isEdited: data?.isEdited,
+    isPinned: data?.isPinned,
+    userId: data?.userId,
+    user: data?.user,
+    replies: data?.replies,
+    level: data?.level,
+    createdAt: data?.createdAt,
+    updatedAt: data?.updatedAt,
+    uuid: data?.uuid,
+    deletedByUUID: data?.deletedByUUID,
+    postId: data?.postId,
+  };
+  return activityEntityData;
 }

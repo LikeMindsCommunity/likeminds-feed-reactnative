@@ -4,6 +4,8 @@ import { PostDetail } from "./postDetail";
 import { CreatePost } from "./createPost";
 import { PostLikesList } from "./likesList";
 import { TopicFeed } from "./topicFeed";
+import { LMFeedNotificationFeedScreen } from "./notificationFeed";
+import { LMFeedNotificationFeedListView } from "./notificationsList";
 export {
   UniversalFeed,
   PostsList,
@@ -11,4 +13,6 @@ export {
   CreatePost,
   PostLikesList,
   TopicFeed,
+  LMFeedNotificationFeedListView,
+  LMFeedNotificationFeedScreen,
 };
