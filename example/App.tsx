@@ -9,6 +9,7 @@ import {
   getNotification,
   getRoute,
   LMFeedCallbacks,
+  NAVIGATED_FROM_NOTIFICATION
 } from '@likeminds.community/feed-rn-core';
 import {myClient} from '.';
 import {ActivityIndicator, Linking, PermissionsAndroid, Platform, ViewStyle} from 'react-native';
@@ -22,7 +23,6 @@ import LikesWrapper from './feedScreen/likesWrapper';
 import NotificationWrapper from './feedScreen/notificationWrapper';
 import messaging from '@react-native-firebase/messaging';
 import notifee, {EventType} from '@notifee/react-native';
-import {NAVIGATED_FROM_NOTIFICATION} from '@likeminds.community/feed-rn-core/constants/Strings';
 
 class CustomCallbacks implements LMFeedCallbacks {
   onEventTriggered(eventName: string, eventProperties?: Map<string, string>) {
