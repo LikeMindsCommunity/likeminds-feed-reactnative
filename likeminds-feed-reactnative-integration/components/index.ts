@@ -9,12 +9,10 @@ import {
   LMPostFooter,
   LMPostHeader,
   LMPostMedia,
-  LMPostMenu,
   LMPostContentProps,
   LMPostFooterProps,
   LMPostHeaderProps,
   LMPostMediaProps,
-  LMPostMenuProps,
   LMPostProps,
 } from "./LMPost";
 import {
@@ -44,7 +42,6 @@ export {
   LMPostFooter,
   LMPostHeader,
   LMPostMedia,
-  LMPostMenu,
   LMVideo,
   LMCarousel,
   LMDocument,
@@ -64,7 +61,6 @@ export type {
   LMPostFooterProps,
   LMPostHeaderProps,
   LMPostMediaProps,
-  LMPostMenuProps,
   LMPostProps,
   LMHeaderProps,
   LMLoaderProps,

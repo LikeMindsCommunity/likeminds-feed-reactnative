@@ -9,8 +9,8 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+    paddingHorizontal: 7,
+    paddingTop: 12,
   },
   alignRow: {
     flexDirection: "row",

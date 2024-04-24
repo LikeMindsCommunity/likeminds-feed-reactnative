@@ -73,4 +73,7 @@ export const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   rowAlignment: { flexDirection: "row", alignItems: "center" },
+  showMoreText: {
+    color: "#9B9B9B",
+  },
 });

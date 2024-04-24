@@ -28,12 +28,20 @@ import {
 import STYLES from "../../constants/Styles";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { deletePost, deletePostStateHandler } from "../../store/actions/feed";
-import { deleteComment, deleteCommentStateHandler } from "../../store/actions/postDetail";
+import {
+  deleteComment,
+  deleteCommentStateHandler,
+} from "../../store/actions/postDetail";
 import Toast from "react-native-toast-message";
 import { showToastMessage } from "../../store/actions/toast";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../models/RootStackParamsList";
 import { LMCommentUI, LMPostUI } from "../../models";
+import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
+import { Events } from "../../enums/Events";
+import { Keys } from "../../enums/Keys";
+import { getPostType } from "../../utils/analytics";
+import { UNIVERSAL_FEED } from "../../constants/screenNames";
 
 // delete modal's props
 interface DeleteModalProps {
@@ -43,7 +51,11 @@ interface DeleteModalProps {
   postDetail: LMPostUI;
   commentDetail?: LMCommentUI;
   modalBackdropColor?: string;
-  navigation?: NativeStackNavigationProp<RootStackParamList, "PostDetail" | "UniversalFeed" | "PostsList">;
+  parentCommentId?: string;
+  navigation?: NativeStackNavigationProp<
+    RootStackParamList,
+    "PostDetail" | "UniversalFeed" | "PostsList"
+  >;
 }
 
 const DeleteModal = ({
@@ -53,10 +65,11 @@ const DeleteModal = ({
   postDetail,
   modalBackdropColor,
   commentDetail,
-  navigation
+  parentCommentId,
+  navigation,
 }: DeleteModalProps) => {
   const dispatch = useAppDispatch();
-  const loggedInUser = useAppSelector(state => state.login.member);
+  const loggedInUser = useAppSelector((state) => state.login.member);
   const [deletionReason, setDeletionReason] = useState("");
   const [otherReason, setOtherReason] = useState("");
   const [showReasons, setShowReasons] = useState(false);
@@ -65,7 +78,7 @@ const DeleteModal = ({
   const postDelete = async () => {
     if (!deletionReason && loggedInUser.userUniqueId !== postDetail?.userId) {
       showToast();
-    } else if (deletionReason === 'Others' && otherReason === '') {
+    } else if (deletionReason === "Others" && otherReason === "") {
       showToast();
     } else {
       const payload = {
@@ -79,13 +92,35 @@ const DeleteModal = ({
           DeletePostRequest.builder()
             .setdeleteReason(payload.deleteReason)
             .setpostId(payload.postId)
-            .build(),false
-        ),
+            .build(),
+          false
+        )
       );
       // toast message action
       if (deletePostResponse) {
+        LMFeedAnalytics.track(
+          Events.POST_DELETED,
+          new Map<string, string>([
+            [
+              Keys.USER_STATE,
+              !payload.deleteReason ? "Member" : "Community Manager",
+            ],
+            [Keys.UUID, postDetail?.user?.sdkClientInfo.uuid],
+            [Keys.POST_ID, payload?.postId],
+            [Keys.POST_TYPE, getPostType(postDetail?.attachments)],
+          ])
+        );
         setDeletionReason("");
-        navigation?.goBack();
+        if (navigation) {
+          const routes = navigation?.getState()?.routes;
+          const routesLength = routes?.length;
+          if (
+            routesLength > 0 &&
+            routes[routesLength - 1]?.name !== UNIVERSAL_FEED
+          ) {
+            navigation?.goBack();
+          }
+        }
         dispatch(
           showToastMessage({
             isToast: true,
@@ -117,6 +152,7 @@ const DeleteModal = ({
         commentId: commentDetail?.id ? commentDetail.id : "",
         postId: commentDetail?.postId ? commentDetail.postId : "",
       };
+
       displayModal(false);
       dispatch(deleteCommentStateHandler(payload));
       try {
@@ -126,9 +162,29 @@ const DeleteModal = ({
               .setcommentId(payload.commentId)
               .setpostId(payload.postId)
               .setreason(payload.deleteReason)
-              .build(), false
-          ),
+              .build(),
+            false
+          )
         );
+
+        if (commentDetail?.level && commentDetail?.level > 0) {
+          LMFeedAnalytics.track(
+            Events.REPLY_DELETED,
+            new Map<string, string>([
+              [Keys.POST_ID, payload.postId],
+              [Keys.COMMENT_ID, parentCommentId],
+              [Keys.COMMENT_REPLY_ID, payload.commentId],
+            ])
+          );
+        } else {
+          LMFeedAnalytics.track(
+            Events.COMMENT_DELETED,
+            new Map<string, string>([
+              [Keys.POST_ID, payload.postId],
+              [Keys.COMMENT_ID, payload.commentId],
+            ])
+          );
+        }
         setDeletionReason("");
         await dispatch(
           showToastMessage({
@@ -156,8 +212,8 @@ const DeleteModal = ({
   // this show the toast message over the modal
   const showToast = () => {
     Toast.show({
-      position: 'bottom',
-      type: 'deleteToastView',
+      position: "bottom",
+      type: "deleteToastView",
       autoHide: true,
       visibilityTime: 1500,
     });
@@ -170,7 +226,9 @@ const DeleteModal = ({
         <View>
           <View style={styles.modalView}>
             <Text style={styles.filterText}>
-              {deletionReason === 'Others' ? ENTER_REASON_FOR_DELETION : DELETE_REASON_SELECTION}
+              {deletionReason === "Others"
+                ? ENTER_REASON_FOR_DELETION
+                : DELETE_REASON_SELECTION}
             </Text>
           </View>
         </View>
@@ -257,6 +315,7 @@ const DeleteModal = ({
                         style={styles.otherTextInput}
                         placeholder={REASON_FOR_DELETION_PLACEHOLDER}
                         value={otherReason}
+                        placeholderTextColor={'grey'}
                       />
                     ) : null}
 

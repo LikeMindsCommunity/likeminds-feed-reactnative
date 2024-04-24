@@ -19,6 +19,7 @@ const LMText = React.memo(({
       numberOfLines={maxLines}
       onTextLayout={onTextLayout}
       style={StyleSheet.flatten([defaultStyles.textStyle, textStyle])}
+      ellipsizeMode="tail"
       {...textProps}
     >
       {children}

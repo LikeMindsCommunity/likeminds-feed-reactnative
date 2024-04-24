@@ -4,4 +4,6 @@ export type RootStackParamList = {
     PostDetail: Array<string> | undefined;
     CreatePost: {postId: string} | undefined;
     PostLikesList: Array<string> | undefined;
+    NotificationFeed: undefined,
+    NotificationList: undefined
   };

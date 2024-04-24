@@ -20,10 +20,7 @@ import {
   UNPIN_POST_MENU_ITEM,
   VIDEO_ATTACHMENT_TYPE,
 } from "../../constants/Strings";
-import {
-  POST_LIKES_LIST,
-  POST_DETAIL,
-} from "../../constants/screenNames";
+import { POST_LIKES_LIST, POST_DETAIL } from "../../constants/screenNames";
 // @ts-ignore the lib do not have TS declarations yet
 import _ from "lodash";
 import { DeleteModal, ReportModal } from "../../customModals";
@@ -43,15 +40,15 @@ import LMPost from "../../components/LMPost/LMPost";
 import { LMPostUI } from "../../models";
 import { LMLoader } from "../../components";
 import { autoPlayPostVideo } from "../../store/actions/feed";
+import LMPostMenu from "../../customModals/LMPostMenu";
+import { Events } from "../../enums/Events";
+import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
+import { Keys } from "../../enums/Keys";
+import { getPostType } from "../../utils/analytics";
 
 const PostsList = ({ route, children }: any) => {
-  const {
-    navigation
-  }: UniversalFeedContextValues = useUniversalFeedContext();
-  return (
-   
-      <PostsListComponent /> 
-  );
+  const { navigation }: UniversalFeedContextValues = useUniversalFeedContext();
+  return <PostsListComponent />;
 };
 
 const PostsListComponent = () => {
@@ -61,7 +58,7 @@ const PostsListComponent = () => {
     refreshing,
     onRefresh,
     localRefresh,
-    keyExtractor
+    keyExtractor,
   }: UniversalFeedContextValues = useUniversalFeedContext();
   const {
     navigation,
@@ -73,8 +70,7 @@ const PostsListComponent = () => {
     postLikeHandler,
     debouncedSaveFunction,
     savePostHandler,
-    setFeedPageNumber,
-    feedPageNumber,
+    handleLoadMore,
     renderLoader,
     showLoader,
     showDeleteModal,
@@ -89,31 +85,68 @@ const PostsListComponent = () => {
     handleReportPost,
     handleEditPost,
     onTapLikeCount,
-    onOverlayMenuClick
+    onOverlayMenuClick,
+    setPostInViewport,
   }: PostListContextValues = usePostListContext();
   const LMFeedContextStyles = useLMFeedStyles();
   const { postListStyle, loaderStyle } = LMFeedContextStyles;
-  const { postLikeHandlerProp, savePostHandlerProp, onSelectCommentCountProp, selectEditPostProp, selectPinPostProp, onTapLikeCountProps, handleDeletePostProps, handleReportPostProps, onOverlayMenuClickProp} = useUniversalFeedCustomisableMethodsContext()
-// this function returns the id of the item selected from menu list and handles further functionalities accordingly
-const onMenuItemSelect = (
-  postId: string,
-  itemId?: number,
-  pinnedValue?: boolean
-) => {
-  setSelectedMenuItemPostId(postId);
-  if (itemId === PIN_POST_MENU_ITEM || itemId === UNPIN_POST_MENU_ITEM) {
-    selectPinPostProp ? selectPinPostProp(postId, pinnedValue) : handlePinPost(postId, pinnedValue);
-  }
-  if (itemId === REPORT_POST_MENU_ITEM) {
-    handleReportPostProps ? handleReportPostProps(postId) : handleReportPost();
-  }
-  if (itemId === DELETE_POST_MENU_ITEM) {
-    handleDeletePostProps ? handleDeletePostProps(true, postId) : handleDeletePost(true);
-  }
-  if (itemId === EDIT_POST_MENU_ITEM) {
-   selectEditPostProp ? selectEditPostProp(postId) : handleEditPost(postId)
-  }
-};
+  const {
+    postLikeHandlerProp,
+    savePostHandlerProp,
+    onSelectCommentCountProp,
+    selectEditPostProp,
+    selectPinPostProp,
+    onTapLikeCountProps,
+    handleDeletePostProps,
+    handleReportPostProps,
+    onOverlayMenuClickProp,
+    onSharePostClicked,
+  } = useUniversalFeedCustomisableMethodsContext();
+  // this function returns the id of the item selected from menu list and handles further functionalities accordingly
+  const onMenuItemSelect = (
+    postId: string,
+    itemId?: number,
+    pinnedValue?: boolean,
+    postDetail?: LMPostUI
+  ) => {
+    setSelectedMenuItemPostId(postId);
+    if (itemId === PIN_POST_MENU_ITEM || itemId === UNPIN_POST_MENU_ITEM) {
+      selectPinPostProp
+        ? selectPinPostProp(postId, pinnedValue)
+        : handlePinPost(postId, pinnedValue);
+      let event = pinnedValue ? Events.POST_UNPINNED : Events.POST_PINNED;
+      LMFeedAnalytics.track(
+        event,
+        new Map<string, string>([
+          [Keys.UUID, postDetail?.user?.sdkClientInfo?.uuid],
+          [Keys.POST_ID, postId],
+          [Keys.POST_TYPE, getPostType(postDetail?.attachments)],
+        ])
+      );
+    }
+    if (itemId === REPORT_POST_MENU_ITEM) {
+      handleReportPostProps
+        ? handleReportPostProps(postId)
+        : handleReportPost();
+    }
+    if (itemId === DELETE_POST_MENU_ITEM) {
+      handleDeletePostProps
+        ? handleDeletePostProps(true, postId)
+        : handleDeletePost(true);
+    }
+    if (itemId === EDIT_POST_MENU_ITEM) {
+      selectEditPostProp ? selectEditPostProp(postId) : handleEditPost(postId);
+      LMFeedAnalytics.track(
+        Events.POST_EDITED,
+        new Map<string, string>([
+          [Keys.UUID, postDetail?.user?.sdkClientInfo.uuid],
+          [Keys.POST_ID, postId],
+          [Keys.POST_TYPE, getPostType(postDetail?.attachments)],
+        ])
+      );
+    }
+  };
+
   return (
     <>
       {/* posts list section */}
@@ -133,6 +166,7 @@ const onMenuItemSelect = (
                 style={{ backgroundColor: "#e0e0e0" }}
                 onPress={() => {
                   dispatch(clearPostDetail() as any);
+                  dispatch(autoPlayPostVideo(""));
                   navigation.navigate(POST_DETAIL, [
                     item?.id,
                     NAVIGATED_FROM_POST,
@@ -144,58 +178,78 @@ const onMenuItemSelect = (
                   post={item}
                   // header props
                   headerProps={{
-                    postMenu: {
-                      modalPosition: modalPosition,
-                      modalVisible: showActionListModal,
-                      onCloseModal: closePostActionListModal,
-                      onSelected: (postId, itemId) =>
-                       {
-                       onMenuItemSelect(postId, itemId, item?.isPinned)},
+                    onOverlayMenuClick: (event) => {
+                      onOverlayMenuClickProp
+                        ? onOverlayMenuClickProp(
+                            event,
+                            item?.menuItems,
+                            item?.id
+                          )
+                        : onOverlayMenuClick(event, item.id);
                     },
-                    onOverlayMenuClick: (event) => {onOverlayMenuClickProp ? onOverlayMenuClickProp(event,item?.menuItems, item?.id) : onOverlayMenuClick(event)}
                   }}
                   // footer props
                   footerProps={{
                     likeIconButton: {
                       onTap: () => {
-                        postLikeHandlerProp ? postLikeHandlerProp(item?.id) : postLikeHandler(item?.id);
+                        postLikeHandlerProp
+                          ? postLikeHandlerProp(item?.id)
+                          : postLikeHandler(item?.id);
                       },
                     },
                     saveButton: {
                       onTap: () => {
-                        savePostHandlerProp ? savePostHandlerProp(item?.id, item?.isSaved) : savePostHandler(item?.id, item?.isSaved);
+                        savePostHandlerProp
+                          ? savePostHandlerProp(item?.id, item?.isSaved)
+                          : savePostHandler(item?.id, item?.isSaved);
                       },
                     },
                     likeTextButton: {
                       onTap: () => {
-                        onTapLikeCountProps ? onTapLikeCountProps(item?.id) : onTapLikeCount(item?.id)
+                        onTapLikeCountProps
+                          ? onTapLikeCountProps(item?.id)
+                          : onTapLikeCount(item?.id);
                       },
                     },
                     commentButton: {
                       onTap: () => {
-                        onSelectCommentCountProp ? onSelectCommentCountProp(item?.id) : onTapCommentCount(item?.id)
+                        onSelectCommentCountProp
+                          ? onSelectCommentCountProp(item?.id)
+                          : onTapCommentCount(item?.id);
                       },
+                    },
+                    shareButton: {
+                      onTap: () => {
+                        onSharePostClicked ? onSharePostClicked(item?.id) : {};
+                      },
+                    },
+                  }}
+                  mediaProps={{
+                    videoProps: {
+                      autoPlay:
+                        postListStyle?.media?.video?.autoPlay != undefined
+                          ? postListStyle?.media?.video?.autoPlay
+                          : true,
+                      videoInFeed: true,
                     },
                   }}
                 />
               </TouchableOpacity>
             )}
             onEndReachedThreshold={0.3}
-            onEndReached={() => {
-              setFeedPageNumber(feedPageNumber + 1);
+            onEndReached={handleLoadMore}
+            keyExtractor={(item) => {
+              return item?.id?.toString();
             }}
-            keyExtractor={item => keyExtractor(item)}
-            ListFooterComponent={<>{renderLoader()}</>}
-            onViewableItemsChanged={({changed, viewableItems}) => {
+            ListFooterComponent={renderLoader}
+            onViewableItemsChanged={({ changed, viewableItems }) => {
               if (changed) {
                 if (viewableItems) {
-                  dispatch(
-                    autoPlayPostVideo(viewableItems?.[0]?.item?.id) as any,
-                  );
+                  setPostInViewport(viewableItems?.[0]?.item?.id);
                 }
               }
             }}
-            viewabilityConfig={{viewAreaCoveragePercentThreshold: 60}}
+            viewabilityConfig={{ viewAreaCoveragePercentThreshold: 60 }}
           />
         ) : (
           <View style={[styles.noDataView, postListStyle?.noPostView]}>
@@ -225,6 +279,21 @@ const onMenuItemSelect = (
           closeModal={() => setShowReportModal(false)}
           reportType={POST_TYPE}
           postDetail={getPostDetail()}
+        />
+      )}
+      {/* menu list modal */}
+      {showActionListModal && (
+        <LMPostMenu
+          post={getPostDetail()}
+          onSelected={(postId, itemId, isPinned) => {
+            onMenuItemSelect(postId, itemId, isPinned, getPostDetail());
+          }}
+          modalPosition={modalPosition}
+          modalVisible={showActionListModal}
+          onCloseModal={closePostActionListModal}
+          menuItemTextStyle={postListStyle?.header?.postMenu?.menuItemTextStyle}
+          menuViewStyle={postListStyle?.header?.postMenu?.menuViewStyle}
+          backdropColor={postListStyle?.header?.postMenu?.backdropColor}
         />
       )}
     </>

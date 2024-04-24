@@ -6,9 +6,11 @@ import React, {
   useContext,
   useEffect,
   useState,
+  JSX,
 } from "react";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import {
+  autoPlayPostVideo,
   getFeed,
   likePost,
   likePostStateHandler,
@@ -51,6 +53,11 @@ import { LMPostUI } from "../models";
 import { LMLoader } from "../components";
 import { clearPostDetail } from "../store/actions/postDetail";
 import { postLikesClear } from "../store/actions/postLikes";
+import { ActivityIndicator, View } from "react-native";
+import Layout from "../constants/Layout";
+import STYLES from "../constants/Styles";
+import { useUniversalFeedContext } from "../context/universalFeedContext";
+import { useIsFocused } from "@react-navigation/native";
 
 interface PostListContextProps {
   children: ReactNode;
@@ -81,6 +88,8 @@ export interface PostListContextValues {
   showDeleteModal: boolean;
   showReportModal: boolean;
   feedFetching: boolean;
+  postInViewport: string;
+  setPostInViewport: Dispatch<SetStateAction<string>>;
   setFeedFetching: Dispatch<SetStateAction<boolean>>;
   setModalPosition: Dispatch<SetStateAction<{ x: number; y: number }>>;
   setShowReportModal: Dispatch<SetStateAction<boolean>>;
@@ -88,11 +97,12 @@ export interface PostListContextValues {
   setSelectedMenuItemPostId: Dispatch<SetStateAction<string>>;
   setShowActionListModal: Dispatch<SetStateAction<boolean>>;
   setFeedPageNumber: Dispatch<SetStateAction<number>>;
-  renderLoader: () => void;
+  renderLoader: () => JSX.Element | null;
   getPostDetail: () => LMPostUI;
   handleDeletePost: (visible: boolean) => void;
   handleEditPost: (id: string) => void;
-  fetchFeed: () => void;
+  fetchFeed: (page: number) => Promise<any>;
+  handleLoadMore: () => void;
   postLikeHandler: (id: string) => void;
   savePostHandler: (id: string, saved?: boolean) => void;
   debouncedSaveFunction: (id: string, saved?: boolean) => void;
@@ -104,7 +114,7 @@ export interface PostListContextValues {
   onTapLikeCount: (id: string) => void;
   onOverlayMenuClick: (event: {
     nativeEvent: { pageX: number; pageY: number };
-  }) => void;
+  }, postId: string) => void;
 }
 
 const PostListContext = createContext<PostListContextValues | undefined>(
@@ -136,15 +146,30 @@ export const PostListContextProvider = ({
   const [showDeleteModal, setDeleteModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [feedFetching, setFeedFetching] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isPaginationStopped, setIsPaginationStopped] = useState(false);
   const LMFeedContextStyles = useLMFeedStyles();
   const { loaderStyle } = LMFeedContextStyles;
+  const { localRefresh } = useUniversalFeedContext();
+
+  const PAGE_SIZE = 20;
+  const [postInViewport, setPostInViewport] = useState("");
+  const isFocus = useIsFocused();
+
+  // handles the auto play/pause of video in viewport
+  useEffect(() => {
+    if (postInViewport && isFocus) {
+      dispatch(autoPlayPostVideo(postInViewport));
+    }
+  }, [postInViewport, isFocus]);
 
   // this functions gets universal feed data
-  const fetchFeed = async () => {
+  const fetchFeed = async (page: number) => {
     const payload = {
-      page: feedPageNumber,
-      pageSize: 20,
+      page: page,
+      pageSize: PAGE_SIZE,
     };
+
     // calling getFeed API
     const getFeedResponse = await dispatch(
       getFeed(
@@ -158,6 +183,36 @@ export const PostListContextProvider = ({
     setFeedFetching(false);
     return getFeedResponse;
   };
+
+  const loadData = async (newPage: number) => {
+    setIsLoading(true);
+    setTimeout(async () => {
+      const res: any = await fetchFeed(newPage);
+      if (res) {
+        if (res?.posts?.length === 0) {
+          setIsPaginationStopped(true);
+        }
+        setIsLoading(false);
+      }
+    }, 200);
+  };
+
+  const handleLoadMore = async () => {
+    if (!isLoading && !isPaginationStopped) {
+      const newPage = feedPageNumber + 1;
+      setFeedPageNumber((page) => {
+        return page + 1;
+      });
+      loadData(newPage);
+    }
+  };
+
+  useEffect(() => {
+    if (localRefresh) {
+      setFeedPageNumber(1);
+      setIsPaginationStopped(false);
+    }
+  }, [localRefresh]);
 
   // debounce on like post function
   const debouncedLikeFunction = _.debounce(postLikeHandler, 500); // Adjust the debounce time (in milliseconds) as needed
@@ -233,9 +288,10 @@ export const PostListContextProvider = ({
   useEffect(() => {
     if (accessToken) {
       // fetch feed
-      fetchFeed();
+      const initialPage = 1;
+      fetchFeed(initialPage);
     }
-  }, [accessToken, feedPageNumber]);
+  }, [accessToken]);
 
   // this function closes the post action list modal
   const closePostActionListModal = () => {
@@ -245,7 +301,8 @@ export const PostListContextProvider = ({
   // this function is executed on the click of menu icon & handles the position and visibility of the modal
   const onOverlayMenuClick = (event: {
     nativeEvent: { pageX: number; pageY: number };
-  }) => {
+  }, postId : string) => {
+    setSelectedMenuItemPostId(postId)
     const { pageX, pageY } = event.nativeEvent;
     setShowActionListModal(true);
     setModalPosition({ x: pageX, y: pageY });
@@ -273,6 +330,7 @@ export const PostListContextProvider = ({
 
   // this function handles the functionality on the report option
   const handleReportPost = async () => {
+    dispatch(autoPlayPostVideo(''))
     setShowReportModal(true);
   };
 
@@ -283,17 +341,20 @@ export const PostListContextProvider = ({
 
   // this function handles the click on edit option of overlayMenu
   const handleEditPost = (postId) => {
+    dispatch(autoPlayPostVideo(''))
     navigation.navigate(CREATE_POST, { postId });
   };
 
   // this handles the click on comment count section of footer
   const onTapCommentCount = (postId) => {
     dispatch(clearPostDetail());
+    dispatch(autoPlayPostVideo(""));
     navigation.navigate(POST_DETAIL, [postId, NAVIGATED_FROM_COMMENT]);
   };
 
   const onTapLikeCount = (id) => {
     dispatch(postLikesClear());
+    dispatch(autoPlayPostVideo(""));
     navigation.navigate(POST_LIKES_LIST, [POST_LIKES, id]);
   };
 
@@ -305,8 +366,13 @@ export const PostListContextProvider = ({
     return postDetail;
   };
 
+  //pagination loader in the footer
   const renderLoader = () => {
-    return <LMLoader {...loaderStyle?.loader} />;
+    return isLoading ? (
+      <View style={{ paddingVertical: Layout.normalize(20) }}>
+        <LMLoader {...loaderStyle?.loader} />
+      </View>
+    ) : null;
   };
 
   const contextValues: PostListContextValues = {
@@ -332,6 +398,7 @@ export const PostListContextProvider = ({
     handleDeletePost,
     handleEditPost,
     fetchFeed,
+    handleLoadMore,
     postLikeHandler,
     debouncedLikeFunction,
     debouncedSaveFunction,
@@ -342,7 +409,9 @@ export const PostListContextProvider = ({
     onTapCommentCount,
     onTapLikeCount,
     onOverlayMenuClick,
-    setModalPosition
+    setModalPosition,
+    postInViewport,
+    setPostInViewport
   };
 
   return (

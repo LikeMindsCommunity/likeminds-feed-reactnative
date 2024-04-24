@@ -20,4 +20,5 @@ export interface LMActivityEntityUI {
   updatedAt: number;
   uuid: string;
   deletedByUUID?: string;
+  postId?: string
 }

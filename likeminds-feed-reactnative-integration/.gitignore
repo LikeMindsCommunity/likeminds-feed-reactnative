@@ -4,5 +4,6 @@ node_modules/
 npm-debug.log
 yarn-error.log
 package-lock.json
-likeminds-feed-reactnative-integration-1.0.0.tgz
 .env
+dist/
+
