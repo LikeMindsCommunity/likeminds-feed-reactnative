@@ -20,6 +20,8 @@ import { UniversalFeedCustomisableMethodsContextProvider, UniversalFeedCustomisa
 import { PostDetailCustomisableMethodsContextProvider, PostDetailCustomisableMethodsContext, usePostDetailCustomisableMethodsContext } from "./postDetailCallbacksContext";
 import { CreatePostCustomisableMethodsContextProvider, CreatePostCustomisableMethodsContext, useCreatePostCustomisableMethodsContext } from "./createPostCallbacksContext";
 import { PostLikesCustomisableMethodsContextProvider, PostLikesCustomisableMethodsContext, usePostLikesCustomisableMethodsContext } from "./postLikesListCallbacksContext";
+import { NotificationFeedContextProvider, NotificationFeedContextValues, useNotificationFeedContext } from "./notificationFeedContext";
+import { NotificationFeedCustomisableMethodsContextProvider, NotificationFeedCustomisableMethodsContext, useNotificationFeedCustomisableMethodsContext } from "./notificationFeedCallbacksContext";
 export {
   UniversalFeedContextProvider,
   UniversalFeedContextValues,
@@ -50,5 +52,11 @@ export {
   useCreatePostCustomisableMethodsContext,
   PostLikesCustomisableMethodsContext,
   PostLikesCustomisableMethodsContextProvider,
-  usePostLikesCustomisableMethodsContext
+  usePostLikesCustomisableMethodsContext,
+  NotificationFeedContextProvider,
+  NotificationFeedContextValues,
+  useNotificationFeedContext,
+  NotificationFeedCustomisableMethodsContext,
+  NotificationFeedCustomisableMethodsContextProvider,
+  useNotificationFeedCustomisableMethodsContext
 };

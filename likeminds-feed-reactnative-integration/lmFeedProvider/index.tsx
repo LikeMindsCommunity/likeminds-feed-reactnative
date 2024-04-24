@@ -17,16 +17,17 @@ import { LMFeedProviderProps, ThemeContextProps } from "./types";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { getMemberState, initiateUser } from "../store/actions/login";
 import { LMToast } from "../components";
+import { CallBack } from "../callBacks/callBackClass";
 
 // Create the theme context
 export const LMFeedStylesContext = createContext<ThemeContextProps | undefined>(
   undefined
 );
 
-// Create a context for LMChatProvider
+// Create a context for LMFeedProvider
 const LMFeedContext = createContext<LMFeedClient | undefined>(undefined);
 
-// Create a hook to use the LMChatContext
+// Create a hook to use the LMFeedContext
 export const useLMFeed = () => {
   const context = useContext(LMFeedContext);
   if (!context) {
@@ -48,13 +49,15 @@ export const LMFeedProvider = ({
   children,
   userName,
   userUniqueId,
+  lmFeedInterface,
   themeStyles,
   universalFeedStyle,
   postListStyle,
   loaderStyle,
   postDetailStyle,
   postLikesListStyle,
-  createPostStyle
+  createPostStyle,
+  notificationFeedStyle
 }: LMFeedProviderProps): React.JSX.Element => {
   const [isInitiated, setIsInitiated] = useState(false);
   const dispatch  = useAppDispatch();
@@ -64,6 +67,9 @@ export const LMFeedProvider = ({
     //setting client in Client class
     Client.setMyClient(myClient);
     Credentials.setCredentials(userName, userUniqueId);
+    if(lmFeedInterface){
+      CallBack.setLMFeedInterface(lmFeedInterface);
+    } 
 
     // storing myClient followed by community details
     const callInitApi = async () => {
@@ -101,7 +107,8 @@ export const LMFeedProvider = ({
           loaderStyle,
           postDetailStyle,
           postLikesListStyle,
-          createPostStyle
+          createPostStyle,
+          notificationFeedStyle
         }}
       >
         <View style={styles.flexStyling}>{children}</View>

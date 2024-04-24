@@ -1,11 +1,11 @@
-import React from 'react';
-import {Linking, StyleSheet, Text} from 'react-native';
+import React from "react";
+import { Linking, StyleSheet, Text } from "react-native";
 
 const REGEX_USER_SPLITTING = /(<<.+?\|route:\/\/[^>]+>>)/gu;
 const REGEX_USER_TAGGING =
   /<<(?<name>[^<>|]+)\|route:\/\/(?<route>[^?]+(\?.+)?)>>/g;
 
-  // this function detect links in a string
+// this function detect links in a string
 function detectLinks(message: string, isLongPress?: boolean) {
   const regex =
     /((?:https?:\/\/)?(?:www\.)?(?:\w+\.)+\w+(?:\/\S*)?|\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b)/i;
@@ -35,7 +35,8 @@ function detectLinks(message: string, isLongPress?: boolean) {
                       await Linking.openURL(`https://${val}`);
                     }
                   }
-                }}>
+                }}
+              >
                 <Text style={styles.mentionStyle}>{val}</Text>
               </Text>
             ) : (
@@ -54,12 +55,12 @@ function detectLinks(message: string, isLongPress?: boolean) {
 const decode = (
   text: string | undefined,
   enableClick: boolean,
-  isLongPress?: boolean,
+  isLongPress?: boolean
 ) => {
   if (!text) {
     return;
   }
-  const arr: Array<{key: string; route: string | null}> = [];
+  const arr: Array<{ key: string; route: string | null }> = [];
   const parts = text?.split(REGEX_USER_SPLITTING);
 
   if (parts) {
@@ -68,12 +69,12 @@ const decode = (
         const match = REGEX_USER_TAGGING.exec(matchResult);
         if (match !== null) {
           if (match?.groups) {
-            const {name, route}:any = match.groups || '';
-            arr.push({key: name, route: route});
+            const { name, route }: any = match.groups || "";
+            arr.push({ key: name, route: route });
           }
         }
       } else {
-        arr.push({key: matchResult, route: null});
+        arr.push({ key: matchResult, route: null });
       }
     }
 
@@ -90,7 +91,8 @@ const decode = (
                     // Alert.alert(`navigate to the route ${val?.route}`);
                   }
                 }}
-                style={styles.mentionStyle}>
+                style={styles.mentionStyle}
+              >
                 {`@${val.key}`}
               </Text>
             ) : (
@@ -117,9 +119,32 @@ const decode = (
   }
 };
 
+export const userTaggingDecoder = (text) => {
+  if (!text) {
+    return [];
+  }
+
+  const arr: { name: string; route: string }[] = [];
+  const REGEX_USER_SPLITTING = /(@\[.*?\]\((.*?)\))/g;
+  const REGEX_USER_TAGGING =
+    /@\[(?<name>.*?)\]\((?:user_profile\/)?(?<route>.*?)\)/;
+
+  const parts = text.split(REGEX_USER_SPLITTING);
+
+  for (const matchResult of parts) {
+    const match = matchResult.match(REGEX_USER_TAGGING);
+    if (match) {
+      const { name, route } = match.groups;
+      arr.push({ name, route });
+    }
+  }
+
+  return arr;
+};
+
 const styles = StyleSheet.create({
   mentionStyle: {
-    color: '#007AFF',
+    color: "#007AFF",
   },
 });
 export default decode;

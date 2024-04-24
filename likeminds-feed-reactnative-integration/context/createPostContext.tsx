@@ -37,7 +37,11 @@ import {
   convertToLMPostUI,
 } from "../viewDataModels";
 import _ from "lodash";
-import { editPost, getDecodedUrl, setUploadAttachments } from "../store/actions/createPost";
+import {
+  editPost,
+  getDecodedUrl,
+  setUploadAttachments,
+} from "../store/actions/createPost";
 import {
   DecodeURLRequest,
   EditPostRequest,
@@ -49,6 +53,9 @@ import { showToastMessage } from "../store/actions/toast";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../models/RootStackParamsList";
 import { LMAttachmentUI, LMOGTagsUI, LMPostUI, LMUserUI } from "../models";
+import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
+import { Events } from "../enums/Events";
+import { Keys } from "../enums/Keys";
 
 interface CreatePostContextProps {
   children: ReactNode;
@@ -119,7 +126,11 @@ export interface CreatePostContextValues {
   handleInputChange: (event: string) => void;
   loadData: (newPage: number) => void;
   handleLoadMore: () => void;
-  onPostClick: (allMedia:Array<LMAttachmentUI>, linkData: Array<LMAttachmentUI>, content: string) => void;
+  onPostClick: (
+    allMedia: Array<LMAttachmentUI>,
+    linkData: Array<LMAttachmentUI>,
+    content: string
+  ) => void;
   handleScreenBackPress: () => void;
 }
 
@@ -227,18 +238,51 @@ export const CreatePostContextProvider = ({
             ...selectedImagesVideos,
           ]);
         }
+
+        // To fire analytics event
+        let imageCount = 0;
+        let videoCount = 0;
+        for (let i = 0; i < selectedImagesVideos.length; i++) {
+          if (
+            selectedImagesVideos[i].attachmentType === IMAGE_ATTACHMENT_TYPE
+          ) {
+            imageCount++;
+          } else if (
+            selectedImagesVideos[i].attachmentType === VIDEO_ATTACHMENT_TYPE
+          ) {
+            videoCount++;
+          }
+        }
+
+        // sends image attached event if imageCount > 0
+        if (imageCount > 0) {
+          LMFeedAnalytics.track(
+            Events.IMAGE_ATTACHED_TO_POST,
+            new Map<string, string>([[Keys.IMAGE_COUNT, `${imageCount}`]])
+          );
+        }
+        // sends image attached event if videoCount > 0
+        if (videoCount > 0) {
+          LMFeedAnalytics.track(
+            Events.VIDEO_ATTACHED_TO_POST,
+            new Map<string, string>([[Keys.VIDEO_COUNT, `${videoCount}`]])
+          );
+        }
       }
     });
   };
 
   // this handles the functionality of creating or editing post
-  const onPostClick = async (allMedia:Array<LMAttachmentUI>, linkData: Array<LMAttachmentUI>, content: string) => {
+  const onPostClick = async (
+    allMedia: Array<LMAttachmentUI>,
+    linkData: Array<LMAttachmentUI>,
+    content: string
+  ) => {
     const isConnected = await NetworkUtil.isNetworkAvailable();
     if (isConnected) {
       postToEdit
         ? postEdit()
-        :
-          dispatch(
+        : dispatch(
             setUploadAttachments({
               mediaAttachmentData: allMedia,
               linkAttachmentData: linkData,
@@ -269,6 +313,12 @@ export const CreatePostContextProvider = ({
         }
       }
       const selectedDocuments = convertDocumentMetaData(mediaWithSizeCheck);
+      LMFeedAnalytics.track(
+        Events.DOCUMENT_ATTACHED_TO_POST,
+        new Map<string, string>([
+          [Keys.DOCUMENT_COUNT, `${selectedDocuments.length}`],
+        ])
+      );
       // checks the count of the files attached
       if (selectedDocuments.length + formattedDocumentAttachments.length > 10) {
         setFormattedDocumentAttachments([...formattedDocumentAttachments]);
@@ -381,11 +431,18 @@ export const CreatePostContextProvider = ({
               const convertedLinkData = await convertLinkMetaData(
                 filteredResponses
               );
+              const link = convertedLinkData[0]?.attachmentMeta?.ogTags?.url;
               setFormattedLinkAttachments(convertedLinkData);
               if (!closedOnce) {
                 setShowLinkPreview(true);
-              }else {                
-                setFormattedLinkAttachments([])
+              } else {
+                setFormattedLinkAttachments([]);
+              }
+              if (link) {
+                LMFeedAnalytics.track(
+                  Events.LINK_ATTACHED_IN_POST,
+                  new Map<string, string>([[Keys.LINK, link]])
+                );
               }
             }
             // Do something with the array of non-undefined responses
@@ -574,7 +631,7 @@ export const CreatePostContextProvider = ({
   // this handles the functionality on back press
   const handleScreenBackPress = () => {
     navigation.goBack();
-  }
+  };
 
   const contextValues: CreatePostContextValues = {
     navigation,
@@ -628,7 +685,7 @@ export const CreatePostContextProvider = ({
     loadData,
     handleLoadMore,
     onPostClick,
-    handleScreenBackPress
+    handleScreenBackPress,
   };
 
   return (

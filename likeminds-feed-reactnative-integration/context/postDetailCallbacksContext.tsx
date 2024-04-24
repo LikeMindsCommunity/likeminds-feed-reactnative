@@ -16,7 +16,8 @@ export interface PostDetailCallbacksContextProps {
   handleScreenBackPressProp: () => void;
   onCommentOverflowMenuClickProp: (event: {
     nativeEvent: { pageX: number; pageY: number };
-  },menuItems: LMMenuItemsUI, commentId: string) => void;
+  },menuItems: LMMenuItemsUI[], commentId: string) => void;
+  onSharePostClicked: (id:string) => void;
 }
 
 export interface PostDetailCustomisableMethodsContext {
@@ -33,7 +34,8 @@ export interface PostDetailCustomisableMethodsContext {
   handleScreenBackPressProp: () => void;
   onCommentOverflowMenuClickProp: (event: {
     nativeEvent: { pageX: number; pageY: number };
-  },menuItems: LMMenuItemsUI, commentId: string) => void;
+  },menuItems: LMMenuItemsUI[], commentId: string) => void;
+  onSharePostClicked: (id:string) => void;
 }
 
 const PostDetailCustomisableMethodsContext = createContext<
@@ -60,7 +62,8 @@ export const PostDetailCustomisableMethodsContextProvider = ({
   handleEditCommentProp,
   handleReportCommentProp,
   handleScreenBackPressProp,
-  onCommentOverflowMenuClickProp
+  onCommentOverflowMenuClickProp,
+  onSharePostClicked
 }: PostDetailCallbacksContextProps) => {
   const contextValues: PostDetailCustomisableMethodsContext = {
     getCommentsRepliesProp,
@@ -71,7 +74,8 @@ export const PostDetailCustomisableMethodsContextProvider = ({
     handleEditCommentProp,
     handleReportCommentProp,
     handleScreenBackPressProp,
-    onCommentOverflowMenuClickProp
+    onCommentOverflowMenuClickProp,
+    onSharePostClicked
   };
 
   return (
