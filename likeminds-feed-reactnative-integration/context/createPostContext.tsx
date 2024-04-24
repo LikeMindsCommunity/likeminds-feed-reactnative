@@ -47,12 +47,13 @@ import {
   EditPostRequest,
   GetPostRequest,
   GetTaggingListRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-js-beta";
 import { getPost, getTaggingList } from "../store/actions/postDetail";
 import { showToastMessage } from "../store/actions/toast";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../models/RootStackParamsList";
 import { LMAttachmentUI, LMOGTagsUI, LMPostUI, LMUserUI } from "../models";
+import { CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN } from "../store/types/types";
 
 interface CreatePostContextProps {
   children: ReactNode;
@@ -126,7 +127,8 @@ export interface CreatePostContextValues {
   onPostClick: (
     allMedia: Array<LMAttachmentUI>,
     linkData: Array<LMAttachmentUI>,
-    content: string
+    content: string,
+    topics: string[]
   ) => void;
   handleScreenBackPress: () => void;
 }
@@ -244,8 +246,11 @@ export const CreatePostContextProvider = ({
   const onPostClick = async (
     allMedia: Array<LMAttachmentUI>,
     linkData: Array<LMAttachmentUI>,
-    content: string
+    content: string,
+    topics: string[]
   ) => {
+    console.log("topicsFromContext", topics, content);
+
     const isConnected = await NetworkUtil.isNetworkAvailable();
     if (isConnected) {
       postToEdit
@@ -255,6 +260,7 @@ export const CreatePostContextProvider = ({
               mediaAttachmentData: allMedia,
               linkAttachmentData: linkData,
               postContentData: content.trim(),
+              topics: topics,
             })
           );
       navigation.goBack();
@@ -584,7 +590,10 @@ export const CreatePostContextProvider = ({
   };
 
   // this handles the functionality on back press
-  const handleScreenBackPress = () => {
+  const handleScreenBackPress = async () => {
+    await dispatch({
+      type: CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
+    });
     navigation.goBack();
   };
 

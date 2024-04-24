@@ -93,9 +93,8 @@ export const UniversalFeedContextProvider = ({
   const memberRight = useAppSelector((state) => state.login.memberRights);
   const [postUploading, setPostUploading] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(true);
-  const { mediaAttachmemnts, linkAttachments, postContent } = useAppSelector(
-    (state) => state.createPost
-  );
+  const { mediaAttachmemnts, linkAttachments, postContent, topics } =
+    useAppSelector((state) => state.createPost);
   const uploadingMediaAttachmentType = mediaAttachmemnts[0]?.attachmentType;
   const uploadingMediaAttachment = mediaAttachmemnts[0]?.attachmentMeta.url;
 
@@ -151,11 +150,14 @@ export const UniversalFeedContextProvider = ({
     );
     // Wait for all upload operations to complete
     const updatedAttachments = await Promise.all(uploadPromises);
+    console.log("finaleTopics", topics);
+
     const addPostResponse = await dispatch(
       addPost(
         AddPostRequest.builder()
           .setAttachments([...updatedAttachments, ...linkAttachments])
           .setText(postContentText)
+          .setTopicIds(topics)
           .build(),
         false
       )
@@ -167,6 +169,7 @@ export const UniversalFeedContextProvider = ({
           allAttachment: [],
           linkData: [],
           conText: "",
+          topics: [],
         })
       );
       await onRefresh();
@@ -206,12 +209,13 @@ export const UniversalFeedContextProvider = ({
     if (
       mediaAttachmemnts.length > 0 ||
       linkAttachments.length > 0 ||
-      postContent !== ""
+      postContent !== "" ||
+      topics?.length > 0
     ) {
       setPostUploading(true);
       postAdd();
     }
-  }, [mediaAttachmemnts, linkAttachments, postContent]);
+  }, [mediaAttachmemnts, linkAttachments, postContent, topics]);
 
   // keyExtractor of feed list
   const keyExtractor = (item: LMPostUI) => {

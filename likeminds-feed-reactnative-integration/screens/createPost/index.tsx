@@ -55,6 +55,7 @@ import {
 } from "../../components";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TOPIC_FEED } from "../../constants/screenNames";
+import { CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN } from "../../store/types/types";
 
 interface CreatePostProps {
   children: React.ReactNode;
@@ -108,7 +109,7 @@ const CreatePostComponent = () => {
   const customAttachmentOptionsStyle = createPostStyle?.attachmentOptionsStyle;
   const postHeaderStyle = postListStyle?.header;
   const postMediaStyle = postListStyle?.media;
-  const {
+  let {
     navigation,
     postToEdit,
     showOptions,
@@ -164,6 +165,27 @@ const CreatePostComponent = () => {
     }));
     setMappedTopics(filteredTopicArray);
   }, [selectedTopics]);
+
+  const handleOnPress = () => {
+    console.log("selectedTopics", selectedTopics);
+
+    onPostClickProp
+      ? onPostClickProp(
+          allAttachment,
+          formattedLinkAttachments,
+          postContentText,
+          selectedTopics
+        )
+      : onPostClick(
+          allAttachment,
+          formattedLinkAttachments,
+          postContentText,
+          selectedTopics
+        );
+    dispatch({
+      type: CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
+    });
+  };
 
   const {
     handleDocumentProp,
@@ -621,19 +643,7 @@ const CreatePostComponent = () => {
                 ? styles.enabledOpacity
                 : styles.disabledOpacity
             }
-            onPress={() =>
-              onPostClickProp
-                ? onPostClickProp(
-                    allAttachment,
-                    formattedLinkAttachments,
-                    postContentText
-                  )
-                : onPostClick(
-                    allAttachment,
-                    formattedLinkAttachments,
-                    postContentText
-                  )
-            }
+            onPress={handleOnPress}
           >
             {customCreatePostScreenHeader?.rightComponent ? (
               customCreatePostScreenHeader?.rightComponent
