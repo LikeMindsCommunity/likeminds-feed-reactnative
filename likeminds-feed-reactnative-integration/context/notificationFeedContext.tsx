@@ -143,7 +143,7 @@ export const NotificationFeedContextProvider = ({
       : activity?.cta.match(commentRegexPattern)
       ? (dispatch(clearPostDetail()),
         navigation.navigate(POST_DETAIL, [
-          activity?.activityEntityData?.postId,
+          activity?.activityEntityData?.postId ? activity?.activityEntityData?.postId : activity?.activityEntityData?.id ,
           NAVIGATED_FROM_NOTIFICATION,
         ]))
       : activity?.cta.match(createPostRegexPattern)

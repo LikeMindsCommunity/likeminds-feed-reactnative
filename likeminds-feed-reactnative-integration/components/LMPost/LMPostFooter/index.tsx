@@ -81,11 +81,11 @@ const LMPostFooter = React.memo(() => {
               boxFit: footerStyle?.likeIconButton?.icon?.boxFit,
               boxStyle: footerStyle?.likeIconButton?.icon?.boxStyle,
             }}
-            buttonStyle={
-              footerStyle?.likeIconButton?.buttonStyle
-                ? footerStyle?.likeIconButton.buttonStyle
-                : styles.defaultLikeIconView
-            }
+            buttonStyle={StyleSheet.flatten([
+              styles.defaultLikeIconView,
+              { padding: 8, paddingBottom: 15 },
+              footerStyle?.likeIconButton?.buttonStyle,
+            ])}
             isClickable={footerStyle?.likeIconButton?.isClickable}
           />
           {/* like text button */}
@@ -117,11 +117,11 @@ const LMPostFooter = React.memo(() => {
                     width: 55,
                   },
             }}
-            buttonStyle={
-              footerStyle?.likeTextButton?.buttonStyle
-                ? footerStyle?.likeTextButton.buttonStyle
-                : styles.defaultLikeTextView
-            }
+            buttonStyle={StyleSheet.flatten([
+              footerStyle?.likeTextButton?.buttonStyle,
+              { paddingBottom: 15 },
+              styles.defaultLikeTextView,
+            ])}
             isClickable={footerStyle?.likeTextButton?.isClickable}
           />
         </View>
@@ -167,11 +167,11 @@ const LMPostFooter = React.memo(() => {
               boxStyle: footerStyle?.commentButton?.icon?.boxStyle,
             }}
             placement={footerStyle?.commentButton?.placement}
-            buttonStyle={
-              footerStyle?.commentButton?.buttonStyle
-                ? footerStyle?.commentButton.buttonStyle
-                : styles.defaultCommentView
-            }
+            buttonStyle={StyleSheet.flatten([
+              { padding: 8, paddingBottom: 15 },
+              styles.defaultCommentView,
+              footerStyle?.commentButton?.buttonStyle,
+            ])}
             isClickable={footerStyle?.commentButton?.isClickable}
           />
         </View>
@@ -182,7 +182,7 @@ const LMPostFooter = React.memo(() => {
         style={StyleSheet.flatten([
           styles.alignRow,
           showBookMarkIcon &&
-            showShareIcon && { width: "16%", justifyContent: "space-between" },
+            showShareIcon && { width: "20%", justifyContent: "space-between" },
         ])}
       >
         {/* save section */}
@@ -215,11 +215,11 @@ const LMPostFooter = React.memo(() => {
               boxStyle: footerStyle?.saveButton?.icon?.boxStyle,
             }}
             placement={footerStyle?.saveButton?.placement}
-            buttonStyle={
-              footerStyle?.saveButton?.buttonStyle
-                ? footerStyle?.saveButton.buttonStyle
-                : styles.buttonWithoutBorder
-            }
+            buttonStyle={StyleSheet.flatten([
+              styles.buttonWithoutBorder,
+              { padding: 8, paddingBottom: 15 },
+              footerStyle?.saveButton?.buttonStyle,
+            ])}
             isClickable={footerStyle?.saveButton?.isClickable}
           />
         )}
@@ -252,11 +252,11 @@ const LMPostFooter = React.memo(() => {
             placement={footerStyle?.shareButton?.placement}
             activeIcon={footerStyle?.shareButton?.activeIcon}
             activeText={footerStyle?.shareButton?.activeText}
-            buttonStyle={
-              footerStyle?.shareButton?.buttonStyle
-                ? footerStyle?.shareButton.buttonStyle
-                : styles.buttonWithoutBorder
-            }
+            buttonStyle={StyleSheet.flatten([
+              styles.buttonWithoutBorder,
+              { padding: 8, paddingBottom: 15 },
+              footerStyle?.shareButton?.buttonStyle,
+            ])}
             isClickable={footerStyle?.shareButton?.isClickable}
           />
         )}

@@ -331,7 +331,13 @@ export interface NotificationFeedStyleProps {
     fallbackTextBoxStyle?: ViewStyle;
     profilePictureStyle?: ImageStyle;
   };
-  activityAttachmentImageStyle?: LMIconProps
+  activityAttachmentImageStyle?: LMIconProps;
+  noActivityViewText?: string;
+  noActivityViewTextStyle?: TextStyle;
+  noActivityViewImage?: React.ReactNode;
+  noActivityViewImageStyle?: ImageStyle;
+  customScreenHeader?: React.ReactNode;
+  activityTextComponent?: Function
 }
 
 export interface ThemeContextProps {

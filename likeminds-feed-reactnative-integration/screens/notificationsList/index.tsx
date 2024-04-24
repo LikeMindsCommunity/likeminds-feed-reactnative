@@ -24,12 +24,12 @@ const LMFeedNotificationFeedListView = () => {
   const { onNotificationItemClickedProp } =
     useNotificationFeedCustomisableMethodsContext();
   const LMFeedContextStyles = useLMFeedStyles();
-  const { loaderStyle } = LMFeedContextStyles;
+  const { loaderStyle , notificationFeedStyle} = LMFeedContextStyles;
 
   useEffect(() => {
     setTimeout(() => {
       setShowLoader(false);
-    }, 500);
+    }, 1000);
   }, []);
 
   return (
@@ -75,14 +75,15 @@ const LMFeedNotificationFeedListView = () => {
             gap: 10,
           }}
         >
-          <Image
+          {notificationFeedStyle?.noActivityViewImage ? notificationFeedStyle?.noActivityViewImage : <Image
             source={require("../../assets/images/empty_nothing3x.png")}
             style={{
               height: Layout.normalize(150),
               width: Layout.normalize(150),
+              ...notificationFeedStyle?.noActivityViewImageStyle
             }}
-          />
-          <Text>Oops! You don't have any notifications yet.</Text>
+          />}
+          <Text style={notificationFeedStyle?.noActivityViewTextStyle}>{notificationFeedStyle?.noActivityViewText ? notificationFeedStyle?.noActivityViewText : `Oops! You don't have any notifications yet.`}</Text>
         </View>
       ) : null}
     </>

@@ -11,7 +11,7 @@ import {
   LMFeedCallbacks,
 } from '@likeminds.community/feed-rn-core';
 import {myClient} from '.';
-import {ActivityIndicator, Linking, ViewStyle} from 'react-native';
+import {ActivityIndicator, Linking, PermissionsAndroid, Platform, ViewStyle} from 'react-native';
 import {LinkingOptions, NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {navigationRef} from './RootNavigation';
@@ -48,6 +48,11 @@ const App = () => {
     shadowColor: '#000',
   };
 
+  if (Platform.OS === "android") {
+    PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
+    );
+  }
   // notification listener on foreground state
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
