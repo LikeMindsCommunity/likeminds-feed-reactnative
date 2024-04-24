@@ -47,7 +47,7 @@ const NotificationFeed = () => {
   const customScreenHeader = notificationFeedStyle?.screenHeader
   return (
     <SafeAreaView style={styles.mainContainer}>
-      <LMHeader
+      {notificationFeedStyle?.customScreenHeader ? notificationFeedStyle?.customScreenHeader : <LMHeader
         {...customScreenHeader}
         showBackArrow={
           customScreenHeader?.showBackArrow != undefined
@@ -60,7 +60,7 @@ const NotificationFeed = () => {
         onBackPress={() => {
           handleScreenBackPressProp ? handleScreenBackPressProp() : handleScreenBackPress();
         }}
-      />
+      />}
       <LMFeedNotificationFeedListView />
     </SafeAreaView>
   );

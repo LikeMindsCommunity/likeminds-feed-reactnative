@@ -44,7 +44,6 @@ const LMNotificationFeedItem = React.memo(
     const attachmentIconStyle =
       notificationFeedStyle?.activityAttachmentImageStyle;
 
-    const [truncatedText, setTruncatedText] = useState("");
     const MAX_LINES = 2;
 
     // this handles the show more functionality
@@ -63,7 +62,6 @@ const LMNotificationFeedItem = React.memo(
             .map((line) => line.text)
             .join("");
         }
-        setTruncatedText(text);
       }
     };
     const BOLD_STYLE = "BOLD_STYLE";
@@ -168,33 +166,24 @@ const LMNotificationFeedItem = React.memo(
 
           {/* activity content text */}
           <View style={styles.contentView}>
-            {truncatedText ? (
-              <LMText
-                textStyle={StyleSheet.flatten([
-                  styles.activityText,
-                  notificationFeedStyle?.activityTextStyles,
-                ])}
-              >
-                {`${truncatedText}...`}
-              </LMText>
-            ) : (
-              <LMText
-                textStyle={StyleSheet.flatten([
+              {notificationFeedStyle?.activityTextComponent ? <View>{notificationFeedStyle?.activityTextComponent(activity)}</View> :<><Text
+                style={StyleSheet.flatten([
                   styles.activityText,
                   notificationFeedStyle?.activityTextStyles,
                 ])}
                 onTextLayout={(e) => onTextLayout(e)}
+                numberOfLines={MAX_LINES}
+                ellipsizeMode="tail"
               >
                 {activityTextArray.map((item, index) =>{
                   return item?.styleType === BOLD_STYLE ? (
-                    <Text key={index} style={{ fontWeight: "500" }}>{item?.content}</Text>
+                    <Text  key={index} style={{ fontWeight: "500" }} >{item?.content}</Text>
                   ) : (
                     <Text key={index}>{item?.content}</Text>
                   )
                 }
                 )}
-              </LMText>
-            )}
+              </Text>
 
             <LMText
               textStyle={StyleSheet.flatten([
@@ -203,7 +192,7 @@ const LMNotificationFeedItem = React.memo(
               ])}
             >
               {timeStamp(Number(activity.updatedAt))} ago
-            </LMText>
+            </LMText></>}
           </View>
         </TouchableOpacity>
       </View>

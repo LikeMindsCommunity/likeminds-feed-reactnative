@@ -6,6 +6,7 @@ import {
   Pressable,
   FlatList,
   StyleSheet,
+  ScrollView,
 } from "react-native";
 import React from "react";
 import { NetworkUtil, nameInitials, replaceLastMention } from "../../utils";
@@ -46,6 +47,7 @@ import {
 import { LMAttachmentUI, LMUserUI, RootStackParamList } from "../../models";
 import {
   LMCarousel,
+  LMDocument,
   LMHeader,
   LMImage,
   LMLinkPreview,
@@ -57,7 +59,6 @@ import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Events } from "../../enums/Events";
 import { Keys } from "../../enums/Keys";
 import { userTaggingDecoder } from "../../utils/decodeMentions";
-import LMScrollDocument from "../../components/LMMedia/LMScrollDocument";
 
 interface CreatePostProps {
   children: React.ReactNode;
@@ -158,7 +159,7 @@ const CreatePostComponent = () => {
   // this renders the post detail UI
   const uiRenderForPost = () => {
     return (
-      <View
+      <ScrollView
         keyboardShouldPersistTaps={"handled"}
         style={
           postToEdit
@@ -421,7 +422,7 @@ const CreatePostComponent = () => {
           {/* selected document view section */}
           {formattedDocumentAttachments &&
             formattedDocumentAttachments.length >= 1 && (
-              <LMScrollDocument
+              <LMDocument
                 {...postMediaStyle?.document}
                 attachments={formattedDocumentAttachments}
                 showCancel={
@@ -500,7 +501,7 @@ const CreatePostComponent = () => {
               isClickable={customAddMoreAttachmentsButton?.isClickable}
             />
           )}
-      </View>
+      </ScrollView>
     );
   };
 
