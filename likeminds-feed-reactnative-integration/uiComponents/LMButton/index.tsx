@@ -28,7 +28,7 @@ const LMButton = React.memo(
     return (
       <TouchableOpacity
         disabled={!isClickable}
-        hitSlop={{ top: 10, bottom: 10 }}
+        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         style={StyleSheet.flatten([defaultStyles.buttonViewStyle, buttonStyle])}
         activeOpacity={0.8}
         onPress={(event) => {
