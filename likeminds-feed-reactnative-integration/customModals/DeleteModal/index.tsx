@@ -12,7 +12,7 @@ import styles from "./styles";
 import {
   DeleteCommentRequest,
   DeletePostRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-js-beta";
 import DeleteReasonsModal from "../DeleteReasonsModal";
 import {
   COMMENT_DELETE,
@@ -97,7 +97,7 @@ const DeleteModal = ({
         )
       );
       // toast message action
-      if (deletePostResponse) {
+      if (deletePostResponse !== undefined) {
         LMFeedAnalytics.track(
           Events.POST_DELETED,
           new Map<string, string>([

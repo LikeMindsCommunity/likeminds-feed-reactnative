@@ -24,7 +24,7 @@ import {
   LikePostRequest,
   PinPostRequest,
   SavePostRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-js-beta";
 import _ from "lodash";
 import {
   DELETE_POST_MENU_ITEM,
@@ -112,9 +112,12 @@ export interface PostListContextValues {
   handleReportPost: () => void;
   onTapCommentCount: (id: string) => void;
   onTapLikeCount: (id: string) => void;
-  onOverlayMenuClick: (event: {
-    nativeEvent: { pageX: number; pageY: number };
-  }, postId: string) => void;
+  onOverlayMenuClick: (
+    event: {
+      nativeEvent: { pageX: number; pageY: number };
+    },
+    postId: string
+  ) => void;
 }
 
 const PostListContext = createContext<PostListContextValues | undefined>(
@@ -299,10 +302,13 @@ export const PostListContextProvider = ({
   };
 
   // this function is executed on the click of menu icon & handles the position and visibility of the modal
-  const onOverlayMenuClick = (event: {
-    nativeEvent: { pageX: number; pageY: number };
-  }, postId : string) => {
-    setSelectedMenuItemPostId(postId)
+  const onOverlayMenuClick = (
+    event: {
+      nativeEvent: { pageX: number; pageY: number };
+    },
+    postId: string
+  ) => {
+    setSelectedMenuItemPostId(postId);
     const { pageX, pageY } = event.nativeEvent;
     setShowActionListModal(true);
     setModalPosition({ x: pageX, y: pageY });
@@ -330,7 +336,7 @@ export const PostListContextProvider = ({
 
   // this function handles the functionality on the report option
   const handleReportPost = async () => {
-    dispatch(autoPlayPostVideo(''))
+    dispatch(autoPlayPostVideo(""));
     setShowReportModal(true);
   };
 
@@ -341,7 +347,7 @@ export const PostListContextProvider = ({
 
   // this function handles the click on edit option of overlayMenu
   const handleEditPost = (postId) => {
-    dispatch(autoPlayPostVideo(''))
+    dispatch(autoPlayPostVideo(""));
     navigation.navigate(CREATE_POST, { postId });
   };
 
@@ -411,7 +417,7 @@ export const PostListContextProvider = ({
     onOverlayMenuClick,
     setModalPosition,
     postInViewport,
-    setPostInViewport
+    setPostInViewport,
   };
 
   return (

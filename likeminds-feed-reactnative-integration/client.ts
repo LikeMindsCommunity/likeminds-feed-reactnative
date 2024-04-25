@@ -1,4 +1,4 @@
-import { LMFeedClient } from "@likeminds.community/feed-js";
+import { LMFeedClient } from "@likeminds.community/feed-js-beta";
 
 export class Client {
   private static _myClient: LMFeedClient;

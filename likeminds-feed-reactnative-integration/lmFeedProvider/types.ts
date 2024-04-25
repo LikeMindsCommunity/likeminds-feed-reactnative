@@ -1,5 +1,5 @@
 import React from "react";
-import { LMFeedClient } from "@likeminds.community/feed-js";
+import { LMFeedClient } from "@likeminds.community/feed-js-beta";
 import { ViewStyle, TextStyle, ImageProps, ImageStyle } from "react-native";
 import { LMHeaderProps, LMLoaderProps } from "../components";
 import {
@@ -324,7 +324,7 @@ export interface NotificationFeedStyleProps {
   unreadBackgroundColor?: string;
   activityTextStyles?: TextStyle;
   timestampTextStyles?: TextStyle;
-  userImageStyles?:  {
+  userImageStyles?: {
     fallbackTextStyle?: TextStyle;
     size?: number;
     onTap?: () => void;
@@ -337,7 +337,7 @@ export interface NotificationFeedStyleProps {
   noActivityViewImage?: React.ReactNode;
   noActivityViewImageStyle?: ImageStyle;
   customScreenHeader?: React.ReactNode;
-  activityTextComponent?: Function
+  activityTextComponent?: Function;
 }
 
 export interface ThemeContextProps {
@@ -348,7 +348,7 @@ export interface ThemeContextProps {
   postDetailStyle?: PostDetailStyleProps;
   createPostStyle?: CreatePostStyleProps;
   postLikesListStyle?: PostLikesListStyleProps;
-  notificationFeedStyle?: NotificationFeedStyleProps
+  notificationFeedStyle?: NotificationFeedStyleProps;
 }
 
 export interface LMFeedProviderProps {
@@ -359,10 +359,10 @@ export interface LMFeedProviderProps {
   lmFeedInterface?: any;
   themeStyles?: ThemeStyles;
   universalFeedStyle?: UniversalFeedStyleProps;
-  postListStyle?: PostListStyleProps;
+  postListStyle?: any;
   loaderStyle?: LoaderStyleProps;
   postDetailStyle?: PostDetailStyleProps;
   createPostStyle?: CreatePostStyleProps;
   postLikesListStyle?: PostLikesListStyleProps;
-  notificationFeedStyle?: NotificationFeedStyleProps
+  notificationFeedStyle?: NotificationFeedStyleProps;
 }

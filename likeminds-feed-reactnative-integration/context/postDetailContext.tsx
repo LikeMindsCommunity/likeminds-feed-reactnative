@@ -57,7 +57,7 @@ import {
   PinPostRequest,
   ReplyCommentRequest,
   SavePostRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-js-beta";
 import {
   autoPlayPostVideo,
   likePost,
@@ -112,7 +112,7 @@ export interface PostDetailContextValues {
   };
   postDetail: LMPostUI;
   modalPosition: {};
-  showActionListModal: false;
+  showActionListModal: boolean;
   selectedMenuItemPostId: string;
   commentToAdd: string;
   selectedMenuItemCommentId: string;
@@ -123,15 +123,15 @@ export interface PostDetailContextValues {
   loggedInUser: {};
   showCommentActionListModal: boolean;
   replyOnComment: {
-    textInputFocus: false;
+    textInputFocus: boolean;
     commentId: string;
     userId: string;
   };
-  replyToUsername: "";
+  replyToUsername: string;
   localModalVisibility: boolean;
   keyboardIsVisible: boolean;
   editCommentFocus: boolean;
-  myRef: null;
+  myRef: any;
   taggedUserName: string;
   debounceTimeout: null;
   page: number;
@@ -171,7 +171,7 @@ export interface PostDetailContextValues {
   setKeyboardIsVisible: Dispatch<SetStateAction<boolean>>;
   setLocalModalVisibility: Dispatch<SetStateAction<boolean>>;
   setReplyToUsername: Dispatch<SetStateAction<string>>;
-  setReplyOnComment: Dispatch<SetStateAction<object>>;
+  setReplyOnComment: any;
   setShowCommentActionListModal: Dispatch<SetStateAction<boolean>>;
   setCommentPageNumber: Dispatch<SetStateAction<number>>;
   setShowReportModal: Dispatch<SetStateAction<boolean>>;
@@ -428,7 +428,7 @@ export const PostDetailContextProvider = ({
     const pinPostResponse = await dispatch(
       pinPost(PinPostRequest.builder().setpostId(payload.postId).build(), false)
     );
-    if (pinPostResponse) {
+    if (pinPostResponse !== undefined) {
       dispatch(
         showToastMessage({
           isToast: true,
@@ -621,7 +621,7 @@ export const PostDetailContextProvider = ({
     // handles adding comment locally
     dispatch(addCommentStateHandler({ payload, loggedInUser }));
     // calls new comment api
-    const commentAddResponse = await dispatch(
+    const commentAddResponse: any = await dispatch(
       addComment(
         AddCommentRequest.builder()
           .setpostId(payload.postId)
@@ -662,7 +662,7 @@ export const PostDetailContextProvider = ({
     setRouteParams(false);
     dispatch(replyCommentStateHandler({ payload, loggedInUser }));
     // call reply on comment api
-    const replyAddResponse = await dispatch(
+    const replyAddResponse: any = await dispatch(
       replyComment(
         ReplyCommentRequest.builder()
           .setPostId(payload.postId)
@@ -771,7 +771,7 @@ export const PostDetailContextProvider = ({
         false
       )
     );
-    if (editCommentResponse) {
+    if (editCommentResponse !== undefined) {
       setEditCommentFocus(false);
       setCommentToAdd("");
       setKeyboardFocusOnReply(false);
@@ -800,9 +800,9 @@ export const PostDetailContextProvider = ({
 
     const mentionListLength = newMentions.length;
     if (mentionListLength > 0) {
-      const timeoutID = setTimeout(async () => {
+      const timeoutID: any = setTimeout(async () => {
         setPage(1);
-        const taggingListResponse = await dispatch(
+        const taggingListResponse: any = await dispatch(
           getTaggingList(
             GetTaggingListRequest.builder()
               .setsearchName(newMentions[mentionListLength - 1])
@@ -838,7 +838,7 @@ export const PostDetailContextProvider = ({
   // this calls the tagging list api for different page number
   const loadData = async (newPage: number) => {
     setIsLoading(true);
-    const taggingListResponse = await dispatch(
+    const taggingListResponse: any = await dispatch(
       getTaggingList(
         GetTaggingListRequest.builder()
           .setsearchName(taggedUserName)
@@ -848,7 +848,7 @@ export const PostDetailContextProvider = ({
         false
       )
     );
-    if (taggingListResponse) {
+    if (taggingListResponse !== undefined) {
       setAllTags([...allTags, ...taggingListResponse.members]);
       setIsLoading(false);
     }

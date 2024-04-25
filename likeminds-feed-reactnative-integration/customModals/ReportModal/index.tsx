@@ -13,7 +13,7 @@ import styles from "./styles";
 import {
   GetReportTagsRequest,
   PostReportRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-js-beta";
 import {
   COMMENT_REPORTED_SUCCESSFULLY,
   COMMENT_REPORT_ENTITY_TYPE,
@@ -118,7 +118,7 @@ const ReportModal = ({
         )
       );
       // toast message action
-      if (postReportResponse) {
+      if (postReportResponse !== undefined) {
         let reportReason = reportTags.find((item) => item?.id === selectedId);
         let params = {
           reportType: reportType,

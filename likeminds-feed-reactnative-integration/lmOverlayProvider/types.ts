@@ -1,6 +1,14 @@
-import React from "react"
-import { LMFeedClient } from "@likeminds.community/feed-js";
-import { CreatePostStyleProps, LoaderStyleProps, NotificationFeedStyleProps, PostDetailStyleProps, PostLikesListStyleProps, PostListStyleProps, UniversalFeedStyleProps } from "../lmFeedProvider/types";
+import React from "react";
+import { LMFeedClient } from "@likeminds.community/feed-js-beta";
+import {
+  CreatePostStyleProps,
+  LoaderStyleProps,
+  NotificationFeedStyleProps,
+  PostDetailStyleProps,
+  PostLikesListStyleProps,
+  PostListStyleProps,
+  UniversalFeedStyleProps,
+} from "../lmFeedProvider/types";
 
 export interface LMOverlayProviderProps {
   myClient: LMFeedClient;
@@ -14,5 +22,5 @@ export interface LMOverlayProviderProps {
   postDetailStyle?: PostDetailStyleProps;
   createPostStyle?: CreatePostStyleProps;
   postLikesListStyle?: PostLikesListStyleProps;
-  notificationFeedStyle?: NotificationFeedStyleProps
+  notificationFeedStyle?: NotificationFeedStyleProps;
 }

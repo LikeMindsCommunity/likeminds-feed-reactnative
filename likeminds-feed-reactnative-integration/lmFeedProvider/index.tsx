@@ -11,13 +11,13 @@ import { Credentials } from "../credentials";
 import {
   InitiateUserRequest,
   LMFeedClient,
-} from "@likeminds.community/feed-js";
-import { Client } from "../client";
+} from "@likeminds.community/feed-js-beta";
 import { LMFeedProviderProps, ThemeContextProps } from "./types";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { getMemberState, initiateUser } from "../store/actions/login";
 import { LMToast } from "../components";
 import { CallBack } from "../callBacks/callBackClass";
+import { Client } from "../client";
 
 // Create the theme context
 export const LMFeedStylesContext = createContext<ThemeContextProps | undefined>(

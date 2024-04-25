@@ -24,7 +24,6 @@ export const LMOverlayProvider = ({
         myClient={myClient}
         userName={userName}
         userUniqueId={userUniqueId}
-        children={children}
         universalFeedStyle={universalFeedStyle}
         postDetailStyle={postDetailStyle}
         postListStyle={postListStyle}

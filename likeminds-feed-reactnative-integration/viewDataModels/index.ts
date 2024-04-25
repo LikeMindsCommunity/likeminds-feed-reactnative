@@ -8,9 +8,9 @@ import {
   IOgTag,
   IPost,
   IUser,
-} from "@likeminds.community/feed-js";
-import { GetPostLikesResponse } from "@likeminds.community/feed-js/dist/post/model/GetPostLikesResponse";
-import Like from "@likeminds.community/feed-js/dist/post/model/Like";
+} from "@likeminds.community/feed-js-beta";
+import { GetPostLikesResponse } from "@likeminds.community/feed-js-beta/dist/post/model/GetPostLikesResponse";
+import Like from "@likeminds.community/feed-js-beta/dist/post/model/Like";
 import {
   DocumentMetaData,
   ImageVideoMetaData,
@@ -21,7 +21,7 @@ import {
   LINK_ATTACHMENT_TYPE,
   VIDEO_ATTACHMENT_TYPE,
 } from "../constants/Strings";
-import { IComment } from "@likeminds.community/feed-js";
+import { IComment } from "@likeminds.community/feed-js-beta";
 import {
   LMActivityEntityUI,
   LMActivityUI,
@@ -34,7 +34,7 @@ import {
   LMSDKClientInfoUI,
   LMUserUI,
 } from "../models";
-import { GetNotificationFeedResponse } from "@likeminds.community/feed-js/dist/notificationFeed/model/GetNotificationFeedResponse";
+import { GetNotificationFeedResponse } from "@likeminds.community/feed-js-beta/dist/notificationFeed/model/GetNotificationFeedResponse";
 
 /**
  * @param data: [GetFeedResponse]
