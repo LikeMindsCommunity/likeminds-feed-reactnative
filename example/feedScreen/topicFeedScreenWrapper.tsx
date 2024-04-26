@@ -3,13 +3,16 @@ import {
   TopicFeed,
   UniversalFeedContextProvider,
 } from '@likeminds.community/feed-rn-core';
+import {CreatePostContextProvider} from '@likeminds.community/feed-rn-core/context/createPostContext';
 
 const TopicFeedWrapper = ({navigation, route}) => {
   console.log('heree');
 
   return (
     <UniversalFeedContextProvider navigation={navigation} route={route}>
-      <TopicFeed />
+      <CreatePostContextProvider navigation={navigation} route={route}>
+        <TopicFeed />
+      </CreatePostContextProvider>
     </UniversalFeedContextProvider>
   );
 };

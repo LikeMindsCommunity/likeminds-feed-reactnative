@@ -49,6 +49,12 @@ const TopicFeed = () => {
   const topicsSelected = useAppSelector(
     (state) => state.createPost.selectedTopics
   );
+  const allTopics = useAppSelector((state) => state.feed.topics);
+
+  const filterEnabledTrue = (topicId) => {
+    const topic = allTopics[topicId];
+    return topic && topic.isEnabled; // Check if isEnabled is true
+  };
 
   useEffect(() => {
     if (selectedTopics?.length > 0) {
@@ -58,7 +64,10 @@ const TopicFeed = () => {
 
   useEffect(() => {
     if (topicsSelected?.length > 0) {
-      setNewTopics(topicsSelected);
+      const enabledTopics = topicsSelected.filter((topic) =>
+        filterEnabledTrue(topic)
+      );
+      setNewTopics(enabledTopics);
     }
   }, [topicsSelected]);
 
@@ -199,7 +208,7 @@ const TopicFeed = () => {
 
   const fetchTopics = async () => {
     const apiRes = await myClient?.getTopics({
-      isEnabled: true,
+      isEnabled: previousRoute?.name === "UniversalFeed" ? null : true,
       search: search,
       searchType: "name",
       page: 1,

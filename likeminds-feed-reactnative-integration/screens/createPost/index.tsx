@@ -9,6 +9,7 @@ import {
   TextStyle,
   Image,
   ScrollView,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { NetworkUtil, nameInitials, replaceLastMention } from "../../utils";
@@ -58,7 +59,10 @@ import {
 } from "../../components";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TOPIC_FEED } from "../../constants/screenNames";
-import { CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN } from "../../store/types/types";
+import {
+  CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
+  SET_DISABLED_TOPICS,
+} from "../../store/types/types";
 import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Events } from "../../enums/Events";
 import { Keys } from "../../enums/Keys";
@@ -159,6 +163,7 @@ const CreatePostComponent = () => {
   };
 
   const [mappedTopics, setMappedTopics] = useState([] as any);
+  const [disbaledTopicsGlobal, setDisabledTopicsGlobal] = useState([] as any);
   const selectedTopics = useAppSelector(
     (state) => state.feed.selectedTopicsForCreatePostScreen
   );
@@ -167,26 +172,49 @@ const CreatePostComponent = () => {
     (state) => state.createPost.selectedTopics
   );
 
+  const filterEnabledFalse = (topicId) => {
+    const topic = topics[topicId];
+    return topic && !topic.isEnabled; // Check if isEnabled is false
+  };
+
   useEffect(() => {
     // Create a new state array named mappedTopics
-    console.log("topicsSelected", topicsSelected);
-
     if (topicsSelected.length > 0) {
       const filteredTopicArray = topicsSelected.map((topicId) => ({
         id: topicId,
         name: topics[topicId]?.name || "Unknown", // Use optional chaining and provide a default name if not found
       }));
+      const disabledTopics = filteredTopicArray.filter((topic) =>
+        filterEnabledFalse(topic.id)
+      );
+      setDisabledTopicsGlobal(disabledTopics);
+
       setMappedTopics(filteredTopicArray);
+      dispatch({
+        type: SET_DISABLED_TOPICS,
+        body: { topics: disabledTopics },
+      });
     } else {
       const filteredTopicArray = selectedTopics.map((topicId) => ({
         id: topicId,
         name: topics[topicId]?.name || "Unknown", // Use optional chaining and provide a default name if not found
       }));
+      const disabledTopics = filteredTopicArray.filter((topic) =>
+        filterEnabledFalse(topic.id)
+      );
+      setDisabledTopicsGlobal(disabledTopics);
+
       setMappedTopics(filteredTopicArray);
+      dispatch({
+        type: SET_DISABLED_TOPICS,
+        body: { topics: disabledTopics },
+      });
     }
   }, [selectedTopics, topicsSelected]);
 
-  const handleOnPress = () => {
+  const handleAcceptedOnPress = () => {
+    console.log("flow here");
+
     onPostClickProp
       ? onPostClickProp(
           allAttachment,
@@ -200,7 +228,6 @@ const CreatePostComponent = () => {
           postContentText,
           selectedTopics
         );
-
     if (!postToEdit) {
       const map: Map<string | undefined, string | undefined> = new Map();
       const taggedUsers: any = userTaggingDecoder(postContentText);
@@ -281,6 +308,32 @@ const CreatePostComponent = () => {
     dispatch({
       type: CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
     });
+  };
+
+  const handleOnPress = () => {
+    const disabledTopicNames = disbaledTopicsGlobal.map((topic) => topic.name);
+
+    // Joining the names together with commas
+    const selectedTopicsString = disabledTopicNames.join(", ");
+
+    const isPlural = disabledTopicNames.length > 1 ? "are" : "is";
+
+    if (disbaledTopicsGlobal.length > 0) {
+      Alert.alert(
+        "Disabled Topics Alert",
+        `The selected topics ${selectedTopicsString} ${isPlural} disabled. Do you want to continue?`,
+        [
+          {
+            text: "Yes",
+            onPress: () => handleAcceptedOnPress(),
+          },
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+        ]
+      );
+    }
   };
 
   const {
