@@ -18,9 +18,11 @@ import { useNavigation } from "@react-navigation/native";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { useUniversalFeedContext } from "../../context/universalFeedContext";
 import {
+  CLEAR_SELECTED_TOPICS,
   SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
   SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
 } from "../../store/types/types";
+import { useCreatePostContext } from "../../context";
 
 const TopicFeed = () => {
   const navigation = useNavigation<StackNavigationProp<any>>();
@@ -44,11 +46,21 @@ const TopicFeed = () => {
     (state) => state.feed.selectedTopicsForCreatePostScreen
   );
 
+  const topicsSelected = useAppSelector(
+    (state) => state.createPost.selectedTopics
+  );
+
   useEffect(() => {
     if (selectedTopics?.length > 0) {
       setNewTopics(selectedTopics);
     }
   }, [selectedTopics]);
+
+  useEffect(() => {
+    if (topicsSelected?.length > 0) {
+      setNewTopics(topicsSelected);
+    }
+  }, [topicsSelected]);
 
   const handleUpdateAndNavigateBack = async () => {
     if (previousRoute?.name === "UniversalFeed") {
@@ -67,6 +79,9 @@ const TopicFeed = () => {
       await dispatch({
         type: SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
         body: { topics: newTopics },
+      });
+      await dispatch({
+        type: CLEAR_SELECTED_TOPICS,
       });
     }
     navigation.goBack();

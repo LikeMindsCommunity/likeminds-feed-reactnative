@@ -53,7 +53,10 @@ import { showToastMessage } from "../store/actions/toast";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../models/RootStackParamsList";
 import { LMAttachmentUI, LMOGTagsUI, LMPostUI, LMUserUI } from "../models";
-import { CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN } from "../store/types/types";
+import {
+  ADD_SELECTED_TOPICS,
+  CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
+} from "../store/types/types";
 import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
 import { Events } from "../enums/Events";
 import { Keys } from "../enums/Keys";
@@ -183,6 +186,9 @@ export const CreatePostContextProvider = ({
   const [allTags, setAllTags] = useState<Array<LMUserUI>>([]);
   const [isUserTagging, setIsUserTagging] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const selectedTopics = useAppSelector(
+    (state) => state.feed.selectedTopicsForCreatePostScreen
+  );
 
   // function handles the selection of images and videos
   const setSelectedImageVideo = (type: string) => {
@@ -524,6 +530,12 @@ export const CreatePostContextProvider = ({
       setFormattedDocumentAttachments(documentMedia);
       setFormattedLinkAttachments(linkPreview);
     }
+    if (postDetail?.topics) {
+      dispatch({
+        type: ADD_SELECTED_TOPICS,
+        body: { topics: postDetail?.topics },
+      });
+    }
   }, [postDetail]);
 
   //  this function calls the edit post api
@@ -539,6 +551,7 @@ export const CreatePostContextProvider = ({
           .setattachments([...allAttachment, ...linkAttachments])
           .setpostId(postDetail?.id)
           .settext(contentText)
+          .setTopicIds(selectedTopics)
           .build(),
         false
       )

@@ -163,15 +163,28 @@ const CreatePostComponent = () => {
     (state) => state.feed.selectedTopicsForCreatePostScreen
   );
   const topics = useAppSelector((state) => state.feed.topics);
+  const topicsSelected = useAppSelector(
+    (state) => state.createPost.selectedTopics
+  );
 
   useEffect(() => {
     // Create a new state array named mappedTopics
-    const filteredTopicArray = selectedTopics.map((topicId) => ({
-      id: topicId,
-      name: topics[topicId]?.name || "Unknown", // Use optional chaining and provide a default name if not found
-    }));
-    setMappedTopics(filteredTopicArray);
-  }, [selectedTopics]);
+    console.log("topicsSelected", topicsSelected);
+
+    if (topicsSelected.length > 0) {
+      const filteredTopicArray = topicsSelected.map((topicId) => ({
+        id: topicId,
+        name: topics[topicId]?.name || "Unknown", // Use optional chaining and provide a default name if not found
+      }));
+      setMappedTopics(filteredTopicArray);
+    } else {
+      const filteredTopicArray = selectedTopics.map((topicId) => ({
+        id: topicId,
+        name: topics[topicId]?.name || "Unknown", // Use optional chaining and provide a default name if not found
+      }));
+      setMappedTopics(filteredTopicArray);
+    }
+  }, [selectedTopics, topicsSelected]);
 
   const handleOnPress = () => {
     onPostClickProp

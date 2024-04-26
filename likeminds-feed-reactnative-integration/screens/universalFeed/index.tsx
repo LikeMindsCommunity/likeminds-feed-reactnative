@@ -46,6 +46,10 @@ import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Events } from "../../enums/Events";
 import { Keys } from "../../enums/Keys";
 import { notificationFeedClear } from "../../store/actions/notification";
+import {
+  CLEAR_SELECTED_TOPICS,
+  CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
+} from "../../store/types/types";
 
 interface UniversalFeedProps {
   children: React.ReactNode;
@@ -264,6 +268,12 @@ const UniversalFeedComponent = () => {
             ? newPostButtonClickProps()
             : newPostButtonClick();
           LMFeedAnalytics.track(Events.POST_CREATION_STARTED);
+          dispatch({
+            type: CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
+          });
+          dispatch({
+            type: CLEAR_SELECTED_TOPICS,
+          });
         }}
       >
         <Image
