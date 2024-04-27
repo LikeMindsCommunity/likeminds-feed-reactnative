@@ -23,6 +23,7 @@ import {
   SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
   SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
   CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
+  POST_DATA_SUCCESS,
 } from "../types/types";
 import { LMPostUI } from "../../models";
 
@@ -214,6 +215,18 @@ export const feedReducer = (state = initialState, action) => {
     }
     case AUTO_PLAY_POST_VIDEO: {
       return { ...state, autoPlayVideoPostId: action.body };
+    }
+    case POST_DATA_SUCCESS: {
+      const updatedFeed = state.feed;
+      const { post = {}, users = {} } = action.body;
+      const converterPostData = convertToLMPostUI(post, users);
+      const index = updatedFeed.findIndex(
+        (item) => item.id === converterPostData.id
+      );
+      if (index !== -1) {
+        updatedFeed[index] = converterPostData;
+      }
+      return { ...state, feed: updatedFeed };
     }
     default:
       return state;
