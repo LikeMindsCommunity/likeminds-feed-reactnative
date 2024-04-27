@@ -88,7 +88,6 @@ const TopicFeed = () => {
     if (previousRoute?.name === "UniversalFeed") {
       let body;
       if (newTopics[0] === "0") {
-        const topicIds = topics.slice(1).map((topic) => topic.Id);
         body = { topics: [] };
       } else {
         body = { topics: newTopics };

@@ -51,6 +51,7 @@ import {
   CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
 } from "../../store/types/types";
 import { Client } from "../../client";
+import Layout from "../../constants/Layout";
 
 interface UniversalFeedProps {
   children: React.ReactNode;
@@ -194,25 +195,28 @@ const UniversalFeedComponent = () => {
       <LMHeader heading={APP_TITLE} {...universalFeedStyle?.screenHeader} />
       {/* all topics filter */}
       {mappedTopics.length > 0 && showTopics ? (
-        <ScrollView style={{ flexGrow: 0, margin: 10 }} horizontal={true}>
+        <ScrollView
+          style={{ flexGrow: 0, margin: Layout.normalize(10) }}
+          horizontal={true}
+        >
           <View style={{ flexDirection: "row" }}>
             {mappedTopics.map((item, index) => (
-              <View key={index} style={{ margin: 5 }}>
+              <View key={index} style={{ margin: Layout.normalize(5) }}>
                 <View
                   style={{
                     flexDirection: "row",
                     alignItems: "center",
-                    padding: 7,
+                    padding: Layout.normalize(7),
                     borderWidth: 1,
                     borderColor: "#5046E5",
-                    borderRadius: 5,
+                    borderRadius: Layout.normalize(5),
                   }}
                 >
                   <Text
                     style={{
-                      fontSize: 17,
+                      fontSize: Layout.normalize(17),
                       color: "#5046E5",
-                      marginRight: 8,
+                      marginRight: Layout.normalize(8),
                       ...(filteredTopicsStyle !== undefined
                         ? filteredTopicsStyle
                         : {}),
@@ -226,8 +230,8 @@ const UniversalFeedComponent = () => {
                       source={require("../../assets/images/close_tag3x.png")}
                       style={{
                         tintColor: "#5046E5",
-                        width: 15,
-                        height: 15,
+                        width: Layout.normalize(15),
+                        height: Layout.normalize(15),
                         ...(crossIconStyle !== undefined ? crossIconStyle : {}),
                       }}
                     />
@@ -243,26 +247,26 @@ const UniversalFeedComponent = () => {
             style={{
               flexDirection: "row",
               alignItems: "center",
-              marginLeft: 15,
-              marginTop: 15,
+              marginLeft: Layout.normalize(15),
+              marginTop: Layout.normalize(15),
             }}
           >
             <TouchableOpacity onPress={() => handleAllTopicPress()}>
               <View
                 style={{
-                  marginTop: 10,
-                  marginLeft: 10,
-                  borderRadius: 5,
+                  marginTop: Layout.normalize(10),
+                  marginLeft: Layout.normalize(10),
+                  borderRadius: Layout.normalize(5),
                   flexDirection: "row",
                   alignItems: "center",
-                  marginBottom: 20,
+                  marginBottom: Layout.normalize(20),
                 }}
               >
                 <Text
                   style={{
-                    fontSize: 16,
+                    fontSize: Layout.normalize(16),
                     color: "#222020",
-                    marginRight: 5,
+                    marginRight: Layout.normalize(5),
                     ...(allTopicsStyle !== undefined ? allTopicsStyle : {}),
                   }}
                 >
@@ -274,8 +278,8 @@ const UniversalFeedComponent = () => {
                   source={require("../../assets/images/arrow_down3x.png")}
                   style={{
                     tintColor: "#222020",
-                    width: 15,
-                    height: 15,
+                    width: Layout.normalize(15),
+                    height: Layout.normalize(15),
                     ...(arrowDownStyle !== undefined ? arrowDownStyle : {}),
                   }}
                 />

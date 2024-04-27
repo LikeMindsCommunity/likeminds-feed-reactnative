@@ -68,6 +68,7 @@ import { Events } from "../../enums/Events";
 import { Keys } from "../../enums/Keys";
 import { userTaggingDecoder } from "../../utils/decodeMentions";
 import { Client } from "../../client";
+import Layout from "../../constants/Layout";
 
 interface CreatePostProps {
   children: React.ReactNode;
@@ -408,8 +409,8 @@ const CreatePostComponent = () => {
             style={{
               flexDirection: "row",
               flexWrap: "wrap",
-              marginLeft: 15,
-              marginTop: 15,
+              marginLeft: Layout.normalize(15),
+              marginTop: Layout.normalize(15),
             }}
           >
             {mappedTopics.map((item, index) => (
@@ -420,12 +421,12 @@ const CreatePostComponent = () => {
                 <View>
                   <Text
                     style={{
-                      fontSize: 16,
+                      fontSize: Layout.normalize(17),
                       color: "#5046E5",
-                      padding: 7,
+                      padding: Layout.normalize(7),
                       backgroundColor: "hsla(244, 75%, 59%, 0.1)",
-                      borderRadius: 5,
-                      margin: 5,
+                      borderRadius: Layout.normalize(5),
+                      margin: Layout.normalize(5),
                       ...(selectedTopicsStyle !== undefined
                         ? selectedTopicsStyle
                         : {}),
@@ -435,7 +436,7 @@ const CreatePostComponent = () => {
                   </Text>
                 </View>
                 {index === mappedTopics.length - 1 && (
-                  <View style={{ padding: 7 }}>
+                  <View style={{ padding: Layout.normalize(7) }}>
                     <TouchableOpacity onPress={() => handleAllTopicPress()}>
                       <Image
                         source={require("../../assets/images/edit_icon3x.png")}
@@ -453,16 +454,16 @@ const CreatePostComponent = () => {
               style={{
                 flexDirection: "row",
                 alignItems: "center",
-                marginLeft: 15,
-                marginTop: 15,
+                marginLeft: Layout.normalize(15),
+                marginTop: Layout.normalize(15),
               }}
             >
               <TouchableOpacity onPress={() => handleAllTopicPress()}>
                 <View
                   style={{
-                    padding: 7,
+                    padding: Layout.normalize(7),
                     backgroundColor: "hsla(244, 75%, 59%, 0.1)",
-                    borderRadius: 5,
+                    borderRadius: Layout.normalize(5),
                     flexDirection: "row",
                     alignItems: "center",
                   }}
@@ -471,15 +472,15 @@ const CreatePostComponent = () => {
                     source={require("../../assets/images/plusAdd_icon3x.png")}
                     style={{
                       tintColor: "#5046E5",
-                      width: 15,
-                      height: 15,
-                      marginRight: 5, // Add margin to separate Image and Text
+                      width: Layout.normalize(15),
+                      height: Layout.normalize(15),
+                      marginRight: Layout.normalize(5), // Add margin to separate Image and Text
                       ...(plusIconStyle !== undefined ? plusIconStyle : {}),
                     }}
                   />
                   <Text
                     style={{
-                      fontSize: 16,
+                      fontSize: Layout.normalize(16),
                       color: "#5046E5",
                     }}
                   >
