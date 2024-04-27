@@ -20,6 +20,7 @@ import {
   CREATE_COMMENT_SUCCESS,
   DELETE_COMMENT_STATE,
   AUTO_PLAY_POST_VIDEO,
+  POST_DATA_SUCCESS,
 } from "../types/types";
 import { LMPostUI } from "../../models";
 
@@ -176,6 +177,16 @@ export const feedReducer = (state = initialState, action) => {
     }
     case AUTO_PLAY_POST_VIDEO: {
       return { ...state, autoPlayVideoPostId: action.body };
+    }
+    case POST_DATA_SUCCESS : {
+      const updatedFeed = state.feed;
+      const { post = {}, users = {} } = action.body;
+      const converterPostData = convertToLMPostUI(post, users);
+      const index = updatedFeed.findIndex((item) => item.id === converterPostData.id);
+      if (index !== -1) {
+        updatedFeed[index] = converterPostData;
+      }
+      return { ...state, feed: updatedFeed };
     }
     default:
       return state;

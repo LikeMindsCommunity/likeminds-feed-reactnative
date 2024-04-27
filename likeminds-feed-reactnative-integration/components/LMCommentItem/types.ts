@@ -19,7 +19,7 @@ export interface LMCommentProps {
   repliesCountTextStyle?: TextStyle; // props for comment count text
   timeStampStyle?: TextStyle; // props for time stamp text
   viewMoreRepliesProps?: LMTextProps; // props for view more text
-  onTapReplies?: (data: (repliesArray: Array<LMCommentUI>) => void) => void; // callback function to be executed on click of replies
+  onTapReplies?: (data: (repliesArray: Array<LMCommentUI>) => void, commentIdOfReplies: string) => void; // callback function to be executed on click of replies
   isRepliesVisible?: boolean;
   onCommentOverflowMenuClick: (event: {
     nativeEvent: { pageX: number; pageY: number };

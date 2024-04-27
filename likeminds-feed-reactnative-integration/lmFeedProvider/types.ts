@@ -293,6 +293,18 @@ export interface CreatePostStyleProps {
     headingTextStyle?: TextStyle;
     headingViewStyle?: ViewStyle;
   };
+  attachmentOptionsStyle: {
+    attachmentOptionsView?: ViewStyle,
+    photoAttachmentView?: ViewStyle,
+    photoAttachmentIcon?: LMIconProps,
+    photoAttachmentTextStyle?: LMTextProps,
+    videoAttachmentView?: ViewStyle,
+    videoAttachmentIcon?: LMIconProps,
+    videoAttachmentTextStyle?: LMTextProps,
+    filesAttachmentView?: ViewStyle,
+    filesAttachmentIcon?: LMIconProps,
+    filesAttachmentTextStyle?:LMTextProps,
+  };
   createPostTextInputStyle?: {
     inputTextStyle?: TextStyle;
     placeholderText?: string;
@@ -309,6 +321,14 @@ export interface CreatePostStyleProps {
     mentionTextStyle?: TextStyle;
     multilineField?: boolean;
   };
+  addMoreAttachmentsButton?: {
+    text: LMTextProps,
+    icon: LMIconProps,
+    onTap: (value?: any) => void,
+    placement: "start" | "end";
+    buttonStyle: ViewStyle,
+    isClickable: boolean,
+  }
 }
 
 export interface PostLikesListStyleProps {

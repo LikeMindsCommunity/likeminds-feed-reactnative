@@ -66,7 +66,7 @@ const LMCommentItem = React.memo(
     useEffect(() => {
       if (isRepliesVisible) {
         setShowReplies(true)
-        onTapReplies && onTapReplies((data: Array<LMCommentUI>) => setRepliesArray(data));
+        onTapReplies && onTapReplies((data: Array<LMCommentUI>) => setRepliesArray(data), '');
       }
     }, [isRepliesVisible]);
 
@@ -282,7 +282,7 @@ const LMCommentItem = React.memo(
                       onTap={() => {
                         onTapReplies
                           ? (onTapReplies((data: Array<LMCommentUI>) =>
-                              setRepliesArray(data)
+                              setRepliesArray(data), ''
                             ),
                             handleReplies())
                           : handleReplies();
