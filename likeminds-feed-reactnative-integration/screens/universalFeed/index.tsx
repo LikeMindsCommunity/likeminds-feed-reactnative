@@ -50,6 +50,7 @@ import {
   CLEAR_SELECTED_TOPICS,
   CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
 } from "../../store/types/types";
+import { Client } from "../../client";
 
 interface UniversalFeedProps {
   children: React.ReactNode;
@@ -130,8 +131,11 @@ const UniversalFeedComponent = () => {
     unreadNotificationCount,
     onTapNotificationBell,
   }: UniversalFeedContextValues = useUniversalFeedContext();
+  const myClient = Client.myClient;
+  const [showTopics, setShowTopics] = useState(false);
   const LMFeedContextStyles = useLMFeedStyles();
-  const { universalFeedStyle, loaderStyle } = LMFeedContextStyles;
+  const { universalFeedStyle, loaderStyle, topicsStyle }: any =
+    LMFeedContextStyles;
   const { newPostButtonClickProps, onTapNotificationBellProp } =
     useUniversalFeedCustomisableMethodsContext();
   const [mappedTopics, setMappedTopics] = useState([] as any);
@@ -139,6 +143,12 @@ const UniversalFeedComponent = () => {
     (state) => state.feed.selectedTopicsForUniversalFeedScreen
   );
   const topics = useAppSelector((state) => state.feed.topics);
+
+  const allTopicPlaceholder = topicsStyle?.allTopicPlaceholder;
+  const allTopicsStyle = topicsStyle?.allTopic;
+  const filteredTopicsStyle = topicsStyle?.filteredTopicsStyle;
+  const crossIconStyle = topicsStyle?.crossIconStyle;
+  const arrowDownStyle = topicsStyle?.arrowDownStyle;
 
   useEffect(() => {
     // Create a new state array named mappedTopics
@@ -160,12 +170,30 @@ const UniversalFeedComponent = () => {
     setMappedTopics(newItems); // Update the state with the new array
   };
 
+  const getTopics = async () => {
+    const apiRes = await myClient?.getTopics({
+      isEnabled: null,
+      search: "",
+      searchType: "name",
+      page: 1,
+      pageSize: 10,
+    } as any);
+    const topics = apiRes?.data?.topics;
+    if (topics?.length > 0) {
+      setShowTopics(true);
+    }
+  };
+
+  useEffect(() => {
+    getTopics();
+  }, [showTopics]);
+
   return (
     <View style={styles.mainContainer}>
       {/* header */}
       <LMHeader heading={APP_TITLE} {...universalFeedStyle?.screenHeader} />
       {/* all topics filter */}
-      {mappedTopics.length > 0 ? (
+      {mappedTopics.length > 0 && showTopics ? (
         <ScrollView style={{ flexGrow: 0, margin: 10 }} horizontal={true}>
           <View style={{ flexDirection: "row" }}>
             {mappedTopics.map((item, index) => (
@@ -175,21 +203,33 @@ const UniversalFeedComponent = () => {
                     flexDirection: "row",
                     alignItems: "center",
                     padding: 7,
-                    borderWidth: 0.5,
+                    borderWidth: 1,
                     borderColor: "#5046E5",
                     borderRadius: 5,
                   }}
                 >
                   <Text
-                    style={{ fontSize: 16, color: "#5046E5", marginRight: 5 }}
+                    style={{
+                      fontSize: 17,
+                      color: "#5046E5",
+                      marginRight: 8,
+                      ...(filteredTopicsStyle !== undefined
+                        ? filteredTopicsStyle
+                        : {}),
+                    }}
                   >
                     {item?.name}
                   </Text>
                   <TouchableOpacity onPress={() => removeItem(index)}>
                     {/* Your cross icon component */}
                     <Image
-                      source={require("../../assets/images/cross_tag3x.png")}
-                      style={{ tintColor: "#5046E5", width: 25, height: 25 }}
+                      source={require("../../assets/images/close_tag3x.png")}
+                      style={{
+                        tintColor: "#5046E5",
+                        width: 15,
+                        height: 15,
+                        ...(crossIconStyle !== undefined ? crossIconStyle : {}),
+                      }}
                     />
                   </TouchableOpacity>
                 </View>
@@ -198,11 +238,51 @@ const UniversalFeedComponent = () => {
           </View>
         </ScrollView>
       ) : (
-        <TouchableOpacity onPress={() => handleAllTopicPress()}>
-          <Text style={{ fontSize: 16, color: "#222020", margin: 20 }}>
-            All Topics
-          </Text>
-        </TouchableOpacity>
+        showTopics && (
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginLeft: 15,
+              marginTop: 15,
+            }}
+          >
+            <TouchableOpacity onPress={() => handleAllTopicPress()}>
+              <View
+                style={{
+                  marginTop: 10,
+                  marginLeft: 10,
+                  borderRadius: 5,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginBottom: 20,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: "#222020",
+                    marginRight: 5,
+                    ...(allTopicsStyle !== undefined ? allTopicsStyle : {}),
+                  }}
+                >
+                  {allTopicPlaceholder !== undefined
+                    ? allTopicPlaceholder
+                    : "All Topics"}
+                </Text>
+                <Image
+                  source={require("../../assets/images/arrow_down3x.png")}
+                  style={{
+                    tintColor: "#222020",
+                    width: 15,
+                    height: 15,
+                    ...(arrowDownStyle !== undefined ? arrowDownStyle : {}),
+                  }}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
+        )
       )}
       {/* post uploading section */}
       {postUploading && (

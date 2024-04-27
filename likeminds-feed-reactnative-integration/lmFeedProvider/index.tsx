@@ -58,6 +58,7 @@ export const LMFeedProvider = ({
   postLikesListStyle,
   createPostStyle,
   notificationFeedStyle,
+  topicsStyle,
 }: LMFeedProviderProps): React.JSX.Element => {
   const [isInitiated, setIsInitiated] = useState(false);
   const dispatch = useAppDispatch();
@@ -109,6 +110,7 @@ export const LMFeedProvider = ({
           postLikesListStyle,
           createPostStyle,
           notificationFeedStyle,
+          topicsStyle,
         }}
       >
         <View style={styles.flexStyling}>{children}</View>

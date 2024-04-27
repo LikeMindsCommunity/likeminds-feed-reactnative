@@ -7,6 +7,7 @@ import {
   PostDetailStyleProps,
   PostLikesListStyleProps,
   PostListStyleProps,
+  TopicsStyle,
   UniversalFeedStyleProps,
 } from "../lmFeedProvider/types";
 
@@ -23,4 +24,5 @@ export interface LMOverlayProviderProps {
   createPostStyle?: CreatePostStyleProps;
   postLikesListStyle?: PostLikesListStyleProps;
   notificationFeedStyle?: NotificationFeedStyleProps;
+  topicsStyle?: TopicsStyle;
 }

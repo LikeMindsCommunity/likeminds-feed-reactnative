@@ -17,6 +17,7 @@ export const LMOverlayProvider = ({
   postLikesListStyle,
   createPostStyle,
   notificationFeedStyle,
+  topicsStyle,
 }: LMOverlayProviderProps) => {
   return (
     <ContextProvider>
@@ -31,6 +32,7 @@ export const LMOverlayProvider = ({
         loaderStyle={loaderStyle}
         createPostStyle={createPostStyle}
         notificationFeedStyle={notificationFeedStyle}
+        topicsStyle={topicsStyle}
         lmFeedInterface={lmFeedInterface}
       >
         <View style={styles.flexStyling}>{children}</View>

@@ -36,7 +36,7 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontSize: STYLES.$FONT_SIZES.LARGE,
+    fontSize: STYLES.$FONT_SIZES.XL,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
     color: STYLES.$COLORS.FONT_PRIMARY,
   },
@@ -88,7 +88,7 @@ export const styles = StyleSheet.create({
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
   },
   selected: {
-    backgroundColor: STYLES.$COLORS.PRIMARY,
+    backgroundColor: "#5046E5",
     height: Layout.normalize(25),
     width: Layout.normalize(25),
     display: "flex",
@@ -107,7 +107,7 @@ export const styles = StyleSheet.create({
     height: Layout.normalize(60),
     width: Layout.normalize(60),
     borderRadius: Layout.normalize(50),
-    backgroundColor: STYLES.$COLORS.PRIMARY,
+    backgroundColor: "#5046E5",
     position: "absolute",
     right: Layout.normalize(15),
     bottom: Layout.normalize(30),

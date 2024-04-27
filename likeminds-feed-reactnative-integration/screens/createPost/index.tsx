@@ -67,6 +67,7 @@ import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Events } from "../../enums/Events";
 import { Keys } from "../../enums/Keys";
 import { userTaggingDecoder } from "../../utils/decodeMentions";
+import { Client } from "../../client";
 
 interface CreatePostProps {
   children: React.ReactNode;
@@ -111,7 +112,7 @@ const CreatePost = ({
 const CreatePostComponent = () => {
   const dispatch = useAppDispatch();
   const LMFeedContextStyles = useLMFeedStyles();
-  const { postListStyle, createPostStyle, postDetailStyle }: any =
+  const { postListStyle, createPostStyle, postDetailStyle, topicsStyle }: any =
     LMFeedContextStyles;
   const customTextInputStyle = createPostStyle?.createPostTextInputStyle;
   const customAddMoreAttachmentsButton =
@@ -120,6 +121,9 @@ const CreatePostComponent = () => {
   const customAttachmentOptionsStyle = createPostStyle?.attachmentOptionsStyle;
   const postHeaderStyle = postListStyle?.header;
   const postMediaStyle = postListStyle?.media;
+  const selectTopicPlaceholder = topicsStyle?.selectTopicPlaceholder;
+  const selectedTopicsStyle = topicsStyle?.selectedTopicsStyle;
+  const plusIconStyle = topicsStyle?.plusIconStyle;
   let {
     navigation,
     postToEdit,
@@ -162,6 +166,8 @@ const CreatePostComponent = () => {
     return navigation.navigate(TOPIC_FEED);
   };
 
+  const myClient = Client.myClient;
+  const [showTopics, setShowTopics] = useState(false);
   const [mappedTopics, setMappedTopics] = useState([] as any);
   const [disbaledTopicsGlobal, setDisabledTopicsGlobal] = useState([] as any);
   const selectedTopics = useAppSelector(
@@ -171,6 +177,24 @@ const CreatePostComponent = () => {
   const topicsSelected = useAppSelector(
     (state) => state.createPost.selectedTopics
   );
+
+  const getTopics = async () => {
+    const apiRes = await myClient?.getTopics({
+      isEnabled: null,
+      search: "",
+      searchType: "name",
+      page: 1,
+      pageSize: 10,
+    } as any);
+    const topics = apiRes?.data?.topics;
+    if (topics?.length > 0) {
+      setShowTopics(true);
+    }
+  };
+
+  useEffect(() => {
+    getTopics();
+  }, [showTopics]);
 
   const filterEnabledFalse = (topicId) => {
     const topic = topics[topicId];
@@ -213,8 +237,6 @@ const CreatePostComponent = () => {
   }, [selectedTopics, topicsSelected]);
 
   const handleAcceptedOnPress = () => {
-    console.log("flow here");
-
     onPostClickProp
       ? onPostClickProp(
           allAttachment,
@@ -302,6 +324,12 @@ const CreatePostComponent = () => {
         map.set(Keys.DOCUMENT_ATTACHED, Keys.NO);
       }
 
+      if (showTopics) {
+        map.set(Keys.TOPICS, mappedTopics);
+      } else {
+        map.set(Keys.TOPICS, "");
+      }
+
       LMFeedAnalytics.track(Events.POST_CREATION_COMPLETED, map);
     }
 
@@ -375,7 +403,7 @@ const CreatePostComponent = () => {
             }
           />
         </View>
-        {mappedTopics.length > 0 ? (
+        {mappedTopics.length > 0 && showTopics ? (
           <View
             style={{
               flexDirection: "row",
@@ -398,6 +426,9 @@ const CreatePostComponent = () => {
                       backgroundColor: "hsla(244, 75%, 59%, 0.1)",
                       borderRadius: 5,
                       margin: 5,
+                      ...(selectedTopicsStyle !== undefined
+                        ? selectedTopicsStyle
+                        : {}),
                     }}
                   >
                     {item?.name}
@@ -417,31 +448,49 @@ const CreatePostComponent = () => {
             ))}
           </View>
         ) : (
-          <View
-            style={{
-              flexDirection: "row",
-              flexWrap: "wrap",
-              marginLeft: 15,
-              marginTop: 15,
-              alignItems: "center",
-            }}
-          >
-            <TouchableOpacity onPress={() => handleAllTopicPress()}>
-              <Text
-                style={{
-                  fontSize: 16,
-                  color: "#5046E5",
-                  padding: 7,
-                  backgroundColor: "hsla(244, 75%, 59%, 0.1)",
-                  borderRadius: 5,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                + Select Topics
-              </Text>
-            </TouchableOpacity>
-          </View>
+          showTopics && (
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginLeft: 15,
+                marginTop: 15,
+              }}
+            >
+              <TouchableOpacity onPress={() => handleAllTopicPress()}>
+                <View
+                  style={{
+                    padding: 7,
+                    backgroundColor: "hsla(244, 75%, 59%, 0.1)",
+                    borderRadius: 5,
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <Image
+                    source={require("../../assets/images/plusAdd_icon3x.png")}
+                    style={{
+                      tintColor: "#5046E5",
+                      width: 15,
+                      height: 15,
+                      marginRight: 5, // Add margin to separate Image and Text
+                      ...(plusIconStyle !== undefined ? plusIconStyle : {}),
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      color: "#5046E5",
+                    }}
+                  >
+                    {selectTopicPlaceholder !== undefined
+                      ? selectTopicPlaceholder
+                      : "Select Topics"}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          )
         )}
         <View style={styles.border}></View>
         {/* text input field */}

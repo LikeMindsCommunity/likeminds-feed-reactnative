@@ -23,11 +23,24 @@ import {
   SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
 } from "../../store/types/types";
 import { useCreatePostContext } from "../../context";
+import { useLMFeedStyles } from "../../lmFeedProvider";
 
 const TopicFeed = () => {
   const navigation = useNavigation<StackNavigationProp<any>>();
   let routes = navigation.getState()?.routes;
   let previousRoute = routes[routes?.length - 2];
+
+  const LMFeedContextStyles = useLMFeedStyles();
+  const { topicsStyle }: any = LMFeedContextStyles;
+
+  const searchTextStyle = topicsStyle?.searchTextStyle;
+  const searchTextPlaceholder = topicsStyle?.searchTextPlaceholder;
+  const topicListStyle = topicsStyle?.topicListStyle;
+  const selectTopicHeaderStyle = topicsStyle?.selectTopicHeader;
+  const selectTopicHeaderPlaceholder =
+    topicsStyle?.selectTopicHeaderPlaceholder;
+  const tickIconStyle = topicsStyle?.tickIconStyle;
+  const nextArrowStyle = topicsStyle?.nextArrowStyle;
 
   const myClient = Client.myClient;
   const [topics, setTopics] = useState({} as any);
@@ -36,7 +49,7 @@ const TopicFeed = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [count, setCount] = useState(1);
   const [page, setPage] = useState(1);
-  const [searchedTopics, setsearchedTopics] = useState([] as any);
+  const [searchedTopics, setSearchedTopics] = useState([] as any);
   const [searchPage, setSearchPage] = useState(1);
   const [newTopics, setNewTopics] = useState([] as any);
 
@@ -76,7 +89,7 @@ const TopicFeed = () => {
       let body;
       if (newTopics[0] === "0") {
         const topicIds = topics.slice(1).map((topic) => topic.Id);
-        body = { topics: topicIds };
+        body = { topics: [] };
       } else {
         body = { topics: newTopics };
       }
@@ -117,11 +130,16 @@ const TopicFeed = () => {
               <Text
                 style={{
                   color: STYLES.$COLORS.FONT_PRIMARY,
-                  fontSize: STYLES.$FONT_SIZES.LARGE,
+                  fontSize: STYLES.$FONT_SIZES.XL,
                   fontFamily: STYLES.$FONT_TYPES.BOLD,
+                  ...(selectTopicHeaderStyle !== undefined
+                    ? selectTopicHeaderStyle
+                    : {}),
                 }}
               >
-                {"Select Topic"}
+                {selectTopicHeaderPlaceholder !== undefined
+                  ? selectTopicHeaderPlaceholder
+                  : "Select Topic"}
               </Text>
               {newTopics?.length > 0 && newTopics[0] !== "0" && (
                 <Text
@@ -181,10 +199,12 @@ const TopicFeed = () => {
             style={[styles.input]}
             autoFocus={true}
             placeholder={
-              // searchPlaceholderText ? searchPlaceholderText : "Search..."
-              "Search..."
+              searchTextPlaceholder !== undefined
+                ? searchTextPlaceholder
+                : "Search..."
             }
             placeholderTextColor="#aaa"
+            {...(searchTextStyle !== undefined ? searchTextStyle : {})}
           />
         </View>
       ),
@@ -215,19 +235,14 @@ const TopicFeed = () => {
       pageSize: 10,
     } as any);
     const res = apiRes?.data;
-    // LMChatAnalytics.track(
-    //   Events.VIEW_CHATROOM_PARTICIPANTS,
-    //   new Map<string, string>([
-    //     [Keys.CHATROOM_ID, chatroomID?.toString()],
-    //     [Keys.COMMUNITY_ID, user?.sdkClientInfo?.community],
-    //     [Keys.SOURCE, Sources.CHATROOM_OVERFLOW_MENU],
-    //   ])
-    // );
     if (previousRoute?.name === "UniversalFeed") {
-      const updatedTopics = [{ Id: "0", name: "All Topics" }, ...res?.topics];
+      const updatedTopics = search
+        ? [...res?.topics]
+        : [{ Id: "0", name: "All Topics" }, ...res?.topics];
       setTopics(updatedTopics);
     } else setTopics(res?.topics);
     setCount(0);
+    if (isSearch) setSearchedTopics(res?.topics);
     if (!!res && res?.topics.length === 10) {
       const apiResponse = await myClient?.getTopics({
         isEnabled: true,
@@ -267,9 +282,9 @@ const TopicFeed = () => {
 
   useEffect(() => {
     const delay = setTimeout(() => {
-      if (isSearch) {
-        fetchTopics();
-      }
+      // if (isSearch) {
+      fetchTopics();
+      // }
     }, 500);
     return () => clearTimeout(delay);
   }, [search]);
@@ -380,20 +395,12 @@ const TopicFeed = () => {
               >
                 <View style={styles.infoContainer}>
                   <Text
-                    style={
-                      [
-                        styles.title,
-                        // userNameStyles?.color && {
-                        //   color: userNameStyles?.color,
-                        // },
-                        // userNameStyles?.fontSize && {
-                        //   fontSize: userNameStyles?.fontSize,
-                        // },
-                        // userNameStyles?.fontFamily && {
-                        //   fontFamily: userNameStyles?.fontFamily,
-                        // },
-                      ] as TextStyle
-                    }
+                    style={[
+                      styles.title,
+                      ...(topicListStyle && typeof topicListStyle === "object"
+                        ? [topicListStyle]
+                        : []),
+                    ]}
                     numberOfLines={1}
                   >
                     {item?.name}
@@ -404,7 +411,12 @@ const TopicFeed = () => {
                     <View style={styles.selected}>
                       <Image
                         source={require("../../assets/images/white_tick3x.png")}
-                        style={styles.smallIcon}
+                        style={[
+                          styles.smallIcon,
+                          ...(tickIconStyle && typeof tickIconStyle === "object"
+                            ? [tickIconStyle]
+                            : []),
+                        ]}
                       />
                     </View>
                   ) : null}
@@ -424,7 +436,7 @@ const TopicFeed = () => {
         ListFooterComponent={renderFooter}
         keyExtractor={(item: any) => item?.Id?.toString()}
       />
-      {isSearch && searchedTopics?.length === 0 && (
+      {isSearch && searchedTopics?.length === 0 && search && (
         <View style={[styles.justifyCenter]}>
           <Text style={styles.title}>No search results found</Text>
         </View>
@@ -441,7 +453,12 @@ const TopicFeed = () => {
         >
           <Image
             source={require("../../assets/images/send_arrow3x.png")}
-            style={styles.sendIcon}
+            style={[
+              styles.sendIcon,
+              ...(nextArrowStyle && typeof nextArrowStyle === "object"
+                ? [nextArrowStyle]
+                : []),
+            ]}
           />
         </TouchableOpacity>
       ) : null}

@@ -340,6 +340,25 @@ export interface NotificationFeedStyleProps {
   activityTextComponent?: Function;
 }
 
+export interface TopicsStyle {
+  allTopic?: TextStyle;
+  allTopicPlaceholder?: string;
+  selectTopicHeader?: TextStyle;
+  selectTopicHeaderPlaceholder?: string;
+  searchTextStyle?: TextStyle;
+  searchTextPlaceholder?: string;
+  topicListStyle?: TextStyle;
+  selectTopic?: TextStyle;
+  selectTopicPlaceholder?: string;
+  selectedTopicsStyle?: TextStyle;
+  filteredTopicsStyle?: TextStyle;
+  crossIconStyle?: ImageStyle;
+  plusIconStyle?: ImageStyle;
+  tickIconStyle?: ImageStyle;
+  nextArrowStyle?: ImageStyle;
+  arrowDownStyle?: ImageStyle;
+}
+
 export interface ThemeContextProps {
   textStyle?: TextStyles;
   universalFeedStyle?: UniversalFeedStyleProps;
@@ -349,6 +368,7 @@ export interface ThemeContextProps {
   createPostStyle?: CreatePostStyleProps;
   postLikesListStyle?: PostLikesListStyleProps;
   notificationFeedStyle?: NotificationFeedStyleProps;
+  topicsStyle?: TopicsStyle;
 }
 
 export interface LMFeedProviderProps {
@@ -365,4 +385,5 @@ export interface LMFeedProviderProps {
   createPostStyle?: CreatePostStyleProps;
   postLikesListStyle?: PostLikesListStyleProps;
   notificationFeedStyle?: NotificationFeedStyleProps;
+  topicsStyle?: TopicsStyle;
 }

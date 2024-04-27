@@ -6,8 +6,6 @@ import {
 import {CreatePostContextProvider} from '@likeminds.community/feed-rn-core/context/createPostContext';
 
 const TopicFeedWrapper = ({navigation, route}) => {
-  console.log('heree');
-
   return (
     <UniversalFeedContextProvider navigation={navigation} route={route}>
       <CreatePostContextProvider navigation={navigation} route={route}>
