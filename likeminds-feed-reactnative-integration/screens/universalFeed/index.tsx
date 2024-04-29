@@ -141,6 +141,9 @@ const UniversalFeedComponent = () => {
   const { newPostButtonClickProps, onTapNotificationBellProp } =
     useUniversalFeedCustomisableMethodsContext();
   const [mappedTopics, setMappedTopics] = useState([] as any);
+  const [unreadNotifiCount, setUnreadNotifiCount] = useState(
+    unreadNotificationCount
+  );
   const selectedTopics = useAppSelector(
     (state) => state.feed.selectedTopicsForUniversalFeedScreen
   );
@@ -152,6 +155,12 @@ const UniversalFeedComponent = () => {
   const crossIconStyle = topicsStyle?.crossIconStyle;
   const arrowDownStyle = topicsStyle?.arrowDownStyle;
 
+  const getUnreadCount = async () => {
+    const latestUnreadCount = await myClient?.getUnreadNotificationCount();
+    /* @ts-ignore */
+    setUnreadNotifiCount(parseInt(latestUnreadCount?.data?.count));
+  };
+
   useEffect(() => {
     // Create a new state array named mappedTopics
     const filteredTopicArray = selectedTopics.map((topicId) => ({
@@ -159,6 +168,7 @@ const UniversalFeedComponent = () => {
       name: topics[topicId]?.name || "Unknown", // Use optional chaining and provide a default name if not found
     }));
     setMappedTopics(filteredTopicArray);
+    getUnreadCount();
   }, [selectedTopics, topics]);
 
   const handleAllTopicPress = () => {
@@ -235,7 +245,45 @@ const UniversalFeedComponent = () => {
   return (
     <View style={styles.mainContainer}>
       {/* header */}
-      <LMHeader heading={APP_TITLE} {...universalFeedStyle?.screenHeader} />
+      <LMHeader
+        heading={APP_TITLE}
+        rightComponent={
+          <TouchableOpacity
+            onPress={() => {
+              onTapNotificationBellProp
+                ? onTapNotificationBellProp()
+                : onTapNotificationBell();
+
+              LMFeedAnalytics.track(Events.NOTIFICATION_PAGE_OPENED);
+            }}
+          >
+            <Image
+              source={require("../../assets/images/notification_bell.png")}
+              style={{ width: 24, height: 24, resizeMode: "contain" }}
+            />
+            {unreadNotifiCount > 0 && (
+              <View
+                style={{
+                  backgroundColor: "#FB1609",
+                  borderRadius: 50,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: 18,
+                  height: 18,
+                  position: "absolute",
+                  top: -8,
+                  right: -5,
+                }}
+              >
+                <Text style={{ color: "#fff", fontSize: 12 }}>
+                  {unreadNotifiCount < 100 ? unreadNotifiCount : `99+`}
+                </Text>
+              </View>
+            )}
+          </TouchableOpacity>
+        }
+        {...universalFeedStyle?.screenHeader}
+      />
       {/* all topics filter */}
       {mappedTopics.length > 0 && showTopics ? (
         <ScrollView
