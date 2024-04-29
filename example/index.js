@@ -14,7 +14,7 @@ import messaging from '@react-native-firebase/messaging';
 import notifee, {EventType} from '@notifee/react-native';
 import * as RootNavigation from './RootNavigation.js';
 import {RealmProvider} from '@realm/react';
-import {LoginSchemaRO} from './sample/loginSchemaRO';
+import {LoginSchemaRO} from './login/loginSchemaRO';
 
 // notification display for background state
 notifee.onBackgroundEvent(async ({type, detail}) => {

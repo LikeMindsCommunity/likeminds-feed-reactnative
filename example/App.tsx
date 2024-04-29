@@ -30,10 +30,10 @@ import LikesWrapper from './feedScreen/likesWrapper';
 import NotificationWrapper from './feedScreen/notificationWrapper';
 import messaging from '@react-native-firebase/messaging';
 import notifee, {EventType} from '@notifee/react-native';
-import {Credentials} from './sample/credentials';
-import {LoginSchemaRO} from './sample/loginSchemaRO';
+import {Credentials} from './login/credentials';
+import {LoginSchemaRO} from './login/loginSchemaRO';
 import {useQuery} from '@realm/react';
-import FetchKeyInputScreen from './sample';
+import FetchKeyInputScreen from './login';
 
 class CustomCallbacks implements LMFeedCallbacks {
   onEventTriggered(eventName: string, eventProperties?: Map<string, string>) {
