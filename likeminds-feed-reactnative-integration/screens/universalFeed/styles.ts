@@ -49,6 +49,17 @@ export const styles = StyleSheet.create({
     marginBottom: 10,
     height: 50,
   },
+  justifyCenter: {
+    flexDirection: "row",
+    padding: STYLES.$PADDINGS.MEDIUM,
+    justifyContent: "center",
+    flex: 1,
+  },
+  title: {
+    fontSize: STYLES.$FONT_SIZES.XL,
+    fontFamily: STYLES.$FONT_TYPES.MEDIUM,
+    color: STYLES.$COLORS.FONT_PRIMARY,
+  },
   uploadingImageVideoBox: {
     backgroundColor: "#fff",
     width: 49,

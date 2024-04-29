@@ -210,6 +210,28 @@ const UniversalFeedComponent = () => {
     getTopics();
   }, [showTopics]);
 
+  const [isAnyMatchFound, setIsAnyMatchFound] = useState(true);
+
+  useEffect(() => {
+    let isTopicMatched = true;
+
+    // Loop through the items
+    feedData.forEach((item: any) => {
+      // Check if the item's topic matches any name in the topics array
+      isTopicMatched =
+        item?.topics?.length > 0 &&
+        mappedTopics.length > 0 &&
+        item?.topics?.some((topicId) =>
+          mappedTopics.some((topic) => topic.id == topicId)
+        );
+    });
+
+    // If the item matches the topic, set the flag to true
+    if (!isTopicMatched && mappedTopics?.length > 0) {
+      setIsAnyMatchFound(false);
+    } else if (mappedTopics?.length === 0) setIsAnyMatchFound(true);
+  }, [feedData, mappedTopics]);
+
   return (
     <View style={styles.mainContainer}>
       {/* header */}
@@ -356,6 +378,13 @@ const UniversalFeedComponent = () => {
         </View>
       )}
       {/* posts list section */}
+      {!isAnyMatchFound ? (
+        <View style={[styles.justifyCenter]}>
+          <Text style={styles.title}>No matching post found</Text>
+        </View>
+      ) : (
+        <></>
+      )}
       <PostsList items={mappedTopics} />
       {/* create post button section */}
       <TouchableOpacity

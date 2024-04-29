@@ -84,7 +84,8 @@ interface CreatePostProps {
   onPostClickProp: (
     allMedia: Array<LMAttachmentUI>,
     linkData: Array<LMAttachmentUI>,
-    content: string
+    content: string,
+    topics: string[]
   ) => void;
   handleScreenBackPressProp: () => void;
 }

@@ -126,7 +126,7 @@ export interface CreatePostContextValues {
   removeSingleAttachment: () => void;
   allAttachment: Array<LMAttachmentUI>;
   getPostData: () => void;
-  postEdit: () => void;
+  postEdit: any;
   handleInputChange: (event: string) => void;
   loadData: (newPage: number) => void;
   handleLoadMore: () => void;
@@ -186,9 +186,6 @@ export const CreatePostContextProvider = ({
   const [allTags, setAllTags] = useState<Array<LMUserUI>>([]);
   const [isUserTagging, setIsUserTagging] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const selectedTopics = useAppSelector(
-    (state) => state.feed.selectedTopicsForCreatePostScreen
-  );
 
   // function handles the selection of images and videos
   const setSelectedImageVideo = (type: string) => {
@@ -291,7 +288,7 @@ export const CreatePostContextProvider = ({
     const isConnected = await NetworkUtil.isNetworkAvailable();
     if (isConnected) {
       postToEdit
-        ? postEdit()
+        ? postEdit(topics)
         : dispatch(
             setUploadAttachments({
               mediaAttachmentData: allMedia,
@@ -539,7 +536,7 @@ export const CreatePostContextProvider = ({
   }, [postDetail]);
 
   //  this function calls the edit post api
-  const postEdit = async () => {
+  const postEdit = async (topics) => {
     // replace mentions with route
     const contentText = mentionToRouteConverter(postContentText);
     const linkAttachments = showLinkPreview ? formattedLinkAttachments : [];
@@ -551,7 +548,7 @@ export const CreatePostContextProvider = ({
           .setattachments([...allAttachment, ...linkAttachments])
           .setpostId(postDetail?.id)
           .settext(contentText)
-          .setTopicIds(selectedTopics)
+          .setTopicIds(topics)
           .build(),
         false
       )
