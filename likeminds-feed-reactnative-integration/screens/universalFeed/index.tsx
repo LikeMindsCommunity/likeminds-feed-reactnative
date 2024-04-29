@@ -49,6 +49,7 @@ import { notificationFeedClear } from "../../store/actions/notification";
 import {
   CLEAR_SELECTED_TOPICS,
   CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
+  SET_TOPICS,
 } from "../../store/types/types";
 import { Client } from "../../client";
 import Layout from "../../constants/Layout";
@@ -158,7 +159,7 @@ const UniversalFeedComponent = () => {
       name: topics[topicId]?.name || "Unknown", // Use optional chaining and provide a default name if not found
     }));
     setMappedTopics(filteredTopicArray);
-  }, [selectedTopics]);
+  }, [selectedTopics, topics]);
 
   const handleAllTopicPress = () => {
     /* @ts-ignore */
@@ -182,6 +183,26 @@ const UniversalFeedComponent = () => {
     const topics = apiRes?.data?.topics;
     if (topics?.length > 0) {
       setShowTopics(true);
+      const topicsObject = {};
+      topics.forEach((topic) => {
+        topicsObject[topic.Id] = {
+          allParentIds: topic.allParentIds,
+          isEnabled: topic.isEnabled,
+          isSearchable: topic.isSearchable,
+          level: topic.level,
+          name: topic.name,
+          numberOfPosts: topic.numberOfPosts,
+          parentId: topic.parentId,
+          parentName: topic.parentName,
+          priority: topic.priority,
+          totalChildCount: topic.totalChildCount,
+          widgetId: topic.widgetId,
+        };
+      });
+      dispatch({
+        type: SET_TOPICS,
+        body: { topics: topicsObject },
+      });
     }
   };
 

@@ -24,6 +24,7 @@ import {
   SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
   CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
   POST_DATA_SUCCESS,
+  SET_TOPICS,
 } from "../types/types";
 import { LMPostUI } from "../../models";
 
@@ -68,13 +69,16 @@ export const feedReducer = (state = initialState, action) => {
         selectedTopicsForCreatePostScreen: [],
       };
     }
+    case SET_TOPICS: {
+      const { topics = {} } = action.body;
+      return { ...state, topics: topics };
+    }
     case UNIVERSAL_FEED_SUCCESS: {
       const { users = {} } = action.body;
       let feedData = state.feed;
       let usersData = state.users;
       // model converter function
       const post = convertUniversalFeedPosts(action.body);
-      const topicsArray = action.body.topics;
       // this handles pagination and appends new post data with previous data
       feedData = feedData ? [...feedData, ...post] : [...post];
       // this appends the new users data with previous data
@@ -83,10 +87,6 @@ export const feedReducer = (state = initialState, action) => {
         ...state,
         feed: feedData,
         users: usersData,
-        topics:
-          Object.keys(state.topics).length > Object.keys(topicsArray).length
-            ? state.topics
-            : topicsArray,
       };
     }
     case UNIVERSAL_FEED_REFRESH_SUCCESS: {

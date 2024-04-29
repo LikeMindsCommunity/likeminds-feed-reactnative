@@ -362,6 +362,8 @@ const CreatePostComponent = () => {
           },
         ]
       );
+    } else {
+      handleAcceptedOnPress();
     }
   };
 
