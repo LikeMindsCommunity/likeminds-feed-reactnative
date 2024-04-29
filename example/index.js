@@ -13,6 +13,8 @@ import {
 import messaging from '@react-native-firebase/messaging';
 import notifee, {EventType} from '@notifee/react-native';
 import * as RootNavigation from './RootNavigation.js';
+import {RealmProvider} from '@realm/react';
+import {LoginSchemaRO} from './sample/loginSchemaRO';
 
 // notification display for background state
 notifee.onBackgroundEvent(async ({type, detail}) => {
@@ -21,7 +23,7 @@ notifee.onBackgroundEvent(async ({type, detail}) => {
   if (type === EventType.PRESS) {
     if (!!RootNavigation) {
       setTimeout(() => {
-        RootNavigation.navigate(routes.route, routes.params); 
+        RootNavigation.navigate(routes.route, routes.params);
       }, 3000);
     }
   }
@@ -33,8 +35,10 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
   return remoteMessage;
 });
 
-const myClient = initMyClient('');
+const WrappedApp = () => (
+  <RealmProvider schema={[LoginSchemaRO]}>
+    <App />
+  </RealmProvider>
+);
 
-AppRegistry.registerComponent(appName, () => App);
-
-export {myClient};
+AppRegistry.registerComponent(appName, () => WrappedApp);
