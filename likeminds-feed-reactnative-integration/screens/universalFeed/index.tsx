@@ -223,24 +223,28 @@ const UniversalFeedComponent = () => {
   const [isAnyMatchFound, setIsAnyMatchFound] = useState(true);
 
   useEffect(() => {
-    let isTopicMatched = true;
+    let isTopicMatched = false; // Initialize as false
 
     // Loop through the items
-    feedData.forEach((item: any) => {
+    for (const item of feedData) {
       // Check if the item's topic matches any name in the topics array
-      isTopicMatched =
-        item?.topics?.length > 0 &&
-        mappedTopics.length > 0 &&
+      if (
         item?.topics?.some((topicId) =>
           mappedTopics.some((topic) => topic.id == topicId)
-        );
-    });
+        )
+      ) {
+        isTopicMatched = true; // Set to true if any match is found
+        break; // Exit loop once a match is found
+      }
+    }
 
-    // If the item matches the topic, set the flag to true
+    // If no match is found and topics are present, set the flag to false
     if (!isTopicMatched && mappedTopics?.length > 0) {
       setIsAnyMatchFound(false);
-    } else if (mappedTopics?.length === 0) setIsAnyMatchFound(true);
-  }, [feedData, mappedTopics]);
+    } else if (mappedTopics?.length === 0) {
+      setIsAnyMatchFound(true);
+    }
+  }, [mappedTopics, feedData]);
 
   return (
     <View style={styles.mainContainer}>

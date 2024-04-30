@@ -239,18 +239,19 @@ const CreatePostComponent = () => {
   }, [selectedTopics, topicsSelected]);
 
   const handleAcceptedOnPress = () => {
+    const idValuesArray = mappedTopics.map((topic) => topic.id);
     onPostClickProp
       ? onPostClickProp(
           allAttachment,
           formattedLinkAttachments,
           postContentText,
-          selectedTopics
+          idValuesArray
         )
       : onPostClick(
           allAttachment,
           formattedLinkAttachments,
           postContentText,
-          selectedTopics
+          idValuesArray
         );
     if (!postToEdit) {
       const map: Map<string | undefined, string | undefined> = new Map();
@@ -275,17 +276,6 @@ const CreatePostComponent = () => {
       } else {
         map.set(Keys.LINK_ATTACHED, Keys.NO);
       }
-
-      // TODO for Topic Feed
-      // if (topics !== null && topics.length > 0) {
-      //   const topicsNameString = topics
-      //     .map((topic) => topic.name)
-      //     .join(", ");
-      //   map.set(Keys.TOPICS_ADDED, Keys.YES);
-      //   map.set(Keys.TOPICS, topicsNameString);
-      // } else {
-      //   map.set(Keys.TOPICS_ADDED, Keys.NO);
-      // }
 
       // To fire media analytics event
       let imageCount = 0;
