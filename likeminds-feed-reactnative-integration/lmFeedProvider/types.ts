@@ -1,5 +1,5 @@
 import React from "react";
-import { LMFeedClient } from "@likeminds.community/feed-js-beta";
+import { LMFeedClient } from "@likeminds.community/feed-js";
 import { ViewStyle, TextStyle, ImageProps, ImageStyle } from "react-native";
 import { LMHeaderProps, LMLoaderProps } from "../components";
 import {
@@ -294,16 +294,16 @@ export interface CreatePostStyleProps {
     headingViewStyle?: ViewStyle;
   };
   attachmentOptionsStyle: {
-    attachmentOptionsView?: ViewStyle,
-    photoAttachmentView?: ViewStyle,
-    photoAttachmentIcon?: LMIconProps,
-    photoAttachmentTextStyle?: LMTextProps,
-    videoAttachmentView?: ViewStyle,
-    videoAttachmentIcon?: LMIconProps,
-    videoAttachmentTextStyle?: LMTextProps,
-    filesAttachmentView?: ViewStyle,
-    filesAttachmentIcon?: LMIconProps,
-    filesAttachmentTextStyle?:LMTextProps,
+    attachmentOptionsView?: ViewStyle;
+    photoAttachmentView?: ViewStyle;
+    photoAttachmentIcon?: LMIconProps;
+    photoAttachmentTextStyle?: LMTextProps;
+    videoAttachmentView?: ViewStyle;
+    videoAttachmentIcon?: LMIconProps;
+    videoAttachmentTextStyle?: LMTextProps;
+    filesAttachmentView?: ViewStyle;
+    filesAttachmentIcon?: LMIconProps;
+    filesAttachmentTextStyle?: LMTextProps;
   };
   createPostTextInputStyle?: {
     inputTextStyle?: TextStyle;
@@ -322,13 +322,13 @@ export interface CreatePostStyleProps {
     multilineField?: boolean;
   };
   addMoreAttachmentsButton?: {
-    text: LMTextProps,
-    icon: LMIconProps,
-    onTap: (value?: any) => void,
+    text: LMTextProps;
+    icon: LMIconProps;
+    onTap: (value?: any) => void;
     placement: "start" | "end";
-    buttonStyle: ViewStyle,
-    isClickable: boolean,
-  }
+    buttonStyle: ViewStyle;
+    isClickable: boolean;
+  };
 }
 
 export interface PostLikesListStyleProps {

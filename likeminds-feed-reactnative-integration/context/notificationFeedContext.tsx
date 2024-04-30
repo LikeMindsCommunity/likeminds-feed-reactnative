@@ -22,7 +22,7 @@ import {
 import {
   GetNotificationFeedRequest,
   MarkReadNotificationRequest,
-} from "@likeminds.community/feed-js-beta";
+} from "@likeminds.community/feed-js";
 import { clearPostDetail } from "../store/actions/postDetail";
 import {
   CREATE_POST,

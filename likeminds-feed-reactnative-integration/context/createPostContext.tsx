@@ -47,7 +47,7 @@ import {
   EditPostRequest,
   GetPostRequest,
   GetTaggingListRequest,
-} from "@likeminds.community/feed-js-beta";
+} from "@likeminds.community/feed-js";
 import { getPost, getTaggingList } from "../store/actions/postDetail";
 import { showToastMessage } from "../store/actions/toast";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";

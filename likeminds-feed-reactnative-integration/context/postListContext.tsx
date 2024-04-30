@@ -24,7 +24,7 @@ import {
   LikePostRequest,
   PinPostRequest,
   SavePostRequest,
-} from "@likeminds.community/feed-js-beta";
+} from "@likeminds.community/feed-js";
 import _ from "lodash";
 import {
   DELETE_POST_MENU_ITEM,

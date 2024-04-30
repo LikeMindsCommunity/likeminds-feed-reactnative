@@ -13,7 +13,7 @@ import { Client } from "../../client";
 import {
   GetPostLikesRequest,
   GetCommentLikesRequest,
-} from "@likeminds.community/feed-js-beta";
+} from "@likeminds.community/feed-js";
 
 // get post likes api action
 export const postLikes =

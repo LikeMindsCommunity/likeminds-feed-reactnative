@@ -11,7 +11,7 @@ import { Credentials } from "../credentials";
 import {
   InitiateUserRequest,
   LMFeedClient,
-} from "@likeminds.community/feed-js-beta";
+} from "@likeminds.community/feed-js";
 import { LMFeedProviderProps, ThemeContextProps } from "./types";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { getMemberState, initiateUser } from "../store/actions/login";
