@@ -38,6 +38,7 @@ import { showToastMessage } from "../../store/actions/toast";
 import { LMLoader } from "../../components";
 import { LMCommentUI, LMPostUI } from "../../models";
 import { getPostType, reportAnalytics } from "../../utils/analytics";
+import Layout from "../../constants/Layout";
 
 // interface for post report api request
 interface ReportRequest {
@@ -69,6 +70,31 @@ const ReportModal = ({
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const [otherReason, setOtherReason] = useState("");
   const [selectedId, setSelectedId] = useState(-1);
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
+
+  const _keyboardDidShow = () => {
+    setKeyboardVisible(true);
+  };
+
+  const _keyboardDidHide = () => {
+    setKeyboardVisible(false);
+  };
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      _keyboardDidShow
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      _keyboardDidHide
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   // this function calls the get report tags api for reporting a post
   const fetchReportTags = async () => {
@@ -290,11 +316,16 @@ const ReportModal = ({
           <View style={styles.reportBtnParent}>
             <TouchableOpacity
               activeOpacity={0.8}
-              style={
+              style={[
                 selectedId !== -1 || otherReason
                   ? styles.reportBtn
-                  : styles.disabledReportBtn
-              }
+                  : styles.disabledReportBtn,
+                {
+                  top: keyboardVisible
+                    ? Layout.normalize(600)
+                    : Layout.normalize(600),
+                },
+              ]}
               onPress={
                 selectedId !== -1 || otherReason
                   ? () => {
