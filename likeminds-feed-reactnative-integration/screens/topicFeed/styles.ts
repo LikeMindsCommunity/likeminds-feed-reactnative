@@ -41,6 +41,8 @@ export const styles = StyleSheet.create({
     color: STYLES.$COLORS.FONT_PRIMARY,
     lineHeight: 20,
     fontWeight: "500",
+    gap: 8,
+    padding: 10,
   },
   participantsTitle: {
     fontSize: STYLES.$FONT_SIZES.LARGE,

@@ -207,7 +207,7 @@ const TopicFeed = () => {
                 <Text
                   style={{
                     color: STYLES.$COLORS.MSG,
-                    fontSize: STYLES.$FONT_SIZES.SMALL,
+                    fontSize: STYLES.$FONT_SIZES.MEDIUM,
                     fontFamily: STYLES.$FONT_TYPES.LIGHT,
                   }}
                 >
