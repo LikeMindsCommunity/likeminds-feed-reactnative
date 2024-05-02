@@ -8,6 +8,7 @@ import { LINK_ATTACHMENT_TYPE } from "../../../constants/Strings";
 import { styles } from "./styles";
 import { LMPostContextProvider, useLMPostContext } from "../../../context";
 import { useAppSelector } from "../../../store/store";
+import Layout from "../../../constants/Layout";
 
 const LMPost = ({
   navigation,
@@ -49,13 +50,14 @@ const LMPostComponent = React.memo(() => {
                 <View>
                   <Text
                     style={{
-                      fontSize: 16,
+                      fontSize: Layout.normalize(16),
                       color: "#5046E5",
                       marginLeft: index === 0 ? 15 : 5,
-                      marginTop: 10,
-                      padding: 7,
+                      marginTop: Layout.normalize(10),
+                      paddingVertical: Layout.normalize(5),
                       backgroundColor: "hsla(244, 75%, 59%, 0.1)",
-                      borderRadius: 5,
+                      borderRadius: Layout.normalize(5),
+                      paddingHorizontal: Layout.normalize(12),
                     }}
                   >
                     {topicObject?.name}

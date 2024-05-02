@@ -89,7 +89,12 @@ const LMFeedNotificationFeedListView = () => {
               }}
             />
           )}
-          <Text style={notificationFeedStyle?.noActivityViewTextStyle}>
+          <Text
+            style={{
+              color: "black",
+              ...notificationFeedStyle?.noActivityViewTextStyle,
+            }}
+          >
             {notificationFeedStyle?.noActivityViewText
               ? notificationFeedStyle?.noActivityViewText
               : `Oops! You don't have any notifications yet.`}

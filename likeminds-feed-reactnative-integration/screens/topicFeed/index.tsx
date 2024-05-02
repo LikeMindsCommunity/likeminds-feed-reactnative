@@ -174,7 +174,7 @@ const TopicFeed = () => {
   const setInitialHeader = () => {
     navigation.setOptions({
       title: "",
-      headerShadowVisible: false,
+      headerShadowVisible: true,
       headerLeft: () => (
         <View style={styles.headingContainer}>
           <TouchableOpacity

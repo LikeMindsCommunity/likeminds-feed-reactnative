@@ -422,9 +422,10 @@ const CreatePostComponent = () => {
                     style={{
                       fontSize: Layout.normalize(17),
                       color: "#5046E5",
-                      padding: Layout.normalize(7),
+                      paddingVertical: Layout.normalize(5),
                       backgroundColor: "hsla(244, 75%, 59%, 0.1)",
                       borderRadius: Layout.normalize(5),
+                      paddingHorizontal: Layout.normalize(12),
                       margin: Layout.normalize(5),
                       ...(selectedTopicsStyle !== undefined
                         ? selectedTopicsStyle
@@ -435,8 +436,16 @@ const CreatePostComponent = () => {
                   </Text>
                 </View>
                 {index === mappedTopics.length - 1 && (
-                  <View style={{ padding: Layout.normalize(7) }}>
-                    <TouchableOpacity onPress={() => handleAllTopicPress()}>
+                  <View>
+                    <TouchableOpacity
+                      onPress={() => handleAllTopicPress()}
+                      style={{
+                        backgroundColor: "hsla(244, 75%, 59%, 0.1)",
+                        borderRadius: 5,
+                        paddingHorizontal: 15,
+                        marginLeft: 5,
+                      }}
+                    >
                       <Image
                         source={require("../../assets/images/edit_icon3x.png")}
                         style={styles.editIcon}
@@ -460,11 +469,12 @@ const CreatePostComponent = () => {
               <TouchableOpacity onPress={() => handleAllTopicPress()}>
                 <View
                   style={{
-                    padding: Layout.normalize(7),
+                    paddingVertical: Layout.normalize(7),
                     backgroundColor: "hsla(244, 75%, 59%, 0.1)",
                     borderRadius: Layout.normalize(5),
                     flexDirection: "row",
                     alignItems: "center",
+                    paddingHorizontal: Layout.normalize(12),
                   }}
                 >
                   <Image

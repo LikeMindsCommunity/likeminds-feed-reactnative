@@ -380,7 +380,11 @@ const UniversalFeedComponent = () => {
               flexDirection: "row",
               alignItems: "center",
               backgroundColor: STYLES.$BACKGROUND_COLORS.LIGHT,
-              marginBottom: Layout.normalize(10),
+              borderBottomWidth: 1,
+              borderBottomColor: "#D0D8E2",
+              borderTopWidth: 1,
+              borderTopColor: "#D0D8E2",
+              paddingVertical: Layout.normalize(10),
             }}
           >
             <TouchableOpacity onPress={() => handleAllTopicPress()}>
@@ -411,8 +415,8 @@ const UniversalFeedComponent = () => {
                   source={require("../../assets/images/arrow_down3x.png")}
                   style={{
                     tintColor: "#666666",
-                    width: Layout.normalize(18),
-                    height: Layout.normalize(18),
+                    width: Layout.normalize(15),
+                    height: Layout.normalize(15),
                     ...(arrowDownStyle !== undefined ? arrowDownStyle : {}),
                   }}
                 />
