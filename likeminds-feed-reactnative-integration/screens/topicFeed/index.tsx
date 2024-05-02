@@ -81,7 +81,7 @@ const TopicFeed = () => {
   }, [selectedTopics]);
 
   useEffect(() => {
-    if (topicsSelected?.length > 0 && previousRoute?.name === "CreatePost") {
+    if (topicsSelected?.length > 0 || previousRoute?.name === "CreatePost") {
       const enabledTopics = topicsSelected.filter((topic) =>
         filterEnabledTrue(topic)
       );
