@@ -342,19 +342,19 @@ const UniversalFeedComponent = () => {
             style={{
               flexDirection: "row",
               alignItems: "center",
-              marginLeft: Layout.normalize(15),
-              marginTop: Layout.normalize(15),
+              backgroundColor: STYLES.$BACKGROUND_COLORS.LIGHT,
+              marginBottom: Layout.normalize(10),
             }}
           >
             <TouchableOpacity onPress={() => handleAllTopicPress()}>
               <View
                 style={{
                   marginTop: Layout.normalize(10),
-                  marginLeft: Layout.normalize(10),
+                  marginLeft: Layout.normalize(20),
                   borderRadius: Layout.normalize(5),
                   flexDirection: "row",
                   alignItems: "center",
-                  marginBottom: Layout.normalize(20),
+                  marginBottom: Layout.normalize(10),
                 }}
               >
                 <Text
