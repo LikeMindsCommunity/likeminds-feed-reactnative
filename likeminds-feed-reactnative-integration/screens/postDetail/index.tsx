@@ -191,10 +191,11 @@ const PostDetailComponent = React.memo(() => {
     savePostHandler,
     showLoader,
     setShowLoader,
+    setShowRepliesOfCommentId,
   }: PostDetailContextValues = usePostDetailContext();
 
   const LMFeedContextStyles = useLMFeedStyles();
-  const { postDetailStyle, postListStyle } = LMFeedContextStyles;
+  const { postDetailStyle, postListStyle }: any = LMFeedContextStyles;
   const {
     getCommentsRepliesProp,
     commentLikeHandlerProp,
@@ -207,11 +208,11 @@ const PostDetailComponent = React.memo(() => {
     onCommentOverflowMenuClickProp,
     onSharePostClicked,
   } = usePostDetailCustomisableMethodsContext();
-  const postHeaderStyle = postListStyle?.header;
-  const customScreenHeader = postDetailStyle?.screenHeader;
-  const customCommentItemStyle = postDetailStyle?.commentItemStyle;
-  const customReplyingViewStyle = postDetailStyle?.replyingViewStyle;
-  const customCommentTextInput = postDetailStyle?.commentTextInputStyle;
+  const postHeaderStyle: any = postListStyle?.header;
+  const customScreenHeader: any = postDetailStyle?.screenHeader;
+  const customCommentItemStyle: any = postDetailStyle?.commentItemStyle;
+  const customReplyingViewStyle: any = postDetailStyle?.replyingViewStyle;
+  const customCommentTextInput: any = postDetailStyle?.commentTextInputStyle;
 
   // this function returns the id of the item selected from menu list and handles further functionalities accordingly for comment
   const onCommentMenuItemSelect = async (
@@ -374,12 +375,13 @@ const PostDetailComponent = React.memo(() => {
                         : replyOnComment.textInputFocus
                         ? Platform.OS === "android"
                           ? keyboardFocusOnReply
-                            ? navigatedFromComments
-                              ? Layout.normalize(64)
-                              : Layout.normalize(84)
+                            ? //  navigatedFromComments
+                              //   ? Layout.normalize(119)
+                              //   :
+                              Layout.normalize(119)
                             : Layout.normalize(64)
                           : Layout.normalize(64)
-                        : Layout.normalize(64),
+                        : Layout.normalize(89),
                   },
                 ])}
               >
@@ -425,8 +427,12 @@ const PostDetailComponent = React.memo(() => {
                                   item?.id === showRepliesOfCommentId
                                 }
                                 // this calls the getCommentsReplies function on click of number of child replies text
-                                onTapReplies={(repliesResponseCallback) => {
+                                onTapReplies={(
+                                  repliesResponseCallback,
+                                  commentIdOfReplies
+                                ) => {
                                   dispatch(clearComments(item?.id));
+                                  setShowRepliesOfCommentId(commentIdOfReplies);
                                   getCommentsRepliesProp
                                     ? getCommentsRepliesProp(
                                         item?.postId,
@@ -604,9 +610,10 @@ const PostDetailComponent = React.memo(() => {
                     bottom:
                       Platform.OS === "android"
                         ? keyboardIsVisible
-                          ? navigatedFromComments
-                            ? Layout.normalize(64)
-                            : Layout.normalize(84)
+                          ? // navigatedFromComments
+                            //   ? Layout.normalize(89)
+                            //   :
+                            Layout.normalize(89)
                           : Layout.normalize(64)
                         : Layout.normalize(64),
                   },
@@ -673,13 +680,15 @@ const PostDetailComponent = React.memo(() => {
                   styles.taggingListView,
                   {
                     paddingBottom: replyOnComment.textInputFocus
-                      ? navigatedFromComments
-                        ? Layout.normalize(94)
-                        : Layout.normalize(114)
+                      ? // navigatedFromComments
+                        //   ? Layout.normalize(119)
+                        //   :
+                        Layout.normalize(119)
                       : keyboardIsVisible
-                      ? navigatedFromComments
-                        ? Layout.normalize(64)
-                        : Layout.normalize(84)
+                      ? // navigatedFromComments
+                        //   ? Layout.normalize(89)
+                        //   :
+                        Layout.normalize(89)
                       : Layout.normalize(64),
                     maxHeight: 300,
                   },
@@ -768,92 +777,6 @@ const PostDetailComponent = React.memo(() => {
                 />
               </View>
             ) : null}
-
-            {/* input field */}
-            <LMInputText
-              {...customCommentTextInput}
-              inputText={commentToAdd}
-              onType={handleInputChange}
-              inputTextStyle={[
-                styles.textInputStyle,
-                {
-                  bottom: keyboardIsVisible
-                    ? navigatedFromComments
-                      ? Layout.normalize(0)
-                      : Layout.normalize(25)
-                    : 0,
-                },
-                customCommentTextInput?.inputTextStyle,
-              ]}
-              autoFocus={
-                customCommentTextInput?.autoFocus != undefined
-                  ? customCommentTextInput?.autoFocus
-                  : routeParams
-                  ? true
-                  : keyboardFocusOnReply
-                  ? true
-                  : editCommentFocus
-                  ? true
-                  : commentFocus
-              }
-              placeholderText={
-                customCommentTextInput?.placeholderText
-                  ? customCommentTextInput?.placeholderText
-                  : "Write a comment"
-              }
-              placeholderTextColor={
-                customCommentTextInput?.placeholderTextColor
-                  ? customCommentTextInput?.placeholderTextColor
-                  : "#9B9B9B"
-              }
-              inputRef={myRef}
-              rightIcon={{
-                ...customCommentTextInput?.rightIcon,
-                onTap: () => {
-                  customCommentTextInput?.rightIcon?.onTap();
-                  commentToAdd
-                    ? editCommentFocus
-                      ? commentEdit()
-                      : replyOnComment.textInputFocus
-                      ? addNewReplyProp
-                        ? addNewReplyProp(
-                            postDetail?.id,
-                            replyOnComment.commentId
-                          )
-                        : addNewReply(postDetail?.id, replyOnComment.commentId)
-                      : addNewCommentProp
-                      ? addNewCommentProp(postDetail?.id)
-                      : addNewComment(postDetail?.id)
-                    : {};
-                  setAllTags([]);
-                  setIsUserTagging(false);
-                },
-                icon: {
-                  assetPath: require("../../assets/images/send_icon3x.png"),
-                  iconStyle: { opacity: commentToAdd ? 1 : 0.7 },
-                  ...customCommentTextInput?.rightIcon?.icon,
-                },
-                isClickable: commentToAdd
-                  ? customCommentTextInput?.rightIcon?.isClickable != undefined
-                    ? customCommentTextInput?.rightIcon?.isClickable
-                    : true
-                  : false,
-              }}
-              multilineField={
-                customCommentTextInput?.multilineField != undefined
-                  ? customCommentTextInput?.multilineField
-                  : true
-              }
-              partTypes={[
-                {
-                  trigger: "@", // Should be a single character like '@' or '#'
-                  textStyle: {
-                    color: "blue",
-                    ...customCommentTextInput?.mentionTextStyle,
-                  }, // The mention style in the input
-                },
-              ]}
-            />
           </>
         ) : !showLoader ? (
           <View
@@ -862,6 +785,94 @@ const PostDetailComponent = React.memo(() => {
             <Text>Deleted Post</Text>
           </View>
         ) : null}
+        {/* input field */}
+        {postDetail?.id && (
+          <LMInputText
+            {...customCommentTextInput}
+            inputText={commentToAdd}
+            onType={handleInputChange}
+            inputTextStyle={[
+              styles.textInputStyle,
+              {
+                bottom: keyboardIsVisible
+                  ? // navigatedFromComments
+                    //   ? Layout.normalize(0)
+                    //   :
+                    Layout.normalize(25)
+                  : 0,
+              },
+              customCommentTextInput?.inputTextStyle,
+            ]}
+            autoFocus={
+              customCommentTextInput?.autoFocus != undefined
+                ? customCommentTextInput?.autoFocus
+                : routeParams
+                ? true
+                : keyboardFocusOnReply
+                ? true
+                : editCommentFocus
+                ? true
+                : commentFocus
+            }
+            placeholderText={
+              customCommentTextInput?.placeholderText
+                ? customCommentTextInput?.placeholderText
+                : "Write a comment"
+            }
+            placeholderTextColor={
+              customCommentTextInput?.placeholderTextColor
+                ? customCommentTextInput?.placeholderTextColor
+                : "#9B9B9B"
+            }
+            inputRef={myRef}
+            rightIcon={{
+              ...customCommentTextInput?.rightIcon,
+              onTap: () => {
+                customCommentTextInput?.rightIcon?.onTap();
+                commentToAdd
+                  ? editCommentFocus
+                    ? commentEdit()
+                    : replyOnComment.textInputFocus
+                    ? addNewReplyProp
+                      ? addNewReplyProp(
+                          postDetail?.id,
+                          replyOnComment.commentId
+                        )
+                      : addNewReply(postDetail?.id, replyOnComment.commentId)
+                    : addNewCommentProp
+                    ? addNewCommentProp(postDetail?.id)
+                    : addNewComment(postDetail?.id)
+                  : {};
+                setAllTags([]);
+                setIsUserTagging(false);
+              },
+              icon: {
+                assetPath: require("../../assets/images/send_icon3x.png"),
+                iconStyle: { opacity: commentToAdd ? 1 : 0.7 },
+                ...customCommentTextInput?.rightIcon?.icon,
+              },
+              isClickable: commentToAdd
+                ? customCommentTextInput?.rightIcon?.isClickable != undefined
+                  ? customCommentTextInput?.rightIcon?.isClickable
+                  : true
+                : false,
+            }}
+            multilineField={
+              customCommentTextInput?.multilineField != undefined
+                ? customCommentTextInput?.multilineField
+                : true
+            }
+            partTypes={[
+              {
+                trigger: "@", // Should be a single character like '@' or '#'
+                textStyle: {
+                  color: "blue",
+                  ...customCommentTextInput?.mentionTextStyle,
+                }, // The mention style in the input
+              },
+            ]}
+          />
+        )}
       </KeyboardAvoidingView>
 
       {/* delete post modal */}
@@ -905,6 +916,7 @@ const PostDetailComponent = React.memo(() => {
               ? onMenuItemSelect(postId, itemId, isPinned)
               : onCommentMenuItemSelect(postId, itemId);
           }}
+          /* @ts-ignore */
           modalPosition={modalPosition}
           modalVisible={showActionListModal}
           onCloseModal={closePostActionListModal}

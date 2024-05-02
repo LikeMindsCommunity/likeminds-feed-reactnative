@@ -21,12 +21,13 @@ const LMPostMedia = React.memo(() => {
   const { post, mediaProps }: LMPostContextValues = useLMPostContext();
   const LMFeedContextStyles = useLMFeedStyles();
   const { postListStyle } = LMFeedContextStyles;
-  const customPostMediaStyle = postListStyle?.media;
+  const customPostMediaStyle: any = postListStyle?.media;
   // this handles the rendering of posts with single attachment
   const renderSingleAttachment = () => {
     switch (post?.attachments && post?.attachments[0]?.attachmentType) {
       case IMAGE_ATTACHMENT_TYPE: {
         return (
+          /* @ts-ignore */
           <LMImage
             imageUrl={
               post?.attachments
@@ -41,6 +42,7 @@ const LMPostMedia = React.memo(() => {
       }
       case VIDEO_ATTACHMENT_TYPE: {
         return (
+          /* @ts-ignore */
           <LMVideo
             videoUrl={
               post?.attachments
@@ -62,7 +64,9 @@ const LMPostMedia = React.memo(() => {
       }
       case DOCUMENT_ATTACHMENT_TYPE: {
         return (
+          /* @ts-ignore */
           <LMDocument
+            /* @ts-ignore */
             attachments={post?.attachments}
             {...customPostMediaStyle?.document}
           />
@@ -70,7 +74,9 @@ const LMPostMedia = React.memo(() => {
       }
       case LINK_ATTACHMENT_TYPE: {
         return (
+          /* @ts-ignore */
           <LMLinkPreview
+            /* @ts-ignore */
             attachments={post?.attachments}
             {...customPostMediaStyle?.linkPreview}
           />
@@ -125,7 +131,7 @@ const LMPostMedia = React.memo(() => {
                   ? mediaProps?.videoProps?.autoPlay
                   : true,
               videoInFeed: mediaProps?.videoProps?.videoInFeed,
-              postId: post?.id
+              postId: post?.id,
             }}
           />
         ) : (

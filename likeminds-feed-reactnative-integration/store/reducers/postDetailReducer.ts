@@ -51,8 +51,8 @@ export const initialState: PostDetailReducerState = {
       sdkClientInfo: {
         community: 0,
         user: 0,
-        userUniqueId: '',
-        uuid: ''
+        userUniqueId: "",
+        uuid: "",
       },
       uuid: "",
       isGuest: false,
@@ -60,6 +60,7 @@ export const initialState: PostDetailReducerState = {
       customTitle: "",
       organisationName: "",
     },
+    topics: [],
   },
 };
 export const postDetailReducer = (state = initialState, action) => {
@@ -137,7 +138,7 @@ export const postDetailReducer = (state = initialState, action) => {
     }
     case PIN_POST_STATE: {
       const updatedFeed = state.postDetail;
-      if (updatedFeed?.id !== '' && updatedFeed?.id === action.body) {
+      if (updatedFeed?.id !== "" && updatedFeed?.id === action.body) {
         // this updates the isPinned value
         updatedFeed.isPinned = !updatedFeed.isPinned;
 
@@ -290,7 +291,7 @@ export const postDetailReducer = (state = initialState, action) => {
       return { ...state, postDetail: updatedPostDetail };
     }
     case EDIT_COMMENT_STATE: {
-      const updatedPostDetail = state.postDetail;
+      const updatedPostDetail: any = state.postDetail;
       const { commentId, commentText } = action.body;
 
       const editCommentIndex =
@@ -310,7 +311,9 @@ export const postDetailReducer = (state = initialState, action) => {
       } else {
         if (updatedPostDetail?.replies) {
           for (let i = 0; i <= updatedPostDetail?.replies?.length - 1; i++) {
-            const editCommentIndexChild = updatedPostDetail.replies[i]?.replies.findIndex((item: LMCommentUI) => item?.id === commentId);
+            const editCommentIndexChild = updatedPostDetail.replies[
+              i
+            ]?.replies.findIndex((item: LMCommentUI) => item?.id === commentId);
             // removes that child comment from the data
             if (
               updatedPostDetail?.replies[i]?.replies &&
@@ -329,7 +332,7 @@ export const postDetailReducer = (state = initialState, action) => {
       return { ...state };
     }
     case DELETE_COMMENT_STATE: {
-      const updatedPostDetail = state.postDetail;
+      const updatedPostDetail: any = state.postDetail;
       // this gets the index of the comment that is deleted
       const deletedCommentIndex =
         updatedPostDetail?.replies &&
@@ -348,7 +351,9 @@ export const postDetailReducer = (state = initialState, action) => {
       } else {
         if (updatedPostDetail?.replies) {
           for (let i = 0; i <= updatedPostDetail?.replies?.length - 1; i++) {
-            const deletedCommentIndexChild = updatedPostDetail.replies[i].replies.findIndex(
+            const deletedCommentIndexChild = updatedPostDetail.replies[
+              i
+            ].replies.findIndex(
               (item: any) => item?.id === action.body.commentId
             );
             // removes that child comment from the data
@@ -373,28 +378,28 @@ export const postDetailReducer = (state = initialState, action) => {
       return { ...state, postDetail: { ...updatedPostDetail } };
     }
     case EDIT_POST_SUCCESS: {
-      const {post = {}, users = {}} = action.body;
+      const { post = {}, users = {} } = action.body;
       const converterPostData = convertToLMPostUI(post, users);
-      return {...state, postDetail: converterPostData};
+      return { ...state, postDetail: converterPostData };
     }
-    case LIKE_POST_STATE : {
+    case LIKE_POST_STATE: {
       const updatedDetail = state.postDetail;
-       // this updates the isLiked value
-       updatedDetail.isLiked = !updatedDetail.isLiked;
-     if (updatedDetail.isLiked) {
-       // increase the like count
-       updatedDetail.likesCount =updatedDetail.likesCount + 1;
-     } else {
-       // decrease the like count
-       updatedDetail.likesCount = updatedDetail.likesCount - 1;
-     }
-     return {...state, postDetail: updatedDetail};
+      // this updates the isLiked value
+      updatedDetail.isLiked = !updatedDetail.isLiked;
+      if (updatedDetail.isLiked) {
+        // increase the like count
+        updatedDetail.likesCount = updatedDetail.likesCount + 1;
+      } else {
+        // decrease the like count
+        updatedDetail.likesCount = updatedDetail.likesCount - 1;
+      }
+      return { ...state, postDetail: updatedDetail };
     }
     case SAVE_POST_STATE: {
       const updatedDetail = state.postDetail;
       // this updates the isSaved value
       updatedDetail.isSaved = !updatedDetail.isSaved;
-      return {...state, postDetail: updatedDetail};
+      return { ...state, postDetail: updatedDetail };
     }
     default:
       return state;

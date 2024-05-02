@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import LMPostHeader from "../LMPostHeader";
 import LMPostContent from "../LMPostContent";
@@ -7,6 +7,8 @@ import LMPostFooter from "../LMPostFooter";
 import { LINK_ATTACHMENT_TYPE } from "../../../constants/Strings";
 import { styles } from "./styles";
 import { LMPostContextProvider, useLMPostContext } from "../../../context";
+import { useAppSelector } from "../../../store/store";
+import Layout from "../../../constants/Layout";
 
 const LMPost = ({
   navigation,
@@ -20,7 +22,6 @@ const LMPost = ({
   return (
     <LMPostContextProvider
       navigation={navigation}
-      children={children}
       post={post}
       headerProps={headerProps}
       footerProps={footerProps}
@@ -33,21 +34,47 @@ const LMPost = ({
 };
 const LMPostComponent = React.memo(() => {
   const { post } = useLMPostContext();
+  const allTopics = useAppSelector((state) => state.feed.topics);
+
   return (
     <View style={styles.mainContainer}>
       {/* post header */}
       <LMPostHeader />
+      {post?.topics?.length > 0 ? (
+        <View style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 10 }}>
+          {post?.topics?.map((item, index) => {
+            // Find the corresponding topic object from allTopics
+            const topicObject = allTopics[item];
+            return (
+              <View key={index}>
+                <View>
+                  <Text
+                    style={{
+                      fontSize: Layout.normalize(16),
+                      color: "#5046E5",
+                      marginLeft: index === 0 ? 15 : 5,
+                      marginTop: Layout.normalize(10),
+                      paddingVertical: Layout.normalize(5),
+                      backgroundColor: "hsla(244, 75%, 59%, 0.1)",
+                      borderRadius: Layout.normalize(5),
+                      paddingHorizontal: Layout.normalize(12),
+                    }}
+                  >
+                    {topicObject?.name}
+                  </Text>
+                </View>
+              </View>
+            );
+          })}
+        </View>
+      ) : null}
       {/* post content */}
       {(post?.text ||
         post?.attachments?.find(
           (item) => item?.attachmentType === LINK_ATTACHMENT_TYPE
-        )?.attachmentType === LINK_ATTACHMENT_TYPE) && (
-        <LMPostContent />
-      )}
+        )?.attachmentType === LINK_ATTACHMENT_TYPE) && <LMPostContent />}
       {/* post media */}
-      {post?.attachments && post?.attachments.length > 0 && (
-        <LMPostMedia />
-      )}
+      {post?.attachments && post?.attachments.length > 0 && <LMPostMedia />}
       {/* post footer */}
       <LMPostFooter />
     </View>

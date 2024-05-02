@@ -38,7 +38,7 @@ const LMCommentItem = React.memo(
     viewMoreRepliesProps,
     onTapReplies,
     isRepliesVisible,
-    onCommentOverflowMenuClick
+    onCommentOverflowMenuClick,
   }: LMCommentProps) => {
     const MAX_LINES = commentMaxLines
       ? commentMaxLines
@@ -53,7 +53,7 @@ const LMCommentItem = React.memo(
     );
     const [repliesArray, setRepliesArray] = useState<LMCommentUI[]>([]);
     const [replyPageNumber, setReplyPageNumber] = useState(2);
-    const customLikeIcon = likeIconButton?.icon
+    const customLikeIcon = likeIconButton?.icon;
 
     // this handles the show more functionality
     const onTextLayout = (event) => {
@@ -65,8 +65,9 @@ const LMCommentItem = React.memo(
 
     useEffect(() => {
       if (isRepliesVisible) {
-        setShowReplies(true)
-        onTapReplies && onTapReplies((data: Array<LMCommentUI>) => setRepliesArray(data));
+        setShowReplies(true);
+        onTapReplies &&
+          onTapReplies((data: Array<LMCommentUI>) => setRepliesArray(data), "");
       }
     }, [isRepliesVisible]);
 
@@ -113,10 +114,13 @@ const LMCommentItem = React.memo(
     };
 
     // this function is executed on the click of menu icon & handles the position and visibility of the modal
-    const onOverflowMenuClick = (event: {
-      nativeEvent: { pageX: number; pageY: number };
-    },commentId:string) => {
-      onCommentOverflowMenuClick(event, commentId)   
+    const onOverflowMenuClick = (
+      event: {
+        nativeEvent: { pageX: number; pageY: number };
+      },
+      commentId: string
+    ) => {
+      onCommentOverflowMenuClick(event, commentId);
       menuIcon && menuIcon?.onTap();
     };
 
@@ -166,6 +170,7 @@ const LMCommentItem = React.memo(
                 onPress={() => setShowText(!showText)}
                 accessibilityRole="button"
               >
+                {/* @ts-ignore */}
                 <LMText {...updatedShowMoreProps} />
               </TouchableOpacity>
             )}
@@ -173,8 +178,8 @@ const LMCommentItem = React.memo(
           {/* menu icon */}
           {comment?.menuItems?.length > 0 && (
             <LMButton
-            onTap={(event) => onOverflowMenuClick(event, comment?.id)}
-            icon={{
+              onTap={(event) => onOverflowMenuClick(event, comment?.id)}
+              icon={{
                 assetPath: menuIcon?.icon?.assetPath
                   ? menuIcon.icon.assetPath
                   : require("../../assets/images/three_dots3x.png"),
@@ -281,8 +286,10 @@ const LMCommentItem = React.memo(
                     <LMButton
                       onTap={() => {
                         onTapReplies
-                          ? (onTapReplies((data: Array<LMCommentUI>) =>
-                              setRepliesArray(data)
+                          ? (onTapReplies(
+                              (data: Array<LMCommentUI>) =>
+                                setRepliesArray(data),
+                              ""
                             ),
                             handleReplies())
                           : handleReplies();
@@ -362,8 +369,9 @@ const LMCommentItem = React.memo(
                           likeTextButton={{
                             onTap: () => likeTextButton?.onTap(item?.id),
                           }}
-                        
-                          onCommentOverflowMenuClick={(event) => onOverflowMenuClick(event, item?.id)}
+                          onCommentOverflowMenuClick={(event) =>
+                            onOverflowMenuClick(event, item?.id)
+                          }
                         />
                       )}
                     </>
@@ -416,7 +424,6 @@ const LMCommentItem = React.memo(
             )}
           </View>
         )}
-
       </View>
     );
   }

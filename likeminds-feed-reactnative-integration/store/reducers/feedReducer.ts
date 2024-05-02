@@ -20,6 +20,13 @@ import {
   CREATE_COMMENT_SUCCESS,
   DELETE_COMMENT_STATE,
   AUTO_PLAY_POST_VIDEO,
+  SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
+  SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
+  CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
+  POST_DATA_SUCCESS,
+  SET_TOPICS,
+  SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
+  CLEAR_SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
 } from "../types/types";
 import { LMPostUI } from "../../models";
 
@@ -28,6 +35,10 @@ export interface FeedReducerState {
   users: {};
   reportTags: {};
   autoPlayVideoPostId: "";
+  topics: {};
+  selectedTopicsForUniversalFeedScreen: [];
+  selectedTopicsForCreatePostScreen: [];
+  selectedTopicsFromUniversalFeedScreen: [];
 }
 
 export const initialState: FeedReducerState = {
@@ -35,9 +46,50 @@ export const initialState: FeedReducerState = {
   users: {},
   reportTags: {},
   autoPlayVideoPostId: "",
+  topics: {},
+  selectedTopicsForUniversalFeedScreen: [],
+  selectedTopicsForCreatePostScreen: [],
+  selectedTopicsFromUniversalFeedScreen: [],
 };
 export const feedReducer = (state = initialState, action) => {
   switch (action.type) {
+    case SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN: {
+      const { topics = {} } = action.body;
+      return {
+        ...state,
+        selectedTopicsFromUniversalFeedScreen: topics,
+      };
+    }
+    case CLEAR_SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN: {
+      return {
+        ...state,
+        selectedTopicsFromUniversalFeedScreen: [],
+      };
+    }
+    case SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN: {
+      const { topics = {} } = action.body;
+      return {
+        ...state,
+        selectedTopicsForUniversalFeedScreen: topics,
+      };
+    }
+    case SELECTED_TOPICS_FOR_CREATE_POST_SCREEN: {
+      const { topics = {} } = action.body;
+      return {
+        ...state,
+        selectedTopicsForCreatePostScreen: topics,
+      };
+    }
+    case CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN: {
+      return {
+        ...state,
+        selectedTopicsForCreatePostScreen: [],
+      };
+    }
+    case SET_TOPICS: {
+      const { topics = {} } = action.body;
+      return { ...state, topics: topics };
+    }
     case UNIVERSAL_FEED_SUCCESS: {
       const { users = {} } = action.body;
       let feedData = state.feed;
@@ -48,7 +100,11 @@ export const feedReducer = (state = initialState, action) => {
       feedData = feedData ? [...feedData, ...post] : [...post];
       // this appends the new users data with previous data
       usersData = { ...usersData, ...users };
-      return { ...state, feed: feedData, users: usersData };
+      return {
+        ...state,
+        feed: feedData,
+        users: usersData,
+      };
     }
     case UNIVERSAL_FEED_REFRESH_SUCCESS: {
       const { users = {} } = action.body;
@@ -63,7 +119,7 @@ export const feedReducer = (state = initialState, action) => {
         (item: LMPostUI) => item?.id === action.body
       );
       // removes that post from the data
-      if(deletedPostIndex != -1) {
+      if (deletedPostIndex != -1) {
         updatedFeed.splice(deletedPostIndex, 1);
       }
       return { ...state, feed: updatedFeed };
@@ -176,6 +232,18 @@ export const feedReducer = (state = initialState, action) => {
     }
     case AUTO_PLAY_POST_VIDEO: {
       return { ...state, autoPlayVideoPostId: action.body };
+    }
+    case POST_DATA_SUCCESS: {
+      const updatedFeed = state.feed;
+      const { post = {}, users = {} } = action.body;
+      const converterPostData = convertToLMPostUI(post, users);
+      const index = updatedFeed.findIndex(
+        (item) => item.id === converterPostData.id
+      );
+      if (index !== -1) {
+        updatedFeed[index] = converterPostData;
+      }
+      return { ...state, feed: updatedFeed };
     }
     default:
       return state;

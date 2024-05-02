@@ -31,25 +31,29 @@ const PostLikesList = ({
   route,
   children,
   onTapUserItemProp,
-  handleScreenBackPressProp
+  handleScreenBackPressProp,
 }: PostLikesProps) => {
   return (
-  
-      <PostLikesCustomisableMethodsContextProvider
-        onTapUserItemProp={onTapUserItemProp}
-        handleScreenBackPressProp={handleScreenBackPressProp}
-      >
-        <PostLikesListComponent />
-      </PostLikesCustomisableMethodsContextProvider>
+    <PostLikesCustomisableMethodsContextProvider
+      onTapUserItemProp={onTapUserItemProp}
+      handleScreenBackPressProp={handleScreenBackPressProp}
+    >
+      <PostLikesListComponent />
+    </PostLikesCustomisableMethodsContextProvider>
   );
 };
 
 const PostLikesListComponent = React.memo(() => {
-  const { totalLikes, postLike, navigation, handleScreenBackPress }: PostLikesListContextValues =
-    usePostLikesListContext();
+  const {
+    totalLikes,
+    postLike,
+    navigation,
+    handleScreenBackPress,
+  }: PostLikesListContextValues = usePostLikesListContext();
   const LMFeedContextStyles = useLMFeedStyles();
-  const {onTapUserItemProp, handleScreenBackPressProp} = usePostLikesCustomisableMethodsContext()
-  const { postListStyle, postLikesListStyle } = LMFeedContextStyles;
+  const { onTapUserItemProp, handleScreenBackPressProp } =
+    usePostLikesCustomisableMethodsContext();
+  const { postListStyle, postLikesListStyle }: any = LMFeedContextStyles;
   const customScreenHeader = postLikesListStyle?.screenHeader;
   return (
     <SafeAreaView style={styles.mainContainer}>
@@ -71,7 +75,9 @@ const PostLikesListComponent = React.memo(() => {
             : `${totalLikes} like`
         }
         onBackPress={() => {
-        handleScreenBackPressProp ? handleScreenBackPressProp() : handleScreenBackPress()
+          handleScreenBackPressProp
+            ? handleScreenBackPressProp()
+            : handleScreenBackPress();
         }}
       />
       {/* post likes list */}
@@ -88,7 +94,7 @@ const PostLikesListComponent = React.memo(() => {
                 customTitleProps={{
                   textStyle: postLikesListStyle?.userDesignationTextStyle,
                 }}
-                onTap={(user) => onTapUserItemProp(user)}
+                onTap={(user: any) => onTapUserItemProp(user)}
               />
             );
           }}

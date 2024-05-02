@@ -75,12 +75,12 @@ export const markReadNotification =
     }
   };
 
-  // mark read notification action
+// mark read notification action
 export const notificationReadHandler = (payload: string) => () => {
   try {
     return {
       type: READ_NOTIFICATION_STATE,
-      body: payload
+      body: payload,
     };
   } catch (error) {
     Alert.alert(`${error}`);

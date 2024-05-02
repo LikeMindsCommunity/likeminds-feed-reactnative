@@ -1,6 +1,6 @@
-import {TextStyle} from 'react-native';
-import {LMCommentUI} from '../../models';
-import { LMTextProps,LMButtonProps } from '../../uiComponents';
+import { TextStyle } from "react-native";
+import { LMCommentUI } from "../../models";
+import { LMTextProps, LMButtonProps } from "../../uiComponents";
 
 export interface LMCommentProps {
   comment: LMCommentUI; // comment data
@@ -8,7 +8,7 @@ export interface LMCommentProps {
   likeTextButton?: LMButtonProps; // custom like text button
   onTapViewMore?: (
     page: number,
-    data: (repliesArray: Array<LMCommentUI>) => void,
+    data: (repliesArray: Array<LMCommentUI>) => void
   ) => void; // callback function to be executed on click of view more replies
   commentMaxLines?: number; // maximun lines of comment to be shown
   menuIcon?: LMButtonProps; // custom menu icon button
@@ -19,9 +19,12 @@ export interface LMCommentProps {
   repliesCountTextStyle?: TextStyle; // props for comment count text
   timeStampStyle?: TextStyle; // props for time stamp text
   viewMoreRepliesProps?: LMTextProps; // props for view more text
-  onTapReplies?: (data: (repliesArray: Array<LMCommentUI>) => void) => void; // callback function to be executed on click of replies
+  onTapReplies?: (data: (repliesArray: Array<LMCommentUI>) => void, commentIdOfReplies: string) => void; // callback function to be executed on click of replies
   isRepliesVisible?: boolean;
-  onCommentOverflowMenuClick: (event: {
-    nativeEvent: { pageX: number; pageY: number };
-  }, commentId:string) => void;
+  onCommentOverflowMenuClick?: (
+    event: {
+      nativeEvent: { pageX: number; pageY: number };
+    },
+    commentId: string
+  ) => void;
 }

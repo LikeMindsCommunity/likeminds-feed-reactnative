@@ -53,6 +53,10 @@ import { showToastMessage } from "../store/actions/toast";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../models/RootStackParamsList";
 import { LMAttachmentUI, LMOGTagsUI, LMPostUI, LMUserUI } from "../models";
+import {
+  ADD_SELECTED_TOPICS,
+  CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
+} from "../store/types/types";
 import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
 import { Events } from "../enums/Events";
 import { Keys } from "../enums/Keys";
@@ -87,7 +91,7 @@ export interface CreatePostContextValues {
   postToEdit: any;
   postDetail: LMPostUI;
   postContentText: string;
-  myRef: MutableRefObject<TextInput>;
+  myRef: any;
   taggedUserName: string;
   debounceTimeout: NodeJS.Timeout | null;
   page: number;
@@ -122,14 +126,15 @@ export interface CreatePostContextValues {
   removeSingleAttachment: () => void;
   allAttachment: Array<LMAttachmentUI>;
   getPostData: () => void;
-  postEdit: () => void;
+  postEdit: any;
   handleInputChange: (event: string) => void;
   loadData: (newPage: number) => void;
   handleLoadMore: () => void;
   onPostClick: (
     allMedia: Array<LMAttachmentUI>,
     linkData: Array<LMAttachmentUI>,
-    content: string
+    content: string,
+    topics: string[]
   ) => void;
   handleScreenBackPress: () => void;
 }
@@ -189,13 +194,14 @@ export const CreatePostContextProvider = ({
       if (res?.didCancel) {
         setShowSelecting(false);
       } else {
-        const mediaWithSizeCheck = [];
+        const mediaWithSizeCheck: any = [];
         // checks the size of media
         if (res?.assets) {
           for (const media of res.assets) {
             if (
-              media.fileSize > MAX_FILE_SIZE ||
-              media.fileSize < MIN_FILE_SIZE
+              media?.fileSize &&
+              (media?.fileSize > MAX_FILE_SIZE ||
+                media?.fileSize < MIN_FILE_SIZE)
             ) {
               dispatch(
                 showToastMessage({
@@ -276,17 +282,19 @@ export const CreatePostContextProvider = ({
   const onPostClick = async (
     allMedia: Array<LMAttachmentUI>,
     linkData: Array<LMAttachmentUI>,
-    content: string
+    content: string,
+    topics: string[]
   ) => {
     const isConnected = await NetworkUtil.isNetworkAvailable();
     if (isConnected) {
       postToEdit
-        ? postEdit()
+        ? postEdit(topics)
         : dispatch(
             setUploadAttachments({
               mediaAttachmentData: allMedia,
               linkAttachmentData: linkData,
               postContentData: content.trim(),
+              topics: topics,
             })
           );
       navigation.goBack();
@@ -298,7 +306,7 @@ export const CreatePostContextProvider = ({
   // function handles the slection of documents
   const setSelectedDocuments = () => {
     selectDocument()?.then((res: any) => {
-      const mediaWithSizeCheck = [];
+      const mediaWithSizeCheck: any = [];
       // checks the size of the files
       for (const media of res) {
         if (media.size > MAX_FILE_SIZE || media.size < MIN_FILE_SIZE) {
@@ -404,7 +412,7 @@ export const CreatePostContextProvider = ({
           (item: string) => {
             return new Promise((resolve, reject) => {
               // calls the decodeUrl api
-              const decodeUrlResponse = dispatch(
+              const decodeUrlResponse: any = dispatch(
                 getDecodedUrl(
                   DecodeURLRequest.builder().setURL(item).build(),
                   false
@@ -470,7 +478,7 @@ export const CreatePostContextProvider = ({
 
   // this function calls the getPost api
   const getPostData = async () => {
-    const getPostResponse = await dispatch(
+    const getPostResponse: any = await dispatch(
       getPost(
         GetPostRequest.builder()
           .setpostId(postToEdit)
@@ -501,9 +509,9 @@ export const CreatePostContextProvider = ({
       setPostContentText(convertedText);
     }
     if (postDetail?.attachments) {
-      const imageVideoMedia = [];
-      const documentMedia = [];
-      const linkPreview = [];
+      const imageVideoMedia: any = [];
+      const documentMedia: any = [];
+      const linkPreview: any = [];
       for (const media of postDetail.attachments) {
         if (media.attachmentType === IMAGE_ATTACHMENT_TYPE) {
           imageVideoMedia.push(media);
@@ -519,10 +527,16 @@ export const CreatePostContextProvider = ({
       setFormattedDocumentAttachments(documentMedia);
       setFormattedLinkAttachments(linkPreview);
     }
+    if (postDetail?.topics) {
+      dispatch({
+        type: ADD_SELECTED_TOPICS,
+        body: { topics: postDetail?.topics },
+      });
+    }
   }, [postDetail]);
 
   //  this function calls the edit post api
-  const postEdit = async () => {
+  const postEdit = async (topics) => {
     // replace mentions with route
     const contentText = mentionToRouteConverter(postContentText);
     const linkAttachments = showLinkPreview ? formattedLinkAttachments : [];
@@ -534,6 +548,7 @@ export const CreatePostContextProvider = ({
           .setattachments([...allAttachment, ...linkAttachments])
           .setpostId(postDetail?.id)
           .settext(contentText)
+          .setTopicIds(topics)
           .build(),
         false
       )
@@ -562,7 +577,7 @@ export const CreatePostContextProvider = ({
     if (mentionListLength > 0) {
       const timeoutID = setTimeout(async () => {
         setPage(1);
-        const taggingListResponse = await dispatch(
+        const taggingListResponse: any = await dispatch(
           getTaggingList(
             GetTaggingListRequest.builder()
               .setsearchName(newMentions[mentionListLength - 1])
@@ -599,7 +614,7 @@ export const CreatePostContextProvider = ({
   // this calls the tagging list api for different page number
   const loadData = async (newPage: number) => {
     setIsLoading(true);
-    const taggingListResponse = await dispatch(
+    const taggingListResponse: any = await dispatch(
       getTaggingList(
         GetTaggingListRequest.builder()
           .setsearchName(taggedUserName)
@@ -629,7 +644,10 @@ export const CreatePostContextProvider = ({
   };
 
   // this handles the functionality on back press
-  const handleScreenBackPress = () => {
+  const handleScreenBackPress = async () => {
+    await dispatch({
+      type: CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
+    });
     navigation.goBack();
   };
 

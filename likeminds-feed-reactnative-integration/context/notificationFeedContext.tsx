@@ -24,7 +24,11 @@ import {
   MarkReadNotificationRequest,
 } from "@likeminds.community/feed-js";
 import { clearPostDetail } from "../store/actions/postDetail";
-import { CREATE_POST, POST_DETAIL, UNIVERSAL_FEED } from "../constants/screenNames";
+import {
+  CREATE_POST,
+  POST_DETAIL,
+  UNIVERSAL_FEED,
+} from "../constants/screenNames";
 import { NAVIGATED_FROM_NOTIFICATION } from "../constants/Strings";
 
 interface NotificationFeedContextProps {
@@ -56,7 +60,7 @@ export interface NotificationFeedContextValues {
   fetchNotificationFeed: (page: number) => void;
   readNotification: (id: string) => void;
   handleScreenBackPress: () => void;
-  handleActivityOnTap:(activity: LMActivityUI) => void;
+  handleActivityOnTap: (activity: LMActivityUI) => void;
   onRefresh: () => void;
   handleLoadMore: () => void;
 }
@@ -86,14 +90,14 @@ export const NotificationFeedContextProvider = ({
   const notifications = useAppSelector(
     (state) => state.notification.activities
   );
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const PostRegexPattern = /^route:\/\/post_detail\?post_id=\w+$/;
   const commentRegexPattern =
     /^route:\/\/post_detail\?post_id=[\w\d]+&comment_id=[\w\d]+$/;
   const createPostRegexPattern = /^route:\/\/create_post$/;
   const universalFeedRegexPattern = /^route:\/\/feed\?type=universal$/;
-  const PAGE_SIZE = 20
+  const PAGE_SIZE = 20;
   // this functions gets notification feed data
   const fetchNotificationFeed = async (page) => {
     const payload = {
@@ -133,7 +137,7 @@ export const NotificationFeedContextProvider = ({
   };
 
   const handleActivityOnTap = (activity) => {
-    readNotification(activity?.id)
+    readNotification(activity?.id);
     activity?.cta.match(PostRegexPattern)
       ? (dispatch(clearPostDetail()),
         navigation.navigate(POST_DETAIL, [
@@ -143,7 +147,9 @@ export const NotificationFeedContextProvider = ({
       : activity?.cta.match(commentRegexPattern)
       ? (dispatch(clearPostDetail()),
         navigation.navigate(POST_DETAIL, [
-          activity?.activityEntityData?.postId ? activity?.activityEntityData?.postId : activity?.activityEntityData?.id ,
+          activity?.activityEntityData?.postId
+            ? activity?.activityEntityData?.postId
+            : activity?.activityEntityData?.id,
           NAVIGATED_FROM_NOTIFICATION,
         ]))
       : activity?.cta.match(createPostRegexPattern)
@@ -157,10 +163,7 @@ export const NotificationFeedContextProvider = ({
     // calling getNotification API
     await dispatch(
       refreshNotificationFeed(
-        GetNotificationFeedRequest.builder()
-          .setpage(1)
-          .setpageSize(20)
-          .build(),
+        GetNotificationFeedRequest.builder().setpage(1).setpageSize(20).build(),
         false
       )
     );
@@ -180,7 +183,10 @@ export const NotificationFeedContextProvider = ({
 
   // pagination
   const handleLoadMore = async () => {
-    if (!isLoading && notifications.length === PAGE_SIZE * notificationFeedPageNumber) {
+    if (
+      !isLoading &&
+      notifications.length === PAGE_SIZE * notificationFeedPageNumber
+    ) {
       const newPage = notificationFeedPageNumber + 1;
       setNotificationFeedPageNumber((page) => {
         return page + 1;
@@ -203,7 +209,7 @@ export const NotificationFeedContextProvider = ({
     onRefresh,
     handleLoadMore,
     setIsLoading,
-    isLoading
+    isLoading,
   };
 
   return (

@@ -1,10 +1,21 @@
 import React, {useEffect, useState} from 'react';
 import {
+  CreatePost,
+  PostDetail,
+  PostLikesList,
+  PostsList,
+  UniversalFeed,
+  TopicFeed,
   UNIVERSAL_FEED,
+  TOPIC_FEED,
+  POSTS_LIST,
   POST_DETAIL,
   CREATE_POST,
   POST_LIKES_LIST,
   LMOverlayProvider,
+} from '@likeminds.community/feed-rn-core';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {
   NOTIFICATION_FEED,
   getNotification,
   getRoute,
@@ -21,12 +32,12 @@ import {
   ViewStyle,
 } from 'react-native';
 import {LinkingOptions, NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
 import {navigationRef} from './RootNavigation';
 import FeedWrapper from './feedScreen/feedWrapper';
 import DetailWrapper from './feedScreen/detailScreenWrapper';
 import CreateWrapper from './feedScreen/createScreenWrapper';
 import LikesWrapper from './feedScreen/likesWrapper';
+import TopicFeedWrapper from './feedScreen/topicFeedScreenWrapper';
 import NotificationWrapper from './feedScreen/notificationWrapper';
 import messaging from '@react-native-firebase/messaging';
 import notifee, {EventType} from '@notifee/react-native';
@@ -44,6 +55,7 @@ class CustomCallbacks implements LMFeedCallbacks {
 const lmFeedInterface = new CustomCallbacks();
 
 const App = () => {
+  const Stack = createNativeStackNavigator();
   const [users, setUsers] = useState<any>();
   const [apiKey, setApiKey] = useState(
     Credentials?.apiKey?.length > 0 ? Credentials?.apiKey : users?.apiKey,
@@ -98,7 +110,6 @@ const App = () => {
     }
   }, [isTrue, apiKey]);
 
-  const Stack = createStackNavigator();
   // custom style of new post button
   const regex = /post_id=([^&]+)/;
 
@@ -205,6 +216,11 @@ const App = () => {
               <Stack.Screen name={POST_DETAIL} component={DetailWrapper} />
               <Stack.Screen name={CREATE_POST} component={CreateWrapper} />
               <Stack.Screen name={POST_LIKES_LIST} component={LikesWrapper} />
+              <Stack.Screen
+                name={TOPIC_FEED}
+                component={TopicFeedWrapper}
+                options={{headerShown: true}}
+              />
               <Stack.Screen
                 name={NOTIFICATION_FEED}
                 component={NotificationWrapper}

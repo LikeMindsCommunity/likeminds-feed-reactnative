@@ -1,6 +1,6 @@
-import {StyleSheet} from 'react-native';
-import STYLES from '../../constants/Styles';
-import Layout from '../../constants/Layout';
+import { StyleSheet } from "react-native";
+import STYLES from "../../constants/Styles";
+import Layout from "../../constants/Layout";
 
 const styles = StyleSheet.create({
   page: {
@@ -30,14 +30,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: STYLES.$PADDINGS.MEDIUM,
     margin: 8,
     borderWidth: 1,
-    borderColor: '#9B9B9B',
+    borderColor: "#9B9B9B",
   },
   reportBtnParent: {
-    justifyContent: 'center',
-    alignSelf: 'center',
-    position: 'absolute',
-    bottom: 40,
-    zIndex: -1,
+    justifyContent: "center",
+    alignSelf: "center",
+    position: "absolute",
+    // bottom: 40,
+    // zIndex: -1,
   },
   reportBtn: {
     backgroundColor: STYLES.$COLORS.RED,
@@ -52,19 +52,19 @@ const styles = StyleSheet.create({
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
   },
   disabledReportBtn: {
-    backgroundColor: '#D0D8E2',
+    backgroundColor: "#D0D8E2",
     borderRadius: 25,
     paddingHorizontal: 50,
     paddingVertical: STYLES.$PADDINGS.MEDIUM,
   },
   titleView: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderBottomColor: '#D8D8D8',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    borderBottomColor: "#D8D8D8",
     borderBottomWidth: 1,
     paddingHorizontal: STYLES.$PADDINGS.LARGE,
     paddingVertical: STYLES.$PADDINGS.SMALL,
-    alignItems: 'center',
+    alignItems: "center",
   },
   titleText: {
     color: STYLES.$COLORS.RED,
@@ -78,8 +78,8 @@ const styles = StyleSheet.create({
     paddingTop: STYLES.$PADDINGS.SMALL,
   },
   tagView: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     marginTop: STYLES.$MARGINS.MEDIUM,
     paddingHorizontal: STYLES.$PADDINGS.LARGE,
   },
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   modalView: {
     padding: 10,
     borderRadius: 8,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -118,26 +118,26 @@ const styles = StyleSheet.create({
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
     color: STYLES.$COLORS.whiteTextColor,
   },
-  toastViewStyle: {zIndex: 4000},
-  contentBox: {flex: 1},
+  toastViewStyle: { zIndex: 4000 },
+  contentBox: { flex: 1 },
   selectedReasonItemView: {
-    backgroundColor: '#5046E5',
-    borderColor: '#5046E5',
+    backgroundColor: "#5046E5",
+    borderColor: "#5046E5",
   },
   defaultReasonItemView: {
-    backgroundColor: '#ffffff',
-    borderColor: '#777e8e',
+    backgroundColor: "#ffffff",
+    borderColor: "#777e8e",
   },
   selectedReasonText: {
-    color: '#ffffff',
+    color: "#ffffff",
   },
   defaultReasonText: {
-    color: '#777e8e',
+    color: "#777e8e",
   },
   loaderView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

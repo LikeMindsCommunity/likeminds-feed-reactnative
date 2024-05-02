@@ -97,7 +97,7 @@ const DeleteModal = ({
         )
       );
       // toast message action
-      if (deletePostResponse) {
+      if (deletePostResponse !== undefined) {
         LMFeedAnalytics.track(
           Events.POST_DELETED,
           new Map<string, string>([
@@ -315,7 +315,7 @@ const DeleteModal = ({
                         style={styles.otherTextInput}
                         placeholder={REASON_FOR_DELETION_PLACEHOLDER}
                         value={otherReason}
-                        placeholderTextColor={'grey'}
+                        placeholderTextColor={"grey"}
                       />
                     ) : null}
 

@@ -9,10 +9,10 @@ import { useLMFeedStyles } from "../../../lmFeedProvider";
 import { useAppSelector } from "../../../store/store";
 
 const LMPostHeader = React.memo(() => {
-  const { post, headerProps }: LMPostContextValues = useLMPostContext();
+  const { post, headerProps }: any = useLMPostContext();
   const LMFeedContextStyles = useLMFeedStyles();
   const { postListStyle } = LMFeedContextStyles;
-  const customPostHeaderStyle = postListStyle?.header
+  const customPostHeaderStyle: any = postListStyle?.header;
   const memberData = useAppSelector((state) => state.login.member);
 
   const showMenuIcon =
@@ -24,13 +24,11 @@ const LMPostHeader = React.memo(() => {
       ? customPostHeaderStyle?.showMemberStateLabel
       : true;
 
-
   // this function is executed on the click of menu icon & handles the position and visibility of the modal
   const onThreedotsClick = (event: {
     nativeEvent: { pageX: number; pageY: number };
   }) => {
-    headerProps?.onOverlayMenuClick(event)
- 
+    headerProps?.onOverlayMenuClick(event);
   };
 
   return (
@@ -76,7 +74,7 @@ const LMPostHeader = React.memo(() => {
                 {post?.user?.name}
               </LMText>
               {/* member state label view */}
-              {showMemberStateLabel && post?.user?.customTitle != '' && (
+              {showMemberStateLabel && post?.user?.customTitle != "" && (
                 <View
                   style={StyleSheet.flatten([
                     styles.labelView,
@@ -88,7 +86,9 @@ const LMPostHeader = React.memo(() => {
                       styles.labelText,
                       customPostHeaderStyle?.memberStateTextStyle,
                     ])}
-                  >{post?.user?.customTitle}</LMText>
+                  >
+                    {post?.user?.customTitle}
+                  </LMText>
                 </View>
               )}
             </View>
@@ -102,8 +102,7 @@ const LMPostHeader = React.memo(() => {
                   customPostHeaderStyle?.createdAt,
                 ])}
               >
-                {timeStamp(Number(post?.createdAt)) ===
-                undefined
+                {timeStamp(Number(post?.createdAt)) === undefined
                   ? "now"
                   : `${timeStamp(Number(post?.createdAt))}`}
               </LMText>
@@ -147,11 +146,17 @@ const LMPostHeader = React.memo(() => {
                     ? customPostHeaderStyle?.pinIcon?.assetPath
                     : require("../../../assets/images/pin_icon3x.png")
                 }
-                iconStyle={customPostHeaderStyle?.pinIcon?.iconStyle ? customPostHeaderStyle?.pinIcon?.iconStyle : styles.iconSize}
+                iconStyle={
+                  customPostHeaderStyle?.pinIcon?.iconStyle
+                    ? customPostHeaderStyle?.pinIcon?.iconStyle
+                    : styles.iconSize
+                }
                 iconUrl={customPostHeaderStyle?.pinIcon?.iconUrl}
                 color={customPostHeaderStyle?.pinIcon?.color}
                 width={
-                  customPostHeaderStyle?.pinIcon?.width ? customPostHeaderStyle?.pinIcon?.width : 20
+                  customPostHeaderStyle?.pinIcon?.width
+                    ? customPostHeaderStyle?.pinIcon?.width
+                    : 20
                 }
                 height={
                   customPostHeaderStyle?.pinIcon?.height
@@ -178,7 +183,11 @@ const LMPostHeader = React.memo(() => {
                     ? customPostHeaderStyle?.menuIcon?.assetPath
                     : require("../../../assets/images/three_dots3x.png")
                 }
-                iconStyle={customPostHeaderStyle?.menuIcon?.iconStyle ? customPostHeaderStyle?.menuIcon?.iconStyle : styles.iconSize}
+                iconStyle={
+                  customPostHeaderStyle?.menuIcon?.iconStyle
+                    ? customPostHeaderStyle?.menuIcon?.iconStyle
+                    : styles.iconSize
+                }
                 iconUrl={customPostHeaderStyle?.menuIcon?.iconUrl}
                 color={customPostHeaderStyle?.menuIcon?.color}
                 width={
@@ -198,7 +207,6 @@ const LMPostHeader = React.memo(() => {
           </>
         </TouchableOpacity>
       </View>
-
     </View>
   );
 });
