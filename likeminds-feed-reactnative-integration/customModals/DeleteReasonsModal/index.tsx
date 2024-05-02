@@ -40,7 +40,7 @@ const DeleteReasonsModal = ({
       )
     );
     return reportTagsResponse;
-  }
+  };
 
   // this calls the fetchReportTags api when the modal gets visible
   useEffect(() => {

@@ -7,6 +7,7 @@ import {
   PostDetail,
   CreatePost,
   PostLikesList,
+  TopicFeed,
   LMFeedNotificationFeedListView,
   LMFeedNotificationFeedScreen,
 } from "./screens";
@@ -16,6 +17,7 @@ import {
   POSTS_LIST,
   POST_DETAIL,
   POST_LIKES_LIST,
+  TOPIC_FEED,
   NOTIFICATION_FEED,
   NOTIFICATION_LIST,
 } from "./constants/screenNames";
@@ -36,7 +38,11 @@ import {
 import getNotification, { getRoute } from "./notification";
 import { LMFeedAnalytics } from "./analytics/LMFeedAnalytics";
 import { LMFeedCallbacks } from "./callBacks/lmFeedCallback";
-import {NAVIGATED_FROM_NOTIFICATION, NAVIGATED_FROM_COMMENT, NAVIGATED_FROM_POST} from './constants/Strings'
+import {
+  NAVIGATED_FROM_NOTIFICATION,
+  NAVIGATED_FROM_COMMENT,
+  NAVIGATED_FROM_POST,
+} from "./constants/Strings";
 export {
   LMOverlayProvider,
   initMyClient,
@@ -49,6 +55,7 @@ export {
   LMFeedNotificationFeedListView,
   LMFeedNotificationFeedScreen,
   UNIVERSAL_FEED,
+  TOPIC_FEED,
   CREATE_POST,
   POSTS_LIST,
   POST_DETAIL,
@@ -66,6 +73,7 @@ export {
   PostLikesListContextProvider,
   PostListContextProvider,
   CreatePostContextProvider,
+  TopicFeed,
   NotificationFeedContextProvider,
   getRoute,
   getNotification,
@@ -73,5 +81,5 @@ export {
   LMFeedCallbacks,
   NAVIGATED_FROM_NOTIFICATION,
   NAVIGATED_FROM_COMMENT,
-  NAVIGATED_FROM_POST
+  NAVIGATED_FROM_POST,
 };

@@ -195,7 +195,7 @@ const PostDetailComponent = React.memo(() => {
   }: PostDetailContextValues = usePostDetailContext();
 
   const LMFeedContextStyles = useLMFeedStyles();
-  const { postDetailStyle, postListStyle } = LMFeedContextStyles;
+  const { postDetailStyle, postListStyle }: any = LMFeedContextStyles;
   const {
     getCommentsRepliesProp,
     commentLikeHandlerProp,
@@ -208,11 +208,11 @@ const PostDetailComponent = React.memo(() => {
     onCommentOverflowMenuClickProp,
     onSharePostClicked,
   } = usePostDetailCustomisableMethodsContext();
-  const postHeaderStyle = postListStyle?.header;
-  const customScreenHeader = postDetailStyle?.screenHeader;
-  const customCommentItemStyle = postDetailStyle?.commentItemStyle;
-  const customReplyingViewStyle = postDetailStyle?.replyingViewStyle;
-  const customCommentTextInput = postDetailStyle?.commentTextInputStyle;
+  const postHeaderStyle: any = postListStyle?.header;
+  const customScreenHeader: any = postDetailStyle?.screenHeader;
+  const customCommentItemStyle: any = postDetailStyle?.commentItemStyle;
+  const customReplyingViewStyle: any = postDetailStyle?.replyingViewStyle;
+  const customCommentTextInput: any = postDetailStyle?.commentTextInputStyle;
 
   // this function returns the id of the item selected from menu list and handles further functionalities accordingly for comment
   const onCommentMenuItemSelect = async (
@@ -916,6 +916,7 @@ const PostDetailComponent = React.memo(() => {
               ? onMenuItemSelect(postId, itemId, isPinned)
               : onCommentMenuItemSelect(postId, itemId);
           }}
+          /* @ts-ignore */
           modalPosition={modalPosition}
           modalVisible={showActionListModal}
           onCloseModal={closePostActionListModal}

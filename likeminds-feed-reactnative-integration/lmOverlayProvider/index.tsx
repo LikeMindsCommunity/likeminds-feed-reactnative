@@ -1,7 +1,6 @@
-
 import React from "react";
 import { LMOverlayProviderProps } from "./types";
-import {LMFeedProvider} from '../lmFeedProvider'
+import { LMFeedProvider } from "../lmFeedProvider";
 import { StyleSheet, View } from "react-native";
 import { ContextProvider } from "../store/contextStore";
 
@@ -17,15 +16,15 @@ export const LMOverlayProvider = ({
   postDetailStyle,
   postLikesListStyle,
   createPostStyle,
-  notificationFeedStyle
+  notificationFeedStyle,
+  topicsStyle,
 }: LMOverlayProviderProps) => {
   return (
-    <ContextProvider children={children}>
+    <ContextProvider>
       <LMFeedProvider
         myClient={myClient}
         userName={userName}
         userUniqueId={userUniqueId}
-        children={children}
         universalFeedStyle={universalFeedStyle}
         postDetailStyle={postDetailStyle}
         postListStyle={postListStyle}
@@ -33,11 +32,12 @@ export const LMOverlayProvider = ({
         loaderStyle={loaderStyle}
         createPostStyle={createPostStyle}
         notificationFeedStyle={notificationFeedStyle}
+        topicsStyle={topicsStyle}
         lmFeedInterface={lmFeedInterface}
       >
         <View style={styles.flexStyling}>{children}</View>
       </LMFeedProvider>
-      </ContextProvider>
+    </ContextProvider>
   );
 };
 

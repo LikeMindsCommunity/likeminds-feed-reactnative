@@ -1,10 +1,10 @@
-import {LMFeedClient} from '@likeminds.community/feed-js';
+import { LMFeedClient } from "@likeminds.community/feed-js";
 
 export const initMyClient = (apiKey: string) => {
   const lmFeedClient = LMFeedClient.Builder()
     .setApiKey(apiKey)
-    .setPlatformCode('rn')
-    .setVersionCode(5)
+    .setPlatformCode("rn")
+    .setVersionCode(6)
     .build();
 
   return lmFeedClient;

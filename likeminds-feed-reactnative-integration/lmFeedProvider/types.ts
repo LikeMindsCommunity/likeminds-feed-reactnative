@@ -294,16 +294,16 @@ export interface CreatePostStyleProps {
     headingViewStyle?: ViewStyle;
   };
   attachmentOptionsStyle: {
-    attachmentOptionsView?: ViewStyle,
-    photoAttachmentView?: ViewStyle,
-    photoAttachmentIcon?: LMIconProps,
-    photoAttachmentTextStyle?: LMTextProps,
-    videoAttachmentView?: ViewStyle,
-    videoAttachmentIcon?: LMIconProps,
-    videoAttachmentTextStyle?: LMTextProps,
-    filesAttachmentView?: ViewStyle,
-    filesAttachmentIcon?: LMIconProps,
-    filesAttachmentTextStyle?:LMTextProps,
+    attachmentOptionsView?: ViewStyle;
+    photoAttachmentView?: ViewStyle;
+    photoAttachmentIcon?: LMIconProps;
+    photoAttachmentTextStyle?: LMTextProps;
+    videoAttachmentView?: ViewStyle;
+    videoAttachmentIcon?: LMIconProps;
+    videoAttachmentTextStyle?: LMTextProps;
+    filesAttachmentView?: ViewStyle;
+    filesAttachmentIcon?: LMIconProps;
+    filesAttachmentTextStyle?: LMTextProps;
   };
   createPostTextInputStyle?: {
     inputTextStyle?: TextStyle;
@@ -322,13 +322,13 @@ export interface CreatePostStyleProps {
     multilineField?: boolean;
   };
   addMoreAttachmentsButton?: {
-    text: LMTextProps,
-    icon: LMIconProps,
-    onTap: (value?: any) => void,
+    text: LMTextProps;
+    icon: LMIconProps;
+    onTap: (value?: any) => void;
     placement: "start" | "end";
-    buttonStyle: ViewStyle,
-    isClickable: boolean,
-  }
+    buttonStyle: ViewStyle;
+    isClickable: boolean;
+  };
 }
 
 export interface PostLikesListStyleProps {
@@ -344,7 +344,7 @@ export interface NotificationFeedStyleProps {
   unreadBackgroundColor?: string;
   activityTextStyles?: TextStyle;
   timestampTextStyles?: TextStyle;
-  userImageStyles?:  {
+  userImageStyles?: {
     fallbackTextStyle?: TextStyle;
     size?: number;
     onTap?: () => void;
@@ -357,7 +357,26 @@ export interface NotificationFeedStyleProps {
   noActivityViewImage?: React.ReactNode;
   noActivityViewImageStyle?: ImageStyle;
   customScreenHeader?: React.ReactNode;
-  activityTextComponent?: Function
+  activityTextComponent?: Function;
+}
+
+export interface TopicsStyle {
+  allTopic?: TextStyle;
+  allTopicPlaceholder?: string;
+  selectTopicHeader?: TextStyle;
+  selectTopicHeaderPlaceholder?: string;
+  searchTextStyle?: TextStyle;
+  searchTextPlaceholder?: string;
+  topicListStyle?: TextStyle;
+  selectTopic?: TextStyle;
+  selectTopicPlaceholder?: string;
+  selectedTopicsStyle?: TextStyle;
+  filteredTopicsStyle?: TextStyle;
+  crossIconStyle?: ImageStyle;
+  plusIconStyle?: ImageStyle;
+  tickIconStyle?: ImageStyle;
+  nextArrowStyle?: ImageStyle;
+  arrowDownStyle?: ImageStyle;
 }
 
 export interface ThemeContextProps {
@@ -368,7 +387,8 @@ export interface ThemeContextProps {
   postDetailStyle?: PostDetailStyleProps;
   createPostStyle?: CreatePostStyleProps;
   postLikesListStyle?: PostLikesListStyleProps;
-  notificationFeedStyle?: NotificationFeedStyleProps
+  notificationFeedStyle?: NotificationFeedStyleProps;
+  topicsStyle?: TopicsStyle;
 }
 
 export interface LMFeedProviderProps {
@@ -379,10 +399,11 @@ export interface LMFeedProviderProps {
   lmFeedInterface?: any;
   themeStyles?: ThemeStyles;
   universalFeedStyle?: UniversalFeedStyleProps;
-  postListStyle?: PostListStyleProps;
+  postListStyle?: any;
   loaderStyle?: LoaderStyleProps;
   postDetailStyle?: PostDetailStyleProps;
   createPostStyle?: CreatePostStyleProps;
   postLikesListStyle?: PostLikesListStyleProps;
-  notificationFeedStyle?: NotificationFeedStyleProps
+  notificationFeedStyle?: NotificationFeedStyleProps;
+  topicsStyle?: TopicsStyle;
 }

@@ -7,7 +7,7 @@ import React, {
   useEffect,
   useState,
   useRef,
-  JSX
+  JSX,
 } from "react";
 import { useAppDispatch, useAppSelector } from "../store/store";
 
@@ -112,7 +112,7 @@ export interface PostDetailContextValues {
   };
   postDetail: LMPostUI;
   modalPosition: {};
-  showActionListModal: false;
+  showActionListModal: boolean;
   selectedMenuItemPostId: string;
   commentToAdd: string;
   selectedMenuItemCommentId: string;
@@ -123,15 +123,15 @@ export interface PostDetailContextValues {
   loggedInUser: {};
   showCommentActionListModal: boolean;
   replyOnComment: {
-    textInputFocus: false;
+    textInputFocus: boolean;
     commentId: string;
     userId: string;
   };
-  replyToUsername: "";
+  replyToUsername: string;
   localModalVisibility: boolean;
   keyboardIsVisible: boolean;
   editCommentFocus: boolean;
-  myRef: null;
+  myRef: any;
   taggedUserName: string;
   debounceTimeout: null;
   page: number;
@@ -139,7 +139,7 @@ export interface PostDetailContextValues {
   allTags: Array<LMUserUI>;
   isUserTagging: boolean;
   isLoading: boolean;
-  isPostLoading:boolean;
+  isPostLoading: boolean;
   refreshing: boolean;
   localRefresh: boolean;
   commentFocus: boolean;
@@ -171,7 +171,7 @@ export interface PostDetailContextValues {
   setKeyboardIsVisible: Dispatch<SetStateAction<boolean>>;
   setLocalModalVisibility: Dispatch<SetStateAction<boolean>>;
   setReplyToUsername: Dispatch<SetStateAction<string>>;
-  setReplyOnComment: Dispatch<SetStateAction<object>>;
+  setReplyOnComment: any;
   setShowCommentActionListModal: Dispatch<SetStateAction<boolean>>;
   setCommentPageNumber: Dispatch<SetStateAction<number>>;
   setShowReportModal: Dispatch<SetStateAction<boolean>>;
@@ -211,10 +211,12 @@ export interface PostDetailContextValues {
   commentLikeHandler: (postId: string, commentId: string) => void;
   addNewComment: (postId: string) => void;
   addNewReply: (postId: string, commentId: string) => void;
-  onOverlayMenuClick: ( event: {
-    nativeEvent: { pageX: number; pageY: number };
-  },
-  postId: string) => void;
+  onOverlayMenuClick: (
+    event: {
+      nativeEvent: { pageX: number; pageY: number };
+    },
+    postId: string
+  ) => void;
   commentEdit: () => void;
   handleInputChange: (event: string) => void;
   loadData: (newPage: number) => void;
@@ -310,7 +312,7 @@ export const PostDetailContextProvider = ({
   const [showLoader, setShowLoader] = useState(true);
 
   const LMFeedContextStyles = useLMFeedStyles();
-  const { postListStyle ,loaderStyle} = LMFeedContextStyles;
+  const { postListStyle, loaderStyle } = LMFeedContextStyles;
 
   // this function is executed on pull to refresh
   const onRefresh = async () => {
@@ -426,7 +428,7 @@ export const PostDetailContextProvider = ({
     const pinPostResponse = await dispatch(
       pinPost(PinPostRequest.builder().setpostId(payload.postId).build(), false)
     );
-    if (pinPostResponse) {
+    if (pinPostResponse !== undefined) {
       dispatch(
         showToastMessage({
           isToast: true,
@@ -439,7 +441,7 @@ export const PostDetailContextProvider = ({
 
   // this function handles the functionality on the report option of post
   const handleReportPost = async () => {
-    dispatch(autoPlayPostVideo(''))
+    dispatch(autoPlayPostVideo(""));
     setShowReportModal(true);
   };
 
@@ -475,7 +477,7 @@ export const PostDetailContextProvider = ({
       handleDeletePost(true);
     }
     if (itemId === EDIT_POST_MENU_ITEM) {
-      dispatch(autoPlayPostVideo(''))
+      dispatch(autoPlayPostVideo(""));
       navigation.navigate(CREATE_POST, { postId });
       LMFeedAnalytics.track(
         Events.POST_EDITED,
@@ -490,7 +492,7 @@ export const PostDetailContextProvider = ({
 
   // this function handles the functionality on the report option of comment
   const handleReportComment = async () => {
-    dispatch(autoPlayPostVideo(''))
+    dispatch(autoPlayPostVideo(""));
     setShowReportModal(true);
   };
 
@@ -548,7 +550,7 @@ export const PostDetailContextProvider = ({
         false
       )
     );
-    setShowLoader(false)
+    setShowLoader(false);
     return getPostResponse;
   };
 
@@ -619,7 +621,7 @@ export const PostDetailContextProvider = ({
     // handles adding comment locally
     dispatch(addCommentStateHandler({ payload, loggedInUser }));
     // calls new comment api
-    const commentAddResponse = await dispatch(
+    const commentAddResponse: any = await dispatch(
       addComment(
         AddCommentRequest.builder()
           .setpostId(payload.postId)
@@ -660,7 +662,7 @@ export const PostDetailContextProvider = ({
     setRouteParams(false);
     dispatch(replyCommentStateHandler({ payload, loggedInUser }));
     // call reply on comment api
-    const replyAddResponse = await dispatch(
+    const replyAddResponse: any = await dispatch(
       replyComment(
         ReplyCommentRequest.builder()
           .setPostId(payload.postId)
@@ -687,9 +689,9 @@ export const PostDetailContextProvider = ({
 
   // this useEffect handles the pagination of the comments
   useEffect(() => {
-    setShowLoader(true)
-    dispatch(autoPlayPostVideo('')) 
-    dispatch(clearPostDetail())   
+    setShowLoader(true);
+    dispatch(autoPlayPostVideo(""));
+    dispatch(clearPostDetail());
     const initialPage = 1;
     getPostData(initialPage);
   }, [route.params[0]]);
@@ -707,7 +709,6 @@ export const PostDetailContextProvider = ({
     setShowActionListModal(true);
     setModalPosition({ x: pageX, y: pageY });
   };
-
 
   // Update localModalVisibility when showDeleteModal visibility changes
   useEffect(() => {
@@ -770,7 +771,7 @@ export const PostDetailContextProvider = ({
         false
       )
     );
-    if (editCommentResponse) {
+    if (editCommentResponse !== undefined) {
       setEditCommentFocus(false);
       setCommentToAdd("");
       setKeyboardFocusOnReply(false);
@@ -799,9 +800,9 @@ export const PostDetailContextProvider = ({
 
     const mentionListLength = newMentions.length;
     if (mentionListLength > 0) {
-      const timeoutID = setTimeout(async () => {
+      const timeoutID: any = setTimeout(async () => {
         setPage(1);
-        const taggingListResponse = await dispatch(
+        const taggingListResponse: any = await dispatch(
           getTaggingList(
             GetTaggingListRequest.builder()
               .setsearchName(newMentions[mentionListLength - 1])
@@ -837,7 +838,7 @@ export const PostDetailContextProvider = ({
   // this calls the tagging list api for different page number
   const loadData = async (newPage: number) => {
     setIsLoading(true);
-    const taggingListResponse = await dispatch(
+    const taggingListResponse: any = await dispatch(
       getTaggingList(
         GetTaggingListRequest.builder()
           .setsearchName(taggedUserName)
@@ -847,7 +848,7 @@ export const PostDetailContextProvider = ({
         false
       )
     );
-    if (taggingListResponse) {
+    if (taggingListResponse !== undefined) {
       setAllTags([...allTags, ...taggingListResponse.members]);
       setIsLoading(false);
     }
@@ -869,23 +870,23 @@ export const PostDetailContextProvider = ({
   const handleScreenBackPress = () => {
     Keyboard.dismiss();
     navigation.goBack();
-    dispatch(clearPostDetail())
+    dispatch(clearPostDetail());
   };
 
-    //pagination loader in the footer
-    const renderLoader = () => {
-      return isPostLoading ? (
-        <View style={{ paddingVertical: Layout.normalize(20) }}>
-          <LMLoader {...loaderStyle?.loader} />
-        </View>
-      ) : null;
-    };
+  //pagination loader in the footer
+  const renderLoader = () => {
+    return isPostLoading ? (
+      <View style={{ paddingVertical: Layout.normalize(20) }}>
+        <LMLoader {...loaderStyle?.loader} />
+      </View>
+    ) : null;
+  };
 
   const loadPostData = async (newPage: number) => {
     setIsPostLoading(true);
     setTimeout(async () => {
       const res: any = await getPostData(newPage);
-      if (res) {                
+      if (res) {
         if (res?.post?.replies?.length === 0) {
           setIsPaginationStopped(true);
         }
@@ -894,7 +895,7 @@ export const PostDetailContextProvider = ({
     }, 200);
   };
 
-  const handlePostLoadMore = async () => {    
+  const handlePostLoadMore = async () => {
     if (!isPostLoading && !isPaginationStopped) {
       const newPage = commentPageNumber + 1;
       setCommentPageNumber((page) => {
@@ -1003,7 +1004,7 @@ export const PostDetailContextProvider = ({
     handlePostLoadMore,
     renderLoader,
     showLoader,
-    setShowLoader
+    setShowLoader,
   };
 
   return (

@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Image,
   Platform,
   SafeAreaView,
+  ScrollView,
   Text,
   TouchableOpacity,
   View,
@@ -18,12 +19,16 @@ import {
   POST_UPLOAD_INPROGRESS,
   VIDEO_ATTACHMENT_TYPE,
 } from "../../constants/Strings";
-import { CREATE_POST, NOTIFICATION_FEED } from "../../constants/screenNames";
+import {
+  CREATE_POST,
+  TOPIC_FEED,
+  NOTIFICATION_FEED,
+} from "../../constants/screenNames";
 // @ts-ignore the lib do not have TS declarations yet
 import _ from "lodash";
 import { PostsList } from "../postsList";
 import { useLMFeedStyles } from "../../lmFeedProvider";
-import { useAppDispatch } from "../../store/store";
+import { useAppDispatch, useAppSelector } from "../../store/store";
 import {
   UniversalFeedContextProvider,
   UniversalFeedContextValues,
@@ -41,6 +46,15 @@ import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Events } from "../../enums/Events";
 import { Keys } from "../../enums/Keys";
 import { notificationFeedClear } from "../../store/actions/notification";
+import {
+  CLEAR_SELECTED_TOPICS,
+  CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
+  CLEAR_SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
+  SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
+  SET_TOPICS,
+} from "../../store/types/types";
+import { Client } from "../../client";
+import Layout from "../../constants/Layout";
 
 interface UniversalFeedProps {
   children: React.ReactNode;
@@ -57,10 +71,7 @@ interface UniversalFeedProps {
   selectEditPostProp: (id: string) => void;
   onSelectCommentCountProp: (id: string) => void;
   onTapLikeCountProps: (id: string) => void;
-  handleDeletePostProps: (
-    visible: boolean,
-    postId: string,
-  ) => void;
+  handleDeletePostProps: (visible: boolean, postId: string) => void;
   handleReportPostProps: (postId: string) => void;
   newPostButtonClickProps: () => void;
   onOverlayMenuClickProp: (
@@ -124,13 +135,134 @@ const UniversalFeedComponent = () => {
     unreadNotificationCount,
     onTapNotificationBell,
   }: UniversalFeedContextValues = useUniversalFeedContext();
+  const myClient = Client.myClient;
+  const [showTopics, setShowTopics] = useState(false);
   const LMFeedContextStyles = useLMFeedStyles();
-  const { universalFeedStyle, loaderStyle } = LMFeedContextStyles;
+  const { universalFeedStyle, loaderStyle, topicsStyle }: any =
+    LMFeedContextStyles;
   const { newPostButtonClickProps, onTapNotificationBellProp } =
     useUniversalFeedCustomisableMethodsContext();
+  const [mappedTopics, setMappedTopics] = useState([] as any);
+  const [unreadNotifiCount, setUnreadNotifiCount] = useState(
+    unreadNotificationCount
+  );
+  const selectedTopics = useAppSelector(
+    (state) => state.feed.selectedTopicsForUniversalFeedScreen
+  );
+  const topics = useAppSelector((state) => state.feed.topics);
+
+  const allTopicPlaceholder = topicsStyle?.allTopicPlaceholder;
+  const allTopicsStyle = topicsStyle?.allTopic;
+  const filteredTopicsStyle = topicsStyle?.filteredTopicsStyle;
+  const crossIconStyle = topicsStyle?.crossIconStyle;
+  const arrowDownStyle = topicsStyle?.arrowDownStyle;
+
+  const getUnreadCount = async () => {
+    const latestUnreadCount = await myClient?.getUnreadNotificationCount();
+    /* @ts-ignore */
+    setUnreadNotifiCount(parseInt(latestUnreadCount?.data?.count));
+  };
+
+  useEffect(() => {
+    // Create a new state array named mappedTopics
+    const filteredTopicArray = selectedTopics.map((topicId) => ({
+      id: topicId,
+      name: topics[topicId]?.name || "Unknown", // Use optional chaining and provide a default name if not found
+    }));
+    setMappedTopics(filteredTopicArray);
+    getUnreadCount();
+  }, [selectedTopics, topics]);
+
+  const handleAllTopicPress = () => {
+    dispatch({
+      type: CLEAR_SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
+    });
+    /* @ts-ignore */
+    return navigation.navigate(TOPIC_FEED);
+  };
+
+  const handleIndividualTopicsPress = () => {
+    const arrayOfIds = mappedTopics.map((obj) => obj.id);
+    dispatch({
+      type: SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
+      body: { topics: arrayOfIds },
+    });
+    /* @ts-ignore */
+    return navigation.navigate(TOPIC_FEED);
+  };
+
+  const removeItem = (index: any) => {
+    const newItems = [...mappedTopics]; // Create a copy of the array
+    newItems.splice(index, 1); // Remove the item at the specified index
+    setMappedTopics(newItems); // Update the state with the new array
+  };
+
+  const getTopics = async () => {
+    const apiRes = await myClient?.getTopics({
+      isEnabled: null,
+      search: "",
+      searchType: "name",
+      page: 1,
+      pageSize: 10,
+    } as any);
+    const topics = apiRes?.data?.topics;
+    if (topics?.length > 0) {
+      setShowTopics(true);
+      const topicsObject = {};
+      topics.forEach((topic) => {
+        topicsObject[topic.Id] = {
+          allParentIds: topic.allParentIds,
+          isEnabled: topic.isEnabled,
+          isSearchable: topic.isSearchable,
+          level: topic.level,
+          name: topic.name,
+          numberOfPosts: topic.numberOfPosts,
+          parentId: topic.parentId,
+          parentName: topic.parentName,
+          priority: topic.priority,
+          totalChildCount: topic.totalChildCount,
+          widgetId: topic.widgetId,
+        };
+      });
+      dispatch({
+        type: SET_TOPICS,
+        body: { topics: topicsObject },
+      });
+    }
+  };
+
+  useEffect(() => {
+    getTopics();
+  }, [showTopics]);
+
+  const [isAnyMatchFound, setIsAnyMatchFound] = useState(true);
+
+  useEffect(() => {
+    let isTopicMatched = false; // Initialize as false
+
+    // Loop through the items
+    for (const item of feedData) {
+      // Check if the item's topic matches any name in the topics array
+      if (
+        item?.topics?.some((topicId) =>
+          mappedTopics.some((topic) => topic.id == topicId)
+        )
+      ) {
+        isTopicMatched = true; // Set to true if any match is found
+        break; // Exit loop once a match is found
+      }
+    }
+
+    // If no match is found and topics are present, set the flag to false
+    if (!isTopicMatched && mappedTopics?.length > 0) {
+      setIsAnyMatchFound(false);
+    } else if (mappedTopics?.length === 0) {
+      setIsAnyMatchFound(true);
+    }
+  }, [mappedTopics, feedData]);
 
   return (
-    <SafeAreaView style={styles.mainContainer}>
+    <View style={styles.mainContainer}>
       {/* header */}
       <LMHeader
         heading={APP_TITLE}
@@ -148,7 +280,7 @@ const UniversalFeedComponent = () => {
               source={require("../../assets/images/notification_bell.png")}
               style={{ width: 24, height: 24, resizeMode: "contain" }}
             />
-            {unreadNotificationCount > 0 && (
+            {unreadNotifiCount > 0 && (
               <View
                 style={{
                   backgroundColor: "#FB1609",
@@ -163,9 +295,7 @@ const UniversalFeedComponent = () => {
                 }}
               >
                 <Text style={{ color: "#fff", fontSize: 12 }}>
-                  {unreadNotificationCount < 100
-                    ? unreadNotificationCount
-                    : `99+`}
+                  {unreadNotifiCount < 100 ? unreadNotifiCount : `99+`}
                 </Text>
               </View>
             )}
@@ -173,6 +303,124 @@ const UniversalFeedComponent = () => {
         }
         {...universalFeedStyle?.screenHeader}
       />
+      {/* all topics filter */}
+      {mappedTopics.length > 0 && showTopics ? (
+        <View style={{ justifyContent: "space-between", flexDirection: "row" }}>
+          <ScrollView
+            style={{ flexGrow: 0, margin: Layout.normalize(10) }}
+            horizontal={true}
+          >
+            <View style={{ flexDirection: "row" }}>
+              {mappedTopics.map((item, index) => (
+                <View key={index} style={{ margin: Layout.normalize(5) }}>
+                  <TouchableOpacity onPress={handleIndividualTopicsPress}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        padding: Layout.normalize(7),
+                        borderWidth: 1,
+                        borderColor: "#5046E5",
+                        borderRadius: Layout.normalize(5),
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: Layout.normalize(16),
+                          color: "#5046E5",
+                          marginRight: Layout.normalize(8),
+                          fontWeight: "400",
+                          ...(filteredTopicsStyle !== undefined
+                            ? filteredTopicsStyle
+                            : {}),
+                        }}
+                      >
+                        {item?.name}
+                      </Text>
+                      <TouchableOpacity onPress={() => removeItem(index)}>
+                        {/* Your cross icon component */}
+                        <Image
+                          source={require("../../assets/images/close_tag3x.png")}
+                          style={{
+                            tintColor: "#5046E5",
+                            width: Layout.normalize(15),
+                            height: Layout.normalize(15),
+                            ...(crossIconStyle !== undefined
+                              ? crossIconStyle
+                              : {}),
+                          }}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </View>
+          </ScrollView>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              marginRight: 10,
+            }}
+          >
+            <TouchableOpacity onPress={() => setMappedTopics([])}>
+              <Text
+                style={{ color: "#5046E5", fontSize: Layout.normalize(17) }}
+              >
+                Clear
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      ) : (
+        showTopics && (
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              backgroundColor: STYLES.$BACKGROUND_COLORS.LIGHT,
+              marginBottom: Layout.normalize(10),
+            }}
+          >
+            <TouchableOpacity onPress={() => handleAllTopicPress()}>
+              <View
+                style={{
+                  marginTop: Layout.normalize(10),
+                  marginLeft: Layout.normalize(20),
+                  borderRadius: Layout.normalize(5),
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginBottom: Layout.normalize(10),
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: Layout.normalize(16),
+                    color: "#666666",
+                    marginRight: Layout.normalize(5),
+                    fontWeight: "400",
+                    ...(allTopicsStyle !== undefined ? allTopicsStyle : {}),
+                  }}
+                >
+                  {allTopicPlaceholder !== undefined
+                    ? allTopicPlaceholder
+                    : "All Topics"}
+                </Text>
+                <Image
+                  source={require("../../assets/images/arrow_down3x.png")}
+                  style={{
+                    tintColor: "#666666",
+                    width: Layout.normalize(18),
+                    height: Layout.normalize(18),
+                    ...(arrowDownStyle !== undefined ? arrowDownStyle : {}),
+                  }}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
+        )
+      )}
       {/* post uploading section */}
       {postUploading && (
         <View style={styles.postUploadingView}>
@@ -220,7 +468,14 @@ const UniversalFeedComponent = () => {
         </View>
       )}
       {/* posts list section */}
-      <PostsList />
+      {!isAnyMatchFound ? (
+        <View style={[styles.justifyCenter]}>
+          <Text style={styles.title}>No matching post found</Text>
+        </View>
+      ) : (
+        <></>
+      )}
+      <PostsList items={mappedTopics} />
       {/* create post button section */}
       <TouchableOpacity
         activeOpacity={0.8}
@@ -237,6 +492,12 @@ const UniversalFeedComponent = () => {
             ? newPostButtonClickProps()
             : newPostButtonClick();
           LMFeedAnalytics.track(Events.POST_CREATION_STARTED);
+          dispatch({
+            type: CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
+          });
+          dispatch({
+            type: CLEAR_SELECTED_TOPICS,
+          });
         }}
       >
         <Image
@@ -251,7 +512,7 @@ const UniversalFeedComponent = () => {
           NEW POST
         </Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 

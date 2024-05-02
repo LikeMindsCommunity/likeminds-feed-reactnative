@@ -24,7 +24,7 @@ const LMFeedNotificationFeedListView = () => {
   const { onNotificationItemClickedProp } =
     useNotificationFeedCustomisableMethodsContext();
   const LMFeedContextStyles = useLMFeedStyles();
-  const { loaderStyle , notificationFeedStyle} = LMFeedContextStyles;
+  const { loaderStyle, notificationFeedStyle } = LMFeedContextStyles;
 
   useEffect(() => {
     setTimeout(() => {
@@ -36,6 +36,7 @@ const LMFeedNotificationFeedListView = () => {
     <>
       {showLoader ? (
         <View style={styles.loaderView}>
+          {/* @ts-ignore */}
           <LMLoader {...loaderStyle} />
         </View>
       ) : null}
@@ -63,6 +64,7 @@ const LMFeedNotificationFeedListView = () => {
             handleLoadMore();
           }}
           ListFooterComponent={
+            /* @ts-ignore */
             <>{isLoading && <LMLoader {...loaderStyle} />}</>
           }
         />
@@ -75,15 +77,23 @@ const LMFeedNotificationFeedListView = () => {
             gap: 10,
           }}
         >
-          {notificationFeedStyle?.noActivityViewImage ? notificationFeedStyle?.noActivityViewImage : <Image
-            source={require("../../assets/images/empty_nothing3x.png")}
-            style={{
-              height: Layout.normalize(150),
-              width: Layout.normalize(150),
-              ...notificationFeedStyle?.noActivityViewImageStyle
-            }}
-          />}
-          <Text style={notificationFeedStyle?.noActivityViewTextStyle}>{notificationFeedStyle?.noActivityViewText ? notificationFeedStyle?.noActivityViewText : `Oops! You don't have any notifications yet.`}</Text>
+          {notificationFeedStyle?.noActivityViewImage ? (
+            notificationFeedStyle?.noActivityViewImage
+          ) : (
+            <Image
+              source={require("../../assets/images/empty_nothing3x.png")}
+              style={{
+                height: Layout.normalize(150),
+                width: Layout.normalize(150),
+                ...notificationFeedStyle?.noActivityViewImageStyle,
+              }}
+            />
+          )}
+          <Text style={notificationFeedStyle?.noActivityViewTextStyle}>
+            {notificationFeedStyle?.noActivityViewText
+              ? notificationFeedStyle?.noActivityViewText
+              : `Oops! You don't have any notifications yet.`}
+          </Text>
         </View>
       ) : null}
     </>

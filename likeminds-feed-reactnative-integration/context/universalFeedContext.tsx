@@ -100,9 +100,8 @@ export const UniversalFeedContextProvider = ({
   const memberRight = useAppSelector((state) => state.login.memberRights);
   const [postUploading, setPostUploading] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(true);
-  const { mediaAttachmemnts, linkAttachments, postContent } = useAppSelector(
-    (state) => state.createPost
-  );
+  const { mediaAttachmemnts, linkAttachments, postContent, topics } =
+    useAppSelector((state) => state.createPost);
   const unreadNotificationCount = useAppSelector(
     (state) => state.notification.activitiesCount
   );
@@ -174,17 +173,19 @@ export const UniversalFeedContextProvider = ({
         AddPostRequest.builder()
           .setAttachments([...updatedAttachments, ...linkAttachments])
           .setText(postContentText)
+          .setTopicIds(topics)
           .build(),
         false
       )
     );
-    if (addPostResponse) {
+    if (addPostResponse !== undefined) {
       setPostUploading(false);
       dispatch(
         setUploadAttachments({
           allAttachment: [],
           linkData: [],
           conText: "",
+          topics: [],
         })
       );
       await onRefresh();
@@ -225,12 +226,13 @@ export const UniversalFeedContextProvider = ({
     if (
       mediaAttachmemnts.length > 0 ||
       linkAttachments.length > 0 ||
-      postContent !== ""
+      postContent !== "" ||
+      topics?.length > 0
     ) {
       setPostUploading(true);
       postAdd();
     }
-  }, [mediaAttachmemnts, linkAttachments, postContent]);
+  }, [mediaAttachmemnts, linkAttachments, postContent, topics]);
 
   // keyExtractor of feed list
   const keyExtractor = (item: LMPostUI) => {

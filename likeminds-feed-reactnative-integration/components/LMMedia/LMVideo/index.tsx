@@ -90,6 +90,7 @@ const LMVideo = React.memo(
             playWhenInactive={false}
             playInBackground={false}
             ignoreSilentSwitch="obey"
+            /* @ts-ignore */
             style={StyleSheet.flatten([
               videoStyle,
               {

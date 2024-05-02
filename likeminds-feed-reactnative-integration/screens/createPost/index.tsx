@@ -6,11 +6,14 @@ import {
   Pressable,
   FlatList,
   StyleSheet,
+  TextStyle,
+  Image,
   ScrollView,
+  Alert,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NetworkUtil, nameInitials, replaceLastMention } from "../../utils";
-import { useAppDispatch } from "../../store/store";
+import { useAppDispatch, useAppSelector } from "../../store/store";
 import {
   ADD_FILES,
   ADD_IMAGES,
@@ -55,10 +58,18 @@ import {
   LMVideo,
 } from "../../components";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { TOPIC_FEED } from "../../constants/screenNames";
+import {
+  ADD_SELECTED_TOPICS,
+  CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
+  SET_DISABLED_TOPICS,
+} from "../../store/types/types";
 import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Events } from "../../enums/Events";
 import { Keys } from "../../enums/Keys";
 import { userTaggingDecoder } from "../../utils/decodeMentions";
+import { Client } from "../../client";
+import Layout from "../../constants/Layout";
 
 interface CreatePostProps {
   children: React.ReactNode;
@@ -74,7 +85,8 @@ interface CreatePostProps {
   onPostClickProp: (
     allMedia: Array<LMAttachmentUI>,
     linkData: Array<LMAttachmentUI>,
-    content: string
+    content: string,
+    topics: string[]
   ) => void;
   handleScreenBackPressProp: () => void;
 }
@@ -103,7 +115,7 @@ const CreatePost = ({
 const CreatePostComponent = () => {
   const dispatch = useAppDispatch();
   const LMFeedContextStyles = useLMFeedStyles();
-  const { postListStyle, createPostStyle, postDetailStyle } =
+  const { postListStyle, createPostStyle, postDetailStyle, topicsStyle }: any =
     LMFeedContextStyles;
   const customTextInputStyle = createPostStyle?.createPostTextInputStyle;
   const customAddMoreAttachmentsButton =
@@ -112,7 +124,10 @@ const CreatePostComponent = () => {
   const customAttachmentOptionsStyle = createPostStyle?.attachmentOptionsStyle;
   const postHeaderStyle = postListStyle?.header;
   const postMediaStyle = postListStyle?.media;
-  const {
+  const selectTopicPlaceholder = topicsStyle?.selectTopicPlaceholder;
+  const selectedTopicsStyle = topicsStyle?.selectedTopicsStyle;
+  const plusIconStyle = topicsStyle?.plusIconStyle;
+  let {
     navigation,
     postToEdit,
     showOptions,
@@ -148,6 +163,206 @@ const CreatePostComponent = () => {
     onPostClick,
     handleScreenBackPress,
   }: CreatePostContextValues = useCreatePostContext();
+
+  const handleAllTopicPress = () => {
+    const arrayOfIds = mappedTopics.map((obj) => obj.id);
+    dispatch({
+      type: ADD_SELECTED_TOPICS,
+      body: { topics: arrayOfIds },
+    });
+    /* @ts-ignore */
+    return navigation.navigate(TOPIC_FEED);
+  };
+
+  const myClient = Client.myClient;
+  const [showTopics, setShowTopics] = useState(false);
+  const [mappedTopics, setMappedTopics] = useState([] as any);
+  const [disbaledTopicsGlobal, setDisabledTopicsGlobal] = useState([] as any);
+  const selectedTopics = useAppSelector(
+    (state) => state.feed.selectedTopicsForCreatePostScreen
+  );
+  const topics = useAppSelector((state) => state.feed.topics);
+  const topicsSelected = useAppSelector(
+    (state) => state.createPost.selectedTopics
+  );
+
+  const getTopics = async () => {
+    const apiRes = await myClient?.getTopics({
+      isEnabled: null,
+      search: "",
+      searchType: "name",
+      page: 1,
+      pageSize: 10,
+    } as any);
+    const topics = apiRes?.data?.topics;
+    if (topics?.length > 0) {
+      setShowTopics(true);
+    }
+  };
+
+  useEffect(() => {
+    getTopics();
+  }, [showTopics]);
+
+  const filterEnabledFalse = (topicId) => {
+    const topic = topics[topicId];
+    return topic && !topic.isEnabled; // Check if isEnabled is false
+  };
+
+  useEffect(() => {
+    // Create a new state array named mappedTopics
+    if (topicsSelected.length > 0) {
+      const filteredTopicArray = topicsSelected.map((topicId) => ({
+        id: topicId,
+        name: topics[topicId]?.name || "Unknown", // Use optional chaining and provide a default name if not found
+      }));
+      const disabledTopics = filteredTopicArray.filter((topic) =>
+        filterEnabledFalse(topic.id)
+      );
+      setDisabledTopicsGlobal(disabledTopics);
+
+      setMappedTopics(filteredTopicArray);
+      dispatch({
+        type: SET_DISABLED_TOPICS,
+        body: { topics: disabledTopics },
+      });
+    } else {
+      const filteredTopicArray = selectedTopics.map((topicId) => ({
+        id: topicId,
+        name: topics[topicId]?.name || "Unknown", // Use optional chaining and provide a default name if not found
+      }));
+      const disabledTopics = filteredTopicArray.filter((topic) =>
+        filterEnabledFalse(topic.id)
+      );
+      setDisabledTopicsGlobal(disabledTopics);
+
+      setMappedTopics(filteredTopicArray);
+      dispatch({
+        type: SET_DISABLED_TOPICS,
+        body: { topics: disabledTopics },
+      });
+    }
+  }, [selectedTopics, topicsSelected]);
+
+  const handleAcceptedOnPress = () => {
+    const idValuesArray = mappedTopics.map((topic) => topic.id);
+    onPostClickProp
+      ? onPostClickProp(
+          allAttachment,
+          formattedLinkAttachments,
+          postContentText,
+          idValuesArray
+        )
+      : onPostClick(
+          allAttachment,
+          formattedLinkAttachments,
+          postContentText,
+          idValuesArray
+        );
+    if (!postToEdit) {
+      const map: Map<string | undefined, string | undefined> = new Map();
+      const taggedUsers: any = userTaggingDecoder(postContentText);
+
+      const ogTags = formattedLinkAttachments[0]?.attachmentMeta?.ogTags;
+
+      // To fire user tagged analytics event
+      if (taggedUsers?.length > 0) {
+        map.set(Keys.USER_TAGGED, Keys.YES);
+        map.set(Keys.TAGGED_USER_COUNT, taggedUsers?.length.toString());
+        const taggedUserIds = taggedUsers.map((user) => user.route).join(", ");
+        map.set(Keys.TAGGED_USER_UUID, taggedUserIds);
+      } else {
+        map.set(Keys.USER_TAGGED, Keys.NO);
+      }
+
+      // To fire link analytics event
+      if (ogTags) {
+        map.set(Keys.LINK_ATTACHED, Keys.YES);
+        map.set(Keys.LINK, ogTags?.url ?? "");
+      } else {
+        map.set(Keys.LINK_ATTACHED, Keys.NO);
+      }
+
+      // To fire media analytics event
+      let imageCount = 0;
+      let videoCount = 0;
+      let documentCount = 0;
+      for (let i = 0; i < allAttachment.length; i++) {
+        if (allAttachment[i].attachmentType === IMAGE_ATTACHMENT_TYPE) {
+          imageCount++;
+        } else if (allAttachment[i].attachmentType === VIDEO_ATTACHMENT_TYPE) {
+          videoCount++;
+        } else if (
+          allAttachment[i].attachmentType === DOCUMENT_ATTACHMENT_TYPE
+        ) {
+          documentCount++;
+        }
+      }
+
+      // sends image attached event if imageCount > 0
+      if (imageCount > 0) {
+        map.set(Keys.IMAGE_ATTACHED, Keys.YES);
+        map.set(Keys.IMAGE_COUNT, `${imageCount}`);
+      } else {
+        map.set(Keys.IMAGE_ATTACHED, Keys.NO);
+      }
+      // sends video attached event if videoCount > 0
+      if (videoCount > 0) {
+        map.set(Keys.VIDEO_ATTACHED, Keys.YES);
+        map.set(Keys.VIDEO_COUNT, `${videoCount}`);
+      } else {
+        map.set(Keys.VIDEO_ATTACHED, Keys.NO);
+      }
+
+      // sends document attached event if documentCount > 0
+      if (documentCount > 0) {
+        map.set(Keys.DOCUMENT_ATTACHED, Keys.YES);
+        map.set(Keys.DOCUMENT_COUNT, `${documentCount}`);
+      } else {
+        map.set(Keys.DOCUMENT_ATTACHED, Keys.NO);
+      }
+
+      if (showTopics) {
+        map.set(Keys.TOPICS, mappedTopics);
+      } else {
+        map.set(Keys.TOPICS, "");
+      }
+
+      LMFeedAnalytics.track(Events.POST_CREATION_COMPLETED, map);
+    }
+
+    dispatch({
+      type: CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
+    });
+  };
+
+  const handleOnPress = () => {
+    const disabledTopicNames = disbaledTopicsGlobal.map((topic) => topic.name);
+
+    // Joining the names together with commas
+    const selectedTopicsString = disabledTopicNames.join(", ");
+
+    const isPlural = disabledTopicNames.length > 1 ? "are" : "is";
+
+    if (disbaledTopicsGlobal.length > 0) {
+      Alert.alert(
+        "Disabled Topics Alert",
+        `The selected topics ${selectedTopicsString} ${isPlural} disabled. Do you want to continue?`,
+        [
+          {
+            text: "Yes",
+            onPress: () => handleAcceptedOnPress(),
+          },
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+        ]
+      );
+    } else {
+      handleAcceptedOnPress();
+    }
+  };
 
   const {
     handleDocumentProp,
@@ -188,6 +403,96 @@ const CreatePostComponent = () => {
             }
           />
         </View>
+        {mappedTopics.length > 0 && showTopics ? (
+          <View
+            style={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+              marginLeft: Layout.normalize(10),
+              marginTop: Layout.normalize(15),
+            }}
+          >
+            {mappedTopics.map((item, index) => (
+              <View
+                key={index}
+                style={{ flexDirection: "row", alignItems: "center" }}
+              >
+                <View>
+                  <Text
+                    style={{
+                      fontSize: Layout.normalize(17),
+                      color: "#5046E5",
+                      padding: Layout.normalize(7),
+                      backgroundColor: "hsla(244, 75%, 59%, 0.1)",
+                      borderRadius: Layout.normalize(5),
+                      margin: Layout.normalize(5),
+                      ...(selectedTopicsStyle !== undefined
+                        ? selectedTopicsStyle
+                        : {}),
+                    }}
+                  >
+                    {item?.name}
+                  </Text>
+                </View>
+                {index === mappedTopics.length - 1 && (
+                  <View style={{ padding: Layout.normalize(7) }}>
+                    <TouchableOpacity onPress={() => handleAllTopicPress()}>
+                      <Image
+                        source={require("../../assets/images/edit_icon3x.png")}
+                        style={styles.editIcon}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
+            ))}
+          </View>
+        ) : (
+          showTopics && (
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginLeft: Layout.normalize(15),
+                marginTop: Layout.normalize(15),
+              }}
+            >
+              <TouchableOpacity onPress={() => handleAllTopicPress()}>
+                <View
+                  style={{
+                    padding: Layout.normalize(7),
+                    backgroundColor: "hsla(244, 75%, 59%, 0.1)",
+                    borderRadius: Layout.normalize(5),
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <Image
+                    source={require("../../assets/images/plusAdd_icon3x.png")}
+                    style={{
+                      tintColor: "#5046E5",
+                      width: Layout.normalize(15),
+                      height: Layout.normalize(15),
+                      marginRight: Layout.normalize(5), // Add margin to separate Image and Text
+                      ...(plusIconStyle !== undefined ? plusIconStyle : {}),
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontSize: Layout.normalize(16),
+                      color: "#5046E5",
+                    }}
+                  >
+                    {selectTopicPlaceholder !== undefined
+                      ? selectTopicPlaceholder
+                      : "Select Topics"}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          )
+        )}
+        <View style={styles.border}></View>
         {/* text input field */}
         <LMInputText
           {...customTextInputStyle}
@@ -307,11 +612,13 @@ const CreatePostComponent = () => {
                       <LMText
                         children={<Text>{item?.name}</Text>}
                         maxLines={1}
-                        textStyle={[
-                          styles.taggingListText,
-                          postDetailStyle?.userTaggingListStyle
-                            ?.userTagNameStyle,
-                        ]}
+                        textStyle={
+                          [
+                            styles.taggingListText,
+                            postDetailStyle?.userTaggingListStyle
+                              ?.userTagNameStyle,
+                          ] as TextStyle
+                        }
                       />
                     </View>
                   </Pressable>
@@ -331,6 +638,7 @@ const CreatePostComponent = () => {
                   </View>
                 ) : null
               }
+              /* @ts-ignore */
               keyExtractor={(item) => {
                 return item?.id;
               }}
@@ -411,7 +719,11 @@ const CreatePostComponent = () => {
                       removeSingleAttachment();
                       postMediaStyle?.video?.onCancel();
                     }}
-                    autoPlay= {postMediaStyle?.video?.autoPlay != undefined ? postMediaStyle?.video?.autoPlay : true}
+                    autoPlay={
+                      postMediaStyle?.video?.autoPlay != undefined
+                        ? postMediaStyle?.video?.autoPlay
+                        : true
+                    }
                     videoInFeed={false}
                   />
                 )}
@@ -551,107 +863,7 @@ const CreatePostComponent = () => {
                 ? styles.enabledOpacity
                 : styles.disabledOpacity
             }
-            onPress={() => {
-              onPostClickProp
-                ? onPostClickProp(
-                    allAttachment,
-                    formattedLinkAttachments,
-                    postContentText
-                  )
-                : onPostClick(
-                    allAttachment,
-                    formattedLinkAttachments,
-                    postContentText
-                  );
-
-              if (!postToEdit) {
-                const map: Map<string | undefined, string | undefined> =
-                  new Map();
-                const taggedUsers: any = userTaggingDecoder(postContentText);
-
-                const ogTags =
-                  formattedLinkAttachments[0]?.attachmentMeta?.ogTags;
-
-                // To fire user tagged analytics event
-                if (taggedUsers?.length > 0) {
-                  map.set(Keys.USER_TAGGED, Keys.YES);
-                  map.set(
-                    Keys.TAGGED_USER_COUNT,
-                    taggedUsers?.length.toString()
-                  );
-                  const taggedUserIds = taggedUsers
-                    .map((user) => user.route)
-                    .join(", ");
-                  map.set(Keys.TAGGED_USER_UUID, taggedUserIds);
-                } else {
-                  map.set(Keys.USER_TAGGED, Keys.NO);
-                }
-
-                // To fire link analytics event
-                if (ogTags) {
-                  map.set(Keys.LINK_ATTACHED, Keys.YES);
-                  map.set(Keys.LINK, ogTags?.url ?? "");
-                } else {
-                  map.set(Keys.LINK_ATTACHED, Keys.NO);
-                }
-
-                // TODO for Topic Feed
-                // if (topics !== null && topics.length > 0) {
-                //   const topicsNameString = topics
-                //     .map((topic) => topic.name)
-                //     .join(", ");
-                //   map.set(Keys.TOPICS_ADDED, Keys.YES);
-                //   map.set(Keys.TOPICS, topicsNameString);
-                // } else {
-                //   map.set(Keys.TOPICS_ADDED, Keys.NO);
-                // }
-
-                // To fire media analytics event
-                let imageCount = 0;
-                let videoCount = 0;
-                let documentCount = 0;
-                for (let i = 0; i < allAttachment.length; i++) {
-                  if (
-                    allAttachment[i].attachmentType === IMAGE_ATTACHMENT_TYPE
-                  ) {
-                    imageCount++;
-                  } else if (
-                    allAttachment[i].attachmentType === VIDEO_ATTACHMENT_TYPE
-                  ) {
-                    videoCount++;
-                  } else if (
-                    allAttachment[i].attachmentType === DOCUMENT_ATTACHMENT_TYPE
-                  ) {
-                    documentCount++;
-                  }
-                }
-
-                // sends image attached event if imageCount > 0
-                if (imageCount > 0) {
-                  map.set(Keys.IMAGE_ATTACHED, Keys.YES);
-                  map.set(Keys.IMAGE_COUNT, `${imageCount}`);
-                } else {
-                  map.set(Keys.IMAGE_ATTACHED, Keys.NO);
-                }
-                // sends video attached event if videoCount > 0
-                if (videoCount > 0) {
-                  map.set(Keys.VIDEO_ATTACHED, Keys.YES);
-                  map.set(Keys.VIDEO_COUNT, `${videoCount}`);
-                } else {
-                  map.set(Keys.VIDEO_ATTACHED, Keys.NO);
-                }
-
-                // sends document attached event if documentCount > 0
-                if (documentCount > 0) {
-                  map.set(Keys.DOCUMENT_ATTACHED, Keys.YES);
-                  map.set(Keys.DOCUMENT_COUNT, `${documentCount}`);
-                } else {
-                  map.set(Keys.DOCUMENT_ATTACHED, Keys.NO);
-                }
-
-                LMFeedAnalytics.track(Events.POST_CREATION_COMPLETED, map);
-              }
-            }}
+            onPress={handleOnPress}
           >
             {customCreatePostScreenHeader?.rightComponent ? (
               customCreatePostScreenHeader?.rightComponent

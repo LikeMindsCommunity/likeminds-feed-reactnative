@@ -12,12 +12,12 @@ import {
   InitiateUserRequest,
   LMFeedClient,
 } from "@likeminds.community/feed-js";
-import { Client } from "../client";
 import { LMFeedProviderProps, ThemeContextProps } from "./types";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { getMemberState, initiateUser } from "../store/actions/login";
 import { LMToast } from "../components";
 import { CallBack } from "../callBacks/callBackClass";
+import { Client } from "../client";
 
 // Create the theme context
 export const LMFeedStylesContext = createContext<ThemeContextProps | undefined>(
@@ -57,19 +57,20 @@ export const LMFeedProvider = ({
   postDetailStyle,
   postLikesListStyle,
   createPostStyle,
-  notificationFeedStyle
+  notificationFeedStyle,
+  topicsStyle,
 }: LMFeedProviderProps): React.JSX.Element => {
   const [isInitiated, setIsInitiated] = useState(false);
-  const dispatch  = useAppDispatch();
-  const showToast = useAppSelector(state => state.loader.isToast);
+  const dispatch = useAppDispatch();
+  const showToast = useAppSelector((state) => state.loader.isToast);
 
   useEffect(() => {
     //setting client in Client class
     Client.setMyClient(myClient);
     Credentials.setCredentials(userName, userUniqueId);
-    if(lmFeedInterface){
+    if (lmFeedInterface) {
       CallBack.setLMFeedInterface(lmFeedInterface);
-    } 
+    }
 
     // storing myClient followed by community details
     const callInitApi = async () => {
@@ -83,7 +84,7 @@ export const LMFeedProvider = ({
           true
         )
       );
-      if (initiateResponse) {
+      if (initiateResponse !== undefined && initiateResponse !== null) {
         // calling getMemberState API
         await dispatch(getMemberState());
       }
@@ -108,11 +109,12 @@ export const LMFeedProvider = ({
           postDetailStyle,
           postLikesListStyle,
           createPostStyle,
-          notificationFeedStyle
+          notificationFeedStyle,
+          topicsStyle,
         }}
       >
         <View style={styles.flexStyling}>{children}</View>
-      {showToast && <LMToast />}
+        {showToast && <LMToast />}
       </LMFeedStylesContext.Provider>
     </LMFeedContext.Provider>
   ) : (

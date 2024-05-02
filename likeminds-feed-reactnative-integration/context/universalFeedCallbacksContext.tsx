@@ -12,11 +12,15 @@ export interface UniversalFeedCallbacksContextProps {
   handleDeletePostProps: (visible: boolean, postId: string) => void;
   handleReportPostProps: (postId: string) => void;
   newPostButtonClickProps: () => void;
-  onOverlayMenuClickProp: (event: {
-    nativeEvent: { pageX: number; pageY: number };
-  }, menuItems: LMMenuItemsUI[], postId: string) => void;
+  onOverlayMenuClickProp: (
+    event: {
+      nativeEvent: { pageX: number; pageY: number };
+    },
+    menuItems: LMMenuItemsUI[],
+    postId: string
+  ) => void;
   onTapNotificationBellProp: () => void;
-  onSharePostClicked: (id:string) => void;
+  onSharePostClicked: (id: string) => void;
 }
 
 export interface UniversalFeedCustomisableMethodsContext {
@@ -29,11 +33,15 @@ export interface UniversalFeedCustomisableMethodsContext {
   handleDeletePostProps: (visible: boolean, postId: string) => void;
   handleReportPostProps: (postId: string) => void;
   newPostButtonClickProps: () => void;
-  onOverlayMenuClickProp: (event: {
-    nativeEvent: { pageX: number; pageY: number };
-  },menuItems: LMMenuItemsUI[], postId: string) => void;
+  onOverlayMenuClickProp: (
+    event: {
+      nativeEvent: { pageX: number; pageY: number };
+    },
+    menuItems: LMMenuItemsUI[],
+    postId: string
+  ) => void;
   onTapNotificationBellProp: () => void;
-  onSharePostClicked: (id:string) => void;
+  onSharePostClicked: (id: string) => void;
 }
 
 const UniversalFeedCustomisableMethodsContext = createContext<
@@ -63,7 +71,7 @@ export const UniversalFeedCustomisableMethodsContextProvider = ({
   newPostButtonClickProps,
   onOverlayMenuClickProp,
   onTapNotificationBellProp,
-  onSharePostClicked
+  onSharePostClicked,
 }: UniversalFeedCallbacksContextProps) => {
   const contextValues: UniversalFeedCustomisableMethodsContext = {
     postLikeHandlerProp,
@@ -77,7 +85,7 @@ export const UniversalFeedCustomisableMethodsContextProvider = ({
     newPostButtonClickProps,
     onOverlayMenuClickProp,
     onTapNotificationBellProp,
-    onSharePostClicked
+    onSharePostClicked,
   };
 
   return (
