@@ -36,9 +36,11 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontSize: STYLES.$FONT_SIZES.XL,
+    fontSize: STYLES.$FONT_SIZES.LARGE,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
     color: STYLES.$COLORS.FONT_PRIMARY,
+    lineHeight: 20,
+    fontWeight: "500",
   },
   participantsTitle: {
     fontSize: STYLES.$FONT_SIZES.LARGE,
@@ -57,8 +59,8 @@ export const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   border: {
-    borderBottomWidth: 1.5,
     borderBottomColor: "#D0D8E2",
+    borderBottomWidth: 1,
   },
   search: {
     height: Layout.normalize(20),

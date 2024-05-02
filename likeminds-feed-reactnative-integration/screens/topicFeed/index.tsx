@@ -52,6 +52,8 @@ const TopicFeed = () => {
   const [searchedTopics, setSearchedTopics] = useState([] as any);
   const [searchPage, setSearchPage] = useState(1);
   const [newTopics, setNewTopics] = useState([] as any);
+  let sortedTopics: any = [];
+  let sortedTopicsFromUniversalFeed: any = [];
 
   const dispatch = useAppDispatch();
 
@@ -63,6 +65,9 @@ const TopicFeed = () => {
     (state) => state.createPost.selectedTopics
   );
   const allTopics = useAppSelector((state) => state.feed.topics);
+  const selectedTopicsFromUniversalFeedScreen = useAppSelector(
+    (state) => state.feed.selectedTopicsFromUniversalFeedScreen
+  );
 
   const filterEnabledTrue = (topicId) => {
     const topic = allTopics[topicId];
@@ -76,13 +81,71 @@ const TopicFeed = () => {
   }, [selectedTopics]);
 
   useEffect(() => {
-    if (topicsSelected?.length > 0) {
+    if (topicsSelected?.length > 0 && previousRoute?.name === "CreatePost") {
       const enabledTopics = topicsSelected.filter((topic) =>
         filterEnabledTrue(topic)
       );
+      const filteredTopics = Object.entries(allTopics)
+        .filter(
+          ([topicId, topic]: any) =>
+            !enabledTopics.includes(topicId) && topic.isEnabled
+        )
+        .map(([topicId]) => topicId);
+      let newArr = [...enabledTopics, ...filteredTopics];
+
+      let newTopics = newArr.map((topicId) => {
+        const topic = allTopics[topicId];
+        return {
+          Id: topicId,
+          allParentIds: topic.allParentIds,
+          isEnabled: topic.isEnabled,
+          isSearchable: topic.isSearchable,
+          level: topic.level,
+          name: topic.name,
+          numberOfPosts: topic.numberOfPosts,
+          parentId: topic.parentId,
+          parentName: topic.parentName,
+          priority: topic.priority,
+          totalChildCount: topic.totalChildCount,
+          widgetId: topic.widgetId,
+        };
+      });
+      sortedTopics = newTopics;
       setNewTopics(enabledTopics);
+    } else {
+      const filteredTopics = Object.entries(allTopics)
+        .filter(
+          ([topicId, topic]: any) =>
+            !selectedTopicsFromUniversalFeedScreen.includes(topicId)
+        )
+        .map(([topicId]) => topicId);
+
+      let newArr = [
+        ...selectedTopicsFromUniversalFeedScreen,
+        ...filteredTopics,
+      ];
+
+      let newTopics = newArr.map((topicId) => {
+        const topic = allTopics[topicId];
+        return {
+          Id: topicId,
+          allParentIds: topic.allParentIds,
+          isEnabled: topic.isEnabled,
+          isSearchable: topic.isSearchable,
+          level: topic.level,
+          name: topic.name,
+          numberOfPosts: topic.numberOfPosts,
+          parentId: topic.parentId,
+          parentName: topic.parentName,
+          priority: topic.priority,
+          totalChildCount: topic.totalChildCount,
+          widgetId: topic.widgetId,
+        };
+      });
+      sortedTopicsFromUniversalFeed = newTopics;
+      setNewTopics(selectedTopicsFromUniversalFeedScreen);
     }
-  }, [topicsSelected]);
+  }, [topicsSelected, selectedTopicsFromUniversalFeedScreen]);
 
   const handleUpdateAndNavigateBack = async () => {
     if (previousRoute?.name === "UniversalFeed") {
@@ -129,7 +192,7 @@ const TopicFeed = () => {
               <Text
                 style={{
                   color: STYLES.$COLORS.FONT_PRIMARY,
-                  fontSize: STYLES.$FONT_SIZES.XL,
+                  fontSize: STYLES.$FONT_SIZES.XXL,
                   fontFamily: STYLES.$FONT_TYPES.BOLD,
                   ...(selectTopicHeaderStyle !== undefined
                     ? selectTopicHeaderStyle
@@ -237,9 +300,17 @@ const TopicFeed = () => {
     if (previousRoute?.name === "UniversalFeed") {
       const updatedTopics = search
         ? [...res?.topics]
+        : sortedTopicsFromUniversalFeed?.length > 0
+        ? [{ Id: "0", name: "All Topics" }, ...sortedTopicsFromUniversalFeed]
         : [{ Id: "0", name: "All Topics" }, ...res?.topics];
       setTopics(updatedTopics);
-    } else setTopics(res?.topics);
+    } else {
+      if (sortedTopics?.length > 0) {
+        setTopics(sortedTopics);
+      } else {
+        setTopics(res?.topics);
+      }
+    }
     setCount(0);
     if (isSearch) setSearchedTopics(res?.topics);
     if (!!res && res?.topics.length === 10) {

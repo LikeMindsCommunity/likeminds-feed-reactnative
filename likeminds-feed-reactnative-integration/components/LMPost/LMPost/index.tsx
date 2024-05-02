@@ -51,7 +51,7 @@ const LMPostComponent = React.memo(() => {
                     style={{
                       fontSize: 16,
                       color: "#5046E5",
-                      marginLeft: 15,
+                      marginLeft: index === 0 ? 15 : 5,
                       marginTop: 10,
                       padding: 7,
                       backgroundColor: "hsla(244, 75%, 59%, 0.1)",

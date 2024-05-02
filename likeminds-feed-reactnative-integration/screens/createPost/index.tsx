@@ -60,6 +60,7 @@ import {
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TOPIC_FEED } from "../../constants/screenNames";
 import {
+  ADD_SELECTED_TOPICS,
   CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
   SET_DISABLED_TOPICS,
 } from "../../store/types/types";
@@ -164,6 +165,11 @@ const CreatePostComponent = () => {
   }: CreatePostContextValues = useCreatePostContext();
 
   const handleAllTopicPress = () => {
+    const arrayOfIds = mappedTopics.map((obj) => obj.id);
+    dispatch({
+      type: ADD_SELECTED_TOPICS,
+      body: { topics: arrayOfIds },
+    });
     /* @ts-ignore */
     return navigation.navigate(TOPIC_FEED);
   };
@@ -402,7 +408,7 @@ const CreatePostComponent = () => {
             style={{
               flexDirection: "row",
               flexWrap: "wrap",
-              marginLeft: Layout.normalize(15),
+              marginLeft: Layout.normalize(10),
               marginTop: Layout.normalize(15),
             }}
           >

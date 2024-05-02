@@ -25,6 +25,8 @@ import {
   CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
   POST_DATA_SUCCESS,
   SET_TOPICS,
+  SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
+  CLEAR_SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
 } from "../types/types";
 import { LMPostUI } from "../../models";
 
@@ -36,6 +38,7 @@ export interface FeedReducerState {
   topics: {};
   selectedTopicsForUniversalFeedScreen: [];
   selectedTopicsForCreatePostScreen: [];
+  selectedTopicsFromUniversalFeedScreen: [];
 }
 
 export const initialState: FeedReducerState = {
@@ -46,9 +49,23 @@ export const initialState: FeedReducerState = {
   topics: {},
   selectedTopicsForUniversalFeedScreen: [],
   selectedTopicsForCreatePostScreen: [],
+  selectedTopicsFromUniversalFeedScreen: [],
 };
 export const feedReducer = (state = initialState, action) => {
   switch (action.type) {
+    case SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN: {
+      const { topics = {} } = action.body;
+      return {
+        ...state,
+        selectedTopicsFromUniversalFeedScreen: topics,
+      };
+    }
+    case CLEAR_SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN: {
+      return {
+        ...state,
+        selectedTopicsFromUniversalFeedScreen: [],
+      };
+    }
     case SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN: {
       const { topics = {} } = action.body;
       return {

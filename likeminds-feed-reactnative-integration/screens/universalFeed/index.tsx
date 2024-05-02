@@ -49,6 +49,8 @@ import { notificationFeedClear } from "../../store/actions/notification";
 import {
   CLEAR_SELECTED_TOPICS,
   CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
+  CLEAR_SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
+  SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
   SET_TOPICS,
 } from "../../store/types/types";
 import { Client } from "../../client";
@@ -172,6 +174,19 @@ const UniversalFeedComponent = () => {
   }, [selectedTopics, topics]);
 
   const handleAllTopicPress = () => {
+    dispatch({
+      type: CLEAR_SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
+    });
+    /* @ts-ignore */
+    return navigation.navigate(TOPIC_FEED);
+  };
+
+  const handleIndividualTopicsPress = () => {
+    const arrayOfIds = mappedTopics.map((obj) => obj.id);
+    dispatch({
+      type: SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
+      body: { topics: arrayOfIds },
+    });
     /* @ts-ignore */
     return navigation.navigate(TOPIC_FEED);
   };
@@ -290,52 +305,74 @@ const UniversalFeedComponent = () => {
       />
       {/* all topics filter */}
       {mappedTopics.length > 0 && showTopics ? (
-        <ScrollView
-          style={{ flexGrow: 0, margin: Layout.normalize(10) }}
-          horizontal={true}
-        >
-          <View style={{ flexDirection: "row" }}>
-            {mappedTopics.map((item, index) => (
-              <View key={index} style={{ margin: Layout.normalize(5) }}>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    padding: Layout.normalize(7),
-                    borderWidth: 1,
-                    borderColor: "#5046E5",
-                    borderRadius: Layout.normalize(5),
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: Layout.normalize(17),
-                      color: "#5046E5",
-                      marginRight: Layout.normalize(8),
-                      ...(filteredTopicsStyle !== undefined
-                        ? filteredTopicsStyle
-                        : {}),
-                    }}
-                  >
-                    {item?.name}
-                  </Text>
-                  <TouchableOpacity onPress={() => removeItem(index)}>
-                    {/* Your cross icon component */}
-                    <Image
-                      source={require("../../assets/images/close_tag3x.png")}
+        <View style={{ justifyContent: "space-between", flexDirection: "row" }}>
+          <ScrollView
+            style={{ flexGrow: 0, margin: Layout.normalize(10) }}
+            horizontal={true}
+          >
+            <View style={{ flexDirection: "row" }}>
+              {mappedTopics.map((item, index) => (
+                <View key={index} style={{ margin: Layout.normalize(5) }}>
+                  <TouchableOpacity onPress={handleIndividualTopicsPress}>
+                    <View
                       style={{
-                        tintColor: "#5046E5",
-                        width: Layout.normalize(15),
-                        height: Layout.normalize(15),
-                        ...(crossIconStyle !== undefined ? crossIconStyle : {}),
+                        flexDirection: "row",
+                        alignItems: "center",
+                        padding: Layout.normalize(7),
+                        borderWidth: 1,
+                        borderColor: "#5046E5",
+                        borderRadius: Layout.normalize(5),
                       }}
-                    />
+                    >
+                      <Text
+                        style={{
+                          fontSize: Layout.normalize(16),
+                          color: "#5046E5",
+                          marginRight: Layout.normalize(8),
+                          fontWeight: "400",
+                          ...(filteredTopicsStyle !== undefined
+                            ? filteredTopicsStyle
+                            : {}),
+                        }}
+                      >
+                        {item?.name}
+                      </Text>
+                      <TouchableOpacity onPress={() => removeItem(index)}>
+                        {/* Your cross icon component */}
+                        <Image
+                          source={require("../../assets/images/close_tag3x.png")}
+                          style={{
+                            tintColor: "#5046E5",
+                            width: Layout.normalize(15),
+                            height: Layout.normalize(15),
+                            ...(crossIconStyle !== undefined
+                              ? crossIconStyle
+                              : {}),
+                          }}
+                        />
+                      </TouchableOpacity>
+                    </View>
                   </TouchableOpacity>
                 </View>
-              </View>
-            ))}
+              ))}
+            </View>
+          </ScrollView>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              marginRight: 10,
+            }}
+          >
+            <TouchableOpacity onPress={() => setMappedTopics([])}>
+              <Text
+                style={{ color: "#5046E5", fontSize: Layout.normalize(17) }}
+              >
+                Clear
+              </Text>
+            </TouchableOpacity>
           </View>
-        </ScrollView>
+        </View>
       ) : (
         showTopics && (
           <View
@@ -360,8 +397,9 @@ const UniversalFeedComponent = () => {
                 <Text
                   style={{
                     fontSize: Layout.normalize(16),
-                    color: "#222020",
+                    color: "#666666",
                     marginRight: Layout.normalize(5),
+                    fontWeight: "400",
                     ...(allTopicsStyle !== undefined ? allTopicsStyle : {}),
                   }}
                 >
@@ -372,9 +410,9 @@ const UniversalFeedComponent = () => {
                 <Image
                   source={require("../../assets/images/arrow_down3x.png")}
                   style={{
-                    tintColor: "#222020",
-                    width: Layout.normalize(15),
-                    height: Layout.normalize(15),
+                    tintColor: "#666666",
+                    width: Layout.normalize(18),
+                    height: Layout.normalize(18),
                     ...(arrowDownStyle !== undefined ? arrowDownStyle : {}),
                   }}
                 />

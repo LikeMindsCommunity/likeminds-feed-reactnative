@@ -168,8 +168,6 @@ export const UniversalFeedContextProvider = ({
     );
     // Wait for all upload operations to complete
     const updatedAttachments = await Promise.all(uploadPromises);
-    console.log("finaleTopics", topics);
-
     const addPostResponse = await dispatch(
       addPost(
         AddPostRequest.builder()
