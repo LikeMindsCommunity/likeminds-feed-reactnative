@@ -11,10 +11,14 @@ import { Credentials } from "../credentials";
 import {
   InitiateUserRequest,
   LMFeedClient,
+  ValidateUserRequest,
 } from "@likeminds.community/feed-js";
 import { LMFeedProviderProps, ThemeContextProps } from "./types";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { getMemberState, initiateUser } from "../store/actions/login";
+import {
+  getMemberState,
+  validateUser,
+} from "../store/actions/login";
 import { LMToast } from "../components";
 import { CallBack } from "../callBacks/callBackClass";
 import { Client } from "../client";
@@ -47,8 +51,8 @@ export const useLMFeedStyles = () => {
 export const LMFeedProvider = ({
   myClient,
   children,
-  userName,
-  userUniqueId,
+  accessToken,
+  refreshToken,
   lmFeedInterface,
   themeStyles,
   universalFeedStyle,
@@ -67,24 +71,23 @@ export const LMFeedProvider = ({
   useEffect(() => {
     //setting client in Client class
     Client.setMyClient(myClient);
-    Credentials.setCredentials(userName, userUniqueId);
     if (lmFeedInterface) {
       CallBack.setLMFeedInterface(lmFeedInterface);
     }
 
     // storing myClient followed by community details
     const callInitApi = async () => {
-      const initiateResponse = await dispatch(
-        initiateUser(
-          InitiateUserRequest.builder()
-            .setUUID(Credentials.userUniqueId)
-            .setIsGuest(false)
-            .setUserName(Credentials.username)
+      const validateResponse = await dispatch(
+        validateUser(
+          ValidateUserRequest.builder()
+            .setaccessToken(accessToken)
+            .setrefreshToken(refreshToken)
             .build(),
           true
         )
       );
-      if (initiateResponse !== undefined && initiateResponse !== null) {
+
+      if (validateResponse !== undefined && validateResponse !== null) {
         // calling getMemberState API
         await dispatch(getMemberState());
       }

@@ -393,9 +393,9 @@ export interface ThemeContextProps {
 
 export interface LMFeedProviderProps {
   myClient: LMFeedClient;
-  children: React.ReactNode;
-  userName: string;
-  userUniqueId: string;
+  children?: React.ReactNode;
+  accessToken: string;
+  refreshToken: string;
   lmFeedInterface?: any;
   themeStyles?: ThemeStyles;
   universalFeedStyle?: UniversalFeedStyleProps;

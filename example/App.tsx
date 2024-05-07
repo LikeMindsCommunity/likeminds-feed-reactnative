@@ -71,6 +71,10 @@ const App = () => {
   const [myClient, setMyClient] = useState();
   const [isTrue, setIsTrue] = useState(true);
   const loginSchemaArray: any = useQuery(LoginSchemaRO);
+  const accessToken =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoicUxISlF5Zm1qREJZaTMwSWJGZmE1eTcvOHFVN0ptdmtGVFdxUTFXeXFGZkhNbEtQSWtMUERETjFJeEo2TUpteXZZMzM1TGl6cEhPVnlTbXBrKzFCMEZrbWNRSEJEeHhTN255anprZThhdUxScndtNmYrSCt0dWQ2YUdXRy96YlZxTjA1V2wzVG83TUp1aFBveUpQaG03MXVheFN6NmlqeWNPdWovb205NDAxay9reDhEVkRMUU1Sd2ZIdnlYR3hVdTV0cXpJcHN0RldwVVREaFhTRDNNbUhpb0FqYVVoclBuK2xxV2xVQWVqOE0yTjBMSGwvWHBxN0hBR2JsbFdyTlBlZkUvYU9FbVR2dW9NZkkiLCJleHAiOjE3MTQ2NTAzMzR9.lh81nwr-npOVfO_XykHL7zSLGsRQYZwLg6R4tTqyxGI';
+  const refreshToken =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoicTBjRDFPbkRsQjFVNHFsNFdqeUI1cTBUME9jU3NOdE02dkZFWWVhZDRxN0Eyck1HQTh0ejEzRTduN1l4bEhvMjA1dThyOFdmbGp3a1d6ZFk0RFY4Vk5zbStvWVJ3M3FaWUFIV2NJYUpSUWhFd2Fja2pUYzgyVzA4RWN2TUp0U3lpRTk3Ynd3ZDFXTms3bFpWUUlzOHBrSXNHelhhR3NXNFdwNnN6ejdXRW9aemwyN2lVSXdLTDFGdVBmUmtMTEVGQVRkcFRhTlVaUnFrR1dqWjNnbUtac1JTOUhtaUw5QlBXQ3Q3SWFYTTZTekczZFZmUGxrbmZ0bDdkNWs3K1VjWkxyRThXR3g2WkZqVUE2REEvQT09IiwiZXhwIjoxNzE3MzI3ODM0fQ.Kfj69eRpV-vA4dInz_2W7tKdkf_j5Zp0UNA_aefjBVg';
 
   useEffect(() => {
     const userSchema = async () => {
@@ -105,7 +109,7 @@ const App = () => {
 
   useEffect(() => {
     if (apiKey) {
-      const res: any = initMyClient(apiKey);
+      const res: any = initMyClient();
       setMyClient(res);
     }
   }, [isTrue, apiKey]);
@@ -207,8 +211,8 @@ const App = () => {
       {userName && userUniqueID && apiKey && myClient ? (
         <LMOverlayProvider
           myClient={myClient}
-          userName={userName}
-          userUniqueId={userUniqueID}
+          accessToken={accessToken}
+          refreshToken={refreshToken}
           lmFeedInterface={lmFeedInterface}>
           <NavigationContainer ref={navigationRef} independent={true}>
             <Stack.Navigator screenOptions={{headerShown: false}}>

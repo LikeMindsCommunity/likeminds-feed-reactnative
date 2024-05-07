@@ -55,7 +55,7 @@ export function convertUniversalFeedPosts(data: any): LMPostUI[] {
  */
 export function convertToLMPostUI(
   post: IPost,
-  user: { [key: string]: LMUserUI }
+  user: { [key: string]: LMUserUI },
 ): LMPostUI {
   const postData: LMPostUI = {
     id: post.Id,
@@ -76,9 +76,9 @@ export function convertToLMPostUI(
       : [],
     text: post.text,
     updatedAt: post.updatedAt,
-    userId: post.userId,
+    userId: user?.id.toString(),
     uuid: post.uuid,
-    user: convertToLMUserUI(user[post.userId]),
+    user: convertToLMUserUI(user[post.uuid]),
     topics: post.topics,
   };
   return postData;
@@ -203,9 +203,9 @@ export function convertToLMLikeUI(
     id: likes?.id,
     createdAt: likes?.createdAt,
     updatedAt: likes?.updatedAt,
-    userId: likes?.userId,
+    userId: likes?.uuid,
     uuid: likes?.uuid,
-    user: convertToLMUserUI(users[likes?.userId]),
+    user: convertToLMUserUI(users[likes?.uuid]),
   };
   return likesData;
 }
@@ -325,9 +325,9 @@ export function convertToLMCommentUI(
       text: item.text,
       replies: item?.replies ? item.replies : [],
       updatedAt: item.updatedAt,
-      userId: item.userId,
+      userId: item.uuid,
       uuid: item.uuid,
-      user: convertToLMUserUI(user[item.userId]),
+      user: convertToLMUserUI(user[item.uuid]),
     };
   });
 }

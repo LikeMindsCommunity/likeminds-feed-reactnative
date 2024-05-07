@@ -14,8 +14,8 @@ import {
 export interface LMOverlayProviderProps {
   myClient: LMFeedClient;
   children: React.ReactNode;
-  userName: string;
-  userUniqueId: string;
+  accessToken: string;
+  refreshToken: string;
   lmFeedInterface?: any;
   universalFeedStyle?: UniversalFeedStyleProps;
   postListStyle?: PostListStyleProps;
