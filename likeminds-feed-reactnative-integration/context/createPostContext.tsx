@@ -208,9 +208,6 @@ export const CreatePostContextProvider = ({
         const maxImageSize = mediaLimitsObject?.value?.maxImageSize * 1000;
         const maxVideoSize = mediaLimitsObject?.value?.maxVideoSize * 1000;
 
-        console.log("maxImageSize", maxImageSize);
-        console.log("maxVideoSize", maxVideoSize);
-
         // checks the size of media
         if (res?.assets) {
           for (const media of res.assets) {
