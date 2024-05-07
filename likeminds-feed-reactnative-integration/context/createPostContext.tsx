@@ -229,15 +229,19 @@ export const CreatePostContextProvider = ({
                     ? FILE_UPLOAD_IMAGE_SIZE_VALIDATION.replace(
                         "<x>",
                         maxImageSize
-                          ? (maxImageSize / 1000)?.toString()
-                          : (MAX_IMAGE_FILE_SIZE / 1000)?.toString()
+                          ? Math.round(maxImageSize / 1000000)?.toString()
+                          : Math.round(
+                              MAX_IMAGE_FILE_SIZE / 1000000
+                            )?.toString()
                       )
                     : media?.type?.includes("video")
                     ? FILE_UPLOAD_VIDEO_SIZE_VALIDATION.replace(
                         "<x>",
                         maxVideoSize
-                          ? (maxVideoSize / 1000)?.toString()
-                          : (MAX_VIDEO_FILE_SIZE / 1000)?.toString()
+                          ? Math.round(maxVideoSize / 1000000)?.toString()
+                          : Math.round(
+                              MAX_VIDEO_FILE_SIZE / 1000000
+                            )?.toString()
                       )
                     : FILE_UPLOAD_SIZE_VALIDATION,
                 })
