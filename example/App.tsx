@@ -11,8 +11,10 @@ import {
   POSTS_LIST,
   POST_DETAIL,
   CREATE_POST,
+  CAROUSEL_SCREEN,
   POST_LIKES_LIST,
   LMOverlayProvider,
+  CarouselScreen,
 } from '@likeminds.community/feed-rn-core';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
@@ -224,6 +226,14 @@ const App = () => {
               <Stack.Screen
                 name={NOTIFICATION_FEED}
                 component={NotificationWrapper}
+              />
+              <Stack.Screen
+                options={{gestureEnabled: false}}
+                name={CAROUSEL_SCREEN}
+                component={CarouselScreen}
+                initialParams={{
+                  backIconPath: '', // add your back icon path here
+                }}
               />
             </Stack.Navigator>
           </NavigationContainer>

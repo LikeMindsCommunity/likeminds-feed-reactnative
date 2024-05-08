@@ -103,6 +103,12 @@ export const POST_LIKES = "Post likes";
 export const COMMENT_LIKES = "Comment likes";
 export const DELETE_REASON_SELECTION = "Please select a reason for deletion";
 
+export const IMAGE_TEXT = "image";
+export const PHOTO_TEXT = "photo";
+export const PHOTOS_TEXT = "photos";
+export const VIDEOS_TEXT = "videos";
+export const VIDEO_TEXT = "video";
+
 // file size validation
 export const MAX_FILE_SIZE = 104857600; // 100MB in bytes
 export const MIN_FILE_SIZE = 100000; // 100KB in bytes

@@ -18,6 +18,7 @@ import {
   POST_DETAIL,
   POST_LIKES_LIST,
   TOPIC_FEED,
+  CAROUSEL_SCREEN,
   NOTIFICATION_FEED,
   NOTIFICATION_LIST,
 } from "./constants/screenNames";
@@ -43,6 +44,8 @@ import {
   NAVIGATED_FROM_COMMENT,
   NAVIGATED_FROM_POST,
 } from "./constants/Strings";
+import CarouselScreen from "./screens/carouselScreen";
+
 export {
   LMOverlayProvider,
   initMyClient,
@@ -56,6 +59,7 @@ export {
   LMFeedNotificationFeedScreen,
   UNIVERSAL_FEED,
   TOPIC_FEED,
+  CAROUSEL_SCREEN,
   CREATE_POST,
   POSTS_LIST,
   POST_DETAIL,
@@ -74,6 +78,7 @@ export {
   PostListContextProvider,
   CreatePostContextProvider,
   TopicFeed,
+  CarouselScreen,
   NotificationFeedContextProvider,
   getRoute,
   getNotification,
