@@ -3,10 +3,12 @@ import React, { useEffect, useRef } from "react";
 import { SwiperFlatList } from "react-native-swiper-flatlist";
 import Layout from "../../constants/Layout";
 import {
+  IMAGE_ATTACHMENT_TYPE,
   IMAGE_TEXT,
   PHOTOS_TEXT,
   PHOTO_TEXT,
   VIDEOS_TEXT,
+  VIDEO_ATTACHMENT_TYPE,
   VIDEO_TEXT,
 } from "../../constants/Strings";
 import styles from "./styles";
@@ -20,23 +22,18 @@ const CarouselScreen = ({ navigation, route }: any) => {
   const video = useRef<any>(null);
   const dispatch = useAppDispatch();
   const { index, dataObject, backIconPath } = route.params;
-  console.log("dataObject", dataObject);
-  console.log("index", index);
+  const data = dataObject?.attachments;
 
-  const data = dataObject;
   let imageCount = 0;
   let videoCount = 0;
-  let pdfCount = 0;
   for (let i = 0; i < data.length; i++) {
-    if (data[i].type == DocumentType.VIDEO) {
+    if (data[i].attachmentType == VIDEO_ATTACHMENT_TYPE) {
       videoCount++;
-    } else if (data[i].type == DocumentType.IMAGE) {
+    } else if (data[i].attachmentType === IMAGE_ATTACHMENT_TYPE) {
       imageCount++;
-    } else {
-      pdfCount++;
     }
   }
-  const userName = dataObject?.member?.name;
+  const userName = dataObject?.user?.name;
   const date = dataObject?.date;
   const time = dataObject?.createdAt;
 
@@ -83,8 +80,6 @@ const CarouselScreen = ({ navigation, route }: any) => {
 
     return () => backHandlerAndroid.remove();
   }, []);
-
-  console.log("kjhgfdhjkg");
 
   return (
     <View style={{ flex: 1, backgroundColor: "black" }}>
@@ -149,26 +144,23 @@ const CarouselScreen = ({ navigation, route }: any) => {
         data={data}
         index={index}
         renderItem={({ item, index }) => {
-          console.log("itemadadasdasd", item);
-
           return (
             <View
-              // key={item + index}
+              key={item + index}
               style={{
                 flex: 1,
                 justifyContent: "center",
               }}
             >
-              {true ? (
+              {item?.attachmentType === IMAGE_ATTACHMENT_TYPE ? (
                 <Image
                   style={styles.image}
                   source={{ uri: item?.attachmentMeta?.url }}
                 />
-              ) : item?.type === VIDEO_TEXT ? (
+              ) : item?.attachmentType === VIDEO_ATTACHMENT_TYPE ? (
                 <View style={styles.video}>
                   <VideoPlayer
-                    // @ts-ignore
-                    source={{ uri: item?.url }}
+                    source={{ uri: item?.attachmentMeta?.url }}
                     videoStyle={styles.videoPlayer}
                     videoRef={video}
                     disableVolume={true}

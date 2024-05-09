@@ -18,6 +18,7 @@ import { CAROUSEL_SCREEN } from "../../../constants/screenNames";
 
 const LMCarousel = React.memo(
   ({
+    post,
     attachments,
     carouselStyle,
     paginationBoxStyle,
@@ -83,7 +84,7 @@ const LMCarousel = React.memo(
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate(CAROUSEL_SCREEN, {
-                    dataObject: attachments,
+                    dataObject: post,
                     index,
                   });
                   dispatch({
@@ -118,41 +119,56 @@ const LMCarousel = React.memo(
             )}
             {/* this section render video */}
             {item?.attachmentType === VIDEO_ATTACHMENT_TYPE && (
-              <LMVideo
-                videoUrl={item?.attachmentMeta?.url}
-                height={videoItem?.height}
-                width={videoItem?.width}
-                videoStyle={videoItem?.videoStyle}
-                boxFit={videoItem?.boxFit}
-                boxStyle={videoItem?.boxStyle}
-                aspectRatio={videoItem?.aspectRatio}
-                showControls={videoItem?.showControls}
-                looping={videoItem?.looping}
-                loaderWidget={videoItem?.loaderWidget}
-                errorWidget={videoItem?.errorWidget}
-                playButton={videoItem?.playButton}
-                pauseButton={videoItem?.pauseButton}
-                autoPlay={
-                  videoItem?.autoPlay != undefined ? videoItem?.autoPlay : true
-                }
-                showCancel={
-                  videoItem?.showCancel ? videoItem?.showCancel : showCancel
-                }
-                onCancel={
-                  onCancel
-                    ? () => onCloseHandler(index)
-                    : () => {
-                        videoItem?.onCancel;
-                      }
-                }
-                cancelButton={cancelButton}
-                videoInFeed={videoItem?.videoInFeed}
-                videoInCarousel={true}
-                currentVideoInCarousel={
-                  attachments[activeIndex]?.attachmentMeta?.url
-                }
-                postId={videoItem?.postId}
-              />
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate(CAROUSEL_SCREEN, {
+                    dataObject: post,
+                    index,
+                  });
+                  dispatch({
+                    type: STATUS_BAR_STYLE,
+                    body: { color: STYLES.$STATUS_BAR_STYLE["light-content"] },
+                  });
+                }}
+              >
+                <LMVideo
+                  videoUrl={item?.attachmentMeta?.url}
+                  height={videoItem?.height}
+                  width={videoItem?.width}
+                  videoStyle={videoItem?.videoStyle}
+                  boxFit={videoItem?.boxFit}
+                  boxStyle={videoItem?.boxStyle}
+                  aspectRatio={videoItem?.aspectRatio}
+                  showControls={videoItem?.showControls}
+                  looping={videoItem?.looping}
+                  loaderWidget={videoItem?.loaderWidget}
+                  errorWidget={videoItem?.errorWidget}
+                  playButton={videoItem?.playButton}
+                  pauseButton={videoItem?.pauseButton}
+                  autoPlay={
+                    videoItem?.autoPlay != undefined
+                      ? videoItem?.autoPlay
+                      : true
+                  }
+                  showCancel={
+                    videoItem?.showCancel ? videoItem?.showCancel : showCancel
+                  }
+                  onCancel={
+                    onCancel
+                      ? () => onCloseHandler(index)
+                      : () => {
+                          videoItem?.onCancel;
+                        }
+                  }
+                  cancelButton={cancelButton}
+                  videoInFeed={videoItem?.videoInFeed}
+                  videoInCarousel={true}
+                  currentVideoInCarousel={
+                    attachments[activeIndex]?.attachmentMeta?.url
+                  }
+                  postId={videoItem?.postId}
+                />
+              </TouchableOpacity>
             )}
           </View>
         )}
