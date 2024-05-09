@@ -160,6 +160,7 @@ const CarouselScreen = ({ navigation, route }: any) => {
               ) : item?.attachmentType === VIDEO_ATTACHMENT_TYPE ? (
                 <View style={styles.video}>
                   <VideoPlayer
+                    /* @ts-ignore */
                     source={{ uri: item?.attachmentMeta?.url }}
                     videoStyle={styles.videoPlayer}
                     videoRef={video}

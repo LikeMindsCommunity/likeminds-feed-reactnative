@@ -42,9 +42,8 @@
     "react-native-document-picker": ">=9.1.0",
     "react-native-gesture-handler": ">=2.14.0",
     "react-native-image-picker": ">=7.1.0",
-    "react-native-toast-message": ">=2.2.0",
     "react-native-media-console": ">=2.0.6",
-    "react-native-swiper-flatlist": ">=3.2.2"
+    "react-native-toast-message": ">=2.2.0"
   },
   "devDependencies": {
     "@react-native-community/netinfo": ">=11.3.0",
