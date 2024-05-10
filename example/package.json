@@ -19,6 +19,7 @@
     "@react-navigation/native": "6.1.9",
     "@react-navigation/stack": "6.3.20",
     "@realm/react": "0.6.2",
+    "@types/react-native-video": "5.0.14",
     "diff": "5.1.0",
     "react": "18.2.0",
     "react-native": "0.73.1",
@@ -32,7 +33,7 @@
     "react-native-screens": "3.29.0",
     "react-native-swiper-flatlist": "3.2.3",
     "react-native-toast-message": "2.2.0",
-    "react-native-video": "5.2.1",
+    "react-native-video": "^5.2.1",
     "realm": "12.7.1"
   },
   "devDependencies": {

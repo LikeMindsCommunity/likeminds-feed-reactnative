@@ -34,8 +34,29 @@ const CarouselScreen = ({ navigation, route }: any) => {
     }
   }
   const userName = dataObject?.user?.name;
-  const date = dataObject?.date;
-  const time = dataObject?.createdAt;
+  const date: Date = new Date(dataObject?.createdAt);
+  // Convert UTC to IST
+  date.setMinutes(date.getMinutes() + 330); // 5 hours and 30 minutes offset
+
+  // Format the date as "DD MMM YYYY" (e.g., "09 May 2024") without dashes
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    timeZone: "Asia/Kolkata",
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  };
+  const formattedDate: string = date
+    .toLocaleDateString("en-IN", dateOptions)
+    .replace(/-/g, " ");
+
+  // Format the time in 24-hour format as "HH:MM" (e.g., "12:30")
+  const timeOptions: Intl.DateTimeFormatOptions = {
+    timeZone: "Asia/Kolkata",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  };
+  const formattedTime: string = date.toLocaleTimeString("en-IN", timeOptions);
 
   // const carouselScreenStyles = STYLES.$CAROUSEL_SCREEN_STYLE;
   // const headerTitle = carouselScreenStyles?.headerTitle;
@@ -134,7 +155,9 @@ const CarouselScreen = ({ navigation, route }: any) => {
                   fontFamily: STYLES.$FONT_TYPES.MEDIUM,
                 }}
               >
-                {`${countText ? `${countText} • ` : ""}${date}, ${time}`}
+                {`${
+                  countText ? `${countText} • ` : ""
+                }${formattedDate}, ${formattedTime}`}
               </Text>
             </View>
           </View>
@@ -161,7 +184,9 @@ const CarouselScreen = ({ navigation, route }: any) => {
                 <View style={styles.video}>
                   <VideoPlayer
                     /* @ts-ignore */
-                    source={{ uri: item?.attachmentMeta?.url }}
+                    source={{
+                      uri: item?.attachmentMeta?.url,
+                    }}
                     videoStyle={styles.videoPlayer}
                     videoRef={video}
                     disableVolume={true}
