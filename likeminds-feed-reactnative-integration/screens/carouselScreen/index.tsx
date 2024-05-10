@@ -14,7 +14,6 @@ import {
 import styles from "./styles";
 import STYLES from "../../constants/Styles";
 import { STATUS_BAR_STYLE } from "../../store/types/types";
-import { DocumentType } from "../../enums/DocumentType";
 import { useAppDispatch } from "../../store/store";
 import VideoPlayer from "react-native-media-console";
 
