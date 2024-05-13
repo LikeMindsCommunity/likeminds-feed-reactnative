@@ -16,6 +16,7 @@ import STYLES from "../../constants/Styles";
 import { STATUS_BAR_STYLE } from "../../store/types/types";
 import { useAppDispatch } from "../../store/store";
 import VideoPlayer from "react-native-media-console";
+import { ReactNativeZoomableView } from "@openspacelabs/react-native-zoomable-view";
 
 const CarouselScreen = ({ navigation, route }: any) => {
   const video = useRef<any>(null);
@@ -175,10 +176,16 @@ const CarouselScreen = ({ navigation, route }: any) => {
               }}
             >
               {item?.attachmentType === IMAGE_ATTACHMENT_TYPE ? (
-                <Image
-                  style={styles.image}
-                  source={{ uri: item?.attachmentMeta?.url }}
-                />
+                <ReactNativeZoomableView
+                  maxZoom={30}
+                  contentWidth={300}
+                  contentHeight={150}
+                >
+                  <Image
+                    style={styles.image}
+                    source={{ uri: item?.attachmentMeta?.url }}
+                  />
+                </ReactNativeZoomableView>
               ) : item?.attachmentType === VIDEO_ATTACHMENT_TYPE ? (
                 <View style={styles.video}>
                   <VideoPlayer
