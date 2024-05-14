@@ -5,6 +5,7 @@ export interface CreatePostCallbacksContextProps {
   children?: ReactNode;
   handleGalleryProp: (type: string) => void;
   handleDocumentProp: () => void;
+  handlePollProp: () => void;
   onPostClickProp: (
     allMedia: Array<LMAttachmentUI>,
     linkData: Array<LMAttachmentUI>,
@@ -17,6 +18,7 @@ export interface CreatePostCallbacksContextProps {
 export interface CreatePostCustomisableMethodsContext {
   handleGalleryProp: (type: string) => void;
   handleDocumentProp: () => void;
+  handlePollProp: () => void;
   onPostClickProp: (
     allMedia: Array<LMAttachmentUI>,
     linkData: Array<LMAttachmentUI>,
@@ -44,12 +46,14 @@ export const CreatePostCustomisableMethodsContextProvider = ({
   children,
   handleGalleryProp,
   handleDocumentProp,
+  handlePollProp,
   onPostClickProp,
   handleScreenBackPressProp,
 }: CreatePostCallbacksContextProps) => {
   const contextValues: CreatePostCustomisableMethodsContext = {
     handleGalleryProp,
     handleDocumentProp,
+    handlePollProp,
     onPostClickProp,
     handleScreenBackPressProp,
   };

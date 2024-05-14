@@ -1,3 +1,5 @@
+import { PollStyles } from "./types";
+
 interface StylesProps {
   hue?: number;
   fontColor?: string;
@@ -92,6 +94,7 @@ export class STYLES {
   };
   static $LMLoaderSizeiOS: 10;
   static $LMLoaderSizeAndroid: 25;
+  static $POLL_STYLES: PollStyles = {};
   static setTheme({
     hue,
     fontColor,

@@ -76,7 +76,7 @@ export function convertToLMPostUI(
       : [],
     text: post.text,
     updatedAt: post.updatedAt,
-    userId: user?.id.toString(),
+    userId: user?.id?.toString(),
     uuid: post.uuid,
     user: convertToLMUserUI(user[post.uuid]),
     topics: post.topics,

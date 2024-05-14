@@ -20,22 +20,23 @@ export const COMMENT_REPORT_ENTITY_TYPE = 6;
 export const REPLY_REPORT_ENTITY_TYPE = 7;
 
 // post/comment/reply type
-export const POST_TYPE = 'post';
-export const COMMENT_TYPE = 'comment';
-export const REPLY_TYPE = 'reply';
+export const POST_TYPE = "post";
+export const COMMENT_TYPE = "comment";
+export const REPLY_TYPE = "reply";
 
 // toast messages
-export const REPORTED_SUCCESSFULLY = 'Post Reported!';
-export const COMMENT_REPORTED_SUCCESSFULLY = 'Comment Reported!';
-export const SOMETHING_WENT_WRONG = 'Something Went Wrong';
+export const REPORTED_SUCCESSFULLY = "Post Reported!";
+export const COMMENT_REPORTED_SUCCESSFULLY = "Comment Reported!";
+export const SOMETHING_WENT_WRONG = "Something Went Wrong";
 export const REASON_FOR_REPORTING_PLACEHOLDER =
-  'Enter the reason for reporting this post';
-  export const REASON_FOR_DELETION_PLACEHOLDER =
-  'Enter the reason for deleting this post';
-  export const ENTER_REASON_FOR_DELETION = 'Please enter a specific reason for deleting this post';
+  "Enter the reason for reporting this post";
+export const REASON_FOR_DELETION_PLACEHOLDER =
+  "Enter the reason for deleting this post";
+export const ENTER_REASON_FOR_DELETION =
+  "Please enter a specific reason for deleting this post";
 // pin option in menu items
-export const PIN_THIS_POST = 'Pin this Post';
-export const UNPIN_THIS_POST = 'Unpin this Post';
+export const PIN_THIS_POST = "Pin this Post";
+export const UNPIN_THIS_POST = "Unpin this Post";
 export const PIN_POST_ID = 2;
 export const UNPIN_POST_ID = 3;
 
@@ -48,73 +49,74 @@ export const CONFIRM_DELETE = (type: string) =>
   `Are you sure you want to delete this ${type}. This action cannot be reversed.`;
 export const REPORT_INSTRUSTION = (type: string) =>
   `You would be able to report this ${type} after selecting a problem`;
-export const REPORT_PROBLEM = 'Please specify the problem to continue';
-export const DELETION_REASON = 'Reason for deletion';
+export const REPORT_PROBLEM = "Please specify the problem to continue";
+export const DELETION_REASON = "Reason for deletion";
 
 // app name
-export const APP_TITLE = 'LikeMinds Sample App';
+export const APP_TITLE = "LikeMinds Sample App";
 
 // uploading post processing text
-export const POST_UPLOADING = 'Posting';
+export const POST_UPLOADING = "Posting";
 
 // selection types of media
-export const SELECT_IMAGE = 'photo';
-export const SELECT_BOTH = 'mixed';
-export const SELECT_VIDEO = 'video';
-export const SELECT_FILE = 'file';
+export const SELECT_IMAGE = "photo";
+export const SELECT_BOTH = "mixed";
+export const SELECT_VIDEO = "video";
+export const SELECT_FILE = "file";
 
 // create post screen's text
-export const ADD_FILES = 'Attach Files';
-export const ADD_IMAGES = 'Add Photo';
-export const ADD_VIDEOS = 'Add Video';
-export const CREATE_POST_PLACEHOLDER_TEXT = 'Write something here...';
-export const ADD_MORE_MEDIA = 'Add More';
-export const ADD_POST_TEXT = 'POST';
-export const SAVE_POST_TEXT = 'SAVE';
+export const ADD_FILES = "Attach Files";
+export const ADD_IMAGES = "Add Photo";
+export const ADD_POLL = "Add Poll";
+export const ADD_VIDEOS = "Add Video";
+export const CREATE_POST_PLACEHOLDER_TEXT = "Write something here...";
+export const ADD_MORE_MEDIA = "Add More";
+export const ADD_POST_TEXT = "POST";
+export const SAVE_POST_TEXT = "SAVE";
 
 // android storage permession's text
-export const STORAGE_PERMISSION = 'Storage Permission';
+export const STORAGE_PERMISSION = "Storage Permission";
 export const STORAGE_PERMISSION_MESSAGE =
-  'App needs permission to access your storage';
-export const STORAGE_PERMISSION_ALERT_HEADING = 'Storage Permission Required';
+  "App needs permission to access your storage";
+export const STORAGE_PERMISSION_ALERT_HEADING = "Storage Permission Required";
 export const STORAGE_PERMISSION_ALERT_DESCRIPTION =
-  'App needs access to your storage to read files. Please go to app settings and grant permission.';
+  "App needs access to your storage to read files. Please go to app settings and grant permission.";
 
 // toast messages
-export const POST_DELETE = 'Post Deleted!';
-export const COMMENT_DELETE = 'Comment Deleted!';
-export const REPORT_REASON_VALIDATION = 'Please enter a reason';
-export const POST_UPLOADED = 'Your post was shared';
-export const POST_PIN_SUCCESS = 'Post pinned to top!';
-export const POST_UNPIN_SUCCESS = 'Post unpinned!';
-export const POST_UPLOAD_INPROGRESS = 'A post is already uploading!';
+export const POST_DELETE = "Post Deleted!";
+export const COMMENT_DELETE = "Comment Deleted!";
+export const REPORT_REASON_VALIDATION = "Please enter a reason";
+export const POST_UPLOADED = "Your post was shared";
+export const POST_PIN_SUCCESS = "Post pinned to top!";
+export const POST_UNPIN_SUCCESS = "Post unpinned!";
+export const POST_UPLOAD_INPROGRESS = "A post is already uploading!";
 export const CREATE_POST_PERMISSION =
-  'You do not have permission to create a post.';
+  "You do not have permission to create a post.";
 export const FILE_UPLOAD_SIZE_VALIDATION =
-  'Files below 100 KB and above 100MB are not allowed';
-export const MEDIA_UPLOAD_COUNT_VALIDATION = 'You can select upto 10 items!';
-export const POST_SAVED_SUCCESS = 'Post saved!';
-export const POST_UNSAVED_SUCCESS = 'Post unsaved!';
+  "Files below 100 KB and above 100MB are not allowed";
+export const MEDIA_UPLOAD_COUNT_VALIDATION = "You can select upto 10 items!";
+export const POST_SAVED_SUCCESS = "Post saved!";
+export const POST_UNSAVED_SUCCESS = "Post unsaved!";
 
-export const POST_LIKES = 'Post likes';
-export const COMMENT_LIKES = 'Comment likes';
-export const DELETE_REASON_SELECTION = 'Please select a reason for deletion'
+export const POST_LIKES = "Post likes";
+export const COMMENT_LIKES = "Comment likes";
+export const DELETE_REASON_SELECTION = "Please select a reason for deletion";
 
 // file size validation
 export const MAX_FILE_SIZE = 104857600; // 100MB in bytes
 export const MIN_FILE_SIZE = 100000; // 100KB in bytes
 
-export const NAVIGATED_FROM_POST = 'FROM_POST';
-export const NAVIGATED_FROM_COMMENT = 'FROM_COMMENTS';
-export const NAVIGATED_FROM_NOTIFICATION = 'FROM_NOTIFICATION';
+export const NAVIGATED_FROM_POST = "FROM_POST";
+export const NAVIGATED_FROM_COMMENT = "FROM_COMMENTS";
+export const NAVIGATED_FROM_NOTIFICATION = "FROM_NOTIFICATION";
 
 // member state
-export const STATE_ADMIN = 1
-export const STATE_MEMBER = 4
-export const RIGHT_CREATE_POST = 9
+export const STATE_ADMIN = 1;
+export const STATE_MEMBER = 4;
+export const RIGHT_CREATE_POST = 9;
 
-// post detail screen text 
-export const VIEW_MORE_TEXT = 'View more replies'
+// post detail screen text
+export const VIEW_MORE_TEXT = "View more replies";
 
 // error message for icon path type
 export const ICON_PATH_VALIDATION_ERROR =
@@ -134,3 +136,37 @@ export const MAX_DEFAULT_COMMENT_LINES = 3;
 // comment levels
 export const PARENT_LEVEL_COMMENT = 0;
 export const CHILD_LEVEL_COMMENT = 1;
+
+// poll
+export const DATE_TEXT = "date";
+export const TIME_TEXT = "time";
+export const DATE_TIME_TEXT = "datetime";
+export const POLL_RESULT_TEXT = "Poll Results";
+export const QUESTION_WARNING = "Question Field cannot be empty";
+export const EXPIRY_TIME_WARNING = "Please select expiry time";
+export const POLLS_OPTIONS_WARNING = "Poll options can't be the same";
+export const EMPTY_OPTIONS_WARNING = "Empty options are not allowed";
+export const PLACEHOLDER_VALUE = "Ask a question";
+export const OPTION_TEXT = "Option";
+export const DATE_PLACEHOLDER = "DD-MM-YYYY hh:mm";
+export const ANONYMOUS_POLL_TEXT = "Anonymous Poll";
+export const LIVE_RESULT_TEXT = "Don't show live results";
+export const USER_CAN_VOTE_FOR = "User can vote for";
+export const SELECT_OPTION = "Select option";
+export const POST_TITLE = "POST";
+export const ADD_OPTION_TEXT = "+ Add an option";
+export const SUBMIT_VOTE_TITLE = "SUBMIT VOTE";
+export const EDIT_POLL_TEXT = "EDIT POLL";
+export const ADD_NEW_POLL_OPTION = "Add new poll option";
+export const NEW_POLL_OPTION_TEXT =
+  "Enter an option that you think is missing in this poll. This can not be undone.";
+export const SUBMIT_TEXT = "SUBMIT";
+export const POLL_ENDED_WARNING = "Poll ended. Vote cannot be submitted now";
+export const POLL_SUBMITTED_SUCCESSFULLY = "Your vote is submitted succesfully";
+export const ANONYMOUS_POLL_TITLE = "Anonymous poll";
+export const ANONYMOUS_POLL_SUB_TITLE =
+  "This being an anonymous poll, the names of the voters can not be disclosed";
+export const POLL_MULTIPLE_STATE_EXACTLY = 0;
+export const POLL_MULTIPLE_STATE_MAX = 1;
+export const POLL_MULTIPLE_STATE_LEAST = 2;
+export const OKAY = "Okay";

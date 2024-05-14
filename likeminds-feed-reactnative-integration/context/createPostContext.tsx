@@ -60,6 +60,7 @@ import {
 import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
 import { Events } from "../enums/Events";
 import { Keys } from "../enums/Keys";
+import { CREATE_POLL_SCREEN } from "../constants/screenNames";
 
 interface CreatePostContextProps {
   children: ReactNode;
@@ -121,6 +122,7 @@ export interface CreatePostContextValues {
   setSelectedDocuments: () => void;
   handleGallery: (type: string) => void;
   handleDocument: () => void;
+  handlePoll: () => void;
   removeDocumentAttachment: (index: number) => void;
   removeMediaAttachment: (index: number) => void;
   removeSingleAttachment: () => void;
@@ -375,6 +377,11 @@ export const CreatePostContextProvider = ({
         setSelectedDocuments();
       }
     }
+  };
+
+  // function handles the navigation to create poll screen
+  const handlePoll = () => {
+    navigation.navigate(CREATE_POLL_SCREEN);
   };
 
   // function removes the selected documents
@@ -693,6 +700,7 @@ export const CreatePostContextProvider = ({
     setSelectedDocuments,
     handleGallery,
     handleDocument,
+    handlePoll,
     removeDocumentAttachment,
     removeMediaAttachment,
     removeSingleAttachment,

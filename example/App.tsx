@@ -13,6 +13,7 @@ import {
   CREATE_POST,
   POST_LIKES_LIST,
   LMOverlayProvider,
+  CreatePollScreen,
 } from '@likeminds.community/feed-rn-core';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
@@ -45,6 +46,7 @@ import {Credentials} from './login/credentials';
 import {LoginSchemaRO} from './login/loginSchemaRO';
 import {useQuery} from '@realm/react';
 import FetchKeyInputScreen from './login';
+import {CREATE_POLL_SCREEN} from '@likeminds.community/feed-rn-core/constants/screenNames';
 
 class CustomCallbacks implements LMFeedCallbacks {
   onEventTriggered(eventName: string, eventProperties?: Map<string, string>) {
@@ -72,9 +74,9 @@ const App = () => {
   const [isTrue, setIsTrue] = useState(true);
   const loginSchemaArray: any = useQuery(LoginSchemaRO);
   const accessToken =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoicUxISlF5Zm1qREJZaTMwSWJGZmE1eTcvOHFVN0ptdmtGVFdxUTFXeXFGZkhNbEtQSWtMUERETjFJeEo2TUpteXZZMzM1TGl6cEhPVnlTbXBrKzFCMEZrbWNRSEJEeHhTN255anprZThhdUxScndtNmYrSCt0dWQ2YUdXRy96YlZxTjA1V2wzVG83TUp1aFBveUpQaG03MXVheFN6NmlqeWNPdWovb205NDAxay9reDhEVkRMUU1Sd2ZIdnlYR3hVdTV0cXpJcHN0RldwVVREaFhTRDNNbUhpb0FqYVVoclBuK2xxV2xVQWVqOE0yTjBMSGwvWHBxN0hBR2JsbFdyTlBlZkUvYU9FbVR2dW9NZkkiLCJleHAiOjE3MTQ2NTAzMzR9.lh81nwr-npOVfO_XykHL7zSLGsRQYZwLg6R4tTqyxGI';
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiWHgrVWRTZlJzekxxd3ppQ2MvajBZOU0wOHZVeTU2bW5kQTBKdmMvRXBJQkU1aGY3dUxuSE5hS3hIRWRnaVYzdWNDdHpqTzhRM3VsM1JEMWNmSTM4WG1nQytTSVljcys2VVU1VkhiRFhNZ0xCS2lQSkEyV1Bya0FxMXRoaTlDdEJmWGI4bFduOWZXNGx4Y3hqckFmanpKUnZGSyt4NmFPYXpsSUx6VHlHbXhJVkpoSTBVT3NZSElzb0hNejJ5cXZ5Z0pPQzZZbkNhaXlabFBpcFM0RVo4ZkU0ekZhbVhaUmFhaFk2MCtwSWZZczJqU2hGWlltbC8ySnhiRVNHK2NoVVZtTmNIRGlLbGJFNmx3UU8iLCJleHAiOjE3MTUxNTQxODh9.KLVr_g9Qef0DfhYON80xtYoxERGwSIxOl6ImU54GyVU';
   const refreshToken =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoicTBjRDFPbkRsQjFVNHFsNFdqeUI1cTBUME9jU3NOdE02dkZFWWVhZDRxN0Eyck1HQTh0ejEzRTduN1l4bEhvMjA1dThyOFdmbGp3a1d6ZFk0RFY4Vk5zbStvWVJ3M3FaWUFIV2NJYUpSUWhFd2Fja2pUYzgyVzA4RWN2TUp0U3lpRTk3Ynd3ZDFXTms3bFpWUUlzOHBrSXNHelhhR3NXNFdwNnN6ejdXRW9aemwyN2lVSXdLTDFGdVBmUmtMTEVGQVRkcFRhTlVaUnFrR1dqWjNnbUtac1JTOUhtaUw5QlBXQ3Q3SWFYTTZTekczZFZmUGxrbmZ0bDdkNWs3K1VjWkxyRThXR3g2WkZqVUE2REEvQT09IiwiZXhwIjoxNzE3MzI3ODM0fQ.Kfj69eRpV-vA4dInz_2W7tKdkf_j5Zp0UNA_aefjBVg';
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiazZJUFFRVUdwb3phZHRyN0FTVUx0QjJaVXcwVHluWW5BWWlRb0ZNVWRRcVNSZ2l6L0JMOGlrN3ZnZkZ6R0UzOFlBeFQ1N1NkamZtbnI0QS96VkU1TkMrUE1IcXBCVjhXeFBGVnBzcnVMUVh1WElaYVg1TytMOWFvU0drbFVyV0NNaW40UVUrRmViU3N6amlFa1M1TytQNW5VNXdwR2ZYZUlhTTFkRUZxaWc3eWgwZFNkOVY5Q0ZrNzlqTEFXWXdTeXVuejA5dkliUzBiejlTb3I5MGcyY0tDdlg5V3gxM0MwdU8zZFBzZjV3d2hnekE0UU9ZOXZyNGRKYUhET0dMazRtaHk3akVUV05aMDQveDBZUT09IiwiZXhwIjoxNzE3ODMxNjg4fQ.R_WiCDLpp1FwH9c7sA-64oQ6yPpwY2Orl3NSOJkpujQ';
 
   useEffect(() => {
     const userSchema = async () => {
@@ -228,6 +230,10 @@ const App = () => {
               <Stack.Screen
                 name={NOTIFICATION_FEED}
                 component={NotificationWrapper}
+              />
+              <Stack.Screen
+                name={CREATE_POLL_SCREEN}
+                component={CreatePollScreen}
               />
             </Stack.Navigator>
           </NavigationContainer>

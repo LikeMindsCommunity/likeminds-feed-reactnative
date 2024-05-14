@@ -18,6 +18,7 @@ import {
   ADD_FILES,
   ADD_IMAGES,
   ADD_MORE_MEDIA,
+  ADD_POLL,
   ADD_POST_TEXT,
   ADD_VIDEOS,
   CREATE_POST_PLACEHOLDER_TEXT,
@@ -70,6 +71,7 @@ import { Keys } from "../../enums/Keys";
 import { userTaggingDecoder } from "../../utils/decodeMentions";
 import { Client } from "../../client";
 import Layout from "../../constants/Layout";
+import { PollConversationView } from "../../components/LMPoll";
 
 interface CreatePostProps {
   children: React.ReactNode;
@@ -82,6 +84,7 @@ interface CreatePostProps {
   };
   handleGalleryProp: (type: string) => void;
   handleDocumentProp: () => void;
+  handlePollProp: () => void;
   onPostClickProp: (
     allMedia: Array<LMAttachmentUI>,
     linkData: Array<LMAttachmentUI>,
@@ -96,6 +99,7 @@ const CreatePost = ({
   route,
   children,
   handleDocumentProp,
+  handlePollProp,
   handleGalleryProp,
   onPostClickProp,
   handleScreenBackPressProp,
@@ -103,6 +107,7 @@ const CreatePost = ({
   return (
     <CreatePostCustomisableMethodsContextProvider
       handleDocumentProp={handleDocumentProp}
+      handlePollProp={handlePollProp}
       handleGalleryProp={handleGalleryProp}
       onPostClickProp={onPostClickProp}
       handleScreenBackPressProp={handleScreenBackPressProp}
@@ -136,6 +141,7 @@ const CreatePostComponent = () => {
     postContentText,
     handleInputChange,
     handleDocument,
+    handlePoll,
     handleGallery,
     handleLoadMore,
     allAttachment,
@@ -182,6 +188,7 @@ const CreatePostComponent = () => {
     (state) => state.feed.selectedTopicsForCreatePostScreen
   );
   const topics = useAppSelector((state) => state.feed.topics);
+  const poll = useAppSelector((state) => state.createPost.pollAttachment);
   const topicsSelected = useAppSelector(
     (state) => state.createPost.selectedTopics
   );
@@ -366,6 +373,7 @@ const CreatePostComponent = () => {
 
   const {
     handleDocumentProp,
+    handlePollProp,
     handleGalleryProp,
     onPostClickProp,
     handleScreenBackPressProp,
@@ -403,6 +411,7 @@ const CreatePostComponent = () => {
             }
           />
         </View>
+
         {mappedTopics.length > 0 && showTopics ? (
           <View
             style={{
@@ -502,7 +511,9 @@ const CreatePostComponent = () => {
             </View>
           )
         )}
+
         <View style={styles.border}></View>
+
         {/* text input field */}
         <LMInputText
           {...customTextInputStyle}
@@ -658,6 +669,9 @@ const CreatePostComponent = () => {
 
         {/* selected media section */}
         <View>
+          {/* poll media */}
+
+          {Object.keys(poll).length === 0 ? <PollConversationView />  : null}
           {/* multi media selection section */}
           {showSelecting ? (
             <View style={styles.selectingMediaView}>
@@ -982,6 +996,33 @@ const CreatePostComponent = () => {
             />
             <LMText
               children={<Text>{ADD_FILES}</Text>}
+              textStyle={styles.selectionOptionstext}
+              {...customAttachmentOptionsStyle?.filesAttachmentTextStyle}
+            />
+          </TouchableOpacity>
+
+          {/* poll option */}
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={[
+              styles.optionItemView,
+              customAttachmentOptionsStyle?.filesAttachmentView,
+            ]}
+            onPress={() => {
+              handlePollProp ? handlePollProp() : handlePoll();
+
+              // LMFeedAnalytics.track(
+              //   Events.CLICKED_ON_ATTACHMENT,
+              //   new Map<string, string>([[Keys.TYPE, SELECT_FILE]])
+              // );
+            }}
+          >
+            <LMIcon
+              assetPath={require("../../assets/images/paperClip_icon3x.png")}
+              {...customAttachmentOptionsStyle?.filesAttachmentIcon}
+            />
+            <LMText
+              children={<Text>{ADD_POLL}</Text>}
               textStyle={styles.selectionOptionstext}
               {...customAttachmentOptionsStyle?.filesAttachmentTextStyle}
             />

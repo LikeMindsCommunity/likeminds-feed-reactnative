@@ -111,11 +111,11 @@ const Feed = ({route}) => {
    });
   }, []);
 
-  useEffect(() => {
-    if (FCMToken) {
-      pushAPI(FCMToken, accessToken);
-    }
-  }, [FCMToken]);
+  // useEffect(() => {
+  //   if (FCMToken) {
+  //     pushAPI(FCMToken, accessToken);
+  //   }
+  // }, [FCMToken]);
 
   return (
     <UniversalFeed

@@ -10,6 +10,7 @@ import {
   TopicFeed,
   LMFeedNotificationFeedListView,
   LMFeedNotificationFeedScreen,
+  CreatePollScreen,
 } from "./screens";
 import {
   UNIVERSAL_FEED,
@@ -48,6 +49,7 @@ export {
   initMyClient,
   ContextProvider,
   UniversalFeed,
+  CreatePollScreen,
   PostsList,
   PostDetail,
   CreatePost,

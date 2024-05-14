@@ -1,8 +1,10 @@
 import {
   ADD_SELECTED_TOPICS,
+  CLEAR_POLL,
   CLEAR_SELECTED_TOPICS,
   DECODE_URL_SUCCESS,
   SET_DISABLED_TOPICS,
+  SET_POLL,
   UPLOAD_ATTACHMENTS,
 } from "../types/types";
 
@@ -14,6 +16,7 @@ export interface CreatePostReducerState {
   topics: [];
   selectedTopics: [];
   disbaledTopics: [];
+  pollAttachment: {};
 }
 
 export const initialState: CreatePostReducerState = {
@@ -24,6 +27,7 @@ export const initialState: CreatePostReducerState = {
   topics: [],
   selectedTopics: [],
   disbaledTopics: [],
+  pollAttachment: {},
 };
 
 export function createPostReducer(state = initialState, action) {
@@ -43,6 +47,19 @@ export function createPostReducer(state = initialState, action) {
       return {
         ...state,
         disbaledTopics: topics,
+      };
+    }
+    case SET_POLL: {
+      const { poll = {} } = action.body;
+      return {
+        ...state,
+        pollAttachment: poll,
+      };
+    }
+    case CLEAR_POLL: {
+      return {
+        ...state,
+        pollAttachment: {},
       };
     }
     case DECODE_URL_SUCCESS: {

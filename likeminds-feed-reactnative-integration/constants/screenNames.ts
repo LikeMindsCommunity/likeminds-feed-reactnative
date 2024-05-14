@@ -7,3 +7,5 @@ export const POSTS_LIST = "PostsList";
 export const TOPIC_FEED = "TopicFeed";
 export const NOTIFICATION_LIST = "NotificationList";
 export const NOTIFICATION_FEED = "NotificationFeed";
+export const POLL_RESULT = "PollResult";
+export const CREATE_POLL_SCREEN = "CreatePollScreen";
