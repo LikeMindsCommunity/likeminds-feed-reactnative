@@ -251,7 +251,7 @@ const CarouselScreen = ({ navigation, route }: any) => {
                       muted={mute}
                       onEnd={() => {
                         setPaused(true); // Pause the video
-                        setProgress({ currentTime: 0 }); // Reset seek position
+                        setProgress({ ...progress, currentTime: 0 }); // Reset seek position
                         ref.current.seek(0); // Seek to the beginning of the video
                       }}
                     />
