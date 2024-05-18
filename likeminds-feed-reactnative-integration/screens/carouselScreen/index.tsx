@@ -216,9 +216,8 @@ const CarouselScreen = ({ navigation, route }: any) => {
               ) : item?.attachmentType === VIDEO_ATTACHMENT_TYPE ? (
                 <View style={styles.video}>
                   <TouchableOpacity
-                    style={{ width: "100%", height: 200 }}
+                    style={styles.video}
                     onPress={() => {
-                      console.log("progressHha", progress);
                       if (progress !== null) {
                         setClicked(true);
                         resetClicked(); // Reset clicked after 3 seconds
@@ -226,14 +225,17 @@ const CarouselScreen = ({ navigation, route }: any) => {
                     }}
                   >
                     {progress == null && (
-                      <ActivityIndicator
-                        size="large"
-                        color={STYLES.$COLORS.SECONDARY}
-                        style={{
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      />
+                      <View style={styles.activityIndicatorContainer}>
+                        <ActivityIndicator
+                          size="large"
+                          color={STYLES.$COLORS.SECONDARY}
+                          style={{
+                            justifyContent: "center",
+                            alignItems: "center",
+                            zIndex: 2,
+                          }}
+                        />
+                      </View>
                     )}
                     <Video
                       paused={puased}
@@ -242,10 +244,9 @@ const CarouselScreen = ({ navigation, route }: any) => {
                       }}
                       ref={ref}
                       onProgress={(x) => {
-                        console.log("x", x);
                         setProgress(x);
                       }}
-                      style={{ width: "100%", height: 200 }}
+                      style={styles.videoPlayer}
                       resizeMode="contain"
                       muted={mute}
                       onEnd={() => {
@@ -278,10 +279,9 @@ const CarouselScreen = ({ navigation, route }: any) => {
                                   : require("../../assets/images/pause-button.png")
                               }
                               style={{
-                                width: 30,
-                                height: 30,
+                                width: 40,
+                                height: 40,
                                 tintColor: "white",
-                                marginLeft: 50,
                               }}
                             />
                           </TouchableOpacity>
@@ -293,8 +293,8 @@ const CarouselScreen = ({ navigation, route }: any) => {
                             justifyContent: "space-between",
                             position: "absolute",
                             bottom: 0,
-                            paddingLeft: 20,
-                            paddingRight: 20,
+                            paddingLeft: 10,
+                            paddingRight: 50,
                             alignItems: "center",
                           }}
                         >
@@ -310,10 +310,12 @@ const CarouselScreen = ({ navigation, route }: any) => {
                             step={0}
                             value={progress.currentTime}
                             onValueChange={(x) => {
-                              console.log("xFinale", x);
                               ref.current.seek(x);
                             }}
                           />
+                          <Text style={{ color: "white", marginRight: 10 }}>
+                            {format(progress.seekableDuration)}
+                          </Text>
                           <TouchableOpacity onPress={() => setMute(!mute)}>
                             <Image
                               source={
@@ -321,7 +323,11 @@ const CarouselScreen = ({ navigation, route }: any) => {
                                   ? require("../../assets/images/muted.png")
                                   : require("../../assets/images/unmute.png")
                               }
-                              style={{ height: 20, width: 20 }}
+                              style={{
+                                height: mute ? 20 : 25,
+                                width: mute ? 20 : 25,
+                                tintColor: "white",
+                              }}
                             />
                           </TouchableOpacity>
                         </View>
