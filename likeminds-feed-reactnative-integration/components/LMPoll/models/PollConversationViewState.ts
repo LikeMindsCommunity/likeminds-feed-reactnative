@@ -1,4 +1,4 @@
-import {Poll} from './Poll';
+import { Poll } from "./Poll";
 
 export interface PollConversationViewState {
   hue?: number;
@@ -15,6 +15,7 @@ export interface PollConversationViewState {
   shouldShowVotes: boolean;
   hasPollEnded: boolean;
   expiryTime: string;
+  expiryDays: number | string;
   toShowResults: boolean;
   member: any;
   user: any;
@@ -22,9 +23,11 @@ export interface PollConversationViewState {
   createdAt: string;
   pollAnswerText: string;
   isPollEnded: boolean;
-  isIncluded: boolean;
   multipleSelectNo?: any;
   multipleSelectState?: number;
   showResultsButton: boolean;
   pollType: number;
+  disabled: boolean;
+  truncatedText: string;
+  maxQuestionLines: number;
 }

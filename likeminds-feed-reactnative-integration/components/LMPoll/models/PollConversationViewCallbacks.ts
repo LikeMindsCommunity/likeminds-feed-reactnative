@@ -1,4 +1,4 @@
-import { GestureResponderEvent } from "react-native/types";
+import { GestureResponderEvent, TextLayoutLine } from "react-native/types";
 
 export interface PollConversationViewCallbacks {
   onNavigate: (val: string) => void;
@@ -9,5 +9,9 @@ export interface PollConversationViewCallbacks {
   setIsAddPollOptionModalVisible: (visible: boolean) => void;
   setAddOptionInputField: (inputField: string) => void;
   stringManipulation: () => string;
+  dateManipulation: () => string;
   resetShowResult: () => void;
+  onQuestionTextLayout: (event: {
+    nativeEvent: { lines: string | TextLayoutLine[] };
+  }) => void;
 }

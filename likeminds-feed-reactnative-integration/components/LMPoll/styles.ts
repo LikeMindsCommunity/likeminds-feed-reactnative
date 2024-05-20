@@ -73,6 +73,9 @@ export const styles = StyleSheet.create({
   gap10: {
     gap: Layout.normalize(10),
   },
+  gap15: {
+    gap: Layout.normalize(15),
+  },
   centeredView: {
     flexGrow: 1,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -236,8 +239,8 @@ export const styles = StyleSheet.create({
   },
   greyPollButton: {
     borderRadius: Layout.normalize(8),
-    borderColor: "#c5c5c5",
-    borderWidth: Layout.normalize(1),
+    borderColor: "grey",
+    borderWidth: Layout.normalize(0.5),
   },
   pollButtonBackground: {
     margin: Layout.normalize(2),
@@ -353,6 +356,6 @@ export const styles = StyleSheet.create({
     zIndex: 1,
     alignItems: "center",
     left: Layout.normalize(5),
-    top: Platform.OS === "ios" ? "35%" : "30%",
+    top: Platform.OS === "ios" ? "30%" : "30%",
   },
 });

@@ -1,8 +1,9 @@
-import { View, Text } from "react-native";
+import { View, Text, TextLayoutLine } from "react-native";
 import React, { useEffect, useState } from "react";
 import {
   ANONYMOUS_POLL_SUB_TITLE,
   ANONYMOUS_POLL_TITLE,
+  MAX_DEFAULT_POST_CONTENT_LINES,
   POLL_ENDED_WARNING,
   POLL_MULTIPLE_STATE_EXACTLY,
   POLL_MULTIPLE_STATE_LEAST,
@@ -48,10 +49,15 @@ const PollConversationView = ({ item }: any) => {
   const [isAnonymousPollModalVisible, setIsAnonymousPollModalVisible] =
     useState(false);
   const [pollsArr, setPollsArr] = useState(item?.polls);
+  const [truncatedText, setTruncatedText] = useState("");
 
-  const { user } = useAppSelector((item) => item.homefeed);
+  const { member } = useAppSelector((item) => item.login);
 
   const dispatch = useAppDispatch();
+  const pollStyles: any = STYLES.$POLL_STYLES;
+  const MAX_LINES = pollStyles?.visibleLines
+    ? pollStyles?.visibleLines
+    : MAX_DEFAULT_POST_CONTENT_LINES;
 
   // this function navigates to poll result screen if we click on votes or show alert in case of anonymous poll
   const onNavigate = (val: string) => {
@@ -399,6 +405,28 @@ const PollConversationView = ({ item }: any) => {
     }
   };
 
+  const dateManipulation = () => {
+    // Define the UNIX timestamp in milliseconds
+    const timestampMs: number = Number(item?.expiryTime);
+
+    // Convert milliseconds to a Date object
+    const date: Date = new Date(timestampMs);
+
+    // Define options for formatting the date and time to 12-hour format
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    };
+
+    // Use toLocaleString to get the formatted date and time
+    const formattedDate: string = date.toLocaleString("en-US", options);
+    return formattedDate;
+  };
+
   const calculateDaysToExpiry = () => {
     const difference = item?.expiryTime - Date.now();
 
@@ -408,9 +436,29 @@ const PollConversationView = ({ item }: any) => {
     return Math.ceil(millisecondsToDays)?.toString();
   };
 
+  // this handles the show more functionality
+  const onTextLayout = (event: {
+    nativeEvent: { lines: string | TextLayoutLine[] };
+  }) => {
+    //get all lines
+    const { lines } = event.nativeEvent;
+    let text = "";
+
+    //get lines after it truncate
+    if (lines.length >= MAX_LINES) {
+      if (Array.isArray(lines)) {
+        text = lines
+          .splice(0, MAX_LINES)
+          .map((line) => line.text)
+          .join("");
+      }
+      setTruncatedText(text);
+    }
+  };
+
   // readonly props consumed by UI component
   const props: PollConversationViewState = {
-    text: item?.answer,
+    text: item?.text,
     votes: pollVoteCount,
     optionArr: pollsArr,
     pollTypeText: item?.pollTypeText,
@@ -422,10 +470,11 @@ const PollConversationView = ({ item }: any) => {
     allowAddOption: allowAddOption,
     shouldShowVotes: shouldShowVotes,
     hasPollEnded: hasPollEnded,
-    expiryTime: calculateDaysToExpiry(),
+    expiryTime: item?.expiryTime,
+    expiryDays: calculateDaysToExpiry(),
     toShowResults: item?.toShowResults,
     member: item?.member,
-    user: user,
+    user: member,
     isEdited: item?.isEdited,
     createdAt: item?.createdAt,
     pollAnswerText: item?.pollAnswerText,
@@ -434,6 +483,9 @@ const PollConversationView = ({ item }: any) => {
     multipleSelectState: item?.multipleSelectState,
     showResultsButton: showResultsButton,
     pollType: item?.pollType,
+    disabled: item?.disabled ? item?.disabled : false,
+    truncatedText: truncatedText,
+    maxQuestionLines: MAX_LINES,
   };
 
   return (
@@ -447,7 +499,9 @@ const PollConversationView = ({ item }: any) => {
         setIsAddPollOptionModalVisible={setIsAddPollOptionModalVisible}
         setAddOptionInputField={setAddOptionInputField}
         stringManipulation={stringManipulation}
+        dateManipulation={dateManipulation}
         resetShowResult={resetShowResult}
+        onQuestionTextLayout={onTextLayout}
         {...props}
       />
       <AddOptionsModal

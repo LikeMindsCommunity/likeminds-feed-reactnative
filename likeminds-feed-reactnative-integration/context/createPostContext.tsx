@@ -381,6 +381,7 @@ export const CreatePostContextProvider = ({
 
   // function handles the navigation to create poll screen
   const handlePoll = () => {
+    setShowOptions(false);
     navigation.navigate(CREATE_POLL_SCREEN);
   };
 

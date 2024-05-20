@@ -283,7 +283,7 @@ export const CreatePollContextProvider = ({
       }
 
       const poll: any = {
-        temporaryId: Date.now().toString(),
+        id: Date.now().toString(),
         state: 10,
         text: question,
         polls: polls,
@@ -293,6 +293,7 @@ export const CreatePollContextProvider = ({
         isAnonymous: showAdvancedOption ? anonymousPollEnabled : false,
         allowAddOption: showAdvancedOption ? addOptionsEnabled : false,
         expiryTime: Date.parse(time.toString()),
+        disabled: true, // to disable buttons on poll preview.
       };
 
       dispatch({

@@ -670,8 +670,20 @@ const CreatePostComponent = () => {
         {/* selected media section */}
         <View>
           {/* poll media */}
+          {Object.keys(poll).length > 0 ? (
+            <View
+              style={{
+                padding: 20,
+                margin: 20,
+                borderRadius: 5,
+                borderColor: "#c5c5c5",
+                borderWidth: 1,
+              }}
+            >
+              <PollConversationView item={poll} />
+            </View>
+          ) : null}
 
-          {Object.keys(poll).length === 0 ? <PollConversationView />  : null}
           {/* multi media selection section */}
           {showSelecting ? (
             <View style={styles.selectingMediaView}>
@@ -874,7 +886,8 @@ const CreatePostComponent = () => {
                 ? false
                 : allAttachment?.length > 0 ||
                   formattedLinkAttachments?.length > 0 ||
-                  postContentText.trim() !== ""
+                  postContentText.trim() !== "" ||
+                  Object.keys(poll).length > 0
                 ? false
                 : true
             }
@@ -883,7 +896,8 @@ const CreatePostComponent = () => {
                 ? styles.enabledOpacity
                 : allAttachment?.length > 0 ||
                   formattedLinkAttachments?.length > 0 ||
-                  postContentText.trim() !== ""
+                  postContentText.trim() !== "" ||
+                  Object.keys(poll).length > 0
                 ? styles.enabledOpacity
                 : styles.disabledOpacity
             }

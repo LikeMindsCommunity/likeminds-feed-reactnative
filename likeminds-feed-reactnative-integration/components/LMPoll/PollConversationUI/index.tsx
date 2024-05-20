@@ -1,26 +1,31 @@
-import { View, Text, TouchableOpacity, Image, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  Pressable,
+  TextLayoutLine,
+} from "react-native";
 import React from "react";
 import { styles } from "../styles";
 import {
   ADD_OPTION_TEXT,
   EDIT_POLL_TEXT,
+  MAX_DEFAULT_POST_CONTENT_LINES,
   SUBMIT_VOTE_TITLE,
 } from "../../../constants/Strings";
 import { PollConversationUIProps } from "../models";
 import Layout from "../../../constants/Layout";
 import STYLES from "../../../constants/Styles";
-import { CallBack } from "../../../callBacks/callBackClass";
-// import MessageHeader from "../../MessageHeader";
-// import MessageFooter from "../../MessageFooter";
-// import { useCustomComponentsContext } from "../../../context/CustomComponentContextProvider";
+import LMPostPollText from "../../LMPost/LMPostPollText";
+import { decode } from "../../../utils";
+import { LMText } from "../../../uiComponents";
 
 const PollConversationUI = ({
   text,
   hue,
   onNavigate,
   optionArr,
-  submitTypeText,
-  pollTypeText,
   selectedPolls,
   shouldShowSubmitPollButton,
   setSelectedPollOptions,
@@ -32,6 +37,7 @@ const PollConversationUI = ({
   setIsAddPollOptionModalVisible,
   hasPollEnded,
   expiryTime,
+  expiryDays,
   toShowResults,
   member,
   user,
@@ -39,43 +45,26 @@ const PollConversationUI = ({
   createdAt,
   pollAnswerText,
   isPollEnded,
-  isIncluded,
   multipleSelectNo,
   stringManipulation,
+  dateManipulation,
   resetShowResult,
   pollType,
+  disabled,
+  onQuestionTextLayout,
+  truncatedText,
+  maxQuestionLines,
 }: PollConversationUIProps) => {
   const pollStyles = STYLES.$POLL_STYLES;
 
   //styling props
   const pollVoteSliderColor = pollStyles?.pollVoteSliderColor;
 
-  // const { customMessageHeader, customMessageFooter } =
-  //   useCustomComponentsContext();
   return (
     <View>
-      {isIncluded ? (
-        <TouchableOpacity
-          style={styles.selectedItem}
-        />
-      ) : null}
-      {/* {member?.id == user?.id ? null : customMessageHeader ? (
-        customMessageHeader
-      ) : (
-        <MessageHeader />
-      )} */}
-
-      {/* Poll heading */}
-      <View style={[styles.alignRow, styles.gap]}>
-        <Text style={[styles.smallText, styles.greyColor]}>{pollTypeText}</Text>
-        <Text
-          style={[styles.smallText, styles.greyColor]}
-        >{`• ${submitTypeText}`}</Text>
-      </View>
-
       {/* Poll question */}
-      <View style={styles.extraMarginSpace}>
-        <View style={[styles.alignRow, styles.justifySpace]}>
+      <View>
+        {/* <View style={[styles.alignRow, styles.justifySpace]}>
           <View
             style={[
               styles.pollIconParent,
@@ -99,18 +88,26 @@ const PollConversationUI = ({
                 : "Poll Ends " + expiryTime + " days"}
             </Text>
           </View>
-        </View>
+        </View> */}
 
-        <Text style={[styles.text, styles.blackColor, styles.marginSpace]}>
-          {text}
-        </Text>
+        {truncatedText ? (
+          <LMPostPollText truncatedText={truncatedText} fullText={text} />
+        ) : (
+          <LMText
+            maxLines={maxQuestionLines}
+            textStyle={[styles.text, styles.blackColor]}
+            onTextLayout={(e) => onQuestionTextLayout(e)}
+          >
+            {text}
+          </LMText>
+        )}
 
         {multipleSelectNo > 1 ? (
           <Text
             style={[
-              styles.smallText,
+              styles.mediumText,
               styles.greyColor,
-              { marginTop: Layout.normalize(5) },
+              { marginTop: Layout.normalize(15) },
             ]}
           >
             {stringManipulation()}
@@ -119,7 +116,7 @@ const PollConversationUI = ({
       </View>
 
       {/* Poll Options*/}
-      <View style={[styles.extraMarginSpace, styles.gap10]}>
+      <View style={[styles.marginSpace, styles.gap15]}>
         {optionArr?.map((element: any, index: any) => {
           const isSelected = selectedPolls.includes(index);
           const voteCount = element?.noVotes;
@@ -128,6 +125,7 @@ const PollConversationUI = ({
           return (
             <View key={element?.id} style={styles.gap}>
               <Pressable
+                disabled={disabled}
                 onPress={() => {
                   setShowSelected(!showSelected);
                   setSelectedPollOptions(index);
@@ -152,6 +150,8 @@ const PollConversationUI = ({
                             padding: 0,
                             margin: 0,
                             borderRadius: Layout.normalize(8),
+                            alignItems: "center",
+                            justifyContent: "center",
                           },
                         ]
                       : null,
@@ -198,141 +198,166 @@ const PollConversationUI = ({
                 </View>
               </Pressable>
 
-              {(isPollSentByMe && pollType === 1) ||
-              pollType === 0 ||
-              isPollEnded ? (
-                <Pressable
-                  onPress={() => {
-                    onNavigate(element?.text);
-                  }}
-                >
-                  <Text
-                    style={[
-                      styles.smallText,
-                      { marginLeft: Layout.normalize(5) },
-                      voteCount < 1 ? styles.greyColor : null,
-                    ]}
-                  >{`${voteCount} ${voteCount > 1 ? "votes" : "vote"}`}</Text>
-                </Pressable>
-              ) : null}
+              {!disabled && (
+                <>
+                  {(isPollSentByMe && pollType === 1) ||
+                  pollType === 0 ||
+                  isPollEnded ? (
+                    <Pressable
+                      onPress={() => {
+                        onNavigate(element?.text);
+                      }}
+                    >
+                      <Text
+                        style={[
+                          styles.smallText,
+                          { marginLeft: Layout.normalize(5) },
+                          voteCount < 1 ? styles.greyColor : null,
+                        ]}
+                      >{`${voteCount} ${
+                        voteCount > 1 ? "votes" : "vote"
+                      }`}</Text>
+                    </Pressable>
+                  ) : null}
+                </>
+              )}
             </View>
           );
         })}
       </View>
 
-      {/* Add more options button */}
-      {allowAddOption && isPollEnded ? (
-        <View style={[styles.extraMarginSpace]}>
-          <Pressable
-            onPress={() => {
-              setIsAddPollOptionModalVisible(true);
-            }}
-            style={({ pressed }) => [
-              styles.pollButton,
-              {
-                opacity: pressed ? Layout.normalize(0.5) : Layout.normalize(1),
-                padding: Layout.normalize(12),
-              },
-              hue ? { borderColor: `hsl(${hue}, 47%, 31%)` } : null,
-            ]}
-          >
-            <Text
-              style={[styles.text, styles.blackColor, styles.textAlignCenter]}
+      {!disabled ? (
+        <>
+          {/* Add more options button */}
+          {allowAddOption && isPollEnded ? (
+            <View style={[styles.extraMarginSpace]}>
+              <Pressable
+                onPress={() => {
+                  setIsAddPollOptionModalVisible(true);
+                }}
+                style={({ pressed }) => [
+                  styles.pollButton,
+                  {
+                    opacity: pressed
+                      ? Layout.normalize(0.5)
+                      : Layout.normalize(1),
+                    padding: Layout.normalize(12),
+                  },
+                  hue ? { borderColor: `hsl(${hue}, 47%, 31%)` } : null,
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.text,
+                    styles.blackColor,
+                    styles.textAlignCenter,
+                  ]}
+                >
+                  {ADD_OPTION_TEXT}
+                </Text>
+              </Pressable>
+            </View>
+          ) : null}
+
+          {/* Poll answer text */}
+          {toShowResults === true ? (
+            <Pressable
+              onPress={() => {
+                onNavigate("");
+              }}
             >
-              {ADD_OPTION_TEXT}
-            </Text>
-          </Pressable>
-        </View>
-      ) : null}
+              <Text
+                style={[
+                  styles.mediumText,
+                  styles.extraMarginSpace,
+                  hue ? { color: `hsl(${hue}, 53%, 15%)` } : null,
+                ]}
+              >
+                {pollAnswerText}
+              </Text>
+            </Pressable>
+          ) : null}
 
-      {/* Poll answer text */}
-      {toShowResults === true ? (
-        <Pressable
-          onPress={() => {
-            onNavigate("");
-          }}
-        >
-          <Text
-            style={[
-              styles.mediumText,
-              styles.extraMarginSpace,
-              hue ? { color: `hsl(${hue}, 53%, 15%)` } : null,
-            ]}
-          >
-            {pollAnswerText}
-          </Text>
-        </Pressable>
-      ) : null}
+          {/* Submit vote button */}
+          {isPollEnded && multipleSelectNo > 1 && !shouldShowVotes ? (
+            <View style={styles.marginSpace}>
+              <TouchableOpacity
+                onPress={() => {
+                  submitPoll();
+                }}
+                style={[
+                  styles.submitVoteButton,
+                  styles.alignRow,
+                  !shouldShowSubmitPollButton ? styles.greyBorder : null,
+                  { backgroundColor: styles.whiteColor.color },
+                  hue ? { backgroundColor: `hsl(${hue}, 47%, 31%)` } : null,
+                ]}
+              >
+                <Image
+                  style={[
+                    styles.editIcon,
+                    !shouldShowSubmitPollButton
+                      ? { tintColor: styles.greyColor.color }
+                      : null,
+                  ]}
+                  source={require("../../../assets/images/submit_click3x.png")}
+                />
+                <Text
+                  style={[
+                    styles.textAlignCenter,
+                    styles.smallTextMedium,
+                    !shouldShowSubmitPollButton ? styles.greyColor : null,
+                  ]}
+                >
+                  {SUBMIT_VOTE_TITLE}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          ) : null}
 
-      {/* Submit vote button */}
-      {isPollEnded && multipleSelectNo > 1 && !shouldShowVotes ? (
-        <View style={styles.marginSpace}>
-          <TouchableOpacity
-            onPress={() => {
-              submitPoll();
-            }}
-            style={[
-              styles.submitVoteButton,
-              styles.alignRow,
-              !shouldShowSubmitPollButton ? styles.greyBorder : null,
-              { backgroundColor: styles.whiteColor.color },
-              hue ? { backgroundColor: `hsl(${hue}, 47%, 31%)` } : null,
-            ]}
-          >
-            <Image
+          {/* Edit Poll button */}
+          {isPollEnded &&
+          multipleSelectNo > 1 &&
+          shouldShowVotes &&
+          pollType === 1 ? (
+            <TouchableOpacity
+              onPress={() => {
+                resetShowResult();
+              }}
               style={[
-                styles.editIcon,
-                !shouldShowSubmitPollButton
-                  ? { tintColor: styles.greyColor.color }
-                  : null,
-              ]}
-              source={require("../../../assets/images/submit_click3x.png")}
-            />
-            <Text
-              style={[
-                styles.textAlignCenter,
-                styles.smallTextMedium,
-                !shouldShowSubmitPollButton ? styles.greyColor : null,
+                styles.submitVoteButton,
+                styles.alignRow,
+                styles.justifyCenter,
+                {
+                  backgroundColor: styles.whiteColor.color,
+                  marginTop: Layout.normalize(10),
+                },
+                hue ? { backgroundColor: `hsl(${hue}, 47%, 31%)` } : null,
               ]}
             >
-              {SUBMIT_VOTE_TITLE}
-            </Text>
-          </TouchableOpacity>
-        </View>
+              <Image
+                style={[styles.editIcon]}
+                source={require("../../../assets/images/edit_icon3x.png")}
+              />
+              <Text style={[styles.textAlignCenter, styles.smallTextMedium]}>
+                {EDIT_POLL_TEXT}
+              </Text>
+            </TouchableOpacity>
+          ) : null}
+        </>
       ) : null}
 
-      {/* Edit Poll button */}
-      {isPollEnded &&
-      multipleSelectNo > 1 &&
-      shouldShowVotes &&
-      pollType === 1 ? (
-        <TouchableOpacity
-          onPress={() => {
-            resetShowResult();
-          }}
+      {disabled ? (
+        <Text
           style={[
-            styles.submitVoteButton,
-            styles.alignRow,
-            styles.justifyCenter,
-            {
-              backgroundColor: styles.whiteColor.color,
-              marginTop: Layout.normalize(10),
-            },
-            hue ? { backgroundColor: `hsl(${hue}, 47%, 31%)` } : null,
+            styles.smallText,
+            styles.greyColor,
+            { marginTop: Layout.normalize(15) },
           ]}
         >
-          <Image
-            style={[styles.editIcon]}
-            source={require("../../../assets/images/edit_icon3x.png")}
-          />
-          <Text style={[styles.textAlignCenter, styles.smallTextMedium]}>
-            {EDIT_POLL_TEXT}
-          </Text>
-        </TouchableOpacity>
+          {`Expires on ${dateManipulation()}`}
+        </Text>
       ) : null}
-
-      {/* Poll timestamp and show edited text if edited */}
-      {/* {customMessageFooter ? customMessageFooter : <MessageFooter />} */}
     </View>
   );
 };
