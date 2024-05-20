@@ -6,7 +6,7 @@ import {
   TouchableWithoutFeedback,
   Image,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 // @ts-ignore the lib do not have TS declarations yet
 import Video, { VideoRef } from "react-native-video";
 import { LMVideoProps } from "./types";
@@ -14,7 +14,8 @@ import { MEDIA_FETCH_ERROR } from "../../../constants/Strings";
 import LMLoader from "../../LMLoader";
 import { LMButton } from "../../../uiComponents";
 import { defaultStyles } from "./styles";
-import { useAppSelector } from "../../../store/store";
+import { useAppDispatch, useAppSelector } from "../../../store/store";
+import { SET_MUTED_STATE } from "../../../store/types/types";
 
 const LMVideo = React.memo(
   ({
@@ -32,6 +33,7 @@ const LMVideo = React.memo(
     loaderWidget,
     pauseButton,
     playButton,
+    showMuteUnmute,
     errorWidget,
     showCancel,
     onCancel,
@@ -51,6 +53,13 @@ const LMVideo = React.memo(
     const currentVideoId = useAppSelector(
       (state) => state.feed.autoPlayVideoPostId
     );
+
+    const [mute, setMute] = useState(false);
+    const dispatch = useAppDispatch();
+    const muteStatus = useAppSelector((state) => state.feed.muteStatus);
+    useEffect(() => {
+      setMute(muteStatus);
+    }, [muteStatus]);
 
     return (
       <View
@@ -118,27 +127,7 @@ const LMVideo = React.memo(
                   : false
                 : playingStatus
             } // handles the auto play/pause functionality
-            muted={
-              videoInFeed
-                ? autoPlay
-                  ? currentVideoId === postId
-                    ? videoInCarousel
-                      ? currentVideoInCarousel === videoUrl
-                        ? false
-                        : true
-                      : false
-                    : true
-                  : playingStatus
-                  ? true
-                  : false
-                : autoPlay
-                ? videoInCarousel
-                  ? currentVideoInCarousel === videoUrl
-                    ? false
-                    : true
-                  : false
-                : playingStatus
-            } // this handles the mute of the video according to the video being played
+            muted={mute}
           />
         </>
         {/* this renders the cancel button */}
@@ -167,6 +156,35 @@ const LMVideo = React.memo(
                 }}
               />
             )}
+          </View>
+        )}
+
+        {/* this renders the mute/unmute button */}
+        {showMuteUnmute && (
+          <View style={defaultStyles.muteUnmuteVideoView}>
+            <TouchableOpacity
+              onPress={() => {
+                let currentMuteStatus = mute;
+                setMute(!currentMuteStatus);
+                dispatch({
+                  type: SET_MUTED_STATE,
+                  body: { mute: !currentMuteStatus },
+                });
+              }}
+            >
+              <Image
+                source={
+                  mute
+                    ? require("../../../assets/images/muted.png")
+                    : require("../../../assets/images/unmute.png")
+                }
+                style={{
+                  height: 25,
+                  width: 25,
+                  tintColor: "white",
+                }}
+              />
+            </TouchableOpacity>
           </View>
         )}
 

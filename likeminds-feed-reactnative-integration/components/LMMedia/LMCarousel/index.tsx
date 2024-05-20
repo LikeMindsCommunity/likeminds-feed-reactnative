@@ -35,6 +35,8 @@ const LMCarousel = React.memo(
 
     const navigation = useNavigation<StackNavigationProp<any>>();
     const dispatch = useAppDispatch();
+    let routes = navigation.getState()?.routes;
+    let previousRoute = routes[routes?.length - 2];
 
     // this handles the functionality to be execute on click of close icon
     const onCloseHandler = (index: number) => {
@@ -121,14 +123,18 @@ const LMCarousel = React.memo(
             {item?.attachmentType === VIDEO_ATTACHMENT_TYPE && (
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate(CAROUSEL_SCREEN, {
-                    dataObject: post,
-                    index,
-                  });
-                  dispatch({
-                    type: STATUS_BAR_STYLE,
-                    body: { color: STYLES.$STATUS_BAR_STYLE["light-content"] },
-                  });
+                  previousRoute?.name !== "UniversalFeed" &&
+                    navigation.navigate(CAROUSEL_SCREEN, {
+                      dataObject: post,
+                      index,
+                    });
+                  previousRoute?.name !== "UniversalFeed" &&
+                    dispatch({
+                      type: STATUS_BAR_STYLE,
+                      body: {
+                        color: STYLES.$STATUS_BAR_STYLE["light-content"],
+                      },
+                    });
                 }}
               >
                 <LMVideo
@@ -167,6 +173,9 @@ const LMCarousel = React.memo(
                     attachments[activeIndex]?.attachmentMeta?.url
                   }
                   postId={videoItem?.postId}
+                  showMuteUnmute={
+                    previousRoute?.name === "UniversalFeed" ? false : true
+                  }
                 />
               </TouchableOpacity>
             )}
