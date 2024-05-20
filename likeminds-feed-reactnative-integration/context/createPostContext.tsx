@@ -55,6 +55,7 @@ import { RootStackParamList } from "../models/RootStackParamsList";
 import { LMAttachmentUI, LMOGTagsUI, LMPostUI, LMUserUI } from "../models";
 import {
   ADD_SELECTED_TOPICS,
+  CLEAR_POLL,
   CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
 } from "../store/types/types";
 import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
@@ -136,7 +137,8 @@ export interface CreatePostContextValues {
     allMedia: Array<LMAttachmentUI>,
     linkData: Array<LMAttachmentUI>,
     content: string,
-    topics: string[]
+    topics: string[],
+    poll: any
   ) => void;
   handleScreenBackPress: () => void;
 }
@@ -285,7 +287,8 @@ export const CreatePostContextProvider = ({
     allMedia: Array<LMAttachmentUI>,
     linkData: Array<LMAttachmentUI>,
     content: string,
-    topics: string[]
+    topics: string[],
+    poll: any
   ) => {
     const isConnected = await NetworkUtil.isNetworkAvailable();
     if (isConnected) {
@@ -297,8 +300,10 @@ export const CreatePostContextProvider = ({
               linkAttachmentData: linkData,
               postContentData: content.trim(),
               topics: topics,
+              poll: poll,
             })
           );
+      dispatch({ type: CLEAR_POLL });
       navigation.goBack();
     } else {
       Alert.alert("", "Please check your internet connection");

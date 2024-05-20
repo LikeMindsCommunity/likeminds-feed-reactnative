@@ -119,9 +119,10 @@ const PollConversationUI = ({
       <View style={[styles.marginSpace, styles.gap15]}>
         {optionArr?.map((element: any, index: any) => {
           const isSelected = selectedPolls.includes(index);
-          const voteCount = element?.noVotes;
-          const isPollSentByMe =
-            user?.id === element?.member?.id ? true : false;
+          const voteCount = element?.voteCount;
+          // const isPollSentByMe =
+          //   user?.id === element?.member?.id ? true : false;
+          const isPollSentByMe = true;
           return (
             <View key={element?.id} style={styles.gap}>
               <Pressable

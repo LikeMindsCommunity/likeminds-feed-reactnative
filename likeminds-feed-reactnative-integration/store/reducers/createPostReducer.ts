@@ -14,6 +14,7 @@ export interface CreatePostReducerState {
   linkAttachments: [];
   postContent: "";
   topics: [];
+  poll: {};
   selectedTopics: [];
   disbaledTopics: [];
   pollAttachment: {};
@@ -25,9 +26,10 @@ export const initialState: CreatePostReducerState = {
   linkAttachments: [],
   postContent: "",
   topics: [],
+  poll: {}, // to send poll data on universal feed screen
   selectedTopics: [],
   disbaledTopics: [],
-  pollAttachment: {},
+  pollAttachment: {}, // for local preview of poll data
 };
 
 export function createPostReducer(state = initialState, action) {
@@ -72,6 +74,7 @@ export function createPostReducer(state = initialState, action) {
         linkAttachmentData = [],
         postContentData = "",
         topics = [],
+        poll = {},
       } = action.body;
       return {
         ...state,
@@ -79,6 +82,7 @@ export function createPostReducer(state = initialState, action) {
         linkAttachments: linkAttachmentData,
         postContent: postContentData,
         topics: topics,
+        poll: poll,
       };
     }
     default:

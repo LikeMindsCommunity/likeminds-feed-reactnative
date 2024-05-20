@@ -20,6 +20,7 @@ import { SHOW_TOAST } from "../store/types/loader";
 import { CreatePollProps } from "../components/LMPoll/models";
 import { formatDate } from "../utils/formatPollDate";
 import { SET_POLL } from "../store/types/types";
+import { PollType } from "../enums/Poll";
 
 interface CreatePollContextProps {
   children?: ReactNode;
@@ -284,12 +285,12 @@ export const CreatePollContextProvider = ({
 
       const poll: any = {
         id: Date.now().toString(),
-        state: 10,
-        text: question,
-        polls: polls,
-        pollType: liveResultsEnabled ? 1 : 0,
+        state: 6,
+        title: question,
+        option: polls,
+        pollType: liveResultsEnabled ? PollType.DEFERRED : PollType.INSTANT,
         multipleSelectState: showAdvancedOption ? userVoteFor : null,
-        multipleSelectNo: showAdvancedOption ? voteAllowedPerUser : null,
+        multipleSelectNumber: showAdvancedOption ? voteAllowedPerUser : null,
         isAnonymous: showAdvancedOption ? anonymousPollEnabled : false,
         allowAddOption: showAdvancedOption ? addOptionsEnabled : false,
         expiryTime: Date.parse(time.toString()),

@@ -34,6 +34,7 @@ import {
 import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
 import { Events } from "../enums/Events";
 import { Keys } from "../enums/Keys";
+import { convertPollMetaData } from "../viewDataModels";
 
 interface UniversalFeedContextProps {
   children: ReactNode;
@@ -102,6 +103,7 @@ export const UniversalFeedContextProvider = ({
   const [showCreatePost, setShowCreatePost] = useState(true);
   const { mediaAttachmemnts, linkAttachments, postContent, topics } =
     useAppSelector((state) => state.createPost);
+  const poll = useAppSelector((state) => state.createPost.poll);
   const unreadNotificationCount = useAppSelector(
     (state) => state.notification.activitiesCount
   );
@@ -168,10 +170,20 @@ export const UniversalFeedContextProvider = ({
     );
     // Wait for all upload operations to complete
     const updatedAttachments = await Promise.all(uploadPromises);
+
+    let pollAttachment: any = [];
+    if (Object.keys(poll).length > 0) {
+      let updatedPollAttachment = convertPollMetaData(poll);
+      pollAttachment = [...pollAttachment, updatedPollAttachment];
+    }
     const addPostResponse = await dispatch(
       addPost(
         AddPostRequest.builder()
-          .setAttachments([...updatedAttachments, ...linkAttachments])
+          .setAttachments([
+            ...updatedAttachments,
+            ...linkAttachments,
+            ...pollAttachment,
+          ])
           .setText(postContentText)
           .setTopicIds(topics)
           .build(),
@@ -227,12 +239,13 @@ export const UniversalFeedContextProvider = ({
       mediaAttachmemnts.length > 0 ||
       linkAttachments.length > 0 ||
       postContent !== "" ||
-      topics?.length > 0
+      topics?.length > 0 ||
+      Object.keys(poll).length > 0
     ) {
       setPostUploading(true);
       postAdd();
     }
-  }, [mediaAttachmemnts, linkAttachments, postContent, topics]);
+  }, [mediaAttachmemnts, linkAttachments, postContent, topics, poll]);
 
   // keyExtractor of feed list
   const keyExtractor = (item: LMPostUI) => {

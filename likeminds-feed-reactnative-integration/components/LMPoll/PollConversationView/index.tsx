@@ -18,20 +18,17 @@ import {
   PollConversationViewState,
 } from "../models";
 import { Client } from "../../../client";
-// import { useMessageContext } from "../../../context/MessageContext";
-// import { useChatroomContext } from "../../../context/ChatroomContext";
 import STYLES from "../../../constants/Styles";
 
 import { SHOW_TOAST } from "../../../store/types/loader";
 import { useAppDispatch, useAppSelector } from "../../../store/store";
 import { POLL_RESULT } from "../../../constants/screenNames";
 import { useNavigation } from "@react-navigation/native";
-// import { useLMPostContext } from "../../../context";
+import { PollMultiSelectState } from "../../../enums/Poll";
 
 const PollConversationView = ({ item }: any) => {
   const myClient = Client.myClient;
 
-  // const { post: item } = useLMPostContext();
   const { navigation }: any = useNavigation();
 
   const [selectedPolls, setSelectedPolls] = useState<any>([]);
@@ -48,7 +45,7 @@ const PollConversationView = ({ item }: any) => {
   const [pollVoteCount, setPollVoteCount] = useState(0);
   const [isAnonymousPollModalVisible, setIsAnonymousPollModalVisible] =
     useState(false);
-  const [pollsArr, setPollsArr] = useState(item?.polls);
+  const [pollsArr, setPollsArr] = useState(item?.options);
   const [truncatedText, setTruncatedText] = useState("");
 
   const { member } = useAppSelector((item) => item.login);
@@ -74,7 +71,7 @@ const PollConversationView = ({ item }: any) => {
 
   // this functions have submit poll button logics
   const submitPollLogics = () => {
-    if (item?.multipleSelectNo === undefined) {
+    if (item?.multipleSelectNumber === undefined) {
       // defensive check
       if (selectedPolls.length > 0) {
         setShouldShowSubmitPollButton(true);
@@ -82,7 +79,7 @@ const PollConversationView = ({ item }: any) => {
         setShouldShowSubmitPollButton(false);
       }
     } else {
-      const MAX_POLL_OPTIONS = item?.multipleSelectNo;
+      const MAX_POLL_OPTIONS = item?.multipleSelectNumber;
 
       switch (item?.multipleSelectState) {
         // defensive check
@@ -96,14 +93,14 @@ const PollConversationView = ({ item }: any) => {
               type: SHOW_TOAST,
               body: {
                 isToast: true,
-                msg: `You can select max ${item?.multipleSelectNo} options. Unselect an option or submit your vote now`,
+                msg: `You can select max ${item?.multipleSelectNumber} options. Unselect an option or submit your vote now`,
               },
             });
           }
           break;
         }
 
-        case POLL_MULTIPLE_STATE_EXACTLY: {
+        case PollMultiSelectState.EXACTLY: {
           // Exactly
           if (selectedPolls.length === MAX_POLL_OPTIONS) {
             // show submit poll button
@@ -114,16 +111,16 @@ const PollConversationView = ({ item }: any) => {
               type: SHOW_TOAST,
               body: {
                 isToast: true,
-                msg: `You can select max ${item?.multipleSelectNo} options. Unselect an option or submit your vote now`,
+                msg: `You can select max ${item?.multipleSelectNumber} options. Unselect an option or submit your vote now`,
               },
             });
           }
           break;
         }
 
-        case POLL_MULTIPLE_STATE_MAX: {
+        case PollMultiSelectState.AT_MAX: {
           if (
-            selectedPolls.length <= item.multipleSelectNo &&
+            selectedPolls.length <= item?.multipleSelectNumber &&
             selectedPolls.length > 0
           ) {
             // show submit poll button
@@ -135,8 +132,8 @@ const PollConversationView = ({ item }: any) => {
           break;
         }
 
-        case POLL_MULTIPLE_STATE_LEAST: {
-          if (selectedPolls.length >= item.multipleSelectNo) {
+        case PollMultiSelectState.AT_LEAST: {
+          if (selectedPolls.length >= item?.multipleSelectNumber) {
             // show submit poll button
             setShouldShowSubmitPollButton(true);
           } else {
@@ -224,8 +221,8 @@ const PollConversationView = ({ item }: any) => {
   };
 
   useEffect(() => {
-    setPollsArr(item?.polls);
-  }, [item?.polls]);
+    setPollsArr(item?.options);
+  }, [item?.options]);
 
   // API to reload the existing poll conversation
   async function reloadConversation() {
@@ -297,7 +294,7 @@ const PollConversationView = ({ item }: any) => {
       }
 
       // if only one option is allowed
-      if (item?.multipleSelectNo === 1 || !item?.multipleSelectNo) {
+      if (item?.multipleSelectNumber === 1 || !item?.multipleSelectNumber) {
         // can change selected ouptput in deferred poll
         if (item?.pollType === 1) {
           // const pollSubmissionCall = await myClient.submitPoll({
@@ -330,14 +327,14 @@ const PollConversationView = ({ item }: any) => {
 
       // multiple options are allowed
       switch (item?.multipleSelectState) {
-        case POLL_MULTIPLE_STATE_EXACTLY: {
-          if (selectedPolls.length === item?.multipleSelectNo) {
+        case PollMultiSelectState.EXACTLY: {
+          if (selectedPolls.length === item?.multipleSelectNumber) {
             return;
           }
           break;
         }
-        case POLL_MULTIPLE_STATE_MAX: {
-          if (selectedPolls.length == item?.multipleSelectNo) {
+        case PollMultiSelectState.AT_MAX: {
+          if (selectedPolls.length == item?.multipleSelectNumber) {
             return;
           }
           break;
@@ -382,19 +379,19 @@ const PollConversationView = ({ item }: any) => {
   }
 
   const stringManipulation = (val?: boolean) => {
-    const multipleSelectNo = item?.multipleSelectNo;
+    const multipleSelectNo = item?.multipleSelectNumber;
     switch (item?.multipleSelectState) {
-      case POLL_MULTIPLE_STATE_EXACTLY: {
+      case PollMultiSelectState.EXACTLY: {
         const string = `Select exactly ${multipleSelectNo} options.`;
         return val ? string : "*" + string;
       }
 
-      case POLL_MULTIPLE_STATE_MAX: {
+      case PollMultiSelectState.AT_MAX: {
         const string = `Select at most ${multipleSelectNo} options.`;
         return val ? string : "*" + string;
       }
 
-      case POLL_MULTIPLE_STATE_LEAST: {
+      case PollMultiSelectState.AT_LEAST: {
         const string = `Select at least ${multipleSelectNo} options.`;
         return val ? string : "*" + string;
       }
@@ -458,7 +455,7 @@ const PollConversationView = ({ item }: any) => {
 
   // readonly props consumed by UI component
   const props: PollConversationViewState = {
-    text: item?.text,
+    text: item?.title,
     votes: pollVoteCount,
     optionArr: pollsArr,
     pollTypeText: item?.pollTypeText,
@@ -479,7 +476,7 @@ const PollConversationView = ({ item }: any) => {
     createdAt: item?.createdAt,
     pollAnswerText: item?.pollAnswerText,
     isPollEnded: Date.now() > item?.expiryTime ? false : true,
-    multipleSelectNo: item?.multipleSelectNo,
+    multipleSelectNo: item?.multipleSelectNumber,
     multipleSelectState: item?.multipleSelectState,
     showResultsButton: showResultsButton,
     pollType: item?.pollType,

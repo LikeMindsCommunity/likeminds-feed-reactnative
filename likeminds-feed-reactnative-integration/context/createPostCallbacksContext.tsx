@@ -10,7 +10,8 @@ export interface CreatePostCallbacksContextProps {
     allMedia: Array<LMAttachmentUI>,
     linkData: Array<LMAttachmentUI>,
     content: string,
-    topics: string[]
+    topics: string[],
+    poll: any,
   ) => void;
   handleScreenBackPressProp: () => void;
 }
@@ -23,7 +24,8 @@ export interface CreatePostCustomisableMethodsContext {
     allMedia: Array<LMAttachmentUI>,
     linkData: Array<LMAttachmentUI>,
     content: string,
-    topics: string[]
+    topics: string[],
+    poll: any,
   ) => void;
   handleScreenBackPressProp: () => void;
 }

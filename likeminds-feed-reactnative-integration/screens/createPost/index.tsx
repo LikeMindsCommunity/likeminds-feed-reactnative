@@ -89,7 +89,8 @@ interface CreatePostProps {
     allMedia: Array<LMAttachmentUI>,
     linkData: Array<LMAttachmentUI>,
     content: string,
-    topics: string[]
+    topics: string[],
+    poll: any
   ) => void;
   handleScreenBackPressProp: () => void;
 }
@@ -258,13 +259,15 @@ const CreatePostComponent = () => {
           allAttachment,
           formattedLinkAttachments,
           postContentText,
-          idValuesArray
+          idValuesArray,
+          poll
         )
       : onPostClick(
           allAttachment,
           formattedLinkAttachments,
           postContentText,
-          idValuesArray
+          idValuesArray,
+          poll
         );
     if (!postToEdit) {
       const map: Map<string | undefined, string | undefined> = new Map();

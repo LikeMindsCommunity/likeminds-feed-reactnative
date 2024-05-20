@@ -23,6 +23,7 @@ const CreateScreen = ({navigation}) => {
     formattedLinkAttachments,
     postContentText,
     topics,
+    poll
   ) => {
     console.log('before post click');
     onPostClick(
@@ -30,6 +31,7 @@ const CreateScreen = ({navigation}) => {
       formattedLinkAttachments,
       postContentText,
       topics,
+      poll
     );
     console.log('after post click');
   };
@@ -47,12 +49,14 @@ const CreateScreen = ({navigation}) => {
         formattedLinkAttachments,
         postContentText,
         topics,
+        poll
       ) =>
         customHandleCreatePost(
           allAttachment,
           formattedLinkAttachments,
           postContentText,
           topics,
+          poll
         )
       }
       handleScreenBackPressProp={() => customBackHandler()}
