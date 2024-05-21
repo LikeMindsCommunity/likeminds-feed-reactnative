@@ -15,12 +15,12 @@ import {
   TIME_TEXT,
 } from "../constants/Strings";
 import { Client } from "../client";
-import { useAppDispatch } from "../store/store";
+import { useAppDispatch, useAppSelector } from "../store/store";
 import { SHOW_TOAST } from "../store/types/loader";
 import { CreatePollProps } from "../components/LMPoll/models";
 import { formatDate } from "../utils/formatPollDate";
 import { SET_POLL } from "../store/types/types";
-import { PollType } from "../enums/Poll";
+import { PollMultiSelectState, PollType } from "../enums/Poll";
 
 interface CreatePollContextProps {
   children?: ReactNode;
@@ -50,19 +50,36 @@ export const CreatePollContextProvider = ({
   route,
 }: CreatePollContextProps) => {
   const myClient = Client.myClient;
-  const [question, setQuestion] = useState<string>("");
-  const [optionsArray, setOptionsArray] = useState<any>([]);
+  const poll = useAppSelector((state) => state.createPost.pollAttachment);
+  const isPoll = Object.keys(poll).length > 0;
+
+  console.log("poll ==", poll);
+  const [question, setQuestion] = useState<string>(isPoll ? poll?.title : "");
+  const [optionsArray, setOptionsArray] = useState<any>(
+    isPoll ? poll?.options : []
+  );
   const [showAdvancedOption, setShowAdvancedOption] = useState<boolean>(false);
-  const [addOptionsEnabled, setAddOptionsEnabled] = useState<boolean>(false);
-  const [anonymousPollEnabled, setAnonymousPollEnabled] =
-    useState<boolean>(false);
-  const [liveResultsEnabled, setLiveResultsEnabled] = useState<boolean>(false);
-  const [userVoteFor, setUserVoteFor] = useState<number>(1);
-  const [voteAllowedPerUser, setVoteAllowedPerUser] = useState<number>(1);
-  const [date, setDate] = useState("");
+  const [addOptionsEnabled, setAddOptionsEnabled] = useState<boolean>(
+    isPoll ? poll?.allowAddOption : false
+  );
+  const [anonymousPollEnabled, setAnonymousPollEnabled] = useState<boolean>(
+    isPoll ? poll?.isAnonymous : false
+  );
+  const [liveResultsEnabled, setLiveResultsEnabled] = useState<boolean>(
+    isPoll ? (poll?.pollType === PollType.DEFERRED ? true : false) : false
+  );
+  const [userVoteFor, setUserVoteFor] = useState<string>(
+    isPoll ? poll?.multipleSelectState : PollMultiSelectState.EXACTLY
+  );
+  const [voteAllowedPerUser, setVoteAllowedPerUser] = useState<number>(
+    isPoll ? poll?.multipleSelectNumber : 1
+  );
+  const [date, setDate] = useState(isPoll ? new Date(poll?.expiryTime) : "");
   const [mode, setMode] = useState<string>("");
   const [show, setShow] = useState<boolean>(false);
-  const [time, setTime] = useState(new Date());
+  const [time, setTime] = useState(
+    isPoll ? new Date(poll?.expiryTime) : new Date()
+  );
   const [isActionAlertModalVisible, setIsActionAlertModalVisible] =
     useState(false);
   const [isOptionAlertModalVisible, setIsOptionAlertModalVisible] =
@@ -78,19 +95,26 @@ export const CreatePollContextProvider = ({
 
   // to set initial poll options
   useEffect(() => {
-    const id_1 = Math.random();
-    const id_2 = Math.random();
-    const initialOptionArray = [
-      {
-        id: id_1,
-        text: "",
-      },
-      {
-        id: id_2,
-        text: "",
-      },
-    ];
-    setOptionsArray(initialOptionArray);
+    if (isPoll) {
+      const initialOptionArray = poll?.options.map((item) => {
+        return { id: Math.random(), text: item?.text };
+      });
+      setOptionsArray(initialOptionArray);
+    } else {
+      const id_1 = Math.random();
+      const id_2 = Math.random();
+      const initialOptionArray = [
+        {
+          id: id_1,
+          text: "",
+        },
+        {
+          id: id_2,
+          text: "",
+        },
+      ];
+      setOptionsArray(initialOptionArray);
+    }
   }, []);
 
   // this function handles the input poll options
@@ -184,7 +208,12 @@ export const CreatePollContextProvider = ({
 
   // this function handles "User can vote for" modal dropdown selection
   const handleUserVoteFor = (val: number) => {
-    setUserVoteFor(val);
+    const PollMultipleSelectStateList = [
+      PollMultiSelectState.EXACTLY,
+      PollMultiSelectState.AT_MAX,
+      PollMultiSelectState.AT_LEAST,
+    ];
+    setUserVoteFor(PollMultipleSelectStateList[val]);
     hideActionModal();
   };
 
@@ -245,14 +274,14 @@ export const CreatePollContextProvider = ({
       if (question?.trim() === "") {
         dispatch({
           type: SHOW_TOAST,
-          body: { isToast: true, msg: QUESTION_WARNING },
+          body: { isToast: true, message: QUESTION_WARNING },
         });
         return;
       }
       if (!expiryTime) {
         dispatch({
           type: SHOW_TOAST,
-          body: { isToast: true, msg: EXPIRY_TIME_WARNING },
+          body: { isToast: true, message: EXPIRY_TIME_WARNING },
         });
         return;
       }
@@ -262,14 +291,14 @@ export const CreatePollContextProvider = ({
         if (tempPollOptionsMap[item?.text] !== undefined) {
           dispatch({
             type: SHOW_TOAST,
-            body: { isToast: true, msg: POLLS_OPTIONS_WARNING },
+            body: { isToast: true, message: POLLS_OPTIONS_WARNING },
           });
           shouldBreak = true;
         } else {
           if (item?.text === "") {
             dispatch({
               type: SHOW_TOAST,
-              body: { isToast: true, msg: EMPTY_OPTIONS_WARNING },
+              body: { isToast: true, message: EMPTY_OPTIONS_WARNING },
             });
             shouldBreak = true;
           }
@@ -287,7 +316,7 @@ export const CreatePollContextProvider = ({
         id: Date.now().toString(),
         state: 6,
         title: question,
-        option: polls,
+        options: polls,
         pollType: liveResultsEnabled ? PollType.DEFERRED : PollType.INSTANT,
         multipleSelectState: showAdvancedOption ? userVoteFor : null,
         multipleSelectNumber: showAdvancedOption ? voteAllowedPerUser : null,

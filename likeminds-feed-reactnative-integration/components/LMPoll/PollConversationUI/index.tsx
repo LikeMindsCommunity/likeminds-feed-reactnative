@@ -54,6 +54,8 @@ const PollConversationUI = ({
   onQuestionTextLayout,
   truncatedText,
   maxQuestionLines,
+  removePollAttachment,
+  editPollAttachment,
 }: PollConversationUIProps) => {
   const pollStyles = STYLES.$POLL_STYLES;
 
@@ -90,17 +92,34 @@ const PollConversationUI = ({
           </View>
         </View> */}
 
-        {truncatedText ? (
-          <LMPostPollText truncatedText={truncatedText} fullText={text} />
-        ) : (
-          <LMText
-            maxLines={maxQuestionLines}
-            textStyle={[styles.text, styles.blackColor]}
-            onTextLayout={(e) => onQuestionTextLayout(e)}
-          >
-            {text}
-          </LMText>
-        )}
+        <View>
+          {truncatedText ? (
+            <LMPostPollText truncatedText={truncatedText} fullText={text} />
+          ) : (
+            <LMText
+              maxLines={maxQuestionLines}
+              textStyle={[styles.text, styles.blackColor]}
+              onTextLayout={(e) => onQuestionTextLayout(e)}
+            >
+              {text}
+            </LMText>
+          )}
+
+          <View style={{ gap: 10 }}>
+            <TouchableOpacity onPress={editPollAttachment}>
+              <Image
+                style={[styles.editImage, { tintColor: "black" }]}
+                source={require("../../../assets/images/edit_icon3x.png")}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={removePollAttachment}>
+              <Image
+                style={styles.editImage}
+                source={require("../../../assets/images/cross_circle_icon3x.png")}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
 
         {multipleSelectNo > 1 ? (
           <Text

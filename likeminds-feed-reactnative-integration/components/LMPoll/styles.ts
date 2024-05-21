@@ -358,4 +358,26 @@ export const styles = StyleSheet.create({
     left: Layout.normalize(5),
     top: Platform.OS === "ios" ? "30%" : "30%",
   },
+  profileContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 15,
+    paddingTop: 12,
+    backgroundColor: "white",
+  },
+  userNameText: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#222020",
+    marginLeft: 8,
+    textTransform: "capitalize",
+  },
+  headerRightComponentText: {
+    color: "#5046E5",
+    fontSize: 16,
+    fontWeight: "500",
+  },
+  enabledOpacity: { opacity: 1 },
+  disabledOpacity: { opacity: 0.5 },
+  editImage: { height: 20, width: 20, resizeMode: "contain" },
 });

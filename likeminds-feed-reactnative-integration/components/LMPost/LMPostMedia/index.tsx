@@ -88,7 +88,7 @@ const LMPostMedia = React.memo(() => {
         return (
           /* @ts-ignore */
           <View style={{padding:20}}>
-            <PollConversationView item={post?.attachments && post?.attachments[0]?.attachmentMeta} />
+            <PollConversationView item={post?.attachments && post?.attachments[0]?.attachmentMeta}  />
           </View>
         );
       }

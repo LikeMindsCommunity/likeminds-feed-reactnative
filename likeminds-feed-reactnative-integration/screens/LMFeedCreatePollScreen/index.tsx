@@ -1,9 +1,24 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  SafeAreaView,
+  ScrollView,
+} from "react-native";
 import React, { useEffect } from "react";
 import { styles } from "../../components/LMPoll/styles";
 import CreatePollUI from "../../components/LMPoll/CreatePollUI";
-import { CreatePoll } from "../../components/LMPoll/models";
-import { CreatePollContextProvider } from "../../context/createPollContextProvider";
+import { CreatePoll, CreatePollProps } from "../../components/LMPoll/models";
+import {
+  CreatePollContextProvider,
+  useCreatePollContext,
+} from "../../context/createPollContextProvider";
+import { LMHeader } from "../../components";
+import { LMProfilePicture, LMText } from "../../uiComponents";
+import { nameInitials } from "../../utils";
+import { CreatePostContextValues, useCreatePostContext } from "../../context";
+import { useLMFeedStyles } from "../../lmFeedProvider";
+import Layout from "../../constants/Layout";
 
 const CreatePollScreen = ({ navigation, route }: CreatePoll) => {
   return (
@@ -14,33 +29,60 @@ const CreatePollScreen = ({ navigation, route }: CreatePoll) => {
 };
 
 const CreatePollScreenComponent = ({ navigation, route }: CreatePoll) => {
-  const setInitialHeader = () => {
-    navigation.setOptions({
-      title: "New Poll",
-      headerShadowVisible: false,
-      headerTitleStyle: [styles.font, styles.newPollText],
-      headerStyle: { backgroundColor: styles.lightGreyThumb.color },
-      headerLeft: () => (
-        <View style={[styles.alignRow, styles.header]}>
+  const { postPoll }: CreatePollProps = useCreatePollContext();
+  const { memberData }: any = route.params;
+  const LMFeedContextStyles = useLMFeedStyles();
+  const { postListStyle }: any = LMFeedContextStyles;
+  const postHeaderStyle = postListStyle?.header;
+
+  return (
+    <SafeAreaView>
+      {/* Screen Header */}
+      <LMHeader
+        showBackArrow={true}
+        onBackPress={() => {
+          navigation.goBack();
+        }}
+        heading={"New Poll"}
+        rightComponent={
+          // post button section
           <TouchableOpacity
-            onPress={() => {
-              navigation.goBack();
-            }}
-            style={styles.viewStyle}
+            activeOpacity={0.8}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            onPress={postPoll}
           >
-            <Text style={[styles.font]}>Cancel</Text>
+            {<Text style={styles.headerRightComponentText}>{"DONE"}</Text>}
           </TouchableOpacity>
+        }
+      />
+
+      <ScrollView
+        keyboardShouldPersistTaps={"handled"}
+        contentContainerStyle={{ paddingBottom: Layout.normalize(100) }}
+        bounces={false}
+      >
+        {/* user profile section */}
+        <View style={styles.profileContainer}>
+          {/* profile image */}
+          <LMProfilePicture
+            {...postHeaderStyle?.profilePicture}
+            fallbackText={{
+              children: <Text>{nameInitials(memberData.name)}</Text>,
+            }}
+            imageUrl={memberData.imageUrl}
+          />
+          {/* user name */}
+          <LMText
+            children={<Text>{memberData.name}</Text>}
+            textStyle={styles.userNameText}
+          />
         </View>
-      ),
-    });
-  };
 
-  // to set header of the component
-  useEffect(() => {
-    setInitialHeader();
-  }, []);
-
-  return <CreatePollUI />;
+        {/* Poll UI */}
+        <CreatePollUI />
+      </ScrollView>
+    </SafeAreaView>
+  );
 };
 
 export default CreatePollScreen;

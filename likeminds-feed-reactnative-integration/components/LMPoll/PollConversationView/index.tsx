@@ -24,11 +24,14 @@ import { SHOW_TOAST } from "../../../store/types/loader";
 import { useAppDispatch, useAppSelector } from "../../../store/store";
 import { POLL_RESULT } from "../../../constants/screenNames";
 import { useNavigation } from "@react-navigation/native";
-import { PollMultiSelectState } from "../../../enums/Poll";
+import { PollMultiSelectState, PollType } from "../../../enums/Poll";
 
-const PollConversationView = ({ item }: any) => {
+const PollConversationView = ({
+  item,
+  removePollAttachment,
+  editPollAttachment,
+}: any) => {
   const myClient = Client.myClient;
-
   const { navigation }: any = useNavigation();
 
   const [selectedPolls, setSelectedPolls] = useState<any>([]);
@@ -93,7 +96,7 @@ const PollConversationView = ({ item }: any) => {
               type: SHOW_TOAST,
               body: {
                 isToast: true,
-                msg: `You can select max ${item?.multipleSelectNumber} options. Unselect an option or submit your vote now`,
+                message: `You can select max ${item?.multipleSelectNumber} options. Unselect an option or submit your vote now`,
               },
             });
           }
@@ -111,7 +114,7 @@ const PollConversationView = ({ item }: any) => {
               type: SHOW_TOAST,
               body: {
                 isToast: true,
-                msg: `You can select max ${item?.multipleSelectNumber} options. Unselect an option or submit your vote now`,
+                message: `You can select max ${item?.multipleSelectNumber} options. Unselect an option or submit your vote now`,
               },
             });
           }
@@ -169,7 +172,7 @@ const PollConversationView = ({ item }: any) => {
       setShouldShowVotes(true);
 
       // deffered poll show edit button state updation logic
-      if (item?.pollType === 1) {
+      if (item?.pollType === PollType.DEFERRED) {
         setShowResultsButton(true);
       }
     } else {
@@ -246,14 +249,11 @@ const PollConversationView = ({ item }: any) => {
       setIsAddPollOptionModalVisible(false);
       setAddOptionInputField("");
 
-      // const pollObject = {
-      //   text: addOptionInputField,
-      // };
-      // const addPollCall = await myClient.addPollOption({
-      //   conversationId: item?.id,
-      //   poll: pollObject,
-      // });
-
+      const payload = {
+        pollId: item?.id,
+        text: addOptionInputField,
+      };
+      await myClient.addPollOption(payload);
       await reloadConversation();
     } catch (error) {
       // process error
@@ -265,7 +265,7 @@ const PollConversationView = ({ item }: any) => {
     if (Date.now() > item?.expiryTime) {
       dispatch({
         type: SHOW_TOAST,
-        body: { isToast: true, msg: POLL_ENDED_WARNING },
+        body: { isToast: true, message: POLL_ENDED_WARNING },
       });
       return;
     }
@@ -274,7 +274,7 @@ const PollConversationView = ({ item }: any) => {
 
     if (isPollIndexIncluded) {
       // if poll item is already selected
-      const isSelected = item?.polls?.some((poll: any) => {
+      const isSelected = item?.options?.some((poll: any) => {
         return poll?.isSelected;
       });
       const selectedIndex = newSelectedPolls.findIndex(
@@ -287,38 +287,38 @@ const PollConversationView = ({ item }: any) => {
       });
 
       // Already submitted poll condition
-      if (isSelected && item?.pollType === 0) {
+      if (isSelected && item?.pollType === PollType.INSTANT) {
         return;
-      } else if (item?.pollType === 1 && shouldShowVotes) {
+      } else if (item?.pollType === PollType.DEFERRED && shouldShowVotes) {
         return;
       }
 
       // if only one option is allowed
       if (item?.multipleSelectNumber === 1 || !item?.multipleSelectNumber) {
         // can change selected ouptput in deferred poll
-        if (item?.pollType === 1) {
-          // const pollSubmissionCall = await myClient.submitPoll({
-          //   conversationId: item?.id,
-          //   polls: [item?.polls[pollIndex]],
-          // });
+        if (item?.pollType === PollType.DEFERRED) {
+          const pollSubmissionCall = await myClient.submitPollVote({
+            pollId: item?.id,
+            votes: [item?.options[pollIndex]],
+          });
           await reloadConversation();
           dispatch({
             type: SHOW_TOAST,
-            body: { isToast: true, msg: POLL_SUBMITTED_SUCCESSFULLY },
+            body: { isToast: true, message: POLL_SUBMITTED_SUCCESSFULLY },
           });
         } else {
           // for instant poll selection only for once
 
           // if not selected
           if (!isSelected) {
-            // const pollSubmissionCall = await myClient.submitPoll({
-            //   conversationId: item?.id,
-            //   polls: [item?.polls[pollIndex]],
-            // });
+            const pollSubmissionCall = await myClient.submitPollVote({
+              pollId: item?.id,
+              votes: [item?.options[pollIndex]],
+            });
             await reloadConversation();
             dispatch({
               type: SHOW_TOAST,
-              body: { isToast: true, msg: POLL_SUBMITTED_SUCCESSFULLY },
+              body: { isToast: true, message: POLL_SUBMITTED_SUCCESSFULLY },
             });
           }
         }
@@ -349,19 +349,19 @@ const PollConversationView = ({ item }: any) => {
   async function submitPoll() {
     if (shouldShowSubmitPollButton) {
       try {
-        const polls = selectedPolls?.map((itemIndex: any) => {
-          return item?.polls[itemIndex];
+        const votes = selectedPolls?.map((itemIndex: any) => {
+          return item?.options[itemIndex];
         });
-        // const pollSubmissionCall = await myClient.submitPoll({
-        //   conversationId: item?.id,
-        //   polls: polls,
-        // });
+        const pollSubmissionCall = await myClient.submitPollVote({
+          pollId: item?.id,
+          votes: votes,
+        });
         await reloadConversation();
         setShouldShowVotes(true);
         setSelectedPolls([]);
         dispatch({
           type: SHOW_TOAST,
-          body: { isToast: true, msg: POLL_SUBMITTED_SUCCESSFULLY },
+          body: { isToast: true, message: POLL_SUBMITTED_SUCCESSFULLY },
         });
       } catch (error) {
         // process error
@@ -372,7 +372,7 @@ const PollConversationView = ({ item }: any) => {
         type: SHOW_TOAST,
         body: {
           isToast: true,
-          msg: string,
+          message: string,
         },
       });
     }
@@ -499,6 +499,8 @@ const PollConversationView = ({ item }: any) => {
         dateManipulation={dateManipulation}
         resetShowResult={resetShowResult}
         onQuestionTextLayout={onTextLayout}
+        removePollAttachment={removePollAttachment}
+        editPollAttachment={editPollAttachment}
         {...props}
       />
       <AddOptionsModal

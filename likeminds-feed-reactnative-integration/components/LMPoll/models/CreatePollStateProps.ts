@@ -9,7 +9,7 @@ export interface CreatePollStateProps {
   addOptionsEnabled: boolean;
   anonymousPollEnabled: boolean;
   liveResultsEnabled: boolean;
-  userVoteFor: number;
+  userVoteFor: string;
   voteAllowedPerUser: number;
   question: string;
   optionsArray: Array<{id: string; text: string}>;

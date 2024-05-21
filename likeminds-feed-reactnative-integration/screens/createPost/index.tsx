@@ -163,6 +163,8 @@ const CreatePostComponent = () => {
     removeDocumentAttachment,
     removeMediaAttachment,
     removeSingleAttachment,
+    removePollAttachment,
+    editPollAttachment,
     showLinkPreview,
     setShowLinkPreview,
     postDetail,
@@ -683,7 +685,7 @@ const CreatePostComponent = () => {
                 borderWidth: 1,
               }}
             >
-              <PollConversationView item={poll} />
+              <PollConversationView item={poll} removePollAttachment={removePollAttachment} editPollAttachment={editPollAttachment} />
             </View>
           ) : null}
 

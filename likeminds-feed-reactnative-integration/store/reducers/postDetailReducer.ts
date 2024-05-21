@@ -66,9 +66,9 @@ export const initialState: PostDetailReducerState = {
 export const postDetailReducer = (state = initialState, action) => {
   switch (action.type) {
     case POST_DATA_SUCCESS: {
-      const { post = {}, users = {} } = action.body;
+      const { post = {}, users = {}, widgets = {} } = action.body;
       const updatedPostDetail = state.postDetail;
-      const converterPostData = convertToLMPostUI(post, users);
+      const converterPostData = convertToLMPostUI(post, users, widgets);
       let newReplies = converterPostData.replies || [];
       // filter out the replies already present in postDetail
       newReplies = newReplies.filter(
@@ -90,9 +90,9 @@ export const postDetailReducer = (state = initialState, action) => {
       };
     }
     case POST_DATA_REFRESH_SUCCESS: {
-      const { post = {}, users = {} } = action.body;
+      const { post = {}, users = {}, widgets = {} } = action.body;
       // model converter function
-      const converterPostData = convertToLMPostUI(post, users);
+      const converterPostData = convertToLMPostUI(post, users, widgets);
       return { ...state, postDetail: converterPostData };
     }
     case POST_COMMENTS_SUCCESS: {
@@ -378,8 +378,8 @@ export const postDetailReducer = (state = initialState, action) => {
       return { ...state, postDetail: { ...updatedPostDetail } };
     }
     case EDIT_POST_SUCCESS: {
-      const { post = {}, users = {} } = action.body;
-      const converterPostData = convertToLMPostUI(post, users);
+      const { post = {}, users = {}, widgets = {} } = action.body;
+      const converterPostData = convertToLMPostUI(post, users, widgets);
       return { ...state, postDetail: converterPostData };
     }
     case LIKE_POST_STATE: {

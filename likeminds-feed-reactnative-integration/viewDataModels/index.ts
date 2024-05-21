@@ -142,6 +142,7 @@ const calculateDaysToExpiry = (item) => {
 export function convertToLMPollUI(id: string, widgets: any) {
   const item = widgets[id];
   const pollMetaData: any = {
+    id: id,
     title: item?.metadata?.title,
     options: item?.LmMeta?.options,
     allowAddOption: item?.metadata?.allowAddOption,
@@ -342,6 +343,21 @@ export function convertLinkMetaData(data: LMOGTagsUI[]): LMAttachmentUI[] {
   return convertedLinkMetaData;
 }
 
+/**
+ * @param options: {text:string}[]
+ * @returns string[]
+ */
+export function convertPollOptionsMetaData(
+  options: { text: string }[]
+): string[] {
+  const convertedPollOptions = options.map((item) => item?.text);
+  return convertedPollOptions;
+}
+
+/**
+ * @param item: any
+ * @returns LMAttachmentUI
+ */
 export function convertPollMetaData(item: any): LMAttachmentUI {
   return {
     attachmentMeta: {
@@ -358,12 +374,12 @@ export function convertPollMetaData(item: any): LMAttachmentUI {
       duration: 0,
       pageCount: 0,
       url: "",
-      title: item?.text,
+      title: item?.title,
       expiryTime: item?.expiryTime,
-      options: item?.polls,
+      options: convertPollOptionsMetaData(item?.options),
       multipleSelectState: item?.multipleSelectState,
       pollType: item?.pollType,
-      multipleSelectNumber: item?.multipleSelectNo,
+      multipleSelectNumber: item?.multipleSelectNumber,
       isAnonymous: item?.isAnonymous,
       allowAddOption: item?.allowAddOption,
     },

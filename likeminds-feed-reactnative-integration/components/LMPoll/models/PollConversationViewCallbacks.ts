@@ -11,6 +11,8 @@ export interface PollConversationViewCallbacks {
   stringManipulation: () => string;
   dateManipulation: () => string;
   resetShowResult: () => void;
+  removePollAttachment?: () => void;
+  editPollAttachment?: () => void;
   onQuestionTextLayout: (event: {
     nativeEvent: { lines: string | TextLayoutLine[] };
   }) => void;

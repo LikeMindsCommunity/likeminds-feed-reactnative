@@ -6,5 +6,5 @@ export type RootStackParamList = {
   PostLikesList: Array<string> | undefined;
   NotificationFeed: undefined;
   NotificationList: undefined;
-  CreatePollScreen: undefined;
+  CreatePollScreen: any;
 };

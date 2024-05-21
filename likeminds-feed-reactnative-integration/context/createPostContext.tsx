@@ -127,6 +127,8 @@ export interface CreatePostContextValues {
   removeDocumentAttachment: (index: number) => void;
   removeMediaAttachment: (index: number) => void;
   removeSingleAttachment: () => void;
+  removePollAttachment: () => void;
+  editPollAttachment: () => void;
   allAttachment: Array<LMAttachmentUI>;
   getPostData: () => void;
   postEdit: any;
@@ -163,6 +165,7 @@ export const CreatePostContextProvider = ({
   route,
 }: CreatePostContextProps) => {
   const memberData = useAppSelector((state) => state.login.member);
+  const poll = useAppSelector((state) => state.createPost.pollAttachment);
   const dispatch = useAppDispatch();
   const [formattedDocumentAttachments, setFormattedDocumentAttachments] =
     useState<Array<LMAttachmentUI>>([]);
@@ -386,8 +389,7 @@ export const CreatePostContextProvider = ({
 
   // function handles the navigation to create poll screen
   const handlePoll = () => {
-    setShowOptions(false);
-    navigation.navigate(CREATE_POLL_SCREEN);
+    navigation.navigate(CREATE_POLL_SCREEN, { memberData: memberData });
   };
 
   // function removes the selected documents
@@ -413,6 +415,17 @@ export const CreatePostContextProvider = ({
   const removeSingleAttachment = () => {
     setFormattedMediaAttachments([]);
     setShowOptions(true);
+  };
+
+  // function removes poll attachment
+  const removePollAttachment = () => {
+    dispatch({ type: CLEAR_POLL });
+    setShowOptions(true);
+  };
+
+  // function edits poll attachment
+  const editPollAttachment = () => {
+    navigation.navigate(CREATE_POLL_SCREEN, { memberData: memberData });
   };
 
   useEffect(() => {
@@ -483,6 +496,12 @@ export const CreatePostContextProvider = ({
     };
   }, [postContentText, closedOnce]);
 
+  useEffect(() => {
+    if (Object.keys(poll)?.length > 0) {
+      setShowOptions(false);
+    }
+  }, [poll]);
+
   // all image/video/document media to be uploaded
   const allAttachment = [
     ...formattedMediaAttachments,
@@ -503,7 +522,11 @@ export const CreatePostContextProvider = ({
     );
 
     setPostDetail(
-      convertToLMPostUI(getPostResponse?.post, getPostResponse?.users)
+      convertToLMPostUI(
+        getPostResponse?.post,
+        getPostResponse?.users,
+        getPostResponse?.widgets
+      )
     );
     return getPostResponse;
   };
@@ -710,6 +733,8 @@ export const CreatePostContextProvider = ({
     removeDocumentAttachment,
     removeMediaAttachment,
     removeSingleAttachment,
+    removePollAttachment,
+    editPollAttachment,
     allAttachment,
     getPostData,
     postEdit,
