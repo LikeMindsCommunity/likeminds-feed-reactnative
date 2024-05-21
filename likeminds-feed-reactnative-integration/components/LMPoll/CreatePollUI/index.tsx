@@ -201,7 +201,7 @@ const CreatePollUI = () => {
             {show && (
               <DateTimePicker
                 testID="dateTimePicker"
-                timeZoneOffsetInMinutes={timeZoneOffsetInMinutes}
+                timeZoneName={"Asia/Kolkata"}
                 value={date ? date : new Date()}
                 mode={Platform.OS === "ios" ? "datetime" : mode}
                 is24Hour={true}

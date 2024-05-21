@@ -10,11 +10,11 @@ interface StylesProps {
 
 export class STYLES {
   static $COLORS = {
-    PRIMARY: "hsl(222, 53%, 15%)",
+    PRIMARY: "hsl(244, 75%, 59%)",
     SECONDARY: "hsl(222, 47%, 31%)",
     TERTIARY: "#ffffff",
     MSG: "#777e8e",
-    FONT_PRIMARY: "hsl(222, 53%, 15%)",
+    FONT_PRIMARY: "hsl(244, 75%, 59%)",
     JOINED_BTN: "hsl(222, 22%, 93%)",
     WHITE: '#ffffff',
     BLACK: '#000000',

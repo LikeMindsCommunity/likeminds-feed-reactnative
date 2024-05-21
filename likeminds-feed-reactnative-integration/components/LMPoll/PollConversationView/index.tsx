@@ -25,14 +25,18 @@ import { useAppDispatch, useAppSelector } from "../../../store/store";
 import { POLL_RESULT } from "../../../constants/screenNames";
 import { useNavigation } from "@react-navigation/native";
 import { PollMultiSelectState, PollType } from "../../../enums/Poll";
+import { GetPostRequest } from "@likeminds.community/feed-js";
+import { getPost } from "../../../store/actions/postDetail";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 const PollConversationView = ({
   item,
+  post,
   removePollAttachment,
   editPollAttachment,
 }: any) => {
   const myClient = Client.myClient;
-  const { navigation }: any = useNavigation();
+  const { navigation }: any = useNavigation<StackNavigationProp<any>>();
 
   const [selectedPolls, setSelectedPolls] = useState<any>([]);
   const [showSelected, setShowSelected] = useState(false);
@@ -67,7 +71,7 @@ const PollConversationView = ({
       navigation.navigate(POLL_RESULT, {
         screen: val,
         tabsValueArr: pollsArr,
-        conversationID: item?.id,
+        voteId: item?.id,
       });
     }
   };
@@ -229,14 +233,16 @@ const PollConversationView = ({
 
   // API to reload the existing poll conversation
   async function reloadConversation() {
-    // const payload = {
-    //   chatroomId: item?.chatroomId,
-    //   conversationId: item?.id,
-    // };
-    // await myClient?.updatePollVotes(
-    //   res?.conversations,
-    //   user?.sdkClientInfo?.community
-    // );
+    const getPostResponse = await dispatch(
+      getPost(
+        GetPostRequest.builder()
+          .setpostId(post?.id)
+          .setpage(1)
+          .setpageSize(10)
+          .build(),
+        false
+      )
+    );
   }
 
   // this function call an API which adds a poll option in existing poll
@@ -299,7 +305,7 @@ const PollConversationView = ({
         if (item?.pollType === PollType.DEFERRED) {
           const pollSubmissionCall = await myClient.submitPollVote({
             pollId: item?.id,
-            votes: [item?.options[pollIndex]],
+            votes: [item?.options[pollIndex]?.Id],
           });
           await reloadConversation();
           dispatch({
@@ -313,7 +319,7 @@ const PollConversationView = ({
           if (!isSelected) {
             const pollSubmissionCall = await myClient.submitPollVote({
               pollId: item?.id,
-              votes: [item?.options[pollIndex]],
+              votes: [item?.options[pollIndex]?.Id],
             });
             await reloadConversation();
             dispatch({
@@ -350,7 +356,7 @@ const PollConversationView = ({
     if (shouldShowSubmitPollButton) {
       try {
         const votes = selectedPolls?.map((itemIndex: any) => {
-          return item?.options[itemIndex];
+          return item?.options[itemIndex]?.Id;
         });
         const pollSubmissionCall = await myClient.submitPollVote({
           pollId: item?.id,

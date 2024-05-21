@@ -313,7 +313,6 @@ export const CreatePollContextProvider = ({
       }
 
       const poll: any = {
-        id: Date.now().toString(),
         state: 6,
         title: question,
         options: polls,

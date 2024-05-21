@@ -28,12 +28,14 @@ import {
   MAX_FILE_SIZE,
   MEDIA_UPLOAD_COUNT_VALIDATION,
   MIN_FILE_SIZE,
+  POLL_ATTACHMENT_TYPE,
   VIDEO_ATTACHMENT_TYPE,
 } from "../constants/Strings";
 import {
   convertDocumentMetaData,
   convertImageVideoMetaData,
   convertLinkMetaData,
+  convertPollMetaData,
   convertToLMPostUI,
 } from "../viewDataModels";
 import _ from "lodash";
@@ -86,6 +88,7 @@ export interface CreatePostContextValues {
   formattedDocumentAttachments: Array<LMAttachmentUI>;
   formattedMediaAttachments: Array<LMAttachmentUI>;
   formattedLinkAttachments: Array<LMAttachmentUI>;
+  formattedPollAttachments: Array<LMAttachmentUI>;
   showLinkPreview: boolean;
   closedOnce: boolean;
   showOptions: boolean;
@@ -119,6 +122,7 @@ export interface CreatePostContextValues {
   setFormattedDocumentAttachments: Dispatch<
     SetStateAction<Array<LMAttachmentUI>>
   >;
+  setFormattedPollAttachments: Dispatch<SetStateAction<Array<LMAttachmentUI>>>;
   setSelectedImageVideo: (type: string) => void;
   setSelectedDocuments: () => void;
   handleGallery: (type: string) => void;
@@ -173,6 +177,9 @@ export const CreatePostContextProvider = ({
     Array<LMAttachmentUI>
   >([]);
   const [formattedLinkAttachments, setFormattedLinkAttachments] = useState<
+    Array<LMAttachmentUI>
+  >([]);
+  const [formattedPollAttachments, setFormattedPollAttachments] = useState<
     Array<LMAttachmentUI>
   >([]);
   const [showLinkPreview, setShowLinkPreview] = useState(false);
@@ -548,6 +555,7 @@ export const CreatePostContextProvider = ({
       const imageVideoMedia: any = [];
       const documentMedia: any = [];
       const linkPreview: any = [];
+      const pollPreview: any = [];
       for (const media of postDetail.attachments) {
         if (media.attachmentType === IMAGE_ATTACHMENT_TYPE) {
           imageVideoMedia.push(media);
@@ -555,6 +563,8 @@ export const CreatePostContextProvider = ({
           imageVideoMedia.push(media);
         } else if (media.attachmentType === DOCUMENT_ATTACHMENT_TYPE) {
           documentMedia.push(media);
+        } else if (media.attachmentType === POLL_ATTACHMENT_TYPE) {
+          pollPreview.push(media);
         } else {
           linkPreview.push(media);
         }
@@ -562,6 +572,7 @@ export const CreatePostContextProvider = ({
       setFormattedMediaAttachments(imageVideoMedia);
       setFormattedDocumentAttachments(documentMedia);
       setFormattedLinkAttachments(linkPreview);
+      setFormattedPollAttachments(pollPreview);
     }
     if (postDetail?.topics) {
       dispatch({
@@ -576,12 +587,14 @@ export const CreatePostContextProvider = ({
     // replace mentions with route
     const contentText = mentionToRouteConverter(postContentText);
     const linkAttachments = showLinkPreview ? formattedLinkAttachments : [];
+    const pollAttachments = convertPollMetaData(formattedPollAttachments[0]?.attachmentMeta)
+
     // call edit post api
     const editPostResponse = dispatch(
       editPost(
         EditPostRequest.builder()
           .setHeading("")
-          .setattachments([...allAttachment, ...linkAttachments])
+          .setattachments([...allAttachment, ...linkAttachments, pollAttachments])
           .setpostId(postDetail?.id)
           .settext(contentText)
           .setTopicIds(topics)
@@ -694,6 +707,7 @@ export const CreatePostContextProvider = ({
     formattedDocumentAttachments,
     formattedMediaAttachments,
     formattedLinkAttachments,
+    formattedPollAttachments,
     showLinkPreview,
     closedOnce,
     showOptions,
@@ -725,6 +739,7 @@ export const CreatePostContextProvider = ({
     setFormattedLinkAttachments,
     setFormattedMediaAttachments,
     setFormattedDocumentAttachments,
+    setFormattedPollAttachments,
     setSelectedImageVideo,
     setSelectedDocuments,
     handleGallery,

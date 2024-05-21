@@ -361,7 +361,7 @@ export function convertPollOptionsMetaData(
 export function convertPollMetaData(item: any): LMAttachmentUI {
   return {
     attachmentMeta: {
-      entityId: "",
+      entityId: item?.id ? item?.id : "",
       format: "",
       name: "",
       ogTags: {

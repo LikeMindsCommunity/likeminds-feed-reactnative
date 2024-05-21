@@ -7,4 +7,5 @@ export type RootStackParamList = {
   NotificationFeed: undefined;
   NotificationList: undefined;
   CreatePollScreen: any;
+  PollResult: any;
 };

@@ -14,6 +14,7 @@ import {
   POST_LIKES_LIST,
   LMOverlayProvider,
   CreatePollScreen,
+  PollResult,
 } from '@likeminds.community/feed-rn-core';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
@@ -46,7 +47,10 @@ import {Credentials} from './login/credentials';
 import {LoginSchemaRO} from './login/loginSchemaRO';
 import {useQuery} from '@realm/react';
 import FetchKeyInputScreen from './login';
-import {CREATE_POLL_SCREEN} from '@likeminds.community/feed-rn-core/constants/screenNames';
+import {
+  CREATE_POLL_SCREEN,
+  POLL_RESULT,
+} from '@likeminds.community/feed-rn-core/constants/screenNames';
 
 class CustomCallbacks implements LMFeedCallbacks {
   onEventTriggered(eventName: string, eventProperties?: Map<string, string>) {
@@ -231,6 +235,7 @@ const App = () => {
                 name={NOTIFICATION_FEED}
                 component={NotificationWrapper}
               />
+              <Stack.Screen name={POLL_RESULT} component={PollResult} />
               <Stack.Screen
                 name={CREATE_POLL_SCREEN}
                 component={CreatePollScreen}

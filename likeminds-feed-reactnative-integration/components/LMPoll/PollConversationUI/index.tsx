@@ -92,7 +92,13 @@ const PollConversationUI = ({
           </View>
         </View> */}
 
-        <View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+          }}
+        >
           {truncatedText ? (
             <LMPostPollText truncatedText={truncatedText} fullText={text} />
           ) : (
@@ -105,20 +111,28 @@ const PollConversationUI = ({
             </LMText>
           )}
 
-          <View style={{ gap: 10 }}>
-            <TouchableOpacity onPress={editPollAttachment}>
-              <Image
-                style={[styles.editImage, { tintColor: "black" }]}
-                source={require("../../../assets/images/edit_icon3x.png")}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={removePollAttachment}>
-              <Image
-                style={styles.editImage}
-                source={require("../../../assets/images/cross_circle_icon3x.png")}
-              />
-            </TouchableOpacity>
-          </View>
+          {disabled ? (
+            <View
+              style={{
+                gap: 10,
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <TouchableOpacity onPress={editPollAttachment}>
+                <Image
+                  style={[styles.editImage, { tintColor: "black" }]}
+                  source={require("../../../assets/images/edit_icon3x.png")}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={removePollAttachment}>
+                <Image
+                  style={styles.editImage}
+                  source={require("../../../assets/images/cross_circle_icon3x.png")}
+                />
+              </TouchableOpacity>
+            </View>
+          ) : null}
         </View>
 
         {multipleSelectNo > 1 ? (

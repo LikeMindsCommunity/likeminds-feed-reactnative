@@ -11,6 +11,7 @@ import {
   LMFeedNotificationFeedListView,
   LMFeedNotificationFeedScreen,
   CreatePollScreen,
+  PollResult,
 } from "./screens";
 import {
   UNIVERSAL_FEED,
@@ -50,6 +51,7 @@ export {
   ContextProvider,
   UniversalFeed,
   CreatePollScreen,
+  PollResult,
   PostsList,
   PostDetail,
   CreatePost,

@@ -160,6 +160,7 @@ const CreatePostComponent = () => {
     formattedDocumentAttachments,
     formattedLinkAttachments,
     formattedMediaAttachments,
+    formattedPollAttachments,
     removeDocumentAttachment,
     removeMediaAttachment,
     removeSingleAttachment,
@@ -172,6 +173,8 @@ const CreatePostComponent = () => {
     onPostClick,
     handleScreenBackPress,
   }: CreatePostContextValues = useCreatePostContext();
+
+  console.log("formattedPollAttachments ==", formattedPollAttachments[0]);
 
   const handleAllTopicPress = () => {
     const arrayOfIds = mappedTopics.map((obj) => obj.id);
@@ -674,7 +677,7 @@ const CreatePostComponent = () => {
 
         {/* selected media section */}
         <View>
-          {/* poll media */}
+          {/* poll media for create post preview */}
           {Object.keys(poll).length > 0 ? (
             <View
               style={{
@@ -685,7 +688,28 @@ const CreatePostComponent = () => {
                 borderWidth: 1,
               }}
             >
-              <PollConversationView item={poll} removePollAttachment={removePollAttachment} editPollAttachment={editPollAttachment} />
+              <PollConversationView
+                item={poll}
+                removePollAttachment={removePollAttachment}
+                editPollAttachment={editPollAttachment}
+              />
+            </View>
+          ) : null}
+
+          {/* poll media for edit post preview */}
+          {formattedPollAttachments.length > 0 ? (
+            <View
+              style={{
+                padding: 20,
+                margin: 20,
+                borderRadius: 5,
+                borderColor: "#c5c5c5",
+                borderWidth: 1,
+              }}
+            >
+              <PollConversationView
+                item={formattedPollAttachments[0]?.attachmentMeta}
+              />
             </View>
           ) : null}
 
