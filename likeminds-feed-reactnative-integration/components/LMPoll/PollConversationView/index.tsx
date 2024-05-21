@@ -23,11 +23,10 @@ import STYLES from "../../../constants/Styles";
 import { SHOW_TOAST } from "../../../store/types/loader";
 import { useAppDispatch, useAppSelector } from "../../../store/store";
 import { POLL_RESULT } from "../../../constants/screenNames";
-import { useNavigation } from "@react-navigation/native";
 import { PollMultiSelectState, PollType } from "../../../enums/Poll";
 import { GetPostRequest } from "@likeminds.community/feed-js";
 import { getPost } from "../../../store/actions/postDetail";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { useUniversalFeedContext } from "../../../context";
 
 const PollConversationView = ({
   item,
@@ -36,7 +35,7 @@ const PollConversationView = ({
   editPollAttachment,
 }: any) => {
   const myClient = Client.myClient;
-  const { navigation }: any = useNavigation<StackNavigationProp<any>>();
+  const { navigation } = useUniversalFeedContext();
 
   const [selectedPolls, setSelectedPolls] = useState<any>([]);
   const [showSelected, setShowSelected] = useState(false);

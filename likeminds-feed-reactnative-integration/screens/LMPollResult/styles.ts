@@ -36,14 +36,14 @@ const styles = StyleSheet.create({
     tintColor: "black",
   },
   messageCustomTitle: {
-    color: STYLES.$COLORS.SECONDARY,
+    color: STYLES.$COLORS.PRIMARY,
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
   },
   title: {
     fontSize: STYLES.$FONT_SIZES.LARGE,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
-    color: STYLES.$COLORS.FONT_PRIMARY,
+    color: STYLES.$COLORS.BLACK,
   },
   secondaryTitle: {
     fontSize: STYLES.$FONT_SIZES.MEDIUM,

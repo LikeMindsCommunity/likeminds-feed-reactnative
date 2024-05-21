@@ -708,7 +708,10 @@ const CreatePostComponent = () => {
               }}
             >
               <PollConversationView
-                item={formattedPollAttachments[0]?.attachmentMeta}
+                item={{
+                  ...formattedPollAttachments[0]?.attachmentMeta,
+                  disabled: true,
+                }}
               />
             </View>
           ) : null}

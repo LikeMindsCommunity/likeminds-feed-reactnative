@@ -5,6 +5,7 @@ import {
   Alert,
   TouchableOpacity,
   FlatList,
+  SafeAreaView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -13,11 +14,12 @@ import STYLES from "../../constants/Styles";
 import { NO_RESPONSES, POLL_RESULT_TEXT } from "../../constants/Strings";
 import { Client } from "../../client";
 import Layout from "../../constants/Layout";
+import { LMHeader } from "../../components";
 
 const PollStack = createMaterialTopTabNavigator();
 
 export const PollResult = ({ navigation, route }: any) => {
-  const { tabsValueArr = [], voteId, backIconPath } = route.params;
+  const { tabsValueArr = [], pollId, backIconPath } = route.params;
 
   const setInitialHeader = () => {
     navigation.setOptions({
@@ -60,11 +62,18 @@ export const PollResult = ({ navigation, route }: any) => {
   }, []);
 
   return (
-    <View
+    <SafeAreaView
       style={{
         flex: 1,
       }}
     >
+      <LMHeader
+        showBackArrow={true}
+        onBackPress={() => {
+          navigation.goBack();
+        }}
+        heading={POLL_RESULT_TEXT}
+      />
       <PollStack.Navigator
         screenOptions={{
           tabBarLabelStyle: styles.font,
@@ -73,12 +82,13 @@ export const PollResult = ({ navigation, route }: any) => {
         }}
       >
         {tabsValueArr?.map((val: any, index: any) => {
+          console.log("valll ==", val);
           return (
             <PollStack.Screen
               //   key={val?.id}
               name={val?.text}
               children={(props: any) => (
-                <TabScreenUI pollID={val?.id} votes={voteId} {...props} />
+                <TabScreenUI pollID={pollId} votes={val?.Id} {...props} />
               )}
               options={{
                 tabBarLabel: ({ focused }) => (
@@ -94,13 +104,15 @@ export const PollResult = ({ navigation, route }: any) => {
                         },
                       ]}
                     >
-                      {val?.noVotes}
+                      {val?.voteCount}
                     </Text>
                     <Text
                       style={[
                         styles.font,
                         {
-                          color: STYLES.$COLORS.MSG,
+                          color: focused
+                            ? STYLES.$COLORS.PRIMARY
+                            : STYLES.$COLORS.MSG,
                           marginTop: Layout.normalize(5),
                         },
                       ]}
@@ -114,11 +126,11 @@ export const PollResult = ({ navigation, route }: any) => {
           );
         })}
       </PollStack.Navigator>
-    </View>
+    </SafeAreaView>
   );
 };
 
-const TabScreenUI = ({ pollID, voteId }: any) => {
+const TabScreenUI = ({ pollID, votes }: any) => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -128,17 +140,20 @@ const TabScreenUI = ({ pollID, voteId }: any) => {
   const fetchPollUsers = async (pollID?: string) => {
     const res: any = await Client.myClient.getPollVotes({
       pollId: `${pollID}`,
-      votes: [voteId],
+      votes: [votes],
     });
 
     if (res?.success) {
-      setUsers(res?.data?.members);
+      let userList = res?.data?.votes.map(
+        (item) => res?.data?.users[item?.users[0]]
+      );
+      setUsers(userList);
     }
   };
 
   return (
     <View style={styles.page}>
-      {users.length < 1 ? (
+      {users?.length < 1 ? (
         <View style={styles.nothingDM}>
           <View style={[styles.justifyCenter]}>
             <Image
@@ -151,7 +166,6 @@ const TabScreenUI = ({ pollID, voteId }: any) => {
       ) : (
         <FlatList
           data={users}
-          estimatedItemSize={1}
           renderItem={({ item }: any) => {
             return (
               <View key={item?.id} style={styles.participants}>
@@ -172,11 +186,6 @@ const TabScreenUI = ({ pollID, voteId }: any) => {
                           style={styles.messageCustomTitle}
                         >{` • ${item?.customTitle}`}</Text>
                       ) : null}
-                    </Text>
-                  </View>
-                  <View>
-                    <Text style={[styles.secondaryTitle]} numberOfLines={1}>
-                      {item?.memberSince}
                     </Text>
                   </View>
                 </View>

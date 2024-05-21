@@ -62,6 +62,15 @@ const PollConversationUI = ({
   //styling props
   const pollVoteSliderColor = pollStyles?.pollVoteSliderColor;
 
+  const calculateDaysToExpiry = () => {
+    const difference = Number(expiryTime) - Date.now();
+
+    const millisecondsInADay = 24 * 60 * 60 * 1000;
+    const millisecondsToDays = difference / millisecondsInADay;
+
+    return Math.ceil(millisecondsToDays)?.toString();
+  };
+
   return (
     <View>
       {/* Poll question */}
@@ -111,7 +120,7 @@ const PollConversationUI = ({
             </LMText>
           )}
 
-          {disabled ? (
+          {disabled && removePollAttachment ? (
             <View
               style={{
                 gap: 10,
@@ -164,13 +173,16 @@ const PollConversationUI = ({
                   setShowSelected(!showSelected);
                   setSelectedPollOptions(index);
                 }}
-                style={({ pressed }) => [
-                  isSelected || element?.isSelected
-                    ? styles.pollButton
-                    : styles.greyPollButton,
-                  { opacity: pressed ? 0.5 : 1 },
-                  hue ? { borderColor: `hsl(${hue}, 47%, 31%)` } : null,
-                ]}
+                style={({ pressed }) =>
+                  !disabled
+                    ? [
+                        isSelected || element?.isSelected
+                          ? styles.pollButton
+                          : styles.greyPollButton,
+                        { opacity: pressed ? 0.5 : 1 },
+                      ]
+                    : styles.greyPollButton
+                }
               >
                 <View
                   style={[
@@ -211,14 +223,18 @@ const PollConversationUI = ({
                         ? [
                             {
                               width: `${
-                                element?.percentage > 98
-                                  ? 98
+                                element?.percentage > 99
+                                  ? 99
                                   : element?.percentage
                               }%`,
                               backgroundColor:
                                 pollVoteSliderColor?.backgroundColor
                                   ? pollVoteSliderColor?.backgroundColor
-                                  : "hsl(222, 60%, 85%)",
+                                  : !disabled
+                                  ? "hsl(240, 64%, 91%)"
+                                  : "white",
+
+                              // "hsl(213, 23%, 92%)" light blue color
                             },
                             styles.pollButtonBackground,
                             styles.pollButtonPadding,
@@ -270,14 +286,13 @@ const PollConversationUI = ({
                   setIsAddPollOptionModalVisible(true);
                 }}
                 style={({ pressed }) => [
-                  styles.pollButton,
+                  styles.greyPollButton,
                   {
                     opacity: pressed
                       ? Layout.normalize(0.5)
                       : Layout.normalize(1),
                     padding: Layout.normalize(12),
                   },
-                  hue ? { borderColor: `hsl(${hue}, 47%, 31%)` } : null,
                 ]}
               >
                 <Text
@@ -308,6 +323,9 @@ const PollConversationUI = ({
                 ]}
               >
                 {pollAnswerText}
+                <Text style={styles.messageCustomTitle}>{` • ${
+                  hasPollEnded ? "Poll Ended" : calculateDaysToExpiry() + " left"
+                }`}</Text>
               </Text>
             </Pressable>
           ) : null}

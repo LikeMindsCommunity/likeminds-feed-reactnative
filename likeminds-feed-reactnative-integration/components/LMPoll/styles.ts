@@ -92,7 +92,7 @@ export const styles = StyleSheet.create({
     bottom: 0,
     flexGrow: 1,
     width: Layout.window.width,
-    height: Layout.window.height / 3,
+    height: Layout.normalize(250),
   },
   modalView: {
     backgroundColor: "#e8ebf0",
@@ -234,7 +234,7 @@ export const styles = StyleSheet.create({
   },
   pollButton: {
     borderRadius: Layout.normalize(8),
-    borderColor: STYLES.$COLORS.SECONDARY,
+    borderColor: STYLES.$COLORS.PRIMARY,
     borderWidth: Layout.normalize(1),
   },
   greyPollButton: {
