@@ -82,7 +82,6 @@ export const PollResult = ({ navigation, route }: any) => {
         }}
       >
         {tabsValueArr?.map((val: any, index: any) => {
-          console.log("valll ==", val);
           return (
             <PollStack.Screen
               //   key={val?.id}

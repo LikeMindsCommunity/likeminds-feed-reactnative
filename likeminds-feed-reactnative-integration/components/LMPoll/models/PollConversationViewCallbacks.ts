@@ -16,4 +16,5 @@ export interface PollConversationViewCallbacks {
   onQuestionTextLayout: (event: {
     nativeEvent: { lines: string | TextLayoutLine[] };
   }) => void;
+  getTimeLeftInPoll: (expiryTime: number | null) => string;
 }

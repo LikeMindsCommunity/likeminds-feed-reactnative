@@ -83,6 +83,7 @@ export function convertToLMPostUI(
     uuid: post.uuid,
     user: convertToLMUserUI(user[post.uuid]),
     topics: post.topics,
+    users: user,
   };
   return postData;
 }

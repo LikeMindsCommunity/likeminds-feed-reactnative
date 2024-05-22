@@ -458,6 +458,35 @@ const PollConversationView = ({
     }
   };
 
+  // this function retreives time left in poll
+  function getTimeLeftInPoll(expiryTime: number | null): string {
+    if (expiryTime === null) {
+      return "";
+    }
+
+    const expiryTimeInDateTime = new Date(expiryTime);
+    const now = new Date();
+    const difference = expiryTimeInDateTime.getTime() - now.getTime();
+
+    if (difference < 0) {
+      return "Poll Ended";
+    }
+
+    const differenceInMinutes = Math.floor(difference / (1000 * 60));
+    const differenceInHours = Math.floor(differenceInMinutes / 60);
+    const differenceInDays = Math.floor(differenceInHours / 24);
+
+    if (differenceInDays > 0) {
+      return `${differenceInDays}d left`;
+    } else if (differenceInHours > 0) {
+      return `${differenceInHours}h left`;
+    } else if (differenceInMinutes > 0) {
+      return `${differenceInMinutes}m left`;
+    } else {
+      return "Just Now";
+    }
+  }
+
   // readonly props consumed by UI component
   const props: PollConversationViewState = {
     text: item?.title,
@@ -488,6 +517,7 @@ const PollConversationView = ({
     disabled: item?.disabled ? item?.disabled : false,
     truncatedText: truncatedText,
     maxQuestionLines: MAX_LINES,
+    post: post
   };
 
   return (
@@ -506,6 +536,7 @@ const PollConversationView = ({
         onQuestionTextLayout={onTextLayout}
         removePollAttachment={removePollAttachment}
         editPollAttachment={editPollAttachment}
+        getTimeLeftInPoll={getTimeLeftInPoll}
         {...props}
       />
       <AddOptionsModal

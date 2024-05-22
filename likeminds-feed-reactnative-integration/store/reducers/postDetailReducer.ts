@@ -60,6 +60,7 @@ export const initialState: PostDetailReducerState = {
       customTitle: "",
       organisationName: "",
     },
+    users: {},
     topics: [],
   },
 };

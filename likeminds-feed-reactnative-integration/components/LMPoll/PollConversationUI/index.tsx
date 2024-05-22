@@ -20,6 +20,7 @@ import STYLES from "../../../constants/Styles";
 import LMPostPollText from "../../LMPost/LMPostPollText";
 import { decode } from "../../../utils";
 import { LMText } from "../../../uiComponents";
+import { PollType } from "../../../enums/Poll";
 
 const PollConversationUI = ({
   text,
@@ -48,6 +49,7 @@ const PollConversationUI = ({
   multipleSelectNo,
   stringManipulation,
   dateManipulation,
+  getTimeLeftInPoll,
   resetShowResult,
   pollType,
   disabled,
@@ -62,45 +64,10 @@ const PollConversationUI = ({
   //styling props
   const pollVoteSliderColor = pollStyles?.pollVoteSliderColor;
 
-  const calculateDaysToExpiry = () => {
-    const difference = Number(expiryTime) - Date.now();
-
-    const millisecondsInADay = 24 * 60 * 60 * 1000;
-    const millisecondsToDays = difference / millisecondsInADay;
-
-    return Math.ceil(millisecondsToDays)?.toString();
-  };
-
   return (
     <View>
       {/* Poll question */}
       <View>
-        {/* <View style={[styles.alignRow, styles.justifySpace]}>
-          <View
-            style={[
-              styles.pollIconParent,
-              hue ? { backgroundColor: `hsl(${hue}, 53%, 15%)` } : null,
-            ]}
-          >
-            <Image
-              source={require("../../../assets/images/poll_icon3x.png")}
-              style={styles.pollIcon}
-            />
-          </View>
-          <View
-            style={[
-              styles.pollEndedTime,
-              hue ? { backgroundColor: `hsl(${hue}, 53%, 15%)` } : null,
-            ]}
-          >
-            <Text style={[styles.smallText, styles.whiteColor]}>
-              {hasPollEnded
-                ? "Poll Ended"
-                : "Poll Ends " + expiryTime + " days"}
-            </Text>
-          </View>
-        </View> */}
-
         <View
           style={{
             flexDirection: "row",
@@ -162,9 +129,7 @@ const PollConversationUI = ({
         {optionArr?.map((element: any, index: any) => {
           const isSelected = selectedPolls.includes(index);
           const voteCount = element?.voteCount;
-          // const isPollSentByMe =
-          //   user?.id === element?.member?.id ? true : false;
-          const isPollSentByMe = true;
+          const isPollSentByMe = user?.uuid === element?.uuid ? true : false;
           return (
             <View key={element?.id} style={styles.gap}>
               <Pressable
@@ -176,7 +141,7 @@ const PollConversationUI = ({
                 style={({ pressed }) =>
                   !disabled
                     ? [
-                        isSelected || element?.isSelected
+                        isSelected || (element?.isSelected && isPollSentByMe)
                           ? styles.pollButton
                           : styles.greyPollButton,
                         { opacity: pressed ? 0.5 : 1 },
@@ -204,9 +169,20 @@ const PollConversationUI = ({
                   ]}
                 >
                   <Text
-                    style={[styles.text, styles.blackColor, styles.optionText]}
+                    style={[
+                      styles.mediumText14,
+                      styles.blackColor,
+                      styles.optionText,
+                      allowAddOption ? styles.addedByOptionText : null,
+                    ]}
                   >
-                    {element?.text}
+                    {`${element?.text} \n`}
+
+                    {allowAddOption ? (
+                      <Text style={[styles.smallText10, styles.greyColor]}>
+                        {`Added by ${element?.uuid}`}
+                      </Text>
+                    ) : null}
                   </Text>
 
                   {isSelected ? (
@@ -231,10 +207,12 @@ const PollConversationUI = ({
                                 pollVoteSliderColor?.backgroundColor
                                   ? pollVoteSliderColor?.backgroundColor
                                   : !disabled
-                                  ? "hsl(240, 64%, 91%)"
+                                  ? isPollSentByMe
+                                    ? "hsl(240, 64%, 91%)"
+                                    : element?.isSelected
+                                    ? "hsl(213, 23%, 92%)"
+                                    : "white"
                                   : "white",
-
-                              // "hsl(213, 23%, 92%)" light blue color
                             },
                             styles.pollButtonBackground,
                             styles.pollButtonPadding,
@@ -250,8 +228,8 @@ const PollConversationUI = ({
 
               {!disabled && (
                 <>
-                  {(isPollSentByMe && pollType === 1) ||
-                  pollType === 0 ||
+                  {(isPollSentByMe && pollType === PollType.DEFERRED) ||
+                  pollType === PollType.INSTANT ||
                   isPollEnded ? (
                     <Pressable
                       onPress={() => {
@@ -324,7 +302,9 @@ const PollConversationUI = ({
               >
                 {pollAnswerText}
                 <Text style={styles.messageCustomTitle}>{` • ${
-                  hasPollEnded ? "Poll Ended" : calculateDaysToExpiry() + " left"
+                  hasPollEnded
+                    ? "Poll Ended"
+                    : getTimeLeftInPoll(Number(expiryTime))
                 }`}</Text>
               </Text>
             </Pressable>
@@ -371,7 +351,7 @@ const PollConversationUI = ({
           {isPollEnded &&
           multipleSelectNo > 1 &&
           shouldShowVotes &&
-          pollType === 1 ? (
+          pollType === PollType.DEFERRED ? (
             <TouchableOpacity
               onPress={() => {
                 resetShowResult();

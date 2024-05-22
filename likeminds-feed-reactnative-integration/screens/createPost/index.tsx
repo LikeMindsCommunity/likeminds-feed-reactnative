@@ -174,8 +174,6 @@ const CreatePostComponent = () => {
     handleScreenBackPress,
   }: CreatePostContextValues = useCreatePostContext();
 
-  console.log("formattedPollAttachments ==", formattedPollAttachments[0]);
-
   const handleAllTopicPress = () => {
     const arrayOfIds = mappedTopics.map((obj) => obj.id);
     dispatch({

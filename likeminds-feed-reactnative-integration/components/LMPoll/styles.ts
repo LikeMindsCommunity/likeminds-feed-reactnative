@@ -127,6 +127,11 @@ export const styles = StyleSheet.create({
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
     color: STYLES.$COLORS.FONT_PRIMARY,
   },
+  mediumText14: {
+    fontSize: Layout.normalize(14),
+    fontFamily: STYLES.$FONT_TYPES.LIGHT,
+    color: STYLES.$COLORS.FONT_PRIMARY,
+  },
   boldText: {
     fontSize: Layout.normalize(16),
     fontFamily: STYLES.$FONT_TYPES.BOLD,
@@ -139,6 +144,11 @@ export const styles = StyleSheet.create({
   },
   smallText: {
     fontSize: Layout.normalize(12),
+    fontFamily: STYLES.$FONT_TYPES.LIGHT,
+    color: STYLES.$COLORS.FONT_PRIMARY,
+  },
+  smallText10: {
+    fontSize: Layout.normalize(10),
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
     color: STYLES.$COLORS.FONT_PRIMARY,
   },
@@ -355,8 +365,11 @@ export const styles = StyleSheet.create({
     position: "absolute",
     zIndex: 1,
     alignItems: "center",
-    left: Layout.normalize(5),
+    left: Layout.normalize(10),
     top: Platform.OS === "ios" ? "30%" : "30%",
+  },
+  addedByOptionText: {
+    top: Platform.OS === "ios" ? "18%" : "18%",
   },
   profileContainer: {
     flexDirection: "row",

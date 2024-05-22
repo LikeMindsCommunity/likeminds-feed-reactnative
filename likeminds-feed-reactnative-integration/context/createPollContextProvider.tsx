@@ -52,8 +52,7 @@ export const CreatePollContextProvider = ({
   const myClient = Client.myClient;
   const poll = useAppSelector((state) => state.createPost.pollAttachment);
   const isPoll = Object.keys(poll).length > 0;
-
-  console.log("poll ==", poll);
+  
   const [question, setQuestion] = useState<string>(isPoll ? poll?.title : "");
   const [optionsArray, setOptionsArray] = useState<any>(
     isPoll ? poll?.options : []

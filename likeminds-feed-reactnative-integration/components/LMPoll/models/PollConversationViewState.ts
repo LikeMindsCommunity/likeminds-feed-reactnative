@@ -1,3 +1,5 @@
+import { PollType } from "../../../enums/Poll";
+import { LMPostUI } from "../../../models";
 import { Poll } from "./Poll";
 
 export interface PollConversationViewState {
@@ -26,8 +28,9 @@ export interface PollConversationViewState {
   multipleSelectNo?: any;
   multipleSelectState?: number;
   showResultsButton: boolean;
-  pollType: number;
+  pollType: PollType;
   disabled: boolean;
   truncatedText: string;
   maxQuestionLines: number;
+  post: LMPostUI;
 }
