@@ -15,12 +15,23 @@ import STYLES from "../../constants/Styles";
 import { STATUS_BAR_STYLE } from "../../store/types/types";
 import { useAppDispatch } from "../../store/store";
 import { ReactNativeZoomableView } from "@openspacelabs/react-native-zoomable-view";
-import { VideoPlayer } from "../../components";
+import { LMVideoPlayer } from "../../components";
 
 const CarouselScreen = ({ navigation, route }: any) => {
   const dispatch = useAppDispatch();
   const { index, dataObject, backIconPath } = route.params;
   const data = dataObject?.attachments;
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const viewabilityConfig = useRef({
+    itemVisiblePercentThreshold: 50,
+  });
+
+  const onViewableItemsChanged = useRef(({ viewableItems }) => {
+    if (viewableItems.length > 0) {
+      setCurrentIndex(viewableItems[0].index);
+    }
+  });
 
   let imageCount = 0;
   let videoCount = 0;
@@ -184,12 +195,23 @@ const CarouselScreen = ({ navigation, route }: any) => {
                     source={{ uri: item?.attachmentMeta?.url }}
                   />
                 </ReactNativeZoomableView>
-              ) : item?.attachmentType === VIDEO_ATTACHMENT_TYPE ? (
-                <VideoPlayer url={item?.attachmentMeta?.url} />
+              ) : item?.attachmentType === VIDEO_ATTACHMENT_TYPE &&
+                index === currentIndex ? (
+                <LMVideoPlayer url={item?.attachmentMeta?.url} />
+              ) : item?.attachmentType === VIDEO_ATTACHMENT_TYPE &&
+                index !== currentIndex ? (
+                <Image
+                  style={styles.image}
+                  source={{
+                    uri: item?.attachmentMeta?.thumbnailUrl,
+                  }}
+                />
               ) : null}
             </View>
           );
         }}
+        onViewableItemsChanged={onViewableItemsChanged.current}
+        viewabilityConfig={viewabilityConfig.current}
       />
     </View>
   );

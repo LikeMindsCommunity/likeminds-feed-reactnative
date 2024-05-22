@@ -13,7 +13,7 @@ import Slider from "@react-native-community/slider";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { SET_MUTED_STATE } from "../../store/types/types";
 
-function VideoPlayer({ url }) {
+function LMVideoPlayer({ url }) {
   const ref = useRef<any>();
   const [clicked, setClicked] = useState(false);
   const [puased, setPaused] = useState(false);
@@ -82,7 +82,31 @@ function VideoPlayer({ url }) {
             setProgress({ ...progress, currentTime: 0 }); // Reset seek position
             ref.current.seek(0); // Seek to the beginning of the video
           }}
+          onError={(err) => console.log("err", err)}
         />
+        {/* <VideoPlayer
+                    source={{uri: url}}
+                    paused={puased}
+                    style={styles.videoPlayer}
+                    videoRef={ref}
+                    onProgress={(x) => {
+                      setProgress(x);
+                    }}
+                    resizeMode="contain"
+                    muted={mute}
+                    onEnd={() => {
+                      setPaused(true); // Pause the video
+                      setProgress({ ...progress, currentTime: 0 }); // Reset seek position
+                      ref.current.seek(0); // Seek to the beginning of the video
+                    }}
+                    onError={(err) => console.log("err",err)}
+                    disablePlayPause={true}
+                    showOnStart={false}
+                    showDuration={false}
+                    disableVolume={true}
+                    disableBack={true}
+                    disableFullscreen={true}
+                  /> */}
         {clicked && (
           <TouchableOpacity
             style={{
@@ -187,4 +211,4 @@ function VideoPlayer({ url }) {
   );
 }
 
-export default VideoPlayer;
+export default LMVideoPlayer;

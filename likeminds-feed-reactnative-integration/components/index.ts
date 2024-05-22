@@ -33,7 +33,7 @@ import LMMemberListItem from "./LMMemberListItem";
 import { LMMemberListItemProps } from "./LMMemberListItem/types";
 import LMNotificationFeedItem from "./LMNotificationFeedItem";
 import { LMNotificationFeedItemProps } from "./LMNotificationFeedItem/types";
-import VideoPlayer from "./VideoPlayer";
+import LMVideoPlayer from "./LMVideoPlayer";
 export {
   LMToast,
   LMLoader,
@@ -51,7 +51,7 @@ export {
   LMCommentItem,
   LMMemberListItem,
   LMNotificationFeedItem,
-  VideoPlayer,
+  LMVideoPlayer,
 };
 export type {
   LMCarouselProps,
