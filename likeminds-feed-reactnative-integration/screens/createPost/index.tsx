@@ -72,6 +72,8 @@ import { userTaggingDecoder } from "../../utils/decodeMentions";
 import { Client } from "../../client";
 import Layout from "../../constants/Layout";
 import { PollConversationView } from "../../components/LMPoll";
+import { useRoute } from "@react-navigation/native";
+import STYLES from "../../constants/Styles";
 
 interface CreatePostProps {
   children: React.ReactNode;
@@ -196,6 +198,8 @@ const CreatePostComponent = () => {
   const topicsSelected = useAppSelector(
     (state) => state.createPost.selectedTopics
   );
+  const route: any = useRoute();
+  const post = route?.params?.post;
 
   const getTopics = async () => {
     const apiRes = await myClient?.getTopics({
@@ -690,6 +694,7 @@ const CreatePostComponent = () => {
                 item={poll}
                 removePollAttachment={removePollAttachment}
                 editPollAttachment={editPollAttachment}
+                post={post}
               />
             </View>
           ) : null}
@@ -710,6 +715,7 @@ const CreatePostComponent = () => {
                   ...formattedPollAttachments[0]?.attachmentMeta,
                   disabled: true,
                 }}
+                post={post}
               />
             </View>
           ) : null}
@@ -1062,13 +1068,14 @@ const CreatePostComponent = () => {
             }}
           >
             <LMIcon
-              assetPath={require("../../assets/images/paperClip_icon3x.png")}
-              {...customAttachmentOptionsStyle?.filesAttachmentIcon}
+              assetPath={require("../../assets/images/poll_icon3x.png")}
+              style={{ tintColor: STYLES.$COLORS.PRIMARY }}
+              {...customAttachmentOptionsStyle?.pollAttachmentIcon}
             />
             <LMText
               children={<Text>{ADD_POLL}</Text>}
               textStyle={styles.selectionOptionstext}
-              {...customAttachmentOptionsStyle?.filesAttachmentTextStyle}
+              {...customAttachmentOptionsStyle?.pollAttachmentTextStyle}
             />
           </TouchableOpacity>
         </View>

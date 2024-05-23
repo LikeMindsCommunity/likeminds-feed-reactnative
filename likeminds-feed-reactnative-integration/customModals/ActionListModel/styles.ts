@@ -24,6 +24,6 @@ export const styles = StyleSheet.create({
   filterText: {
     fontSize: STYLES.$FONT_SIZES.LARGE,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
-    color: STYLES.$COLORS.FONT_PRIMARY,
+    color: STYLES.$COLORS.BLACK,
   },
 });

@@ -697,9 +697,12 @@ export const CreatePostContextProvider = ({
     await dispatch({
       type: CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
     });
+    await dispatch({
+      type: CLEAR_POLL,
+    });
     navigation.goBack();
   };
-
+  
   const contextValues: CreatePostContextValues = {
     navigation,
     route,

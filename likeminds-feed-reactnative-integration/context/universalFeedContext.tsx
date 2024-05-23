@@ -26,7 +26,11 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { showToastMessage } from "../store/actions/toast";
 import { FlatList } from "react-native";
 import { LMAttachmentUI, LMPostUI } from "../models";
-import { CREATE_POST, NOTIFICATION_FEED } from "../constants/screenNames";
+import {
+  CREATE_POST,
+  NOTIFICATION_FEED,
+  UNIVERSAL_FEED,
+} from "../constants/screenNames";
 import {
   getUnreadNotificationCount,
   notificationFeedClear,
@@ -35,6 +39,7 @@ import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
 import { Events } from "../enums/Events";
 import { Keys } from "../enums/Keys";
 import { convertPollMetaData } from "../viewDataModels";
+import { useRoute } from "@react-navigation/native";
 
 interface UniversalFeedContextProps {
   children: ReactNode;
@@ -113,6 +118,7 @@ export const UniversalFeedContextProvider = ({
   const [refreshing, setRefreshing] = useState(false);
   const [localRefresh, setLocalRefresh] = useState(false);
   const listRef = useRef<FlatList<LMPostUI>>(null);
+  const route = useRoute();
 
   useEffect(() => {
     if (accessToken) {
@@ -235,12 +241,14 @@ export const UniversalFeedContextProvider = ({
   // this useEffect handles the execution of addPost api
   useEffect(() => {
     // this checks if any media is selected to be posted and then executes the addPost api
+
     if (
-      mediaAttachmemnts.length > 0 ||
-      linkAttachments.length > 0 ||
-      postContent !== "" ||
-      topics?.length > 0 ||
-      Object.keys(poll).length > 0
+      (mediaAttachmemnts.length > 0 ||
+        linkAttachments.length > 0 ||
+        postContent !== "" ||
+        topics?.length > 0 ||
+        Object.keys(poll).length > 0) &&
+      route.name === UNIVERSAL_FEED
     ) {
       setPostUploading(true);
       postAdd();

@@ -135,7 +135,7 @@ const PostsListComponent = ({ topics }: any) => {
         : handleDeletePost(true);
     }
     if (itemId === EDIT_POST_MENU_ITEM) {
-      selectEditPostProp ? selectEditPostProp(postId) : handleEditPost(postId);
+      selectEditPostProp ? selectEditPostProp(postId, postDetail) : handleEditPost(postId, postDetail);
       LMFeedAnalytics.track(
         Events.POST_EDITED,
         new Map<string, string>([

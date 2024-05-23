@@ -10,6 +10,7 @@ import {
   DATE_TEXT,
   EMPTY_OPTIONS_WARNING,
   EXPIRY_TIME_WARNING,
+  FUTURE_TIME_WARNING,
   POLLS_OPTIONS_WARNING,
   QUESTION_WARNING,
   TIME_TEXT,
@@ -52,7 +53,7 @@ export const CreatePollContextProvider = ({
   const myClient = Client.myClient;
   const poll = useAppSelector((state) => state.createPost.pollAttachment);
   const isPoll = Object.keys(poll).length > 0;
-  
+
   const [question, setQuestion] = useState<string>(isPoll ? poll?.title : "");
   const [optionsArray, setOptionsArray] = useState<any>(
     isPoll ? poll?.options : []
@@ -125,13 +126,15 @@ export const CreatePollContextProvider = ({
 
   // this fucntion add the new option in poll
   function addNewOption() {
-    const newOptionsArr = [...optionsArray];
-    const newOption = {
-      id: Math.random(),
-      text: "",
-    };
-    newOptionsArr.push(newOption);
-    setOptionsArray(newOptionsArr);
+    if (optionsArray.length < 10) {
+      const newOptionsArr = [...optionsArray];
+      const newOption = {
+        id: Math.random(),
+        text: "",
+      };
+      newOptionsArr.push(newOption);
+      setOptionsArray(newOptionsArr);
+    }
   }
 
   // this function removes option in poll
@@ -139,6 +142,7 @@ export const CreatePollContextProvider = ({
     const newOptionsArr = [...optionsArray];
     newOptionsArr.splice(index, 1);
     setOptionsArray(newOptionsArr);
+    setVoteAllowedPerUser(1);
   }
 
   // this function changes mode and set date and time
@@ -162,9 +166,20 @@ export const CreatePollContextProvider = ({
         setShow(true); // to show the picker again in time mode
       } else {
         const selectedTime = selectedValue || newDate;
-        setTime(selectedTime);
-        setShow(false);
-        setMode(DATE_TEXT);
+        // Check if the selected date is in the future
+        const now = new Date();
+        if (selectedTime <= now) {
+          setDate("");
+          setTime(new Date());
+          dispatch({
+            type: SHOW_TOAST,
+            body: { isToast: true, message: FUTURE_TIME_WARNING },
+          });
+        } else {
+          setTime(selectedTime);
+          setShow(false);
+          setMode(DATE_TEXT);
+        }
       }
     }
   };

@@ -47,6 +47,7 @@ const PollConversationUI = ({
   pollAnswerText,
   isPollEnded,
   multipleSelectNo,
+  multipleSelectState,
   stringManipulation,
   dateManipulation,
   getTimeLeftInPoll,
@@ -58,6 +59,8 @@ const PollConversationUI = ({
   maxQuestionLines,
   removePollAttachment,
   editPollAttachment,
+  post,
+  isMultiChoicePoll,
 }: PollConversationUIProps) => {
   const pollStyles = STYLES.$POLL_STYLES;
 
@@ -111,7 +114,7 @@ const PollConversationUI = ({
           ) : null}
         </View>
 
-        {multipleSelectNo > 1 ? (
+        {isMultiChoicePoll(multipleSelectNo, multipleSelectState) ? (
           <Text
             style={[
               styles.mediumText,
@@ -180,7 +183,9 @@ const PollConversationUI = ({
 
                     {allowAddOption ? (
                       <Text style={[styles.smallText10, styles.greyColor]}>
-                        {`Added by ${element?.uuid}`}
+                        {`Added by ${
+                          post ? post?.users[element?.uuid]?.name : user?.name
+                        }`}
                       </Text>
                     ) : null}
                   </Text>
@@ -305,13 +310,32 @@ const PollConversationUI = ({
                   hasPollEnded
                     ? "Poll Ended"
                     : getTimeLeftInPoll(Number(expiryTime))
+                } ${
+                  isPollEnded &&
+                  shouldShowVotes &&
+                  pollType === PollType.DEFERRED
+                    ? "•"
+                    : ""
                 }`}</Text>
+                {isPollEnded &&
+                shouldShowVotes &&
+                pollType === PollType.DEFERRED ? (
+                  <Text
+                    onPress={() => {
+                      resetShowResult();
+                    }}
+                    style={styles.mediumText}
+                  >{` ${EDIT_POLL_TEXT}
+                 `}</Text>
+                ) : null}
               </Text>
             </Pressable>
           ) : null}
 
           {/* Submit vote button */}
-          {isPollEnded && multipleSelectNo > 1 && !shouldShowVotes ? (
+          {isPollEnded &&
+          isMultiChoicePoll(multipleSelectNo, multipleSelectState) &&
+          !shouldShowVotes ? (
             <View style={styles.marginSpace}>
               <TouchableOpacity
                 onPress={() => {
@@ -321,23 +345,17 @@ const PollConversationUI = ({
                   styles.submitVoteButton,
                   styles.alignRow,
                   !shouldShowSubmitPollButton ? styles.greyBorder : null,
-                  { backgroundColor: styles.whiteColor.color },
+                  !shouldShowSubmitPollButton
+                    ? { backgroundColor: styles.whiteColor.color }
+                    : null,
                   hue ? { backgroundColor: `hsl(${hue}, 47%, 31%)` } : null,
                 ]}
               >
-                <Image
-                  style={[
-                    styles.editIcon,
-                    !shouldShowSubmitPollButton
-                      ? { tintColor: styles.greyColor.color }
-                      : null,
-                  ]}
-                  source={require("../../../assets/images/submit_click3x.png")}
-                />
                 <Text
                   style={[
                     styles.textAlignCenter,
                     styles.smallTextMedium,
+                    { color: "white" },
                     !shouldShowSubmitPollButton ? styles.greyColor : null,
                   ]}
                 >
@@ -345,36 +363,6 @@ const PollConversationUI = ({
                 </Text>
               </TouchableOpacity>
             </View>
-          ) : null}
-
-          {/* Edit Poll button */}
-          {isPollEnded &&
-          multipleSelectNo > 1 &&
-          shouldShowVotes &&
-          pollType === PollType.DEFERRED ? (
-            <TouchableOpacity
-              onPress={() => {
-                resetShowResult();
-              }}
-              style={[
-                styles.submitVoteButton,
-                styles.alignRow,
-                styles.justifyCenter,
-                {
-                  backgroundColor: styles.whiteColor.color,
-                  marginTop: Layout.normalize(10),
-                },
-                hue ? { backgroundColor: `hsl(${hue}, 47%, 31%)` } : null,
-              ]}
-            >
-              <Image
-                style={[styles.editIcon]}
-                source={require("../../../assets/images/edit_icon3x.png")}
-              />
-              <Text style={[styles.textAlignCenter, styles.smallTextMedium]}>
-                {EDIT_POLL_TEXT}
-              </Text>
-            </TouchableOpacity>
           ) : null}
         </>
       ) : null}

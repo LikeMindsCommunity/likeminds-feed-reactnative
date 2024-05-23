@@ -35,9 +35,9 @@ const Feed = ({route}) => {
     savePostHandler(postId, saved);
     console.log('after save', postId, saved);
   };
-  const customHandleEdit = postId => {
-    console.log('before edit select');
-    handleEditPost(postId);
+  const customHandleEdit = (postId, post) => {
+    console.log('before edit select', post);
+    handleEditPost(postId, post);
     console.log('after edit select', postId);
   };
   const customHandlePin = (postId, pinned) => {
@@ -124,7 +124,7 @@ const Feed = ({route}) => {
       postLikeHandlerProp={id => customPostLike(id)}
       savePostHandlerProp={(id, saved) => customPostSave(id, saved)}
       onSelectCommentCountProp={id => customHandleCommentClick(id)}
-      selectEditPostProp={id => customHandleEdit(id)}
+      selectEditPostProp={(id, post) => customHandleEdit(id, post)}
       selectPinPostProp={(id, pinned) => customHandlePin(id, pinned)}
       onTapLikeCountProps={id => customHandleLikeCountClick(id)}
       handleDeletePostProps={(visible, postId) =>

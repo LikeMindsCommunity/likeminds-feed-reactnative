@@ -3,7 +3,9 @@ import React, { useEffect, useState } from "react";
 import {
   ANONYMOUS_POLL_SUB_TITLE,
   ANONYMOUS_POLL_TITLE,
+  EMPTY_OPTIONS_WARNING,
   MAX_DEFAULT_POST_CONTENT_LINES,
+  POLLS_OPTIONS_WARNING,
   POLL_ENDED_WARNING,
   POLL_MULTIPLE_STATE_EXACTLY,
   POLL_MULTIPLE_STATE_LEAST,
@@ -37,7 +39,7 @@ const PollConversationView = ({
   const myClient = Client.myClient;
   const { navigation } = useUniversalFeedContext();
 
-  const [selectedPolls, setSelectedPolls] = useState<any>([]);
+  const [selectedPolls, setSelectedPolls] = useState<number[]>([]);
   const [showSelected, setShowSelected] = useState(false);
   const [shouldShowSubmitPollButton, setShouldShowSubmitPollButton] =
     useState(false);
@@ -70,7 +72,7 @@ const PollConversationView = ({
       navigation.navigate(POLL_RESULT, {
         screen: val,
         tabsValueArr: pollsArr,
-        voteId: item?.id,
+        pollId: item?.id,
       });
     }
   };
@@ -112,14 +114,11 @@ const PollConversationView = ({
             // show submit poll button
             setShouldShowSubmitPollButton(true);
           } else if (selectedPolls.length > MAX_POLL_OPTIONS) {
-            // show toast
-            dispatch({
-              type: SHOW_TOAST,
-              body: {
-                isToast: true,
-                message: `You can select max ${item?.multipleSelectNumber} options. Unselect an option or submit your vote now`,
-              },
-            });
+            // hide submit poll button
+            setShouldShowSubmitPollButton(false);
+          } else if (selectedPolls.length < MAX_POLL_OPTIONS) {
+            // hide submit poll button
+            setShouldShowSubmitPollButton(false);
           }
           break;
         }
@@ -212,18 +211,22 @@ const PollConversationView = ({
   };
   // this function resets showResult state
   const resetShowResult = () => {
-    const arr = pollsArr.map((item: any) => {
+    const updatedSelectedPolls: number[] = [];
+    const arr = pollsArr.map((option: any, index: number) => {
+      if (item?.multipleSelectNumber > 1 && option.isSelected) {
+        updatedSelectedPolls.push(index);
+      }
       return {
-        ...item,
+        ...option,
         isSelected: false,
         percentage: 0,
-        noVotes: 0,
+        voteCount: 0,
       };
     });
     setPollsArr([...arr]);
     setShowResultsButton(false);
     setShouldShowVotes(false);
-    setSelectedPolls([]);
+    setSelectedPolls(updatedSelectedPolls);
   };
 
   useEffect(() => {
@@ -248,6 +251,23 @@ const PollConversationView = ({
   async function addPollOption() {
     try {
       if (addOptionInputField.length === 0) {
+        return;
+      }
+
+      let shouldBreak = false;
+      const polls = pollsArr.map((item: any) => {
+        if (item?.text === addOptionInputField) {
+          setIsAddPollOptionModalVisible(false);
+          setAddOptionInputField("");
+          dispatch({
+            type: SHOW_TOAST,
+            body: { isToast: true, message: POLLS_OPTIONS_WARNING },
+          });
+          shouldBreak = true;
+        }
+      });
+
+      if (shouldBreak) {
         return;
       }
 
@@ -299,7 +319,13 @@ const PollConversationView = ({
       }
 
       // if only one option is allowed
-      if (item?.multipleSelectNumber === 1 || !item?.multipleSelectNumber) {
+      if (
+        !isMultiChoicePoll(
+          item?.multipleSelectNumber,
+          item?.multipleSelectState
+        ) &&
+        (item?.multipleSelectNumber === 1 || !item?.multipleSelectNumber)
+      ) {
         // can change selected ouptput in deferred poll
         if (item?.pollType === PollType.DEFERRED) {
           const pollSubmissionCall = await myClient.submitPollVote({
@@ -429,6 +455,7 @@ const PollConversationView = ({
     return formattedDate;
   };
 
+  // this method calculate days to expiry for preview
   const calculateDaysToExpiry = () => {
     const difference = item?.expiryTime - Date.now();
 
@@ -487,6 +514,14 @@ const PollConversationView = ({
     }
   }
 
+  // this function checks if poll is multiple choice or not
+  function isMultiChoicePoll(pollMultiSelectNo, pollMultiSelectState) {
+    return !(
+      pollMultiSelectState === PollMultiSelectState.EXACTLY &&
+      pollMultiSelectNo === 1
+    );
+  }
+
   // readonly props consumed by UI component
   const props: PollConversationViewState = {
     text: item?.title,
@@ -517,7 +552,7 @@ const PollConversationView = ({
     disabled: item?.disabled ? item?.disabled : false,
     truncatedText: truncatedText,
     maxQuestionLines: MAX_LINES,
-    post: post
+    post: post,
   };
 
   return (
@@ -537,6 +572,7 @@ const PollConversationView = ({
         removePollAttachment={removePollAttachment}
         editPollAttachment={editPollAttachment}
         getTimeLeftInPoll={getTimeLeftInPoll}
+        isMultiChoicePoll={isMultiChoicePoll}
         {...props}
       />
       <AddOptionsModal

@@ -1,4 +1,5 @@
 import { GestureResponderEvent, TextLayoutLine } from "react-native/types";
+import { PollMultiSelectState } from "../../../enums/Poll";
 
 export interface PollConversationViewCallbacks {
   onNavigate: (val: string) => void;
@@ -17,4 +18,5 @@ export interface PollConversationViewCallbacks {
     nativeEvent: { lines: string | TextLayoutLine[] };
   }) => void;
   getTimeLeftInPoll: (expiryTime: number | null) => string;
+  isMultiChoicePoll: (pollMultiSelectNo: number, pollMultiSelectState: PollMultiSelectState) => boolean;
 }

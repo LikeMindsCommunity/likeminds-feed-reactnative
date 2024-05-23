@@ -79,9 +79,11 @@ const CreatePollUI = () => {
             value={question}
             onChangeText={handleQuestion}
             placeholder={PLACEHOLDER_VALUE}
-            style={[styles.font, styles.blackColor]}
+            style={[styles.font, styles.blackColor, { maxHeight: 100 }]}
             placeholderTextColor="#c5c5c5"
             multiline
+            numberOfLines={3}
+            textAlignVertical="top"
           />
         </View>
       </View>
@@ -117,7 +119,7 @@ const CreatePollUI = () => {
                     handleInputOptionsChangeFunction(index, e);
                   }}
                 />
-                {index > 1 ? (
+                {optionsArray.length > 2 ? (
                   <TouchableOpacity
                     onPress={() => {
                       removeAnOption(index);
