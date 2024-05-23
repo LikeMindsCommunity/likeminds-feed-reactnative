@@ -134,7 +134,7 @@ const PollConversationUI = ({
           const voteCount = element?.voteCount;
           const isPollSentByMe = user?.uuid === element?.uuid ? true : false;
           return (
-            <View key={element?.id} style={styles.gap}>
+            <View key={element?.Id} style={styles.gap}>
               <Pressable
                 disabled={disabled}
                 onPress={() => {

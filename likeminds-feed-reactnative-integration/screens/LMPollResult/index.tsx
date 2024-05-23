@@ -84,7 +84,7 @@ export const PollResult = ({ navigation, route }: any) => {
         {tabsValueArr?.map((val: any, index: any) => {
           return (
             <PollStack.Screen
-              //   key={val?.id}
+              key={val?.Id}
               name={val?.text}
               children={(props: any) => (
                 <TabScreenUI pollID={pollId} votes={val?.Id} {...props} />

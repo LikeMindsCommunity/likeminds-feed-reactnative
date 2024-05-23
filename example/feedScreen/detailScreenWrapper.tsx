@@ -7,7 +7,7 @@ import {
 
 const DetailWrapper = ({navigation, route}) => {
   return (
-    <UniversalFeedContextProvider>
+    <UniversalFeedContextProvider navigation={navigation} route={route}>
       <PostDetailContextProvider navigation={navigation} route={route}>
         <DetailScreen />
       </PostDetailContextProvider>
