@@ -3,21 +3,12 @@ import {
   CreatePollContextProvider,
 } from '@likeminds.community/feed-rn-core';
 import React from 'react';
+import CreatePollScreen from './createPollScreen';
 
 const CreatePollScreenWrapper = ({navigation, route}) => {
-
-//   const onPollExpiryTimeClicked = () => {};
-//   const onAddOptionClicked = () => {};
-//   const onPollOptionCleared = () => {};
-//   const onPollCompleteClicked = () => {};
   return (
     <CreatePollContextProvider navigation={navigation} route={route}>
-      <LMFeedCreatePollScreen
-        // onPollExpiryTimeClicked={onPollExpiryTimeClicked}
-        // onAddOptionClicked={onAddOptionClicked}
-        // onPollOptionCleared={onPollOptionCleared}
-        // onPollCompleteClicked={onPollCompleteClicked}
-      />
+      <CreatePollScreen />
     </CreatePollContextProvider>
   );
 };
