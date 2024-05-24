@@ -532,8 +532,6 @@ const CreatePostComponent = () => {
           )
         )}
 
-        <View style={styles.border}></View>
-
         {/* text input field */}
         <LMInputText
           {...customTextInputStyle}
@@ -694,7 +692,7 @@ const CreatePostComponent = () => {
             <View
               style={{
                 padding: 20,
-                margin: 20,
+                marginHorizontal: 20,
                 borderRadius: 5,
                 borderColor: "#c5c5c5",
                 borderWidth: 1,
@@ -714,7 +712,7 @@ const CreatePostComponent = () => {
             <View
               style={{
                 padding: 20,
-                margin: 20,
+                marginHorizontal: 20,
                 borderRadius: 5,
                 borderColor: "#c5c5c5",
                 borderWidth: 1,

@@ -110,17 +110,19 @@ const LMPostPollUI = ({
             alignItems: "flex-start",
           }}
         >
-          {truncatedText ? (
-            <LMPostPollText truncatedText={truncatedText} fullText={text} />
-          ) : (
-            <LMText
-              maxLines={maxQuestionLines}
-              textStyle={[styles.text, styles.blackColor, pollQuestionStyles]}
-              onTextLayout={(e) => onQuestionTextLayout(e)}
-            >
-              {text}
-            </LMText>
-          )}
+          <View style={{ flex: 1 }}>
+            {truncatedText ? (
+              <LMPostPollText truncatedText={truncatedText} fullText={text} />
+            ) : (
+              <LMText
+                maxLines={maxQuestionLines}
+                textStyle={[styles.text, styles.blackColor, pollQuestionStyles]}
+                onTextLayout={(e) => onQuestionTextLayout(e)}
+              >
+                {text}
+              </LMText>
+            )}
+          </View>
 
           {disabled && removePollAttachment ? (
             <View

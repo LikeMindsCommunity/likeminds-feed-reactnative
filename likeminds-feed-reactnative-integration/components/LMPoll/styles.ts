@@ -58,6 +58,9 @@ export const styles = StyleSheet.create({
   paddingVertical10: {
     paddingVertical: Layout.normalize(10),
   },
+  paddingVertical15: {
+    paddingVertical: Layout.normalize(10),
+  },
   marginSpace: {
     marginTop: Layout.normalize(10),
   },

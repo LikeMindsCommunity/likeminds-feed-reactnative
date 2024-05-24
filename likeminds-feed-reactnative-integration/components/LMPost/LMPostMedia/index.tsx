@@ -87,7 +87,7 @@ const LMPostMedia = React.memo(() => {
       case POLL_ATTACHMENT_TYPE: {
         return (
           /* @ts-ignore */
-          <View style={{padding:20}}>
+          <View style={{paddingHorizontal:20}}>
             <LMPostPollView item={post?.attachments && post?.attachments[0]?.attachmentMeta} post={post}  />
           </View>
         );

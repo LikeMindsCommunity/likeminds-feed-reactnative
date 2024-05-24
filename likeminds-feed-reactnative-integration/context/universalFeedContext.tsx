@@ -298,13 +298,13 @@ export const UniversalFeedContextProvider = ({
   // this function call an API which adds a poll option in existing poll
   async function addPollOption({
     addOptionInputField,
-    options : pollsArr,
+    options: pollsArr,
     poll,
     setIsAddPollOptionModalVisible,
     setAddOptionInputField,
     reloadPost,
   }) {
-    const item = poll?.attachments[0]?.attachmentMeta
+    const item = poll?.attachments[0]?.attachmentMeta;
     try {
       if (addOptionInputField.length === 0) {
         return;
@@ -360,7 +360,7 @@ export const UniversalFeedContextProvider = ({
     reloadPost,
     setSelectedPolls,
   }) {
-    const item = poll?.attachments[0]?.attachmentMeta
+    const item = poll?.attachments[0]?.attachmentMeta;
     if (Date.now() > item?.expiryTime) {
       dispatch({
         type: SHOW_TOAST,
@@ -434,12 +434,26 @@ export const UniversalFeedContextProvider = ({
       switch (item?.multipleSelectState) {
         case PollMultiSelectState.EXACTLY: {
           if (selectedPolls.length === item?.multipleSelectNumber) {
+            dispatch({
+              type: SHOW_TOAST,
+              body: {
+                isToast: true,
+                message: `Select exactly ${item?.multipleSelectNumber} options`,
+              },
+            });
             return;
           }
           break;
         }
         case PollMultiSelectState.AT_MAX: {
           if (selectedPolls.length == item?.multipleSelectNumber) {
+            dispatch({
+              type: SHOW_TOAST,
+              body: {
+                isToast: true,
+                message: `Select at most ${item?.multipleSelectNumber} options`,
+              },
+            });
             return;
           }
           break;
@@ -460,7 +474,7 @@ export const UniversalFeedContextProvider = ({
     setSelectedPolls,
     stringManipulation,
   }) {
-    const item = poll?.attachments[0]?.attachmentMeta
+    const item = poll?.attachments[0]?.attachmentMeta;
     if (shouldShowSubmitPollButton) {
       try {
         const votes = selectedPolls?.map((itemIndex: any) => {

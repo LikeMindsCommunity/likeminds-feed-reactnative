@@ -299,7 +299,7 @@ const CreatePollUI = () => {
             style={[
               styles.alignRow,
               styles.justifySpace,
-              styles.paddingVertical10,
+              styles.paddingVertical15,
               styles.borderBottom,
               styles.paddingHorizontal15,
             ]}
@@ -330,7 +330,7 @@ const CreatePollUI = () => {
             style={[
               styles.alignRow,
               styles.justifySpace,
-              styles.paddingVertical10,
+              styles.paddingVertical15,
               styles.borderBottom,
               styles.paddingHorizontal15,
             ]}
@@ -361,7 +361,7 @@ const CreatePollUI = () => {
             style={[
               styles.alignRow,
               styles.justifySpace,
-              styles.paddingVertical10,
+              styles.paddingVertical15,
               styles.borderBottom,
               styles.paddingHorizontal15,
             ]}
