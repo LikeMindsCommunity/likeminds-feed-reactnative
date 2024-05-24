@@ -57,6 +57,7 @@ import LMPostMenu from "../../customModals/LMPostMenu";
 import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Events } from "../../enums/Events";
 import { Keys } from "../../enums/Keys";
+import { PollCustomisableMethodsContextProvider } from "../../context/pollCustomisableCallback";
 
 interface PostDetailProps {
   children: React.ReactNode;
@@ -88,6 +89,9 @@ interface PostDetailProps {
     commentId: string
   ) => void;
   onSharePostClicked: (id: string) => void;
+  onSubmitButtonClicked: any;
+  onAddPollOptionsClicked: any;
+  onPollOptionClicked: any;
 }
 
 const PostDetail = ({
@@ -104,22 +108,31 @@ const PostDetail = ({
   handleScreenBackPressProp,
   onCommentOverflowMenuClickProp,
   onSharePostClicked,
+  onSubmitButtonClicked,
+  onAddPollOptionsClicked,
+  onPollOptionClicked,
 }: PostDetailProps) => {
   return (
-    <PostDetailCustomisableMethodsContextProvider
-      getCommentsRepliesProp={getCommentsRepliesProp}
-      commentLikeHandlerProp={commentLikeHandlerProp}
-      addNewCommentProp={addNewCommentProp}
-      addNewReplyProp={addNewReplyProp}
-      handleDeleteCommentProp={handleDeleteCommentProp}
-      handleEditCommentProp={handleEditCommentProp}
-      handleReportCommentProp={handleReportCommentProp}
-      handleScreenBackPressProp={handleScreenBackPressProp}
-      onCommentOverflowMenuClickProp={onCommentOverflowMenuClickProp}
-      onSharePostClicked={onSharePostClicked}
+    <PollCustomisableMethodsContextProvider
+      onSubmitButtonClicked={onSubmitButtonClicked}
+      onAddPollOptionsClicked={onAddPollOptionsClicked}
+      onPollOptionClicked={onPollOptionClicked}
     >
-      <PostDetailComponent />
-    </PostDetailCustomisableMethodsContextProvider>
+      <PostDetailCustomisableMethodsContextProvider
+        getCommentsRepliesProp={getCommentsRepliesProp}
+        commentLikeHandlerProp={commentLikeHandlerProp}
+        addNewCommentProp={addNewCommentProp}
+        addNewReplyProp={addNewReplyProp}
+        handleDeleteCommentProp={handleDeleteCommentProp}
+        handleEditCommentProp={handleEditCommentProp}
+        handleReportCommentProp={handleReportCommentProp}
+        handleScreenBackPressProp={handleScreenBackPressProp}
+        onCommentOverflowMenuClickProp={onCommentOverflowMenuClickProp}
+        onSharePostClicked={onSharePostClicked}
+      >
+        <PostDetailComponent />
+      </PostDetailCustomisableMethodsContextProvider>
+    </PollCustomisableMethodsContextProvider>
   );
 };
 

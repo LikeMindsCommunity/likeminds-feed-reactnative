@@ -27,6 +27,7 @@ import STYLES from "../../../constants/Styles";
 import Layout from "../../../constants/Layout";
 import { useCreatePollContext } from "../../../context/createPollContextProvider";
 import { useLMFeedStyles } from "../../../lmFeedProvider";
+import { useCreatePollCustomisableMethodsContext } from "../../../context/createPollCallbacksContext";
 
 const CreatePollUI = () => {
   const {
@@ -59,7 +60,6 @@ const CreatePollUI = () => {
     handleInputOptionsChangeFunction,
     addNewOption,
     removeAnOption,
-    postPoll,
     handleQuestion,
     handleOnSelect,
     handleOnSelectOption,
@@ -67,6 +67,12 @@ const CreatePollUI = () => {
     handleOpenOptionModal,
     resetDateTimePicker,
   }: CreatePollProps = useCreatePollContext();
+
+  const {
+    onPollExpiryTimeClicked,
+    onAddOptionClicked,
+    onPollOptionCleared,
+  } = useCreatePollCustomisableMethodsContext();
 
   const LMFeedContextStyles = useLMFeedStyles();
   const { createPollStyle } = LMFeedContextStyles;
@@ -148,7 +154,7 @@ const CreatePollUI = () => {
                 {optionsArray.length > 2 ? (
                   <TouchableOpacity
                     onPress={() => {
-                      removeAnOption(index);
+                      onPollOptionCleared ? onPollOptionCleared(index) : removeAnOption(index);
                     }}
                   >
                     <Image
@@ -166,7 +172,7 @@ const CreatePollUI = () => {
         })}
 
         <TouchableOpacity
-          onPress={addNewOption}
+          onPress={onAddOptionClicked ? onAddOptionClicked : addNewOption}
           style={[
             styles.alignRow,
             styles.marginSpace,
@@ -198,7 +204,7 @@ const CreatePollUI = () => {
         <View style={styles.question}>
           <TouchableOpacity
             onPress={() => {
-              showDatePicker();
+              onPollExpiryTimeClicked ? onPollExpiryTimeClicked () : showDatePicker();
             }}
           >
             <View

@@ -14,7 +14,7 @@ import {
   MAX_DEFAULT_POST_CONTENT_LINES,
   SUBMIT_VOTE_TITLE,
 } from "../../../constants/Strings";
-import { PollConversationUIProps } from "../models";
+import { LMPostPollUIProps } from "../models";
 import Layout from "../../../constants/Layout";
 import STYLES from "../../../constants/Styles";
 import LMPostPollText from "../../LMPost/LMPostPollText";
@@ -22,8 +22,10 @@ import { decode } from "../../../utils";
 import { LMText } from "../../../uiComponents";
 import { PollType } from "../../../enums/Poll";
 import { useLMFeedStyles } from "../../../lmFeedProvider";
+import { useUniversalFeedCustomisableMethodsContext } from "../../../context";
+import { usePollCustomisableMethodsContext } from "../../../context/pollCustomisableCallback";
 
-const PollConversationUI = ({
+const LMPostPollUI = ({
   text,
   hue,
   onNavigate,
@@ -62,7 +64,17 @@ const PollConversationUI = ({
   editPollAttachment,
   post,
   isMultiChoicePoll,
-}: PollConversationUIProps) => {
+  reloadPost,
+  setSelectedPolls,
+  setShouldShowVotes,
+}: LMPostPollUIProps) => {
+  const {
+    onSubmitButtonClicked,
+    onPollOptionClicked,
+    onPollEditClicked,
+    onPollClearClicked,
+  } = usePollCustomisableMethodsContext();
+
   //styling props
   const LMFeedContextStyles = useLMFeedStyles();
   const { pollStyle } = LMFeedContextStyles;
@@ -120,7 +132,9 @@ const PollConversationUI = ({
             >
               <TouchableOpacity
                 style={editPollOptionsStyles ? editPollOptionsStyles : null}
-                onPress={editPollAttachment}
+                onPress={
+                  onPollEditClicked ? onPollEditClicked : editPollAttachment
+                }
               >
                 <Image
                   style={[styles.editImage, { tintColor: "black" }]}
@@ -133,7 +147,9 @@ const PollConversationUI = ({
               </TouchableOpacity>
               <TouchableOpacity
                 style={clearPollOptionsStyles ? clearPollOptionsStyles : null}
-                onPress={removePollAttachment}
+                onPress={
+                  onPollClearClicked ? onPollClearClicked : removePollAttachment
+                }
               >
                 <Image
                   style={styles.editImage}
@@ -174,7 +190,19 @@ const PollConversationUI = ({
                 disabled={disabled}
                 onPress={() => {
                   setShowSelected(!showSelected);
-                  setSelectedPollOptions(index);
+                  const payload = {
+                    pollIndex: index,
+                    poll: post,
+                    selectedPolls,
+                    options: optionArr,
+                    shouldShowVotes,
+                    isMultiChoicePoll,
+                    reloadPost,
+                    setSelectedPolls,
+                  };
+                  onPollOptionClicked
+                    ? onPollOptionClicked(payload)
+                    : setSelectedPollOptions(payload);
                 }}
                 style={({ pressed }) =>
                   !disabled
@@ -417,7 +445,18 @@ const PollConversationUI = ({
             <View style={styles.marginSpace}>
               <TouchableOpacity
                 onPress={() => {
-                  submitPoll();
+                  const payload = {
+                    shouldShowSubmitPollButton,
+                    selectedPolls,
+                    poll: post,
+                    reloadPost,
+                    setShouldShowVotes,
+                    setSelectedPolls,
+                    stringManipulation,
+                  };
+                  onSubmitButtonClicked
+                    ? onSubmitButtonClicked(payload)
+                    : submitPoll(payload);
                 }}
                 style={[
                   styles.submitVoteButton,
@@ -462,4 +501,4 @@ const PollConversationUI = ({
   );
 };
 
-export default PollConversationUI;
+export default LMPostPollUI;

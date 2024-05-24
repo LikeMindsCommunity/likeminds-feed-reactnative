@@ -13,13 +13,10 @@ import {
   POLL_MULTIPLE_STATE_MAX,
   POLL_SUBMITTED_SUCCESSFULLY,
 } from "../../../constants/Strings";
-import PollConversationUI from "../PollConversationUI";
+import LMPostPollUI from "../LMPostPollUI";
 import AnonymousPollModal from "../../../customModals/AnonymousPollModal";
 import AddOptionsModal from "../../../customModals/AddOptionModal";
-import {
-  PollConversationViewProps,
-  PollConversationViewState,
-} from "../models";
+import { LMPostPollViewProps, LMPostPollViewState } from "../models";
 import { Client } from "../../../client";
 import STYLES from "../../../constants/Styles";
 
@@ -31,14 +28,14 @@ import { GetPostRequest } from "@likeminds.community/feed-js";
 import { getPost } from "../../../store/actions/postDetail";
 import { useUniversalFeedContext } from "../../../context";
 
-const PollConversationView = ({
+const LMPostPollView = ({
   item,
   post,
   removePollAttachment,
   editPollAttachment,
 }: any) => {
-  const myClient = Client.myClient;
-  const { navigation } = useUniversalFeedContext();
+  const { navigation, setSelectedPollOptions, addPollOption, submitPoll } =
+    useUniversalFeedContext();
 
   const [selectedPolls, setSelectedPolls] = useState<number[]>([]);
   const [showSelected, setShowSelected] = useState(false);
@@ -250,8 +247,8 @@ const PollConversationView = ({
     setPollsArr(item?.options);
   }, [item?.options]);
 
-  // API to reload the existing poll conversation
-  async function reloadConversation() {
+  // API to reload the existing poll post
+  async function reloadPost() {
     const getPostResponse = await dispatch(
       getPost(
         GetPostRequest.builder()
@@ -262,176 +259,6 @@ const PollConversationView = ({
         false
       )
     );
-  }
-
-  // this function call an API which adds a poll option in existing poll
-  async function addPollOption() {
-    try {
-      if (addOptionInputField.length === 0) {
-        return;
-      }else if(pollsArr.length >= 10){
-        setIsAddPollOptionModalVisible(false);
-        setAddOptionInputField("");
-        dispatch({
-          type: SHOW_TOAST,
-          body: { isToast: true, message: POLLS_OPTIONS_LIMIT_WARNING },
-        });
-        return;
-      }
-
-      let shouldBreak = false;
-      const polls = pollsArr.map((item: any) => {
-        if (item?.text === addOptionInputField) {
-          setIsAddPollOptionModalVisible(false);
-          setAddOptionInputField("");
-          dispatch({
-            type: SHOW_TOAST,
-            body: { isToast: true, message: POLLS_OPTIONS_WARNING },
-          });
-          shouldBreak = true;
-        }
-      });
-
-      if (shouldBreak) {
-        return;
-      }
-
-      setIsAddPollOptionModalVisible(false);
-      setAddOptionInputField("");
-
-      const payload = {
-        pollId: item?.id,
-        text: addOptionInputField,
-      };
-      await myClient.addPollOption(payload);
-      await reloadConversation();
-    } catch (error) {
-      // process error
-    }
-  }
-
-  // this function used we interact with poll options
-  async function setSelectedPollOptions(pollIndex: any) {
-    if (Date.now() > item?.expiryTime) {
-      dispatch({
-        type: SHOW_TOAST,
-        body: { isToast: true, message: POLL_ENDED_WARNING },
-      });
-      return;
-    }
-    const newSelectedPolls = [...selectedPolls];
-    const isPollIndexIncluded = newSelectedPolls.includes(pollIndex);
-
-    if (isPollIndexIncluded) {
-      // if poll item is already selected
-      const isSelected = item?.options?.some((poll: any) => {
-        return poll?.isSelected;
-      });
-      const selectedIndex = newSelectedPolls.findIndex(
-        (index) => index === pollIndex
-      );
-      newSelectedPolls.splice(selectedIndex, 1);
-    } else {
-      const isSelected = pollsArr?.some((poll: any) => {
-        return poll?.isSelected;
-      });
-
-      // Already submitted poll condition
-      if (isSelected && item?.pollType === PollType.INSTANT) {
-        return;
-      } else if (item?.pollType === PollType.DEFERRED && shouldShowVotes) {
-        return;
-      }
-
-      // if only one option is allowed
-      if (
-        !isMultiChoicePoll(
-          item?.multipleSelectNumber,
-          item?.multipleSelectState
-        ) &&
-        (item?.multipleSelectNumber === 1 || !item?.multipleSelectNumber)
-      ) {
-        // can change selected ouptput in deferred poll
-        if (item?.pollType === PollType.DEFERRED) {
-          const pollSubmissionCall = await myClient.submitPollVote({
-            pollId: item?.id,
-            votes: [item?.options[pollIndex]?.Id],
-          });
-          await reloadConversation();
-          dispatch({
-            type: SHOW_TOAST,
-            body: { isToast: true, message: POLL_SUBMITTED_SUCCESSFULLY },
-          });
-        } else {
-          // for instant poll selection only for once
-
-          // if not selected
-          if (!isSelected) {
-            const pollSubmissionCall = await myClient.submitPollVote({
-              pollId: item?.id,
-              votes: [item?.options[pollIndex]?.Id],
-            });
-            await reloadConversation();
-            dispatch({
-              type: SHOW_TOAST,
-              body: { isToast: true, message: POLL_SUBMITTED_SUCCESSFULLY },
-            });
-          }
-        }
-        return;
-      }
-
-      // multiple options are allowed
-      switch (item?.multipleSelectState) {
-        case PollMultiSelectState.EXACTLY: {
-          if (selectedPolls.length === item?.multipleSelectNumber) {
-            return;
-          }
-          break;
-        }
-        case PollMultiSelectState.AT_MAX: {
-          if (selectedPolls.length == item?.multipleSelectNumber) {
-            return;
-          }
-          break;
-        }
-      }
-      newSelectedPolls.push(pollIndex);
-    }
-    setSelectedPolls(newSelectedPolls);
-  }
-
-  // this function call submit poll button API
-  async function submitPoll() {
-    if (shouldShowSubmitPollButton) {
-      try {
-        const votes = selectedPolls?.map((itemIndex: any) => {
-          return item?.options[itemIndex]?.Id;
-        });
-        const pollSubmissionCall = await myClient.submitPollVote({
-          pollId: item?.id,
-          votes: votes,
-        });
-        await reloadConversation();
-        setShouldShowVotes(true);
-        setSelectedPolls([]);
-        dispatch({
-          type: SHOW_TOAST,
-          body: { isToast: true, message: POLL_SUBMITTED_SUCCESSFULLY },
-        });
-      } catch (error) {
-        // process error
-      }
-    } else {
-      const string = stringManipulation(true);
-      dispatch({
-        type: SHOW_TOAST,
-        body: {
-          isToast: true,
-          message: string,
-        },
-      });
-    }
   }
 
   const stringManipulation = (val?: boolean) => {
@@ -551,7 +378,7 @@ const PollConversationView = ({
   }
 
   // readonly props consumed by UI component
-  const props: PollConversationViewState = {
+  const props: LMPostPollViewState = {
     text: item?.title,
     votes: pollVoteCount,
     optionArr: pollsArr,
@@ -585,7 +412,7 @@ const PollConversationView = ({
 
   return (
     <View>
-      <PollConversationUI
+      <LMPostPollUI
         onNavigate={onNavigate}
         setSelectedPollOptions={setSelectedPollOptions}
         addPollOption={addPollOption}
@@ -601,6 +428,9 @@ const PollConversationView = ({
         editPollAttachment={editPollAttachment}
         getTimeLeftInPoll={getTimeLeftInPoll}
         isMultiChoicePoll={isMultiChoicePoll}
+        reloadPost={reloadPost}
+        setSelectedPolls={setSelectedPolls}
+        setShouldShowVotes={setShouldShowVotes}
         {...props}
       />
       <AddOptionsModal
@@ -609,6 +439,9 @@ const PollConversationView = ({
         addOptionInputField={addOptionInputField}
         setAddOptionInputField={setAddOptionInputField}
         handelAddOptionSubmit={addPollOption}
+        pollsArr={pollsArr}
+        post={post}
+        reloadPost={reloadPost}
       />
       <AnonymousPollModal
         isAnonymousPollModalVisible={isAnonymousPollModalVisible}
@@ -620,4 +453,4 @@ const PollConversationView = ({
   );
 };
 
-export default PollConversationView;
+export default LMPostPollView;

@@ -17,7 +17,7 @@ import {
 } from "../../../constants/Strings";
 import { LMPostContextValues, useLMPostContext } from "../../../context";
 import { useLMFeedStyles } from "../../../lmFeedProvider";
-import PollConversationView from "../../LMPoll/PollConversationView";
+import LMPostPollView from "../../LMPoll/LMPostPollView";
 
 const LMPostMedia = React.memo(() => {
   const { post, mediaProps }: LMPostContextValues = useLMPostContext();
@@ -88,7 +88,7 @@ const LMPostMedia = React.memo(() => {
         return (
           /* @ts-ignore */
           <View style={{padding:20}}>
-            <PollConversationView item={post?.attachments && post?.attachments[0]?.attachmentMeta} post={post}  />
+            <LMPostPollView item={post?.attachments && post?.attachments[0]?.attachmentMeta} post={post}  />
           </View>
         );
       }

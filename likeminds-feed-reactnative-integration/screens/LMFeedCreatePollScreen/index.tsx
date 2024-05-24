@@ -19,21 +19,44 @@ import { nameInitials } from "../../utils";
 import { CreatePostContextValues, useCreatePostContext } from "../../context";
 import { useLMFeedStyles } from "../../lmFeedProvider";
 import Layout from "../../constants/Layout";
+import {
+  CreatePollCustomisableMethodsContextProvider,
+  useCreatePollCustomisableMethodsContext,
+} from "../../context/createPollCallbacksContext";
+import { CreatePollContextProps } from "../../components/LMPoll/models/CreatePoll";
+import { useRoute, useNavigation } from "@react-navigation/native";
 
-const CreatePollScreen = ({ navigation, route }: CreatePoll) => {
+const CreatePollScreen = ({
+  navigation,
+  route,
+  onPollExpiryTimeClicked,
+  onAddOptionClicked,
+  onPollOptionCleared,
+  onPollCompleteClicked,
+}: CreatePollContextProps) => {
   return (
-    <CreatePollContextProvider navigation={navigation} route={route}>
-      <CreatePollScreenComponent navigation={navigation} route={route} />
-    </CreatePollContextProvider>
+    <CreatePollCustomisableMethodsContextProvider
+      onPollExpiryTimeClicked={onPollExpiryTimeClicked}
+      onAddOptionClicked={onAddOptionClicked}
+      onPollOptionCleared={onPollOptionCleared}
+      onPollCompleteClicked={onPollCompleteClicked}
+    >
+      <CreatePollScreenComponent />
+    </CreatePollCustomisableMethodsContextProvider>
   );
 };
 
-const CreatePollScreenComponent = ({ navigation, route }: CreatePoll) => {
+const CreatePollScreenComponent = () => {
   const { postPoll }: CreatePollProps = useCreatePollContext();
-  const { memberData }: any = route.params;
+  const route = useRoute();
+  const navigation = useNavigation<any>();
+
+  const { memberData }: any = route?.params;
   const LMFeedContextStyles = useLMFeedStyles();
   const { postListStyle }: any = LMFeedContextStyles;
   const postHeaderStyle = postListStyle?.header;
+
+  const { onPollCompleteClicked } = useCreatePollCustomisableMethodsContext();
 
   return (
     <SafeAreaView>
@@ -49,7 +72,7 @@ const CreatePollScreenComponent = ({ navigation, route }: CreatePoll) => {
           <TouchableOpacity
             activeOpacity={0.8}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            onPress={postPoll}
+            onPress={!!onPollCompleteClicked ? onPollCompleteClicked : postPoll}
           >
             {<Text style={styles.headerRightComponentText}>{"DONE"}</Text>}
           </TouchableOpacity>

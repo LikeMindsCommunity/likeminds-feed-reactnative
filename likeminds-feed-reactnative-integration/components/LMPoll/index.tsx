@@ -1,3 +1,3 @@
-import PollConversationView from "./PollConversationView";
+import LMPostPollView from "./LMPostPollView";
 
-export { PollConversationView };
+export { LMPostPollView };

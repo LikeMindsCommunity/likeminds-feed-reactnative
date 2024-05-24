@@ -2,7 +2,7 @@ import { PollMultiSelectState, PollType } from "../../../enums/Poll";
 import { LMPostUI } from "../../../models";
 import { Poll } from "./Poll";
 
-export interface PollConversationViewState {
+export interface LMPostPollViewState {
   hue?: number;
   text: string; // Assuming it's a string, update the type if necessary
   votes: number;

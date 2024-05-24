@@ -19,7 +19,7 @@ import { LMHeader } from "../../components";
 
 const PollStack = createMaterialTopTabNavigator();
 
-export const PollResult = ({ navigation, route }: any) => {
+export const LMFeedPollResult = ({ navigation, route }: any) => {
   const { tabsValueArr = [], pollId, backIconPath } = route.params;
 
   return (
@@ -90,7 +90,7 @@ export const PollResult = ({ navigation, route }: any) => {
 };
 
 const TabScreenUI = ({ pollID, votes }: any) => {
-  const [users, setUsers] = useState();
+  const [users, setUsers] = useState<any>();
   const [page, setPage] = useState(1);
 
   const PAGE_SIZE = 20;
@@ -128,11 +128,13 @@ const TabScreenUI = ({ pollID, votes }: any) => {
       pageSize: PAGE_SIZE,
     });
 
-    if (res?.success) {
-      let userList = res?.data?.votes.map(
-        (item) => res?.data?.users[item?.users[0]]
+    if (res?.success && res?.data?.votes.length > 0) {
+      let userList = res?.data?.votes[0]?.users?.map(
+        (item) => res?.data?.users[item]
       );
       setUsers(userList);
+    } else {
+      setUsers([]);
     }
   };
 

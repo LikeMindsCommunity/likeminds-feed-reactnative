@@ -13,8 +13,8 @@ import {
   CREATE_POST,
   POST_LIKES_LIST,
   LMOverlayProvider,
-  CreatePollScreen,
-  PollResult,
+  LMFeedCreatePollScreen,
+  LMFeedPollResult,
 } from '@likeminds.community/feed-rn-core';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
@@ -28,6 +28,7 @@ import {
 import {myClient} from '.';
 import {
   ActivityIndicator,
+  KeyboardAvoidingView,
   Linking,
   PermissionsAndroid,
   Platform,
@@ -51,6 +52,9 @@ import {
   CREATE_POLL_SCREEN,
   POLL_RESULT,
 } from '@likeminds.community/feed-rn-core/constants/screenNames';
+import {initiateAPI} from './registerDeviceApi';
+import {createPollStyle, pollStyle} from './styles';
+import CreatePollScreenWrapper from './feedScreen/createPollScreenWrapper';
 
 class CustomCallbacks implements LMFeedCallbacks {
   onEventTriggered(eventName: string, eventProperties?: Map<string, string>) {
@@ -76,11 +80,10 @@ const App = () => {
   );
   const [myClient, setMyClient] = useState();
   const [isTrue, setIsTrue] = useState(true);
+  const [accessToken, setAccessToken] = useState('');
+  const [refreshToken, setRefreshToken] = useState('');
+
   const loginSchemaArray: any = useQuery(LoginSchemaRO);
-  const accessToken =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoidnRtOEhabEtWNldCVm8zTzIzdHZjOEFDOVdDYURyQU1WeDRBbmpQYk84VUQzbVpvQ1J2TnFBUGtFbDNINGN5TDhzM1BKNllXUlRhRGF4RzRoejh1VE13dFExd2VXTFVkN29qMkNoaHhTVEErSDlJM2VmVmVvdUJYUEhZVTk5S0NOKzIvZ1JyZkJpQlM3anJrQWRIVVF1cGdPdmZkdTNrYTdkNHVCWS9RWDMzeVBPbFpKcEhqMGFha0RnajNEcnYrc2FuWFBuaFQ1aU1DUURyR25RRGd1UUZQMWFkRGxNRWFjbURmR2k2TUZhcTBBeGFIMGozNk5zdEhFNWJ6c3NINlVJUUxGaUtJZU44TUg1STUiLCJleHAiOjE3MTYyMDc0Mjl9.2o9EzGOQIe2dIiMf_hJfVSMrffvpAwDkaTMtOgxQ_dM';
-  const refreshToken =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiMlpHbFQxS1ROdE1ya1RQV0ovc3JqUVZZbXZJRnFaQ2t2Qi83SG54WXI1SG1aQ2dkdU9mRDJoNER4ZTBlaVJET3dSVE10Y0tJQlkrdzY3amswVlphS2JML1BqWWF5NjJYQ29DSzQxVUs3Z0FtUHdWdVlxK3crRkxNK2Y2UnljMUlpN3dFd0lGQXdiQW1vWmk2dkZ6RzMwMTl3VWFSdXo4RmtrQkFJcUNUYXUyTWRlK1Q1SGtSTzVsOFNSaU9rVFZ3SUFWWWlhaGZKYXlydDh3R0R0cEZmdzgwb2lkaDRjcC9sb3lEY1BERTM0a290QmExUWtaWEpwY2lTTVo4UjNnNXZsK3JVSHpKaUdOcENQdFBkQT09IiwiZXhwIjoxNzE4ODg0OTI5fQ.Ye8kt-he4kfJTQPjjR3b1Q8HKN1qxX1i_obXiUV10fw';
 
   useEffect(() => {
     const userSchema = async () => {
@@ -112,6 +115,26 @@ const App = () => {
       Credentials?.apiKey?.length > 0 ? Credentials?.apiKey : users?.apiKey,
     );
   }, [users, isTrue]);
+
+  useEffect(() => {
+    async function callInitiateAPI() {
+      const payload: any = {
+        is_guest: false,
+        user_name: userName,
+        user_unique_id: userUniqueID,
+        api_key: apiKey,
+      };
+      const res: any = await initiateAPI(payload);
+      if (res) {
+        setAccessToken(res?.data?.access_token);
+        setRefreshToken(res?.data?.refresh_token);
+      }
+    }
+
+    if (apiKey) {
+      callInitiateAPI();
+    }
+  }, [apiKey]);
 
   useEffect(() => {
     if (apiKey) {
@@ -213,7 +236,9 @@ const App = () => {
   }, []);
 
   return (
-    <>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{flex: 1}}>
       {userName && userUniqueID && apiKey && myClient ? (
         <LMOverlayProvider
           myClient={myClient}
@@ -235,10 +260,16 @@ const App = () => {
                 name={NOTIFICATION_FEED}
                 component={NotificationWrapper}
               />
-              <Stack.Screen name={POLL_RESULT} component={PollResult} />
+              <Stack.Screen
+                name={POLL_RESULT}
+                component={LMFeedPollResult}
+                options={{
+                  gestureEnabled: false,
+                }}
+              />
               <Stack.Screen
                 name={CREATE_POLL_SCREEN}
-                component={CreatePollScreen}
+                component={CreatePollScreenWrapper}
               />
             </Stack.Navigator>
           </NavigationContainer>
@@ -246,7 +277,7 @@ const App = () => {
       ) : !userName && !userUniqueID && !apiKey ? (
         <FetchKeyInputScreen isTrue={isTrue} setIsTrue={setIsTrue} />
       ) : null}
-    </>
+    </KeyboardAvoidingView>
   );
 };
 

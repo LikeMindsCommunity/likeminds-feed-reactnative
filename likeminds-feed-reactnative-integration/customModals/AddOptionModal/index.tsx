@@ -8,6 +8,8 @@ import {
   SUBMIT_TEXT,
 } from "../../constants/Strings";
 import { styles } from "../../components/LMPoll/styles";
+import { useUniversalFeedCustomisableMethodsContext } from "../../context";
+import { usePollCustomisableMethodsContext } from "../../context/pollCustomisableCallback";
 
 const AddOptionsModal = ({
   isAddPollOptionModalVisible,
@@ -15,6 +17,9 @@ const AddOptionsModal = ({
   addOptionInputField,
   setAddOptionInputField,
   handelAddOptionSubmit,
+  pollsArr,
+  post,
+  reloadPost,
 }: any) => {
   const handleModalClose = () => {
     setIsAddPollOptionModalVisible(false);
@@ -39,6 +44,9 @@ const AddOptionsModal = ({
                 setAddOptionInputField={setAddOptionInputField}
                 handelAddOptionSubmit={handelAddOptionSubmit}
                 handleModalClose={handleModalClose}
+                pollsArr={pollsArr}
+                post={post}
+                reloadPost={reloadPost}
               />
             </View>
           </Pressable>
@@ -58,7 +66,11 @@ const AddOptionUI = ({
   setIsAddPollOptionModalVisible,
   handelAddOptionSubmit,
   handleModalClose,
+  pollsArr,
+  post,
+  reloadPost,
 }: any) => {
+  const { onAddPollOptionsClicked } = usePollCustomisableMethodsContext();
   return (
     <View>
       <View style={styles.padding20}>
@@ -92,7 +104,19 @@ const AddOptionUI = ({
         </View>
         <View style={styles.extraMarginSpace}>
           <TouchableOpacity
-            onPress={handelAddOptionSubmit}
+            onPress={() => {
+              const payload = {
+                addOptionInputField,
+                options: pollsArr,
+                poll: post,
+                setIsAddPollOptionModalVisible,
+                setAddOptionInputField,
+                reloadPost,
+              };
+              onAddPollOptionsClicked
+                ? onAddPollOptionsClicked(payload)
+                : handelAddOptionSubmit(payload);
+            }}
             style={[
               styles.submitButton,
               hue ? { backgroundColor: `hsl(${hue}, 47%, 31%)` } : null,

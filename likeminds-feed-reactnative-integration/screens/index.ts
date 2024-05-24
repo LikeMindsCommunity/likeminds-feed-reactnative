@@ -4,8 +4,8 @@ import { PostDetail } from "./postDetail";
 import { CreatePost } from "./createPost";
 import { PostLikesList } from "./likesList";
 import { TopicFeed } from "./topicFeed";
-import CreatePollScreen from "./LMFeedCreatePollScreen";
-import { PollResult } from "./LMPollResult";
+import LMFeedCreatePollScreen from "./LMFeedCreatePollScreen";
+import { LMFeedPollResult } from "./LMPollResult";
 import { LMFeedNotificationFeedScreen } from "./notificationFeed";
 import { LMFeedNotificationFeedListView } from "./notificationsList";
 export {
@@ -17,6 +17,6 @@ export {
   TopicFeed,
   LMFeedNotificationFeedListView,
   LMFeedNotificationFeedScreen,
-  CreatePollScreen,
-  PollResult,
+  LMFeedCreatePollScreen,
+  LMFeedPollResult,
 };

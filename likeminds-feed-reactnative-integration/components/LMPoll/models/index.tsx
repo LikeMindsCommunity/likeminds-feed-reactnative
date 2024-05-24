@@ -3,10 +3,10 @@ import {CreatePollCallbacks} from './CreatePollCallbacks';
 import {CreatePollProps} from './CreatePollProps';
 import {CreatePollStateProps} from './CreatePollStateProps';
 import {Poll} from './Poll';
-import {PollConversationUIProps} from './PollConversationUIProps';
-import {PollConversationViewCallbacks} from './PollConversationViewCallbacks';
-import {PollConversationViewProps} from './PollConversationViewProps';
-import {PollConversationViewState} from './PollConversationViewState';
+import {LMPostPollUIProps} from './LMPostPollUIProps';
+import {LMPostPollViewCallbacks} from './LMPostPollViewCallbacks';
+import {LMPostPollViewProps} from './LMPostPollViewProps';
+import {LMPostPollViewState} from './LMPostPollViewState';
 
 export {
   CreatePoll,
@@ -14,8 +14,8 @@ export {
   CreatePollProps,
   CreatePollStateProps,
   Poll,
-  PollConversationUIProps,
-  PollConversationViewCallbacks,
-  PollConversationViewProps,
-  PollConversationViewState,
+  LMPostPollUIProps,
+  LMPostPollViewCallbacks,
+  LMPostPollViewProps,
+  LMPostPollViewState,
 };

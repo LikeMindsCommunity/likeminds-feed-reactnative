@@ -55,6 +55,7 @@ import {
 } from "../../store/types/types";
 import { Client } from "../../client";
 import Layout from "../../constants/Layout";
+import { PollCustomisableMethodsContextProvider } from "../../context/pollCustomisableCallback";
 
 interface UniversalFeedProps {
   children: React.ReactNode;
@@ -83,6 +84,9 @@ interface UniversalFeedProps {
   ) => void;
   onTapNotificationBellProp: () => void;
   onSharePostClicked: (id: string) => void;
+  onSubmitButtonClicked: any;
+  onAddPollOptionsClicked: any;
+  onPollOptionClicked: any;
 }
 
 const UniversalFeed = ({
@@ -101,24 +105,33 @@ const UniversalFeed = ({
   onOverlayMenuClickProp,
   onTapNotificationBellProp,
   onSharePostClicked,
+  onSubmitButtonClicked,
+  onAddPollOptionsClicked,
+  onPollOptionClicked,
 }: UniversalFeedProps) => {
   return (
-    <UniversalFeedCustomisableMethodsContextProvider
-      postLikeHandlerProp={postLikeHandlerProp}
-      savePostHandlerProp={savePostHandlerProp}
-      selectEditPostProp={selectEditPostProp}
-      selectPinPostProp={selectPinPostProp}
-      onSelectCommentCountProp={onSelectCommentCountProp}
-      onTapLikeCountProps={onTapLikeCountProps}
-      handleDeletePostProps={handleDeletePostProps}
-      handleReportPostProps={handleReportPostProps}
-      newPostButtonClickProps={newPostButtonClickProps}
-      onOverlayMenuClickProp={onOverlayMenuClickProp}
-      onTapNotificationBellProp={onTapNotificationBellProp}
-      onSharePostClicked={onSharePostClicked}
+    <PollCustomisableMethodsContextProvider
+      onSubmitButtonClicked={onSubmitButtonClicked}
+      onAddPollOptionsClicked={onAddPollOptionsClicked}
+      onPollOptionClicked={onPollOptionClicked}
     >
-      <UniversalFeedComponent />
-    </UniversalFeedCustomisableMethodsContextProvider>
+      <UniversalFeedCustomisableMethodsContextProvider
+        postLikeHandlerProp={postLikeHandlerProp}
+        savePostHandlerProp={savePostHandlerProp}
+        selectEditPostProp={selectEditPostProp}
+        selectPinPostProp={selectPinPostProp}
+        onSelectCommentCountProp={onSelectCommentCountProp}
+        onTapLikeCountProps={onTapLikeCountProps}
+        handleDeletePostProps={handleDeletePostProps}
+        handleReportPostProps={handleReportPostProps}
+        newPostButtonClickProps={newPostButtonClickProps}
+        onOverlayMenuClickProp={onOverlayMenuClickProp}
+        onTapNotificationBellProp={onTapNotificationBellProp}
+        onSharePostClicked={onSharePostClicked}
+      >
+        <UniversalFeedComponent />
+      </UniversalFeedCustomisableMethodsContextProvider>
+    </PollCustomisableMethodsContextProvider>
   );
 };
 

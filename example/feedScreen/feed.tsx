@@ -7,7 +7,7 @@ import {
 import {getUniqueId} from 'react-native-device-info';
 import {Alert, Platform, Share} from 'react-native';
 import {validateRegisterDeviceRequest} from '../registerDeviceApi';
-import { pushAPI, token } from '../pushNotification';
+import {pushAPI, token} from '../pushNotification';
 
 const Feed = ({route}) => {
   const {
@@ -21,8 +21,14 @@ const Feed = ({route}) => {
     handleReportPost,
     onOverlayMenuClick,
   } = usePostListContext();
-  const {navigation, newPostButtonClick, onTapNotificationBell, accessToken} =
-    useUniversalFeedContext();
+  const {
+    navigation,
+    newPostButtonClick,
+    onTapNotificationBell,
+    addPollOption,
+    setSelectedPollOptions,
+    submitPoll,
+  } = useUniversalFeedContext();
   const [FCMToken, setFCMToken] = useState('');
 
   const customPostLike = postId => {
@@ -81,12 +87,15 @@ const Feed = ({route}) => {
     onTapNotificationBell();
     console.log('after notification icon tap');
   };
-  const customShareTap = async(postId) => {
+  const customShareTap = async postId => {
     console.log('share', postId);
     try {
       const result = await Share.share({
         // todo: static data (replace with the deeplink)
-        message: Platform.OS === 'ios' ? `www.sampleapp.com://post?post_id=${postId}`: `https://www.sampleapp.com/post?post_id=${postId}`,
+        message:
+          Platform.OS === 'ios'
+            ? `www.sampleapp.com://post?post_id=${postId}`
+            : `https://www.sampleapp.com/post?post_id=${postId}`,
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -102,13 +111,31 @@ const Feed = ({route}) => {
     }
   };
 
+  const customPollSubmitButtonClick = payload => {
+    console.log('before sumbit poll tap');
+    submitPoll(payload);
+    console.log('after sumbit poll tap');
+  };
+
+  const customAddPollOptionsClick = payload => {
+    console.log('before add option click');
+    addPollOption(payload);
+    console.log('after add option click');
+  };
+
+  const customPollOptionClicked = payload => {
+    console.log('before option click');
+    setSelectedPollOptions(payload);
+    console.log('after option click');
+  };
+
   /// Setup notifications
   useEffect(() => {
-   token().then((res) => {            
-     if (!!res) {
-      setFCMToken(res);
-    }
-   });
+    token().then(res => {
+      if (!!res) {
+        setFCMToken(res);
+      }
+    });
   }, []);
 
   // useEffect(() => {
@@ -135,10 +162,11 @@ const Feed = ({route}) => {
       onOverlayMenuClickProp={(event, menuItems, postId) =>
         customOverlayMenuCick(event, menuItems, postId)
       }
-      onTapNotificationBellProp={() =>
-        customNotificationBellTap()
-      }
-      onSharePostClicked={(id) => customShareTap(id)}></UniversalFeed>
+      onTapNotificationBellProp={() => customNotificationBellTap()}
+      onSharePostClicked={id => customShareTap(id)}
+      onSubmitButtonClicked={customPollSubmitButtonClick}
+      onAddPollOptionsClicked={customAddPollOptionsClick}
+      onPollOptionClicked={customPollOptionClicked}></UniversalFeed>
   );
 };
 

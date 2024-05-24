@@ -71,9 +71,10 @@ import { Keys } from "../../enums/Keys";
 import { userTaggingDecoder } from "../../utils/decodeMentions";
 import { Client } from "../../client";
 import Layout from "../../constants/Layout";
-import { PollConversationView } from "../../components/LMPoll";
+import { LMPostPollView } from "../../components/LMPoll";
 import { useRoute } from "@react-navigation/native";
 import STYLES from "../../constants/Styles";
+import { PollCustomisableMethodsContextProvider } from "../../context/pollCustomisableCallback";
 
 interface CreatePostProps {
   children: React.ReactNode;
@@ -95,6 +96,8 @@ interface CreatePostProps {
     poll: any
   ) => void;
   handleScreenBackPressProp: () => void;
+  onPollEditClicked: any;
+  onPollClearClicked: any;
 }
 
 const CreatePost = ({
@@ -106,17 +109,24 @@ const CreatePost = ({
   handleGalleryProp,
   onPostClickProp,
   handleScreenBackPressProp,
+  onPollEditClicked,
+  onPollClearClicked,
 }: CreatePostProps) => {
   return (
-    <CreatePostCustomisableMethodsContextProvider
-      handleDocumentProp={handleDocumentProp}
-      handlePollProp={handlePollProp}
-      handleGalleryProp={handleGalleryProp}
-      onPostClickProp={onPostClickProp}
-      handleScreenBackPressProp={handleScreenBackPressProp}
+    <PollCustomisableMethodsContextProvider
+      onPollEditClicked={onPollEditClicked}
+      onPollClearClicked={onPollClearClicked}
     >
-      <CreatePostComponent />
-    </CreatePostCustomisableMethodsContextProvider>
+      <CreatePostCustomisableMethodsContextProvider
+        handleDocumentProp={handleDocumentProp}
+        handlePollProp={handlePollProp}
+        handleGalleryProp={handleGalleryProp}
+        onPostClickProp={onPostClickProp}
+        handleScreenBackPressProp={handleScreenBackPressProp}
+      >
+        <CreatePostComponent />
+      </CreatePostCustomisableMethodsContextProvider>
+    </PollCustomisableMethodsContextProvider>
   );
 };
 
@@ -690,7 +700,7 @@ const CreatePostComponent = () => {
                 borderWidth: 1,
               }}
             >
-              <PollConversationView
+              <LMPostPollView
                 item={poll}
                 removePollAttachment={removePollAttachment}
                 editPollAttachment={editPollAttachment}
@@ -710,7 +720,7 @@ const CreatePostComponent = () => {
                 borderWidth: 1,
               }}
             >
-              <PollConversationView
+              <LMPostPollView
                 item={{
                   ...formattedPollAttachments[0]?.attachmentMeta,
                   disabled: true,

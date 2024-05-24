@@ -69,10 +69,12 @@ export const CreatePollContextProvider = ({
     isPoll ? (poll?.pollType === PollType.DEFERRED ? true : false) : false
   );
   const [userVoteFor, setUserVoteFor] = useState<string>(
-    isPoll ? poll?.multipleSelectState : PollMultiSelectState.EXACTLY
+    isPoll && poll?.multipleSelectState
+      ? poll?.multipleSelectState
+      : PollMultiSelectState.EXACTLY
   );
   const [voteAllowedPerUser, setVoteAllowedPerUser] = useState<number>(
-    isPoll ? poll?.multipleSelectNumber : 1
+    isPoll && poll?.multipleSelectNumber ? poll?.multipleSelectNumber : 1
   );
   const [date, setDate] = useState(isPoll ? new Date(poll?.expiryTime) : "");
   const [mode, setMode] = useState<string>("");
@@ -87,8 +89,7 @@ export const CreatePollContextProvider = ({
   const [userVoteForOptionsArrValue, setUserVoteForOptionsArrValue] = useState(
     []
   );
-  const PAGE_SIZE = 200;
-
+  
   const userCanVoteForArr = ["Exactly", "At max", "At least"];
 
   const dispatch = useAppDispatch();
@@ -281,7 +282,7 @@ export const CreatePollContextProvider = ({
     setIsOptionAlertModalVisible(true);
   };
 
-  // this function fetches postPollConversation API
+  // this function fetches postLMPostPoll API
   async function postPoll() {
     const expiryTime = date ? formatDate(date, time) : null;
     try {
