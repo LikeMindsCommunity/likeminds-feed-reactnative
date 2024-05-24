@@ -4,6 +4,7 @@ import {
   CreatePostStyleProps,
   LoaderStyleProps,
   NotificationFeedStyleProps,
+  PollStyle,
   PostDetailStyleProps,
   PostLikesListStyleProps,
   PostListStyleProps,
@@ -25,4 +26,5 @@ export interface LMOverlayProviderProps {
   postLikesListStyle?: PostLikesListStyleProps;
   notificationFeedStyle?: NotificationFeedStyleProps;
   topicsStyle?: TopicsStyle;
+  pollStyle?: PollStyle;
 }

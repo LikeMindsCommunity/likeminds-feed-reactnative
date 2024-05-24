@@ -379,6 +379,26 @@ export interface TopicsStyle {
   arrowDownStyle?: ImageStyle;
 }
 
+export interface PollStyle {
+  pollQuestionStyles?: React.CSSProperties;
+  pollOptionSelectedColor?: string;
+  pollOptionOtherColor?: string;
+  pollOptionSelectedTextStyles?: React.CSSProperties;
+  pollOptionOtherTextStyles?: React.CSSProperties;
+  pollOptionEmptyTextStyles?: React.CSSProperties;
+  votesCountStyles?: React.CSSProperties;
+  memberVotedCountStyles?: React.CSSProperties;
+  pollInfoStyles?: React.CSSProperties;
+  submitButtonStyles?: React.CSSProperties;
+  submitButtonTextStyles?: React.CSSProperties;
+  allowAddPollOptionButtonStyles?: React.CSSProperties;
+  allowAddPollOptionButtonTextStyles?: React.CSSProperties;
+  editPollOptionsStyles?: React.CSSProperties;
+  editPollOptionsIcon?: string;
+  clearPollOptionsStyles?: React.CSSProperties;
+  clearPollOptionsIcon?: string;
+}
+
 export interface ThemeContextProps {
   textStyle?: TextStyles;
   universalFeedStyle?: UniversalFeedStyleProps;
@@ -389,6 +409,7 @@ export interface ThemeContextProps {
   postLikesListStyle?: PostLikesListStyleProps;
   notificationFeedStyle?: NotificationFeedStyleProps;
   topicsStyle?: TopicsStyle;
+  pollStyle?: PollStyle;
 }
 
 export interface LMFeedProviderProps {
@@ -406,4 +427,5 @@ export interface LMFeedProviderProps {
   postLikesListStyle?: PostLikesListStyleProps;
   notificationFeedStyle?: NotificationFeedStyleProps;
   topicsStyle?: TopicsStyle;
+  pollStyle?: PollStyle;
 }

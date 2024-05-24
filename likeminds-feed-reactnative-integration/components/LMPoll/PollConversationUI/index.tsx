@@ -21,6 +21,7 @@ import LMPostPollText from "../../LMPost/LMPostPollText";
 import { decode } from "../../../utils";
 import { LMText } from "../../../uiComponents";
 import { PollType } from "../../../enums/Poll";
+import { useLMFeedStyles } from "../../../lmFeedProvider";
 
 const PollConversationUI = ({
   text,
@@ -62,10 +63,29 @@ const PollConversationUI = ({
   post,
   isMultiChoicePoll,
 }: PollConversationUIProps) => {
-  const pollStyles = STYLES.$POLL_STYLES;
-
   //styling props
-  const pollVoteSliderColor = pollStyles?.pollVoteSliderColor;
+  const LMFeedContextStyles = useLMFeedStyles();
+  const { pollStyle } = LMFeedContextStyles;
+  const pollQuestionStyles = pollStyle?.pollQuestionStyles;
+  const pollOptionSelectedColor = pollStyle?.pollOptionSelectedColor;
+  const pollOptionSelectedTextStyles = pollStyle?.pollOptionSelectedTextStyles;
+  const pollOptionOtherColor = pollStyle?.pollOptionOtherColor;
+  const pollOptionOtherTextStyles = pollStyle?.pollOptionOtherTextStyles;
+  const pollOptionEmptyTextStyles = pollStyle?.pollOptionEmptyTextStyles;
+  const pollOptionAddedByTextStyles = pollStyle?.pollOptionAddedByTextStyles;
+  const votesCountStyles = pollStyle?.votesCountStyles;
+  const memberVotedCountStyles = pollStyle?.memberVotedCountStyles;
+  const pollInfoStyles = pollStyle?.pollInfoStyles;
+  const submitButtonStyles = pollStyle?.submitButtonStyles;
+  const submitButtonTextStyles = pollStyle?.submitButtonTextStyles;
+  const allowAddPollOptionButtonStyles =
+    pollStyle?.allowAddPollOptionButtonStyles;
+  const allowAddPollOptionButtonTextStyles =
+    pollStyle?.allowAddPollOptionButtonTextStyles;
+  const editPollOptionsStyles = pollStyle?.editPollOptionsStyles;
+  const editPollOptionsIcon = pollStyle?.editPollOptionsIcon;
+  const clearPollOptionsStyles = pollStyle?.clearPollOptionsStyles;
+  const clearPollOptionsIcon = pollStyle?.clearPollOptionsIcon;
 
   return (
     <View>
@@ -83,7 +103,7 @@ const PollConversationUI = ({
           ) : (
             <LMText
               maxLines={maxQuestionLines}
-              textStyle={[styles.text, styles.blackColor]}
+              textStyle={[styles.text, styles.blackColor, pollQuestionStyles]}
               onTextLayout={(e) => onQuestionTextLayout(e)}
             >
               {text}
@@ -98,16 +118,26 @@ const PollConversationUI = ({
                 alignItems: "center",
               }}
             >
-              <TouchableOpacity onPress={editPollAttachment}>
+              <TouchableOpacity
+                style={editPollOptionsStyles ? editPollOptionsStyles : null}
+                onPress={editPollAttachment}
+              >
                 <Image
                   style={[styles.editImage, { tintColor: "black" }]}
-                  source={require("../../../assets/images/edit_icon3x.png")}
+                  source={require(editPollOptionsIcon
+                    ? editPollOptionsIcon
+                    : "../../../assets/images/edit_icon3x.png")}
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={removePollAttachment}>
+              <TouchableOpacity
+                style={clearPollOptionsStyles ? clearPollOptionsStyles : null}
+                onPress={removePollAttachment}
+              >
                 <Image
                   style={styles.editImage}
-                  source={require("../../../assets/images/cross_circle_icon3x.png")}
+                  source={require(clearPollOptionsIcon
+                    ? clearPollOptionsIcon
+                    : "../../../assets/images/cross_circle_icon3x.png")}
                 />
               </TouchableOpacity>
             </View>
@@ -120,6 +150,7 @@ const PollConversationUI = ({
               styles.mediumText,
               styles.greyColor,
               { marginTop: Layout.normalize(15) },
+              pollInfoStyles ? pollInfoStyles : null,
             ]}
           >
             {stringManipulation()}
@@ -145,7 +176,17 @@ const PollConversationUI = ({
                   !disabled
                     ? [
                         isSelected || isPollSentByMe
-                          ? styles.pollButton
+                          ? pollOptionSelectedColor
+                            ? {
+                                ...styles.pollButton,
+                                borderColor: pollOptionSelectedColor,
+                              }
+                            : styles.pollButton
+                          : voteCount > 0
+                          ? {
+                              ...styles.greyPollButton,
+                              borderColor: pollOptionOtherColor,
+                            }
                           : styles.greyPollButton,
                         { opacity: pressed ? 0.5 : 1 },
                       ]
@@ -177,12 +218,31 @@ const PollConversationUI = ({
                       styles.blackColor,
                       styles.optionText,
                       allowAddOption ? styles.addedByOptionText : null,
+                      isPollSentByMe
+                        ? pollOptionSelectedTextStyles
+                          ? pollOptionSelectedTextStyles
+                          : null
+                        : voteCount > 0
+                        ? pollOptionOtherTextStyles
+                          ? pollOptionOtherTextStyles
+                          : null
+                        : pollOptionEmptyTextStyles
+                        ? pollOptionEmptyTextStyles
+                        : null,
                     ]}
                   >
                     {`${element?.text} \n`}
 
                     {allowAddOption ? (
-                      <Text style={[styles.smallText10, styles.greyColor]}>
+                      <Text
+                        style={[
+                          styles.smallText10,
+                          styles.greyColor,
+                          pollOptionAddedByTextStyles
+                            ? pollOptionAddedByTextStyles
+                            : null,
+                        ]}
+                      >
                         {`Added by ${
                           post ? post?.users[element?.uuid]?.name : user?.name
                         }`}
@@ -208,16 +268,17 @@ const PollConversationUI = ({
                                   ? 99
                                   : element?.percentage
                               }%`,
-                              backgroundColor:
-                                pollVoteSliderColor?.backgroundColor
-                                  ? pollVoteSliderColor?.backgroundColor
-                                  : !disabled
-                                  ? isPollSentByMe
-                                    ? "hsl(240, 64%, 91%)"
-                                    : element?.voteCount > 0
-                                    ? "hsl(213, 23%, 92%)"
-                                    : "white"
-                                  : "white",
+                              backgroundColor: !disabled
+                                ? isPollSentByMe
+                                  ? pollOptionSelectedColor
+                                    ? pollOptionSelectedColor
+                                    : "hsl(240, 64%, 91%)"
+                                  : element?.voteCount > 0
+                                  ? pollOptionOtherColor
+                                    ? pollOptionOtherColor
+                                    : "hsl(213, 23%, 92%)"
+                                  : "white"
+                                : "white",
                             },
                             styles.pollButtonBackground,
                             styles.pollButtonPadding,
@@ -246,6 +307,7 @@ const PollConversationUI = ({
                           styles.smallText,
                           { marginLeft: Layout.normalize(5) },
                           styles.greyColor,
+                          votesCountStyles ? votesCountStyles : null,
                         ]}
                       >{`${voteCount} ${
                         voteCount > 1 ? "votes" : "vote"
@@ -276,6 +338,9 @@ const PollConversationUI = ({
                       : Layout.normalize(1),
                     padding: Layout.normalize(12),
                   },
+                  allowAddPollOptionButtonStyles
+                    ? allowAddPollOptionButtonStyles
+                    : null,
                 ]}
               >
                 <Text
@@ -283,6 +348,9 @@ const PollConversationUI = ({
                     styles.text,
                     styles.blackColor,
                     styles.textAlignCenter,
+                    allowAddPollOptionButtonTextStyles
+                      ? allowAddPollOptionButtonTextStyles
+                      : null,
                   ]}
                 >
                   {ADD_OPTION_TEXT}
@@ -303,10 +371,17 @@ const PollConversationUI = ({
                   styles.mediumText,
                   styles.extraMarginSpace,
                   hue ? { color: `hsl(${hue}, 53%, 15%)` } : null,
+                  memberVotedCountStyles ? memberVotedCountStyles : null,
                 ]}
               >
                 {pollAnswerText}
-                <Text style={styles.messageCustomTitle}>{` • ${
+                <Text
+                  style={[
+                    styles.messageCustomTitle,
+                    memberVotedCountStyles ? memberVotedCountStyles : null,
+                    { color: STYLES.$COLORS.MSG },
+                  ]}
+                >{` • ${
                   hasPollEnded
                     ? "Poll Ended"
                     : getTimeLeftInPoll(Number(expiryTime))
@@ -324,7 +399,10 @@ const PollConversationUI = ({
                     onPress={() => {
                       resetShowResult();
                     }}
-                    style={styles.mediumText}
+                    style={[
+                      styles.mediumText,
+                      memberVotedCountStyles ? memberVotedCountStyles : null,
+                    ]}
                   >{` ${EDIT_POLL_TEXT}
                  `}</Text>
                 ) : null}
@@ -349,6 +427,7 @@ const PollConversationUI = ({
                     ? { backgroundColor: styles.whiteColor.color }
                     : null,
                   hue ? { backgroundColor: `hsl(${hue}, 47%, 31%)` } : null,
+                  submitButtonStyles ? submitButtonStyles : null,
                 ]}
               >
                 <Text
@@ -357,6 +436,7 @@ const PollConversationUI = ({
                     styles.smallTextMedium,
                     { color: "white" },
                     !shouldShowSubmitPollButton ? styles.greyColor : null,
+                    submitButtonTextStyles ? submitButtonTextStyles : null,
                   ]}
                 >
                   {SUBMIT_VOTE_TITLE}
