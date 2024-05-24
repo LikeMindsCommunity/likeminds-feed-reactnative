@@ -132,7 +132,7 @@ const PollConversationUI = ({
         {optionArr?.map((element: any, index: any) => {
           const isSelected = selectedPolls.includes(index);
           const voteCount = element?.voteCount;
-          const isPollSentByMe = user?.uuid === element?.uuid ? true : false;
+          const isPollSentByMe = element?.isSelected;
           return (
             <View key={element?.Id} style={styles.gap}>
               <Pressable
@@ -144,7 +144,7 @@ const PollConversationUI = ({
                 style={({ pressed }) =>
                   !disabled
                     ? [
-                        isSelected || (element?.isSelected && isPollSentByMe)
+                        isSelected || isPollSentByMe
                           ? styles.pollButton
                           : styles.greyPollButton,
                         { opacity: pressed ? 0.5 : 1 },
@@ -214,7 +214,7 @@ const PollConversationUI = ({
                                   : !disabled
                                   ? isPollSentByMe
                                     ? "hsl(240, 64%, 91%)"
-                                    : element?.isSelected
+                                    : element?.voteCount > 0
                                     ? "hsl(213, 23%, 92%)"
                                     : "white"
                                   : "white",
@@ -245,7 +245,7 @@ const PollConversationUI = ({
                         style={[
                           styles.smallText,
                           { marginLeft: Layout.normalize(5) },
-                          voteCount < 1 ? styles.greyColor : null,
+                          styles.greyColor,
                         ]}
                       >{`${voteCount} ${
                         voteCount > 1 ? "votes" : "vote"

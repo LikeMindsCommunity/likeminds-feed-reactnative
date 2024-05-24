@@ -19,13 +19,13 @@ export const styles = StyleSheet.create({
   title: {
     fontSize: STYLES.$FONT_SIZES.XXL,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
-    color: STYLES.$COLORS.FONT_PRIMARY,
+    color: STYLES.$COLORS.BLACK,
     marginBottom: Layout.normalize(20),
   },
   message: {
     fontSize: Layout.normalize(15),
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
-    color: STYLES.$COLORS.FONT_PRIMARY,
+    color: STYLES.$COLORS.BLACK,
     marginBottom: Layout.normalize(20),
     lineHeight: Layout.normalize(20),
     fontWeight: "400",
@@ -51,7 +51,7 @@ export const styles = StyleSheet.create({
   buttonText: {
     fontSize: STYLES.$FONT_SIZES.REGULAR,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
-    color: STYLES.$COLORS.SECONDARY,
+    color: STYLES.$COLORS.BLACK,
     textTransform: "uppercase",
   },
   cancelButton: {

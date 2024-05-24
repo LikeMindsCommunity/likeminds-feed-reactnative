@@ -515,7 +515,10 @@ const PollConversationView = ({
   }
 
   // this function checks if poll is multiple choice or not
-  function isMultiChoicePoll(pollMultiSelectNo, pollMultiSelectState) {
+  function isMultiChoicePoll(
+    pollMultiSelectNo: number,
+    pollMultiSelectState: PollMultiSelectState
+  ) {
     return !(
       pollMultiSelectState === PollMultiSelectState.EXACTLY &&
       pollMultiSelectNo === 1

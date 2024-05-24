@@ -21,46 +21,6 @@ const PollStack = createMaterialTopTabNavigator();
 export const PollResult = ({ navigation, route }: any) => {
   const { tabsValueArr = [], pollId, backIconPath } = route.params;
 
-  const setInitialHeader = () => {
-    navigation.setOptions({
-      title: "",
-      headerShadowVisible: false,
-      headerLeft: () => (
-        <View style={styles.headingContainer}>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.goBack();
-            }}
-          >
-            {backIconPath ? (
-              <Image source={backIconPath} style={styles.backOptionalBtn} />
-            ) : (
-              <Image
-                source={require("../../assets/images/backArrow_icon3x.png")}
-                style={styles.backBtn}
-              />
-            )}
-          </TouchableOpacity>
-          <View style={styles.chatRoomInfo}>
-            <Text
-              style={{
-                color: STYLES.$COLORS.FONT_PRIMARY,
-                fontSize: STYLES.$FONT_SIZES.LARGE,
-                fontFamily: STYLES.$FONT_TYPES.BOLD,
-              }}
-            >
-              {POLL_RESULT_TEXT}
-            </Text>
-          </View>
-        </View>
-      ),
-    });
-  };
-
-  useEffect(() => {
-    setInitialHeader();
-  }, []);
-
   return (
     <SafeAreaView
       style={{
@@ -81,47 +41,46 @@ export const PollResult = ({ navigation, route }: any) => {
           tabBarScrollEnabled: tabsValueArr.length < 3 ? false : true,
         }}
       >
-        {tabsValueArr?.map((val: any, index: any) => {
+        {tabsValueArr?.map((val: any) => {
           return (
-            <PollStack.Screen
-              key={val?.Id}
-              name={val?.text}
-              children={(props: any) => (
-                <TabScreenUI pollID={pollId} votes={val?.Id} {...props} />
-              )}
-              options={{
-                tabBarLabel: ({ focused }) => (
-                  <View>
-                    <Text
-                      style={[
-                        styles.font,
-                        {
-                          color: focused
-                            ? STYLES.$COLORS.PRIMARY
-                            : STYLES.$COLORS.MSG,
-                          textAlign: "center",
-                        },
-                      ]}
-                    >
-                      {val?.voteCount}
-                    </Text>
-                    <Text
-                      style={[
-                        styles.font,
-                        {
-                          color: focused
-                            ? STYLES.$COLORS.PRIMARY
-                            : STYLES.$COLORS.MSG,
-                          marginTop: Layout.normalize(5),
-                        },
-                      ]}
-                    >
-                      {val?.text}
-                    </Text>
-                  </View>
-                ),
-              }}
-            />
+              <PollStack.Screen
+                name={val?.text}
+                children={(props: any) => (
+                  <TabScreenUI pollID={pollId} votes={val?.Id} {...props} />
+                )}
+                options={{
+                  tabBarLabel: ({ focused }) => (
+                    <View>
+                      <Text
+                        style={[
+                          styles.font,
+                          {
+                            color: focused
+                              ? STYLES.$COLORS.PRIMARY
+                              : STYLES.$COLORS.MSG,
+                            textAlign: "center",
+                          },
+                        ]}
+                      >
+                        {val?.voteCount}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.font,
+                          {
+                            color: focused
+                              ? STYLES.$COLORS.PRIMARY
+                              : STYLES.$COLORS.MSG,
+                            marginTop: Layout.normalize(5),
+                          },
+                        ]}
+                      >
+                        {val?.text}
+                      </Text>
+                    </View>
+                  ),
+                }}
+              />
           );
         })}
       </PollStack.Navigator>

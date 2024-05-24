@@ -15,10 +15,7 @@ import {
 } from "@likeminds.community/feed-js";
 import { LMFeedProviderProps, ThemeContextProps } from "./types";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import {
-  getMemberState,
-  validateUser,
-} from "../store/actions/login";
+import { getMemberState, validateUser } from "../store/actions/login";
 import { LMToast } from "../components";
 import { CallBack } from "../callBacks/callBackClass";
 import { Client } from "../client";
@@ -74,7 +71,6 @@ export const LMFeedProvider = ({
     if (lmFeedInterface) {
       CallBack.setLMFeedInterface(lmFeedInterface);
     }
-
     // storing myClient followed by community details
     const callInitApi = async () => {
       const validateResponse = await dispatch(
@@ -93,8 +89,10 @@ export const LMFeedProvider = ({
       }
       setIsInitiated(true);
     };
-    callInitApi();
-  }, []);
+    if (accessToken && refreshToken) {
+      callInitApi();
+    }
+  }, [accessToken, refreshToken]);
 
   useMemo(() => {
     if (themeStyles) {

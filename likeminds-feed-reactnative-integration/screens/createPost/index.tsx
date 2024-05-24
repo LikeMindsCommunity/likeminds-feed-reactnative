@@ -1069,7 +1069,9 @@ const CreatePostComponent = () => {
           >
             <LMIcon
               assetPath={require("../../assets/images/poll_icon3x.png")}
-              style={{ tintColor: STYLES.$COLORS.PRIMARY }}
+              color={STYLES.$COLORS.PRIMARY}
+              height={15}
+              widht={15}
               {...customAttachmentOptionsStyle?.pollAttachmentIcon}
             />
             <LMText
