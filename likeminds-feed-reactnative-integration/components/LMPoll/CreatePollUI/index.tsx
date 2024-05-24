@@ -26,6 +26,7 @@ import { CreatePollProps } from "../models";
 import STYLES from "../../../constants/Styles";
 import Layout from "../../../constants/Layout";
 import { useCreatePollContext } from "../../../context/createPollContextProvider";
+import { useLMFeedStyles } from "../../../lmFeedProvider";
 
 const CreatePollUI = () => {
   const {
@@ -67,6 +68,23 @@ const CreatePollUI = () => {
     resetDateTimePicker,
   }: CreatePollProps = useCreatePollContext();
 
+  const LMFeedContextStyles = useLMFeedStyles();
+  const { createPollStyle } = LMFeedContextStyles;
+
+  const pollQuestionsStyle = createPollStyle?.pollQuestionsStyle;
+  const pollOptionsStyle = createPollStyle?.pollOptionsStyle;
+  const pollExpiryTimeStyle = createPollStyle?.pollExpiryTimeStyle;
+  const pollAdvancedOptionTextStyle =
+    createPollStyle?.pollAdvancedOptionTextStyle;
+  const pollAdvancedOptionExpandIcon =
+    createPollStyle?.pollAdvancedOptionExpandIcon;
+  const pollAdvancedOptionMinimiseIcon =
+    createPollStyle?.pollAdvancedOptionMinimiseIcon;
+  const pollAdvanceOptionsSwitchThumbColor =
+    createPollStyle?.pollAdvanceOptionsSwitchThumbColor;
+  const pollAdvanceOptionsSwitchTrackColor =
+    createPollStyle?.pollAdvanceOptionsSwitchTrackColor;
+
   return (
     <View>
       {/* Poll question */}
@@ -79,7 +97,12 @@ const CreatePollUI = () => {
             value={question}
             onChangeText={handleQuestion}
             placeholder={PLACEHOLDER_VALUE}
-            style={[styles.font, styles.blackColor, { maxHeight: 100 }]}
+            style={[
+              styles.font,
+              styles.blackColor,
+              { maxHeight: 100 },
+              pollQuestionsStyle ? pollQuestionsStyle : null,
+            ]}
             placeholderTextColor="#c5c5c5"
             multiline
             numberOfLines={3}
@@ -113,6 +136,7 @@ const CreatePollUI = () => {
                     styles.option,
                     styles.blackColor,
                     { flex: 1 },
+                    pollOptionsStyle ? pollOptionsStyle : null,
                   ]}
                   placeholderTextColor="#c5c5c5"
                   onChangeText={(e: any) => {
@@ -160,7 +184,14 @@ const CreatePollUI = () => {
       {/* Poll expire Time and Date selection */}
       <View style={[styles.answerOptions, styles.paddingHorizontal15]}>
         <View>
-          <Text style={[styles.font]}>Poll expires on</Text>
+          <Text
+            style={[
+              styles.font,
+              pollExpiryTimeStyle ? pollExpiryTimeStyle : null,
+            ]}
+          >
+            Poll expires on
+          </Text>
         </View>
         <View style={styles.question}>
           <TouchableOpacity
@@ -234,6 +265,7 @@ const CreatePollUI = () => {
             styles.font,
             styles.lightGreyBackground,
             styles.textAlignCenter,
+            pollAdvancedOptionTextStyle ? pollAdvancedOptionTextStyle : null,
           ]}
         >
           ADVANCED
@@ -242,7 +274,11 @@ const CreatePollUI = () => {
           style={styles.downArrow}
           source={
             !showAdvancedOption
-              ? require("../../../assets/images/expand_arrow3x.png")
+              ? pollAdvancedOptionExpandIcon
+                ? pollAdvancedOptionExpandIcon
+                : require("../../../assets/images/expand_arrow3x.png")
+              : pollAdvancedOptionMinimiseIcon
+              ? pollAdvancedOptionMinimiseIcon
               : require("../../../assets/images/minimize_arrow3x.png")
           }
         />
@@ -266,11 +302,15 @@ const CreatePollUI = () => {
             <Switch
               trackColor={{
                 false: styles.lightGreyBackground.color,
-                true: styles.primaryColor.color,
+                true: pollAdvanceOptionsSwitchTrackColor
+                  ? pollAdvanceOptionsSwitchTrackColor
+                  : styles.lightPrimaryColor.color,
               }}
               thumbColor={
                 addOptionsEnabled
-                  ? styles.lightPrimaryColor.color
+                  ? pollAdvanceOptionsSwitchThumbColor
+                    ? pollAdvanceOptionsSwitchThumbColor
+                    : styles.primaryColor.color
                   : styles.lightGreyThumb.color
               }
               ios_backgroundColor={styles.lightGreyBackground.color}
@@ -293,11 +333,15 @@ const CreatePollUI = () => {
             <Switch
               trackColor={{
                 false: styles.lightGreyBackground.color,
-                true: styles.primaryColor.color,
+                true: pollAdvanceOptionsSwitchTrackColor
+                  ? pollAdvanceOptionsSwitchTrackColor
+                  : styles.lightPrimaryColor.color,
               }}
               thumbColor={
                 anonymousPollEnabled
-                  ? styles.lightPrimaryColor.color
+                  ? pollAdvanceOptionsSwitchThumbColor
+                    ? pollAdvanceOptionsSwitchThumbColor
+                    : styles.primaryColor.color
                   : styles.lightGreyThumb.color
               }
               ios_backgroundColor={styles.lightGreyBackground.color}
@@ -320,11 +364,15 @@ const CreatePollUI = () => {
             <Switch
               trackColor={{
                 false: styles.lightGreyBackground.color,
-                true: styles.primaryColor.color,
+                true: pollAdvanceOptionsSwitchTrackColor
+                  ? pollAdvanceOptionsSwitchTrackColor
+                  : styles.lightPrimaryColor.color,
               }}
               thumbColor={
                 liveResultsEnabled
-                  ? styles.lightPrimaryColor.color
+                  ? pollAdvanceOptionsSwitchThumbColor
+                    ? pollAdvanceOptionsSwitchThumbColor
+                    : styles.primaryColor.color
                   : styles.lightGreyThumb.color
               }
               ios_backgroundColor={styles.lightGreyBackground.color}

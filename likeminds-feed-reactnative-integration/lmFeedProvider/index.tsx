@@ -61,6 +61,7 @@ export const LMFeedProvider = ({
   notificationFeedStyle,
   topicsStyle,
   pollStyle,
+  createPollStyle,
 }: LMFeedProviderProps): React.JSX.Element => {
   const [isInitiated, setIsInitiated] = useState(false);
   const dispatch = useAppDispatch();
@@ -114,6 +115,7 @@ export const LMFeedProvider = ({
           notificationFeedStyle,
           topicsStyle,
           pollStyle,
+          createPollStyle,
         }}
       >
         <View style={styles.flexStyling}>{children}</View>

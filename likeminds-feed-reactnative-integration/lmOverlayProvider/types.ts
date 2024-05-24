@@ -1,6 +1,7 @@
 import React from "react";
 import { LMFeedClient } from "@likeminds.community/feed-js";
 import {
+  CreatePollStyle,
   CreatePostStyleProps,
   LoaderStyleProps,
   NotificationFeedStyleProps,
@@ -27,4 +28,5 @@ export interface LMOverlayProviderProps {
   notificationFeedStyle?: NotificationFeedStyleProps;
   topicsStyle?: TopicsStyle;
   pollStyle?: PollStyle;
+  createPollStyle?: CreatePollStyle;
 }

@@ -124,9 +124,11 @@ const PollConversationUI = ({
               >
                 <Image
                   style={[styles.editImage, { tintColor: "black" }]}
-                  source={require(editPollOptionsIcon
-                    ? editPollOptionsIcon
-                    : "../../../assets/images/edit_icon3x.png")}
+                  source={
+                    editPollOptionsIcon
+                      ? editPollOptionsIcon
+                      : require("../../../assets/images/edit_icon3x.png")
+                  }
                 />
               </TouchableOpacity>
               <TouchableOpacity
@@ -135,9 +137,11 @@ const PollConversationUI = ({
               >
                 <Image
                   style={styles.editImage}
-                  source={require(clearPollOptionsIcon
-                    ? clearPollOptionsIcon
-                    : "../../../assets/images/cross_circle_icon3x.png")}
+                  source={
+                    clearPollOptionsIcon
+                      ? clearPollOptionsIcon
+                      : require("../../../assets/images/cross_circle_icon3x.png")
+                  }
                 />
               </TouchableOpacity>
             </View>
