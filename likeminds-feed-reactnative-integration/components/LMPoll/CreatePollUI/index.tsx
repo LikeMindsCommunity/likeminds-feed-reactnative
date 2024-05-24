@@ -138,6 +138,8 @@ const CreatePollUI = () => {
                     { flex: 1 },
                     pollOptionsStyle ? pollOptionsStyle : null,
                   ]}
+                  maxLength={40}
+                  numberOfLines={1}
                   placeholderTextColor="#c5c5c5"
                   onChangeText={(e: any) => {
                     handleInputOptionsChangeFunction(index, e);

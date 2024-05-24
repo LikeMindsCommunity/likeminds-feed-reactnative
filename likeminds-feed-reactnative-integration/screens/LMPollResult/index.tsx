@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
   SafeAreaView,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -43,44 +44,44 @@ export const PollResult = ({ navigation, route }: any) => {
       >
         {tabsValueArr?.map((val: any) => {
           return (
-              <PollStack.Screen
-                name={val?.text}
-                children={(props: any) => (
-                  <TabScreenUI pollID={pollId} votes={val?.Id} {...props} />
-                )}
-                options={{
-                  tabBarLabel: ({ focused }) => (
-                    <View>
-                      <Text
-                        style={[
-                          styles.font,
-                          {
-                            color: focused
-                              ? STYLES.$COLORS.PRIMARY
-                              : STYLES.$COLORS.MSG,
-                            textAlign: "center",
-                          },
-                        ]}
-                      >
-                        {val?.voteCount}
-                      </Text>
-                      <Text
-                        style={[
-                          styles.font,
-                          {
-                            color: focused
-                              ? STYLES.$COLORS.PRIMARY
-                              : STYLES.$COLORS.MSG,
-                            marginTop: Layout.normalize(5),
-                          },
-                        ]}
-                      >
-                        {val?.text}
-                      </Text>
-                    </View>
-                  ),
-                }}
-              />
+            <PollStack.Screen
+              name={val?.text}
+              children={(props: any) => (
+                <TabScreenUI pollID={pollId} votes={val?.Id} {...props} />
+              )}
+              options={{
+                tabBarLabel: ({ focused }) => (
+                  <View>
+                    <Text
+                      style={[
+                        styles.font,
+                        {
+                          color: focused
+                            ? STYLES.$COLORS.PRIMARY
+                            : STYLES.$COLORS.MSG,
+                          textAlign: "center",
+                        },
+                      ]}
+                    >
+                      {val?.voteCount}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.font,
+                        {
+                          color: focused
+                            ? STYLES.$COLORS.PRIMARY
+                            : STYLES.$COLORS.MSG,
+                          marginTop: Layout.normalize(5),
+                        },
+                      ]}
+                    >
+                      {val?.text}
+                    </Text>
+                  </View>
+                ),
+              }}
+            />
           );
         })}
       </PollStack.Navigator>
@@ -89,16 +90,42 @@ export const PollResult = ({ navigation, route }: any) => {
 };
 
 const TabScreenUI = ({ pollID, votes }: any) => {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState();
+  const [page, setPage] = useState(1);
+
+  const PAGE_SIZE = 20;
 
   useEffect(() => {
     fetchPollUsers(pollID);
   }, []);
 
+  // this handles the pagination of tagging list
+  const handleLoadMore = async () => {
+    if (users.length >= page * PAGE_SIZE) {
+      const res: any = await Client.myClient.getPollVotes({
+        pollId: `${pollID}`,
+        votes: [votes],
+        page: page + 1,
+        pageSize: PAGE_SIZE,
+      });
+
+      setPage(page + 1);
+
+      if (res?.success) {
+        let userList = res?.data?.votes.map(
+          (item) => res?.data?.users[item?.users[0]]
+        );
+        setUsers([...users, ...userList]);
+      }
+    }
+  };
+
   const fetchPollUsers = async (pollID?: string) => {
     const res: any = await Client.myClient.getPollVotes({
       pollId: `${pollID}`,
       votes: [votes],
+      page: page,
+      pageSize: PAGE_SIZE,
     });
 
     if (res?.success) {
@@ -111,7 +138,13 @@ const TabScreenUI = ({ pollID, votes }: any) => {
 
   return (
     <View style={styles.page}>
-      {users?.length < 1 ? (
+      {!users ? (
+        <View style={styles.nothingDM}>
+          <View style={[styles.justifyCenter]}>
+            <ActivityIndicator size="large" color={STYLES.$COLORS.PRIMARY} />
+          </View>
+        </View>
+      ) : users?.length < 1 ? (
         <View style={styles.nothingDM}>
           <View style={[styles.justifyCenter]}>
             <Image
@@ -151,6 +184,7 @@ const TabScreenUI = ({ pollID, votes }: any) => {
             );
           }}
           onEndReachedThreshold={0.1}
+          onEndReached={handleLoadMore}
           keyExtractor={(item: any) => item?.id?.toString()}
         />
       )}

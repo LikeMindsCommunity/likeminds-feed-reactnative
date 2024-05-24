@@ -5,6 +5,7 @@ import {
   ANONYMOUS_POLL_TITLE,
   EMPTY_OPTIONS_WARNING,
   MAX_DEFAULT_POST_CONTENT_LINES,
+  POLLS_OPTIONS_LIMIT_WARNING,
   POLLS_OPTIONS_WARNING,
   POLL_ENDED_WARNING,
   POLL_MULTIPLE_STATE_EXACTLY,
@@ -64,16 +65,32 @@ const PollConversationView = ({
     ? pollStyles?.visibleLines
     : MAX_DEFAULT_POST_CONTENT_LINES;
 
+  // resets local selected polls state
+  useEffect(() => {
+    setSelectedPolls([]);
+  }, [item]);
+
   // this function navigates to poll result screen if we click on votes or show alert in case of anonymous poll
   const onNavigate = (val: string) => {
     if (item?.isAnonymous) {
       setIsAnonymousPollModalVisible(true);
     } else {
-      navigation.navigate(POLL_RESULT, {
-        screen: val,
-        tabsValueArr: pollsArr,
-        pollId: item?.id,
-      });
+      if (item?.toShowResults == true || hasPollEnded == true) {
+        navigation.navigate(POLL_RESULT, {
+          screen: val,
+          tabsValueArr: pollsArr,
+          pollId: item?.id,
+        });
+      } else {
+        // show toast
+        dispatch({
+          type: SHOW_TOAST,
+          body: {
+            isToast: true,
+            message: "The results will be visible after the poll has ended.",
+          },
+        });
+      }
     }
   };
 
@@ -251,6 +268,14 @@ const PollConversationView = ({
   async function addPollOption() {
     try {
       if (addOptionInputField.length === 0) {
+        return;
+      }else if(pollsArr.length >= 10){
+        setIsAddPollOptionModalVisible(false);
+        setAddOptionInputField("");
+        dispatch({
+          type: SHOW_TOAST,
+          body: { isToast: true, message: POLLS_OPTIONS_LIMIT_WARNING },
+        });
         return;
       }
 

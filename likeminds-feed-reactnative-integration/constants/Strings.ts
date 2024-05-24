@@ -147,6 +147,7 @@ export const QUESTION_WARNING = "Question Field cannot be empty";
 export const EXPIRY_TIME_WARNING = "Please select expiry time";
 export const FUTURE_TIME_WARNING = "Please select a time in the future."
 export const POLLS_OPTIONS_WARNING = "Poll options can't be the same";
+export const POLLS_OPTIONS_LIMIT_WARNING = "Poll options can't be more than 10";
 export const EMPTY_OPTIONS_WARNING = "Empty options are not allowed";
 export const PLACEHOLDER_VALUE = "Ask a question";
 export const OPTION_TEXT = "Option";

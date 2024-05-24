@@ -296,7 +296,7 @@ const PollConversationUI = ({
                 </View>
               </Pressable>
 
-              {!disabled && (
+              {!disabled && toShowResults && (
                 <>
                   {(isPollSentByMe && pollType === PollType.DEFERRED) ||
                   pollType === PollType.INSTANT ||
@@ -364,55 +364,51 @@ const PollConversationUI = ({
           ) : null}
 
           {/* Poll answer text */}
-          {toShowResults === true ? (
-            <Pressable
-              onPress={() => {
-                onNavigate("");
-              }}
+          <Pressable
+            onPress={() => {
+              onNavigate("");
+            }}
+          >
+            <Text
+              style={[
+                styles.mediumText,
+                styles.extraMarginSpace,
+                hue ? { color: `hsl(${hue}, 53%, 15%)` } : null,
+                memberVotedCountStyles ? memberVotedCountStyles : null,
+              ]}
             >
+              {pollAnswerText}
               <Text
                 style={[
-                  styles.mediumText,
-                  styles.extraMarginSpace,
-                  hue ? { color: `hsl(${hue}, 53%, 15%)` } : null,
+                  styles.messageCustomTitle,
                   memberVotedCountStyles ? memberVotedCountStyles : null,
+                  { color: STYLES.$COLORS.MSG },
                 ]}
-              >
-                {pollAnswerText}
+              >{` • ${
+                hasPollEnded
+                  ? "Poll Ended"
+                  : getTimeLeftInPoll(Number(expiryTime))
+              } ${
+                isPollEnded && shouldShowVotes && pollType === PollType.DEFERRED
+                  ? "•"
+                  : ""
+              }`}</Text>
+              {isPollEnded &&
+              shouldShowVotes &&
+              pollType === PollType.DEFERRED ? (
                 <Text
+                  onPress={() => {
+                    resetShowResult();
+                  }}
                   style={[
-                    styles.messageCustomTitle,
+                    styles.mediumText,
                     memberVotedCountStyles ? memberVotedCountStyles : null,
-                    { color: STYLES.$COLORS.MSG },
                   ]}
-                >{` • ${
-                  hasPollEnded
-                    ? "Poll Ended"
-                    : getTimeLeftInPoll(Number(expiryTime))
-                } ${
-                  isPollEnded &&
-                  shouldShowVotes &&
-                  pollType === PollType.DEFERRED
-                    ? "•"
-                    : ""
-                }`}</Text>
-                {isPollEnded &&
-                shouldShowVotes &&
-                pollType === PollType.DEFERRED ? (
-                  <Text
-                    onPress={() => {
-                      resetShowResult();
-                    }}
-                    style={[
-                      styles.mediumText,
-                      memberVotedCountStyles ? memberVotedCountStyles : null,
-                    ]}
-                  >{` ${EDIT_POLL_TEXT}
+                >{` ${EDIT_POLL_TEXT}
                  `}</Text>
-                ) : null}
-              </Text>
-            </Pressable>
-          ) : null}
+              ) : null}
+            </Text>
+          </Pressable>
 
           {/* Submit vote button */}
           {isPollEnded &&
