@@ -4,11 +4,11 @@ import { LMFeedProvider } from "../lmFeedProvider";
 import { StyleSheet, View } from "react-native";
 import { ContextProvider } from "../store/contextStore";
 
-export const LMOverlayProvider = ({
+export const LMOverlayProvider: any = ({
   myClient,
   children,
-  userName,
-  userUniqueId,
+  accessToken,
+  refreshToken,
   lmFeedInterface,
   universalFeedStyle,
   postListStyle,
@@ -18,13 +18,15 @@ export const LMOverlayProvider = ({
   createPostStyle,
   notificationFeedStyle,
   topicsStyle,
+  pollStyle,
+  createPollStyle,
 }: LMOverlayProviderProps) => {
   return (
     <ContextProvider>
       <LMFeedProvider
         myClient={myClient}
-        userName={userName}
-        userUniqueId={userUniqueId}
+        accessToken={accessToken}
+        refreshToken={refreshToken}
         universalFeedStyle={universalFeedStyle}
         postDetailStyle={postDetailStyle}
         postListStyle={postListStyle}
@@ -33,6 +35,8 @@ export const LMOverlayProvider = ({
         createPostStyle={createPostStyle}
         notificationFeedStyle={notificationFeedStyle}
         topicsStyle={topicsStyle}
+        pollStyle={pollStyle}
+        createPollStyle={createPollStyle}
         lmFeedInterface={lmFeedInterface}
       >
         <View style={styles.flexStyling}>{children}</View>

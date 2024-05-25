@@ -28,7 +28,7 @@ interface AppContextProps {
 const Context = createContext<AppContextProps | undefined>(undefined);
 
 
-export const ContextProvider = ({ children }) => {
+export const ContextProvider = ({ children }: any) => {
   const initialState: ContextState = {
     login: LoginInitialState,
     feed: FeedInitialState,

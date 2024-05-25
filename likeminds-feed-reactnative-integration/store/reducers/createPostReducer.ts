@@ -1,8 +1,10 @@
 import {
   ADD_SELECTED_TOPICS,
+  CLEAR_POLL,
   CLEAR_SELECTED_TOPICS,
   DECODE_URL_SUCCESS,
   SET_DISABLED_TOPICS,
+  SET_POLL,
   UPLOAD_ATTACHMENTS,
 } from "../types/types";
 
@@ -12,8 +14,10 @@ export interface CreatePostReducerState {
   linkAttachments: [];
   postContent: "";
   topics: [];
+  poll: {};
   selectedTopics: [];
   disbaledTopics: [];
+  pollAttachment: {};
 }
 
 export const initialState: CreatePostReducerState = {
@@ -22,8 +26,10 @@ export const initialState: CreatePostReducerState = {
   linkAttachments: [],
   postContent: "",
   topics: [],
+  poll: {}, // to send poll data on universal feed screen
   selectedTopics: [],
   disbaledTopics: [],
+  pollAttachment: {}, // for local preview of poll data
 };
 
 export function createPostReducer(state = initialState, action) {
@@ -45,6 +51,19 @@ export function createPostReducer(state = initialState, action) {
         disbaledTopics: topics,
       };
     }
+    case SET_POLL: {
+      const { poll = {} } = action.body;
+      return {
+        ...state,
+        pollAttachment: poll,
+      };
+    }
+    case CLEAR_POLL: {
+      return {
+        ...state,
+        pollAttachment: {},
+      };
+    }
     case DECODE_URL_SUCCESS: {
       const { og_tags = {} } = action.body;
       return { ...state, ogTags: og_tags };
@@ -55,6 +74,7 @@ export function createPostReducer(state = initialState, action) {
         linkAttachmentData = [],
         postContentData = "",
         topics = [],
+        poll = {},
       } = action.body;
       return {
         ...state,
@@ -62,6 +82,7 @@ export function createPostReducer(state = initialState, action) {
         linkAttachments: linkAttachmentData,
         postContent: postContentData,
         topics: topics,
+        poll: poll,
       };
     }
     default:

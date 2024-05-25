@@ -19,6 +19,7 @@ import {
   DOCUMENT_ATTACHMENT_TYPE,
   IMAGE_ATTACHMENT_TYPE,
   LINK_ATTACHMENT_TYPE,
+  POLL_ATTACHMENT_TYPE,
   VIDEO_ATTACHMENT_TYPE,
 } from "../constants/Strings";
 import { IComment } from "@likeminds.community/feed-js";
@@ -43,8 +44,9 @@ import { GetNotificationFeedResponse } from "@likeminds.community/feed-js/dist/n
 export function convertUniversalFeedPosts(data: any): LMPostUI[] {
   const postData = data.posts;
   const userData = data.users;
+  const widgetData = data.widgets;
   return postData?.map((item: IPost) => {
-    return convertToLMPostUI(item, userData);
+    return convertToLMPostUI(item, userData, widgetData);
   });
 }
 
@@ -55,12 +57,13 @@ export function convertUniversalFeedPosts(data: any): LMPostUI[] {
  */
 export function convertToLMPostUI(
   post: IPost,
-  user: { [key: string]: LMUserUI }
+  user: { [key: string]: LMUserUI },
+  widgets: any
 ): LMPostUI {
   const postData: LMPostUI = {
     id: post.Id,
     attachments: post.attachments
-      ? convertToLMAttachmentsUI(post.attachments)
+      ? convertToLMAttachmentsUI(post.attachments, widgets)
       : [],
     commentsCount: post.commentsCount,
     communityId: post.communityId,
@@ -76,10 +79,11 @@ export function convertToLMPostUI(
       : [],
     text: post.text,
     updatedAt: post.updatedAt,
-    userId: post.userId,
+    userId: user?.id?.toString(),
     uuid: post.uuid,
-    user: convertToLMUserUI(user[post.userId]),
+    user: convertToLMUserUI(user[post.uuid]),
     topics: post.topics,
+    users: user,
   };
   return postData;
 }
@@ -88,10 +92,13 @@ export function convertToLMPostUI(
  * @param data: [Attachment]
  * @returns list of [LMAttachmentUI]
  */
-export function convertToLMAttachmentsUI(data: Attachment[]): LMAttachmentUI[] {
+export function convertToLMAttachmentsUI(
+  data: Attachment[],
+  widgets: any
+): LMAttachmentUI[] {
   return data?.map((item: Attachment) => {
     return {
-      attachmentMeta: convertToLMAttachmentMetaUI(item.attachmentMeta),
+      attachmentMeta: convertToLMAttachmentMetaUI(item.attachmentMeta, widgets),
       attachmentType: item.attachmentType,
     };
   });
@@ -102,7 +109,8 @@ export function convertToLMAttachmentsUI(data: Attachment[]): LMAttachmentUI[] {
  * @returns LMAttachmentMetaUI
  */
 export function convertToLMAttachmentMetaUI(
-  data: AttachmentMeta
+  data: AttachmentMeta,
+  widgets
 ): LMAttachmentMetaUI {
   const attachmentMetaData: LMAttachmentMetaUI = {
     duration: data.duration,
@@ -112,8 +120,44 @@ export function convertToLMAttachmentMetaUI(
     pageCount: data.pageCount,
     size: data.size,
     url: data.url,
+    ...convertToLMPollUI(data?.entityId, widgets),
   };
   return attachmentMetaData;
+}
+
+// to calculate days of poll expiry.
+const calculateDaysToExpiry = (item) => {
+  const difference = item?.metadata?.expiryTime - Date.now();
+
+  const millisecondsInADay = 24 * 60 * 60 * 1000;
+  const millisecondsToDays = difference / millisecondsInADay;
+
+  return Math.ceil(millisecondsToDays)?.toString();
+};
+
+/**
+ * @param is: string
+ * @param widgets: any
+ * @returns any
+ */
+export function convertToLMPollUI(id: string, widgets: any) {
+  const item = widgets[id];
+  const pollMetaData: any = {
+    id: id,
+    title: item?.metadata?.title,
+    options: item?.LmMeta?.options,
+    allowAddOption: item?.metadata?.allowAddOption,
+    expiryTime: item?.metadata?.expiryTime,
+    expiryDays: calculateDaysToExpiry(item),
+    toShowResults: item?.LmMeta?.toShowResults,
+    createdAt: item?.createdAt,
+    pollAnswerText: item?.LmMeta?.pollAnswerText,
+    multipleSelectNumber: item?.metadata?.multipleSelectNumber,
+    multipleSelectState: item?.metadata?.multipleSelectState,
+    isAnonymous: item?.metadata?.isAnonymous,
+    pollType: item?.metadata?.pollType,
+  };
+  return pollMetaData;
 }
 
 /**
@@ -203,9 +247,9 @@ export function convertToLMLikeUI(
     id: likes?.id,
     createdAt: likes?.createdAt,
     updatedAt: likes?.updatedAt,
-    userId: likes?.userId,
+    userId: likes?.uuid,
     uuid: likes?.uuid,
-    user: convertToLMUserUI(users[likes?.userId]),
+    user: convertToLMUserUI(users[likes?.uuid]),
   };
   return likesData;
 }
@@ -301,6 +345,50 @@ export function convertLinkMetaData(data: LMOGTagsUI[]): LMAttachmentUI[] {
 }
 
 /**
+ * @param options: {text:string}[]
+ * @returns string[]
+ */
+export function convertPollOptionsMetaData(
+  options: { text: string }[]
+): string[] {
+  const convertedPollOptions = options.map((item) => item?.text);
+  return convertedPollOptions;
+}
+
+/**
+ * @param item: any
+ * @returns LMAttachmentUI
+ */
+export function convertPollMetaData(item: any): LMAttachmentUI {
+  return {
+    attachmentMeta: {
+      entityId: item?.id ? item?.id : "",
+      format: "",
+      name: "",
+      ogTags: {
+        description: "",
+        title: "",
+        url: "",
+        image: "",
+      },
+      size: 0,
+      duration: 0,
+      pageCount: 0,
+      url: "",
+      title: item?.title,
+      expiryTime: item?.expiryTime,
+      options: convertPollOptionsMetaData(item?.options),
+      multipleSelectState: item?.multipleSelectState,
+      pollType: item?.pollType,
+      multipleSelectNumber: item?.multipleSelectNumber,
+      isAnonymous: item?.isAnonymous,
+      allowAddOption: item?.allowAddOption,
+    },
+    attachmentType: POLL_ATTACHMENT_TYPE, // You need to specify the attachment type.
+  };
+}
+
+/**
  * @param postId: string
  * @param data: [IComment]
  * @param user: [Map] of String to User
@@ -325,9 +413,9 @@ export function convertToLMCommentUI(
       text: item.text,
       replies: item?.replies ? item.replies : [],
       updatedAt: item.updatedAt,
-      userId: item.userId,
+      userId: item.uuid,
       uuid: item.uuid,
-      user: convertToLMUserUI(user[item.userId]),
+      user: convertToLMUserUI(user[item.uuid]),
     };
   });
 }

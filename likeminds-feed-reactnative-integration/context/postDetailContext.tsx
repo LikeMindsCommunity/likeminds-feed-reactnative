@@ -478,7 +478,7 @@ export const PostDetailContextProvider = ({
     }
     if (itemId === EDIT_POST_MENU_ITEM) {
       dispatch(autoPlayPostVideo(""));
-      navigation.navigate(CREATE_POST, { postId });
+      navigation.navigate(CREATE_POST, { postId, post: postDetail });
       LMFeedAnalytics.track(
         Events.POST_EDITED,
         new Map<string, string>([

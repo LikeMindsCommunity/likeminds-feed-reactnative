@@ -13,6 +13,8 @@ import {
   CREATE_POST,
   POST_LIKES_LIST,
   LMOverlayProvider,
+  LMFeedCreatePollScreen,
+  LMFeedPollResult,
 } from '@likeminds.community/feed-rn-core';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
@@ -26,6 +28,7 @@ import {
 import {myClient} from '.';
 import {
   ActivityIndicator,
+  KeyboardAvoidingView,
   Linking,
   PermissionsAndroid,
   Platform,
@@ -45,6 +48,13 @@ import {Credentials} from './login/credentials';
 import {LoginSchemaRO} from './login/loginSchemaRO';
 import {useQuery} from '@realm/react';
 import FetchKeyInputScreen from './login';
+import {
+  CREATE_POLL_SCREEN,
+  POLL_RESULT,
+} from '@likeminds.community/feed-rn-core/constants/screenNames';
+import {initiateAPI} from './registerDeviceApi';
+import {createPollStyle, pollStyle} from './styles';
+import CreatePollScreenWrapper from './feedScreen/createPollScreenWrapper';
 
 class CustomCallbacks implements LMFeedCallbacks {
   onEventTriggered(eventName: string, eventProperties?: Map<string, string>) {
@@ -70,6 +80,9 @@ const App = () => {
   );
   const [myClient, setMyClient] = useState();
   const [isTrue, setIsTrue] = useState(true);
+  const [accessToken, setAccessToken] = useState('');
+  const [refreshToken, setRefreshToken] = useState('');
+
   const loginSchemaArray: any = useQuery(LoginSchemaRO);
 
   useEffect(() => {
@@ -104,8 +117,28 @@ const App = () => {
   }, [users, isTrue]);
 
   useEffect(() => {
+    async function callInitiateAPI() {
+      const payload: any = {
+        is_guest: false,
+        user_name: userName,
+        user_unique_id: userUniqueID,
+        api_key: apiKey,
+      };
+      const res: any = await initiateAPI(payload);
+      if (res) {
+        setAccessToken(res?.data?.access_token);
+        setRefreshToken(res?.data?.refresh_token);
+      }
+    }
+
     if (apiKey) {
-      const res: any = initMyClient(apiKey);
+      callInitiateAPI();
+    }
+  }, [apiKey]);
+
+  useEffect(() => {
+    if (apiKey) {
+      const res: any = initMyClient();
       setMyClient(res);
     }
   }, [isTrue, apiKey]);
@@ -203,12 +236,14 @@ const App = () => {
   }, []);
 
   return (
-    <>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{flex: 1}}>
       {userName && userUniqueID && apiKey && myClient ? (
         <LMOverlayProvider
           myClient={myClient}
-          userName={userName}
-          userUniqueId={userUniqueID}
+          accessToken={accessToken}
+          refreshToken={refreshToken}
           lmFeedInterface={lmFeedInterface}>
           <NavigationContainer ref={navigationRef} independent={true}>
             <Stack.Navigator screenOptions={{headerShown: false}}>
@@ -225,13 +260,24 @@ const App = () => {
                 name={NOTIFICATION_FEED}
                 component={NotificationWrapper}
               />
+              <Stack.Screen
+                name={POLL_RESULT}
+                component={LMFeedPollResult}
+                options={{
+                  gestureEnabled: false,
+                }}
+              />
+              <Stack.Screen
+                name={CREATE_POLL_SCREEN}
+                component={CreatePollScreenWrapper}
+              />
             </Stack.Navigator>
           </NavigationContainer>
         </LMOverlayProvider>
       ) : !userName && !userUniqueID && !apiKey ? (
         <FetchKeyInputScreen isTrue={isTrue} setIsTrue={setIsTrue} />
       ) : null}
-    </>
+    </KeyboardAvoidingView>
   );
 };
 

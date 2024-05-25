@@ -31,6 +31,7 @@
   },
   "peerDependencies": {
     "@notifee/react-native": ">=7.8.2",
+    "@react-native-community/datetimepicker": ">=7.4.1",
     "@react-native-community/netinfo": ">=11.3.0",
     "@react-native-firebase/app": ">=19.1.2",
     "@react-native-firebase/messaging": ">=19.1.2",
@@ -42,7 +43,10 @@
     "react-native-document-picker": ">=9.1.0",
     "react-native-gesture-handler": ">=2.14.0",
     "react-native-image-picker": ">=7.1.0",
-    "react-native-toast-message": ">=2.2.0"
+    "react-native-toast-message": ">=2.2.0",
+    "@react-navigation/material-top-tabs": ">=6.6.2",
+    "react-native-pager-view": ">=6.1.4",
+    "react-native-tab-view": ">=3.5.0"
   },
   "devDependencies": {
     "@react-native-community/netinfo": ">=11.3.0",

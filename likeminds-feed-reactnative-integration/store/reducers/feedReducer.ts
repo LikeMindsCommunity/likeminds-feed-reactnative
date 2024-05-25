@@ -200,9 +200,9 @@ export const feedReducer = (state = initialState, action) => {
       return { ...state, feed: updatedFeed };
     }
     case EDIT_POST_SUCCESS: {
-      const { post = {}, users = {} } = action.body;
+      const { post = {}, users = {}, widgets = {} } = action.body;
       const updatedFeed = [...state.feed];
-      const postData = convertToLMPostUI(post, users);
+      const postData = convertToLMPostUI(post, users, widgets);
       const index = updatedFeed.findIndex((item) => item.id === postData.id);
       if (index !== -1) {
         updatedFeed[index] = postData;
@@ -235,8 +235,8 @@ export const feedReducer = (state = initialState, action) => {
     }
     case POST_DATA_SUCCESS: {
       const updatedFeed = state.feed;
-      const { post = {}, users = {} } = action.body;
-      const converterPostData = convertToLMPostUI(post, users);
+      const { post = {}, users = {}, widgets = {} } = action.body;
+      const converterPostData = convertToLMPostUI(post, users, widgets);
       const index = updatedFeed.findIndex(
         (item) => item.id === converterPostData.id
       );
