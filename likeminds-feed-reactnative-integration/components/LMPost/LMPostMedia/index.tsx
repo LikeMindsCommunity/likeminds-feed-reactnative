@@ -12,10 +12,12 @@ import {
   DOCUMENT_ATTACHMENT_TYPE,
   IMAGE_ATTACHMENT_TYPE,
   LINK_ATTACHMENT_TYPE,
+  POLL_ATTACHMENT_TYPE,
   VIDEO_ATTACHMENT_TYPE,
 } from "../../../constants/Strings";
 import { LMPostContextValues, useLMPostContext } from "../../../context";
 import { useLMFeedStyles } from "../../../lmFeedProvider";
+import LMPostPollView from "../../LMPoll/LMPostPollView";
 
 const LMPostMedia = React.memo(() => {
   const { post, mediaProps }: LMPostContextValues = useLMPostContext();
@@ -80,6 +82,14 @@ const LMPostMedia = React.memo(() => {
             attachments={post?.attachments}
             {...customPostMediaStyle?.linkPreview}
           />
+        );
+      }
+      case POLL_ATTACHMENT_TYPE: {
+        return (
+          /* @ts-ignore */
+          <View style={{paddingHorizontal:20}}>
+            <LMPostPollView item={post?.attachments && post?.attachments[0]?.attachmentMeta} post={post}  />
+          </View>
         );
       }
       default: {
