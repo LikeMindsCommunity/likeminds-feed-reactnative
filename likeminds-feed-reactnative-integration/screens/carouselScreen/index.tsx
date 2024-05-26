@@ -16,6 +16,7 @@ import { STATUS_BAR_STYLE } from "../../store/types/types";
 import { useAppDispatch } from "../../store/store";
 import { ReactNativeZoomableView } from "@openspacelabs/react-native-zoomable-view";
 import { LMVideoPlayer } from "../../components";
+import { useLMFeedStyles } from "../../lmFeedProvider";
 
 const CarouselScreen = ({ navigation, route }: any) => {
   const dispatch = useAppDispatch();
@@ -67,9 +68,11 @@ const CarouselScreen = ({ navigation, route }: any) => {
   };
   const formattedTime: string = date.toLocaleTimeString("en-IN", timeOptions);
 
-  // const carouselScreenStyles = STYLES.$CAROUSEL_SCREEN_STYLE;
-  // const headerTitle = carouselScreenStyles?.headerTitle;
-  // const headerSubtitle = carouselScreenStyles?.headerSubtitle;
+  const LMFeedContextStyles = useLMFeedStyles();
+  const { carouselScreenStyle }: any = LMFeedContextStyles;
+
+  const headerTitle = carouselScreenStyle?.headerTitle;
+  const headerSubtitle = carouselScreenStyle?.headerSubtitle;
 
   let countText = "";
 
@@ -138,30 +141,30 @@ const CarouselScreen = ({ navigation, route }: any) => {
             <View style={styles.chatRoomInfo}>
               <Text
                 style={{
-                  // color: headerTitle?.color
-                  //   ? headerTitle?.color
-                  color: STYLES.$COLORS.TERTIARY,
-                  // fontSize: headerTitle?.fontSize
-                  //   ? headerTitle?.fontSize
-                  fontSize: STYLES.$FONT_SIZES.LARGE,
-                  // fontFamily: headerTitle?.fontFamily
-                  //   ? headerTitle?.fontFamily
-                  fontFamily: STYLES.$FONT_TYPES.BOLD,
+                  color: headerTitle?.color
+                    ? headerTitle?.color
+                    : STYLES.$COLORS.TERTIARY,
+                  fontSize: headerTitle?.fontSize
+                    ? headerTitle?.fontSize
+                    : STYLES.$FONT_SIZES.LARGE,
+                  fontFamily: headerTitle?.fontFamily
+                    ? headerTitle?.fontFamily
+                    : STYLES.$FONT_TYPES.BOLD,
                 }}
               >
                 {userName}
               </Text>
               <Text
                 style={{
-                  // color: headerSubtitle?.color
-                  //   ? headerSubtitle?.color
-                  color: STYLES.$COLORS.TERTIARY,
-                  // fontSize: headerSubtitle?.fontSize
-                  //   ? headerSubtitle?.fontSize
-                  fontSize: STYLES.$FONT_SIZES.SMALL,
-                  // fontFamily: headerSubtitle?.fontFamily
-                  //   ? headerSubtitle?.fontFamily
-                  fontFamily: STYLES.$FONT_TYPES.MEDIUM,
+                  color: headerSubtitle?.color
+                    ? headerSubtitle?.color
+                    : STYLES.$COLORS.TERTIARY,
+                  fontSize: headerSubtitle?.fontSize
+                    ? headerSubtitle?.fontSize
+                    : STYLES.$FONT_SIZES.SMALL,
+                  fontFamily: headerSubtitle?.fontFamily
+                    ? headerSubtitle?.fontFamily
+                    : STYLES.$FONT_TYPES.MEDIUM,
                 }}
               >
                 {`${

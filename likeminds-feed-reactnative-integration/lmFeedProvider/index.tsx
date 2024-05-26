@@ -60,6 +60,7 @@ export const LMFeedProvider = ({
   createPostStyle,
   notificationFeedStyle,
   topicsStyle,
+  carouselScreenStyle,
 }: LMFeedProviderProps): React.JSX.Element => {
   const [isInitiated, setIsInitiated] = useState(false);
   const dispatch = useAppDispatch();
@@ -123,6 +124,7 @@ export const LMFeedProvider = ({
           createPostStyle,
           notificationFeedStyle,
           topicsStyle,
+          carouselScreenStyle,
         }}
       >
         <View style={styles.flexStyling}>{children}</View>
