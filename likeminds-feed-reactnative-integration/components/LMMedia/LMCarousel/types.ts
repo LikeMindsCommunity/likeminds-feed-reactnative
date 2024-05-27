@@ -1,10 +1,11 @@
-import {ViewStyle} from 'react-native';
-import {LMImageProps} from '../LMImage/types';
-import {LMVideoProps} from '../LMVideo/types';
-import {LMAttachmentUI} from '../../../models';
-import { LMButtonProps } from '../../../uiComponents';
+import { ViewStyle } from "react-native";
+import { LMImageProps } from "../LMImage/types";
+import { LMVideoProps } from "../LMVideo/types";
+import { LMAttachmentUI, LMPostUI } from "../../../models";
+import { LMButtonProps } from "../../../uiComponents";
 
 export interface LMCarouselProps {
+  post: LMPostUI;
   attachments: Array<LMAttachmentUI>; // this represents the array of image & video attachments to be displayed
   carouselStyle?: ViewStyle; // this represents the style of the carousel container
   paginationBoxStyle?: ViewStyle; // this represents the style of the pagination container which contains the indicators
@@ -14,5 +15,5 @@ export interface LMCarouselProps {
   videoItem?: LMVideoProps; // this represents the props for LMVideo component,
   showCancel?: boolean; // this represents the visibility of cancel button
   onCancel?: (index: number) => void; // callback function that executes on click of cancel button,
-  cancelButton?: LMButtonProps
+  cancelButton?: LMButtonProps;
 }

@@ -23,9 +23,13 @@ import {
 } from "../utils";
 import {
   DOCUMENT_ATTACHMENT_TYPE,
+  FILE_UPLOAD_IMAGE_SIZE_VALIDATION,
   FILE_UPLOAD_SIZE_VALIDATION,
+  FILE_UPLOAD_VIDEO_SIZE_VALIDATION,
   IMAGE_ATTACHMENT_TYPE,
   MAX_FILE_SIZE,
+  MAX_IMAGE_FILE_SIZE,
+  MAX_VIDEO_FILE_SIZE,
   MEDIA_UPLOAD_COUNT_VALIDATION,
   MIN_FILE_SIZE,
   VIDEO_ATTACHMENT_TYPE,
@@ -60,6 +64,7 @@ import {
 import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
 import { Events } from "../enums/Events";
 import { Keys } from "../enums/Keys";
+import { CommunityConfigs } from "../communityConfigs";
 
 interface CreatePostContextProps {
   children: ReactNode;
@@ -195,18 +200,50 @@ export const CreatePostContextProvider = ({
         setShowSelecting(false);
       } else {
         const mediaWithSizeCheck: any = [];
+        const communityConfigs = CommunityConfigs.communityConfigs;
+        /* @ts-ignore */
+        const mediaLimitsObject = communityConfigs.find(
+          (obj) => obj.type === "media_limits"
+        );
+        const maxImageSize = mediaLimitsObject?.value?.maxImageSize * 1000;
+        const maxVideoSize = mediaLimitsObject?.value?.maxVideoSize * 1000;
+
         // checks the size of media
         if (res?.assets) {
           for (const media of res.assets) {
             if (
               media?.fileSize &&
-              (media?.fileSize > MAX_FILE_SIZE ||
-                media?.fileSize < MIN_FILE_SIZE)
+              ((media?.type?.includes("image") &&
+                (maxImageSize
+                  ? media?.fileSize > maxImageSize
+                  : media?.fileSize > MAX_IMAGE_FILE_SIZE)) ||
+                (media?.type?.includes("video") &&
+                  (maxVideoSize
+                    ? media?.fileSize > maxVideoSize
+                    : media?.fileSize > MAX_VIDEO_FILE_SIZE)))
             ) {
               dispatch(
                 showToastMessage({
                   isToast: true,
-                  message: FILE_UPLOAD_SIZE_VALIDATION,
+                  message: media?.type?.includes("image")
+                    ? FILE_UPLOAD_IMAGE_SIZE_VALIDATION.replace(
+                        "<x>",
+                        maxImageSize
+                          ? Math.round(maxImageSize / 1000000)?.toString()
+                          : Math.round(
+                              MAX_IMAGE_FILE_SIZE / 1000000
+                            )?.toString()
+                      )
+                    : media?.type?.includes("video")
+                    ? FILE_UPLOAD_VIDEO_SIZE_VALIDATION.replace(
+                        "<x>",
+                        maxVideoSize
+                          ? Math.round(maxVideoSize / 1000000)?.toString()
+                          : Math.round(
+                              MAX_VIDEO_FILE_SIZE / 1000000
+                            )?.toString()
+                      )
+                    : FILE_UPLOAD_SIZE_VALIDATION,
                 })
               );
             } else {
