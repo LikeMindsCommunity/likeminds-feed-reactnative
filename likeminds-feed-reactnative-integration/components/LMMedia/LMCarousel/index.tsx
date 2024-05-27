@@ -14,7 +14,10 @@ import { useAppDispatch } from "../../../store/store";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { STATUS_BAR_STYLE } from "../../../store/types/types";
-import { CAROUSEL_SCREEN } from "../../../constants/screenNames";
+import {
+  CAROUSEL_SCREEN,
+  UNIVERSAL_FEED,
+} from "../../../constants/screenNames";
 
 const LMCarousel = React.memo(
   ({
@@ -123,12 +126,12 @@ const LMCarousel = React.memo(
             {item?.attachmentType === VIDEO_ATTACHMENT_TYPE && (
               <TouchableOpacity
                 onPress={() => {
-                  previousRoute?.name !== "UniversalFeed" &&
+                  previousRoute?.name !== UNIVERSAL_FEED &&
                     navigation.navigate(CAROUSEL_SCREEN, {
                       dataObject: post,
                       index,
                     });
-                  previousRoute?.name !== "UniversalFeed" &&
+                  previousRoute?.name !== UNIVERSAL_FEED &&
                     dispatch({
                       type: STATUS_BAR_STYLE,
                       body: {

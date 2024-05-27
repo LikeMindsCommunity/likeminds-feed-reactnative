@@ -84,29 +84,6 @@ function LMVideoPlayer({ url }) {
           }}
           onError={(err) => console.log("err", err)}
         />
-        {/* <VideoPlayer
-                    source={{uri: url}}
-                    paused={puased}
-                    style={styles.videoPlayer}
-                    videoRef={ref}
-                    onProgress={(x) => {
-                      setProgress(x);
-                    }}
-                    resizeMode="contain"
-                    muted={mute}
-                    onEnd={() => {
-                      setPaused(true); // Pause the video
-                      setProgress({ ...progress, currentTime: 0 }); // Reset seek position
-                      ref.current.seek(0); // Seek to the beginning of the video
-                    }}
-                    onError={(err) => console.log("err",err)}
-                    disablePlayPause={true}
-                    showOnStart={false}
-                    showDuration={false}
-                    disableVolume={true}
-                    disableBack={true}
-                    disableFullscreen={true}
-                  /> */}
         {clicked && (
           <TouchableOpacity
             style={{
