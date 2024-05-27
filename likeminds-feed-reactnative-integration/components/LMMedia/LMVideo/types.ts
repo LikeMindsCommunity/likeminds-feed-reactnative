@@ -25,4 +25,5 @@ export interface LMVideoProps {
   videoInFeed?: boolean;
   videoInCarousel?: boolean;
   currentVideoInCarousel?: string;
+  showPlayPause?: boolean;
 }

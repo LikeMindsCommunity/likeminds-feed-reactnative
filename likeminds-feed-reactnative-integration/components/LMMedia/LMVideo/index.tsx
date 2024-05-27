@@ -41,6 +41,7 @@ const LMVideo = React.memo(
     videoInFeed,
     videoInCarousel,
     currentVideoInCarousel,
+    showPlayPause,
   }: LMVideoProps) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -49,6 +50,7 @@ const LMVideo = React.memo(
       showControls ? showControls : true
     );
     const player = useRef<VideoRef>(null);
+    const [paused, setPaused] = useState(true);
 
     const currentVideoId = useAppSelector(
       (state) => state.feed.autoPlayVideoPostId
@@ -109,23 +111,25 @@ const LMVideo = React.memo(
               },
             ])}
             paused={
-              videoInFeed
-                ? autoPlay
-                  ? currentVideoId === postId
-                    ? videoInCarousel
-                      ? currentVideoInCarousel === videoUrl
-                        ? false
-                        : true
-                      : false
-                    : true
-                  : playingStatus
-                : autoPlay
-                ? videoInCarousel
-                  ? currentVideoInCarousel === videoUrl
-                    ? false
-                    : true
-                  : false
-                : playingStatus
+              // Will work on below commented code while working on autoplay ticket
+              // videoInFeed
+              //   ? autoPlay
+              //     ? currentVideoId === postId
+              //       ? videoInCarousel
+              //         ? currentVideoInCarousel === videoUrl
+              //           ? false
+              //           : true
+              //         : false
+              //       : true
+              //     : playingStatus
+              //   : autoPlay
+              //   ? videoInCarousel
+              //     ? currentVideoInCarousel === videoUrl
+              //       ? false
+              //       : true
+              //     : false
+              //   : playingStatus
+              paused
             } // handles the auto play/pause functionality
             muted={mute}
           />
@@ -228,6 +232,39 @@ const LMVideo = React.memo(
               </>
             </TouchableOpacity>
           </TouchableOpacity>
+        )}
+
+        {showPlayPause && (
+          <View
+            style={{
+              flexDirection: "row",
+              width: "100%",
+              height: "100%",
+              position: "absolute",
+              backgroundColor: "rgba(0,0,0,.5)",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                setPaused(!paused);
+              }}
+            >
+              <Image
+                source={
+                  paused
+                    ? require("../../../assets/images/play-button.png")
+                    : require("../../../assets/images/pause-button.png")
+                }
+                style={{
+                  width: 40,
+                  height: 40,
+                  tintColor: "white",
+                }}
+              />
+            </TouchableOpacity>
+          </View>
         )}
       </View>
     );
