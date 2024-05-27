@@ -178,7 +178,7 @@ const LMCarousel = React.memo(
                   }
                   postId={videoItem?.postId}
                   showMuteUnmute={
-                    previousRoute?.name === "UniversalFeed" ? false : true
+                    previousRoute?.name === UNIVERSAL_FEED ? false : true
                   }
                 />
               </TouchableOpacity>
