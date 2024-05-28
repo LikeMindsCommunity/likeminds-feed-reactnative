@@ -90,6 +90,7 @@ const LMPostMedia = React.memo(() => {
                   : true
               }
               videoInFeed={mediaProps?.videoProps?.videoInFeed}
+              showMuteUnmute={true}
             />
           </TouchableOpacity>
         );

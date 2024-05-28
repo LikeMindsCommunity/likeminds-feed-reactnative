@@ -14,6 +14,15 @@ const styles = StyleSheet.create({
     zIndex: 1,
     opacity: 0.8,
   },
+  activityIndicatorContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   headerElement: {
     backgroundColor: "black",
     display: "flex",

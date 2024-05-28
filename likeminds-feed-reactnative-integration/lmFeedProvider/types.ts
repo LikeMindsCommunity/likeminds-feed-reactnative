@@ -379,6 +379,11 @@ export interface TopicsStyle {
   arrowDownStyle?: ImageStyle;
 }
 
+export interface CarouselScreenStyle {
+  headerTitle?: TextStyle;
+  headerSubtitle?: TextStyle;
+}
+
 export interface ThemeContextProps {
   textStyle?: TextStyles;
   universalFeedStyle?: UniversalFeedStyleProps;
@@ -389,6 +394,7 @@ export interface ThemeContextProps {
   postLikesListStyle?: PostLikesListStyleProps;
   notificationFeedStyle?: NotificationFeedStyleProps;
   topicsStyle?: TopicsStyle;
+  carouselScreenStyle?: CarouselScreenStyle;
 }
 
 export interface LMFeedProviderProps {
@@ -406,4 +412,5 @@ export interface LMFeedProviderProps {
   postLikesListStyle?: PostLikesListStyleProps;
   notificationFeedStyle?: NotificationFeedStyleProps;
   topicsStyle?: TopicsStyle;
+  carouselScreenStyle?: CarouselScreenStyle;
 }

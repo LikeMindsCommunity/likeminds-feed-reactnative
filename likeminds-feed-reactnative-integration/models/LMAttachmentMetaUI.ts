@@ -1,4 +1,4 @@
-import {LMOGTagsUI} from './LMOGTagsUI';
+import { LMOGTagsUI } from "./LMOGTagsUI";
 
 // data model for attachmentMeta object inside attachments
 export interface LMAttachmentMetaUI {
@@ -9,5 +9,6 @@ export interface LMAttachmentMetaUI {
   size?: number;
   duration?: number;
   pageCount?: number;
-  url?: string;
+  url: string;
+  thumbnailUrl?: string;
 }

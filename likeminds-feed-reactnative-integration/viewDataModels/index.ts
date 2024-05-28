@@ -112,6 +112,7 @@ export function convertToLMAttachmentMetaUI(
     pageCount: data.pageCount,
     size: data.size,
     url: data.url,
+    thumbnailUrl: data.thumbnailUrl,
   };
   return attachmentMetaData;
 }

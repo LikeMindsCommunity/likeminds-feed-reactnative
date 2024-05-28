@@ -1,10 +1,9 @@
 import { View, Text, Image, TouchableOpacity, BackHandler } from "react-native";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { SwiperFlatList } from "react-native-swiper-flatlist";
 import Layout from "../../constants/Layout";
 import {
   IMAGE_ATTACHMENT_TYPE,
-  IMAGE_TEXT,
   PHOTOS_TEXT,
   PHOTO_TEXT,
   VIDEOS_TEXT,
@@ -15,14 +14,25 @@ import styles from "./styles";
 import STYLES from "../../constants/Styles";
 import { STATUS_BAR_STYLE } from "../../store/types/types";
 import { useAppDispatch } from "../../store/store";
-import VideoPlayer from "react-native-media-console";
 import { ReactNativeZoomableView } from "@openspacelabs/react-native-zoomable-view";
+import { LMVideoPlayer } from "../../components";
+import { useLMFeedStyles } from "../../lmFeedProvider";
 
 const CarouselScreen = ({ navigation, route }: any) => {
-  const video = useRef<any>(null);
   const dispatch = useAppDispatch();
   const { index, dataObject, backIconPath } = route.params;
   const data = dataObject?.attachments;
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const viewabilityConfig = useRef({
+    itemVisiblePercentThreshold: 50,
+  });
+
+  const onViewableItemsChanged = useRef(({ viewableItems }) => {
+    if (viewableItems.length > 0) {
+      setCurrentIndex(viewableItems[0].index);
+    }
+  });
 
   let imageCount = 0;
   let videoCount = 0;
@@ -58,9 +68,11 @@ const CarouselScreen = ({ navigation, route }: any) => {
   };
   const formattedTime: string = date.toLocaleTimeString("en-IN", timeOptions);
 
-  // const carouselScreenStyles = STYLES.$CAROUSEL_SCREEN_STYLE;
-  // const headerTitle = carouselScreenStyles?.headerTitle;
-  // const headerSubtitle = carouselScreenStyles?.headerSubtitle;
+  const LMFeedContextStyles = useLMFeedStyles();
+  const { carouselScreenStyle }: any = LMFeedContextStyles;
+
+  const headerTitle = carouselScreenStyle?.headerTitle;
+  const headerSubtitle = carouselScreenStyle?.headerSubtitle;
 
   let countText = "";
 
@@ -129,30 +141,30 @@ const CarouselScreen = ({ navigation, route }: any) => {
             <View style={styles.chatRoomInfo}>
               <Text
                 style={{
-                  // color: headerTitle?.color
-                  //   ? headerTitle?.color
-                  color: STYLES.$COLORS.TERTIARY,
-                  // fontSize: headerTitle?.fontSize
-                  //   ? headerTitle?.fontSize
-                  fontSize: STYLES.$FONT_SIZES.LARGE,
-                  // fontFamily: headerTitle?.fontFamily
-                  //   ? headerTitle?.fontFamily
-                  fontFamily: STYLES.$FONT_TYPES.BOLD,
+                  color: headerTitle?.color
+                    ? headerTitle?.color
+                    : STYLES.$COLORS.TERTIARY,
+                  fontSize: headerTitle?.fontSize
+                    ? headerTitle?.fontSize
+                    : STYLES.$FONT_SIZES.LARGE,
+                  fontFamily: headerTitle?.fontFamily
+                    ? headerTitle?.fontFamily
+                    : STYLES.$FONT_TYPES.BOLD,
                 }}
               >
                 {userName}
               </Text>
               <Text
                 style={{
-                  // color: headerSubtitle?.color
-                  //   ? headerSubtitle?.color
-                  color: STYLES.$COLORS.TERTIARY,
-                  // fontSize: headerSubtitle?.fontSize
-                  //   ? headerSubtitle?.fontSize
-                  fontSize: STYLES.$FONT_SIZES.SMALL,
-                  // fontFamily: headerSubtitle?.fontFamily
-                  //   ? headerSubtitle?.fontFamily
-                  fontFamily: STYLES.$FONT_TYPES.MEDIUM,
+                  color: headerSubtitle?.color
+                    ? headerSubtitle?.color
+                    : STYLES.$COLORS.TERTIARY,
+                  fontSize: headerSubtitle?.fontSize
+                    ? headerSubtitle?.fontSize
+                    : STYLES.$FONT_SIZES.SMALL,
+                  fontFamily: headerSubtitle?.fontFamily
+                    ? headerSubtitle?.fontFamily
+                    : STYLES.$FONT_TYPES.MEDIUM,
                 }}
               >
                 {`${
@@ -186,26 +198,23 @@ const CarouselScreen = ({ navigation, route }: any) => {
                     source={{ uri: item?.attachmentMeta?.url }}
                   />
                 </ReactNativeZoomableView>
-              ) : item?.attachmentType === VIDEO_ATTACHMENT_TYPE ? (
-                <View style={styles.video}>
-                  <VideoPlayer
-                    /* @ts-ignore */
-                    source={{
-                      uri: item?.attachmentMeta?.url,
-                    }}
-                    videoStyle={styles.videoPlayer}
-                    videoRef={video}
-                    disableVolume={true}
-                    disableBack={true}
-                    disableFullscreen={true}
-                    paused={true}
-                    showOnStart={true}
-                  />
-                </View>
+              ) : item?.attachmentType === VIDEO_ATTACHMENT_TYPE &&
+                index === currentIndex ? (
+                <LMVideoPlayer url={item?.attachmentMeta?.url} />
+              ) : item?.attachmentType === VIDEO_ATTACHMENT_TYPE &&
+                index !== currentIndex ? (
+                <Image
+                  style={styles.image}
+                  source={{
+                    uri: item?.attachmentMeta?.thumbnailUrl,
+                  }}
+                />
               ) : null}
             </View>
           );
         }}
+        onViewableItemsChanged={onViewableItemsChanged.current}
+        viewabilityConfig={viewabilityConfig.current}
       />
     </View>
   );
