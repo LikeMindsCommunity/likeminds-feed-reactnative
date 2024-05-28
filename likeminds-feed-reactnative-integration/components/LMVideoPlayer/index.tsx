@@ -9,9 +9,9 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./styles";
 import STYLES from "../../constants/Styles";
 import Video from "react-native-video";
-import Slider from "@react-native-community/slider";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { SET_MUTED_STATE } from "../../store/types/types";
+import Slider from "react-native-slider";
 
 function LMVideoPlayer({ url }) {
   const ref = useRef<any>();
@@ -131,7 +131,7 @@ function LMVideoPlayer({ url }) {
                 {format(progress.currentTime)}
               </Text>
               <Slider
-                style={{ width: "80%", height: 40 }}
+                style={{ width: "80%", height: 40, marginHorizontal: 5 }}
                 minimumValue={0}
                 maximumValue={progress.seekableDuration}
                 minimumTrackTintColor="#FFFFFF"
@@ -141,6 +141,11 @@ function LMVideoPlayer({ url }) {
                 onValueChange={(x) => {
                   ref.current.seek(x);
                 }}
+                thumbTouchSize={{
+                  height: 30,
+                  width: 30,
+                }}
+                thumbTintColor={"green"}
               />
               <Text style={{ color: "white", marginRight: 10 }}>
                 {format(progress.seekableDuration)}
