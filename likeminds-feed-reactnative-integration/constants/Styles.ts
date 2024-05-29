@@ -1,3 +1,5 @@
+import { PollStyles } from "./types";
+
 interface StylesProps {
   hue?: number;
   fontColor?: string;
@@ -8,11 +10,11 @@ interface StylesProps {
 
 export class STYLES {
   static $COLORS = {
-    PRIMARY: "hsl(222, 53%, 15%)",
-    SECONDARY: "hsl(222, 47%, 31%)",
+    PRIMARY: "hsl(244, 75%, 59%)",
+    SECONDARY: "hsl(240, 64%, 91%)",
     TERTIARY: "#ffffff",
     MSG: "#777e8e",
-    FONT_PRIMARY: "hsl(222, 53%, 15%)",
+    FONT_PRIMARY: "hsl(244, 75%, 59%)",
     JOINED_BTN: "hsl(222, 22%, 93%)",
     WHITE: '#ffffff',
     BLACK: '#000000',
@@ -92,6 +94,7 @@ export class STYLES {
   };
   static $LMLoaderSizeiOS: 10;
   static $LMLoaderSizeAndroid: 25;
+  static $POLL_STYLES: PollStyles = {};
   static setTheme({
     hue,
     fontColor,

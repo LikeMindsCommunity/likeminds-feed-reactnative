@@ -1,9 +1,11 @@
 import React from "react";
 import { LMFeedClient } from "@likeminds.community/feed-js";
 import {
+  CreatePollStyle,
   CreatePostStyleProps,
   LoaderStyleProps,
   NotificationFeedStyleProps,
+  PollStyle,
   PostDetailStyleProps,
   PostLikesListStyleProps,
   PostListStyleProps,
@@ -14,8 +16,8 @@ import {
 export interface LMOverlayProviderProps {
   myClient: LMFeedClient;
   children: React.ReactNode;
-  userName: string;
-  userUniqueId: string;
+  accessToken: string;
+  refreshToken: string;
   lmFeedInterface?: any;
   universalFeedStyle?: UniversalFeedStyleProps;
   postListStyle?: PostListStyleProps;
@@ -25,4 +27,6 @@ export interface LMOverlayProviderProps {
   postLikesListStyle?: PostLikesListStyleProps;
   notificationFeedStyle?: NotificationFeedStyleProps;
   topicsStyle?: TopicsStyle;
+  pollStyle?: PollStyle;
+  createPollStyle?: CreatePollStyle;
 }

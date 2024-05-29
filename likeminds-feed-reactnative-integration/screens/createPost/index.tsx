@@ -18,6 +18,7 @@ import {
   ADD_FILES,
   ADD_IMAGES,
   ADD_MORE_MEDIA,
+  ADD_POLL,
   ADD_POST_TEXT,
   ADD_VIDEOS,
   CREATE_POST_PLACEHOLDER_TEXT,
@@ -70,6 +71,10 @@ import { Keys } from "../../enums/Keys";
 import { userTaggingDecoder } from "../../utils/decodeMentions";
 import { Client } from "../../client";
 import Layout from "../../constants/Layout";
+import { LMPostPollView } from "../../components/LMPoll";
+import { useRoute } from "@react-navigation/native";
+import STYLES from "../../constants/Styles";
+import { PollCustomisableMethodsContextProvider } from "../../context/pollCustomisableCallback";
 
 interface CreatePostProps {
   children: React.ReactNode;
@@ -82,13 +87,17 @@ interface CreatePostProps {
   };
   handleGalleryProp: (type: string) => void;
   handleDocumentProp: () => void;
+  handlePollProp: () => void;
   onPostClickProp: (
     allMedia: Array<LMAttachmentUI>,
     linkData: Array<LMAttachmentUI>,
     content: string,
-    topics: string[]
+    topics: string[],
+    poll: any
   ) => void;
   handleScreenBackPressProp: () => void;
+  onPollEditClicked: any;
+  onPollClearClicked: any;
 }
 
 const CreatePost = ({
@@ -96,19 +105,28 @@ const CreatePost = ({
   route,
   children,
   handleDocumentProp,
+  handlePollProp,
   handleGalleryProp,
   onPostClickProp,
   handleScreenBackPressProp,
+  onPollEditClicked,
+  onPollClearClicked,
 }: CreatePostProps) => {
   return (
-    <CreatePostCustomisableMethodsContextProvider
-      handleDocumentProp={handleDocumentProp}
-      handleGalleryProp={handleGalleryProp}
-      onPostClickProp={onPostClickProp}
-      handleScreenBackPressProp={handleScreenBackPressProp}
+    <PollCustomisableMethodsContextProvider
+      onPollEditClicked={onPollEditClicked}
+      onPollClearClicked={onPollClearClicked}
     >
-      <CreatePostComponent />
-    </CreatePostCustomisableMethodsContextProvider>
+      <CreatePostCustomisableMethodsContextProvider
+        handleDocumentProp={handleDocumentProp}
+        handlePollProp={handlePollProp}
+        handleGalleryProp={handleGalleryProp}
+        onPostClickProp={onPostClickProp}
+        handleScreenBackPressProp={handleScreenBackPressProp}
+      >
+        <CreatePostComponent />
+      </CreatePostCustomisableMethodsContextProvider>
+    </PollCustomisableMethodsContextProvider>
   );
 };
 
@@ -136,6 +154,7 @@ const CreatePostComponent = () => {
     postContentText,
     handleInputChange,
     handleDocument,
+    handlePoll,
     handleGallery,
     handleLoadMore,
     allAttachment,
@@ -153,9 +172,12 @@ const CreatePostComponent = () => {
     formattedDocumentAttachments,
     formattedLinkAttachments,
     formattedMediaAttachments,
+    formattedPollAttachments,
     removeDocumentAttachment,
     removeMediaAttachment,
     removeSingleAttachment,
+    removePollAttachment,
+    editPollAttachment,
     showLinkPreview,
     setShowLinkPreview,
     postDetail,
@@ -182,9 +204,12 @@ const CreatePostComponent = () => {
     (state) => state.feed.selectedTopicsForCreatePostScreen
   );
   const topics = useAppSelector((state) => state.feed.topics);
+  const poll = useAppSelector((state) => state.createPost.pollAttachment);
   const topicsSelected = useAppSelector(
     (state) => state.createPost.selectedTopics
   );
+  const route: any = useRoute();
+  const post = route?.params?.post;
 
   const getTopics = async () => {
     const apiRes = await myClient?.getTopics({
@@ -251,13 +276,15 @@ const CreatePostComponent = () => {
           allAttachment,
           formattedLinkAttachments,
           postContentText,
-          idValuesArray
+          idValuesArray,
+          poll
         )
       : onPostClick(
           allAttachment,
           formattedLinkAttachments,
           postContentText,
-          idValuesArray
+          idValuesArray,
+          poll
         );
     if (!postToEdit) {
       const map: Map<string | undefined, string | undefined> = new Map();
@@ -366,6 +393,7 @@ const CreatePostComponent = () => {
 
   const {
     handleDocumentProp,
+    handlePollProp,
     handleGalleryProp,
     onPostClickProp,
     handleScreenBackPressProp,
@@ -403,6 +431,7 @@ const CreatePostComponent = () => {
             }
           />
         </View>
+
         {mappedTopics.length > 0 && showTopics ? (
           <View
             style={{
@@ -502,7 +531,7 @@ const CreatePostComponent = () => {
             </View>
           )
         )}
-        <View style={styles.border}></View>
+
         {/* text input field */}
         <LMInputText
           {...customTextInputStyle}
@@ -658,6 +687,47 @@ const CreatePostComponent = () => {
 
         {/* selected media section */}
         <View>
+          {/* poll media for create post preview */}
+          {Object.keys(poll).length > 0 ? (
+            <View
+              style={{
+                padding: 20,
+                marginHorizontal: 20,
+                borderRadius: 5,
+                borderColor: "#c5c5c5",
+                borderWidth: 1,
+              }}
+            >
+              <LMPostPollView
+                item={poll}
+                removePollAttachment={removePollAttachment}
+                editPollAttachment={editPollAttachment}
+                post={post}
+              />
+            </View>
+          ) : null}
+
+          {/* poll media for edit post preview */}
+          {formattedPollAttachments.length > 0 ? (
+            <View
+              style={{
+                padding: 20,
+                marginHorizontal: 20,
+                borderRadius: 5,
+                borderColor: "#c5c5c5",
+                borderWidth: 1,
+              }}
+            >
+              <LMPostPollView
+                item={{
+                  ...formattedPollAttachments[0]?.attachmentMeta,
+                  disabled: true,
+                }}
+                post={post}
+              />
+            </View>
+          ) : null}
+
           {/* multi media selection section */}
           {showSelecting ? (
             <View style={styles.selectingMediaView}>
@@ -860,7 +930,8 @@ const CreatePostComponent = () => {
                 ? false
                 : allAttachment?.length > 0 ||
                   formattedLinkAttachments?.length > 0 ||
-                  postContentText.trim() !== ""
+                  postContentText.trim() !== "" ||
+                  Object.keys(poll).length > 0
                 ? false
                 : true
             }
@@ -869,7 +940,8 @@ const CreatePostComponent = () => {
                 ? styles.enabledOpacity
                 : allAttachment?.length > 0 ||
                   formattedLinkAttachments?.length > 0 ||
-                  postContentText.trim() !== ""
+                  postContentText.trim() !== "" ||
+                  Object.keys(poll).length > 0
                 ? styles.enabledOpacity
                 : styles.disabledOpacity
             }
@@ -984,6 +1056,36 @@ const CreatePostComponent = () => {
               children={<Text>{ADD_FILES}</Text>}
               textStyle={styles.selectionOptionstext}
               {...customAttachmentOptionsStyle?.filesAttachmentTextStyle}
+            />
+          </TouchableOpacity>
+
+          {/* poll option */}
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={[
+              styles.optionItemView,
+              customAttachmentOptionsStyle?.filesAttachmentView,
+            ]}
+            onPress={() => {
+              handlePollProp ? handlePollProp() : handlePoll();
+
+              // LMFeedAnalytics.track(
+              //   Events.CLICKED_ON_ATTACHMENT,
+              //   new Map<string, string>([[Keys.TYPE, SELECT_FILE]])
+              // );
+            }}
+          >
+            <LMIcon
+              assetPath={require("../../assets/images/poll_icon3x.png")}
+              color={STYLES.$COLORS.PRIMARY}
+              height={15}
+              widht={15}
+              {...customAttachmentOptionsStyle?.pollAttachmentIcon}
+            />
+            <LMText
+              children={<Text>{ADD_POLL}</Text>}
+              textStyle={styles.selectionOptionstext}
+              {...customAttachmentOptionsStyle?.pollAttachmentTextStyle}
             />
           </TouchableOpacity>
         </View>

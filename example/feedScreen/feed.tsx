@@ -7,7 +7,7 @@ import {
 import {getUniqueId} from 'react-native-device-info';
 import {Alert, Platform, Share} from 'react-native';
 import {validateRegisterDeviceRequest} from '../registerDeviceApi';
-import { pushAPI, token } from '../pushNotification';
+import {pushAPI, token} from '../pushNotification';
 
 const Feed = ({route}) => {
   const {
@@ -21,8 +21,14 @@ const Feed = ({route}) => {
     handleReportPost,
     onOverlayMenuClick,
   } = usePostListContext();
-  const {navigation, newPostButtonClick, onTapNotificationBell, accessToken} =
-    useUniversalFeedContext();
+  const {
+    navigation,
+    newPostButtonClick,
+    onTapNotificationBell,
+    addPollOption,
+    setSelectedPollOptions,
+    submitPoll,
+  } = useUniversalFeedContext();
   const [FCMToken, setFCMToken] = useState('');
 
   const customPostLike = postId => {
@@ -35,9 +41,9 @@ const Feed = ({route}) => {
     savePostHandler(postId, saved);
     console.log('after save', postId, saved);
   };
-  const customHandleEdit = postId => {
-    console.log('before edit select');
-    handleEditPost(postId);
+  const customHandleEdit = (postId, post) => {
+    console.log('before edit select', post);
+    handleEditPost(postId, post);
     console.log('after edit select', postId);
   };
   const customHandlePin = (postId, pinned) => {
@@ -81,12 +87,15 @@ const Feed = ({route}) => {
     onTapNotificationBell();
     console.log('after notification icon tap');
   };
-  const customShareTap = async(postId) => {
+  const customShareTap = async postId => {
     console.log('share', postId);
     try {
       const result = await Share.share({
         // todo: static data (replace with the deeplink)
-        message: Platform.OS === 'ios' ? `www.sampleapp.com://post?post_id=${postId}`: `https://www.sampleapp.com/post?post_id=${postId}`,
+        message:
+          Platform.OS === 'ios'
+            ? `www.sampleapp.com://post?post_id=${postId}`
+            : `https://www.sampleapp.com/post?post_id=${postId}`,
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -102,20 +111,38 @@ const Feed = ({route}) => {
     }
   };
 
+  const customPollSubmitButtonClick = payload => {
+    console.log('before sumbit poll tap');
+    submitPoll(payload);
+    console.log('after sumbit poll tap');
+  };
+
+  const customAddPollOptionsClick = payload => {
+    console.log('before add option click');
+    addPollOption(payload);
+    console.log('after add option click');
+  };
+
+  const customPollOptionClicked = payload => {
+    console.log('before option click');
+    setSelectedPollOptions(payload);
+    console.log('after option click');
+  };
+
   /// Setup notifications
   useEffect(() => {
-   token().then((res) => {            
-     if (!!res) {
-      setFCMToken(res);
-    }
-   });
+    token().then(res => {
+      if (!!res) {
+        setFCMToken(res);
+      }
+    });
   }, []);
 
-  useEffect(() => {
-    if (FCMToken) {
-      pushAPI(FCMToken, accessToken);
-    }
-  }, [FCMToken]);
+  // useEffect(() => {
+  //   if (FCMToken) {
+  //     pushAPI(FCMToken, accessToken);
+  //   }
+  // }, [FCMToken]);
 
   return (
     <UniversalFeed
@@ -124,7 +151,7 @@ const Feed = ({route}) => {
       postLikeHandlerProp={id => customPostLike(id)}
       savePostHandlerProp={(id, saved) => customPostSave(id, saved)}
       onSelectCommentCountProp={id => customHandleCommentClick(id)}
-      selectEditPostProp={id => customHandleEdit(id)}
+      selectEditPostProp={(id, post) => customHandleEdit(id, post)}
       selectPinPostProp={(id, pinned) => customHandlePin(id, pinned)}
       onTapLikeCountProps={id => customHandleLikeCountClick(id)}
       handleDeletePostProps={(visible, postId) =>
@@ -135,10 +162,11 @@ const Feed = ({route}) => {
       onOverlayMenuClickProp={(event, menuItems, postId) =>
         customOverlayMenuCick(event, menuItems, postId)
       }
-      onTapNotificationBellProp={() =>
-        customNotificationBellTap()
-      }
-      onSharePostClicked={(id) => customShareTap(id)}></UniversalFeed>
+      onTapNotificationBellProp={() => customNotificationBellTap()}
+      onSharePostClicked={id => customShareTap(id)}
+      onSubmitButtonClicked={customPollSubmitButtonClick}
+      onAddPollOptionsClicked={customAddPollOptionsClick}
+      onPollOptionClicked={customPollOptionClicked}></UniversalFeed>
   );
 };
 

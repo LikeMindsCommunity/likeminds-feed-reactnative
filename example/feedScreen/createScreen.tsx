@@ -5,8 +5,14 @@ import {
 } from '@likeminds.community/feed-rn-core';
 
 const CreateScreen = ({navigation}) => {
-  const {handleDocument, handleGallery, onPostClick, handleScreenBackPress} =
-    useCreatePostContext();
+  const {
+    handleDocument,
+    handleGallery,
+    onPostClick,
+    handleScreenBackPress,
+    removePollAttachment,
+    editPollAttachment,
+  } = useCreatePostContext();
 
   const customHandleDocumentProp = () => {
     console.log('before document handle');
@@ -23,6 +29,7 @@ const CreateScreen = ({navigation}) => {
     formattedLinkAttachments,
     postContentText,
     topics,
+    poll,
   ) => {
     console.log('before post click');
     onPostClick(
@@ -30,6 +37,7 @@ const CreateScreen = ({navigation}) => {
       formattedLinkAttachments,
       postContentText,
       topics,
+      poll,
     );
     console.log('after post click');
   };
@@ -37,6 +45,16 @@ const CreateScreen = ({navigation}) => {
     console.log('before back click');
     handleScreenBackPress();
     console.log('after back click');
+  };
+  const customPollEditClicked = () => {
+    console.log('before edit poll click');
+    editPollAttachment();
+    console.log('after edit poll  click');
+  };
+  const customPollClearClicked = () => {
+    console.log('before clear poll  click');
+    removePollAttachment();
+    console.log('after clear poll  click');
   };
   return (
     <CreatePost
@@ -47,15 +65,19 @@ const CreateScreen = ({navigation}) => {
         formattedLinkAttachments,
         postContentText,
         topics,
+        poll,
       ) =>
         customHandleCreatePost(
           allAttachment,
           formattedLinkAttachments,
           postContentText,
           topics,
+          poll,
         )
       }
       handleScreenBackPressProp={() => customBackHandler()}
+      onPollEditClicked={customPollEditClicked}
+      onPollClearClicked={customPollClearClicked}
     />
   );
 };

@@ -3,6 +3,7 @@ export const IMAGE_ATTACHMENT_TYPE = 1;
 export const VIDEO_ATTACHMENT_TYPE = 2;
 export const DOCUMENT_ATTACHMENT_TYPE = 3;
 export const LINK_ATTACHMENT_TYPE = 4;
+export const POLL_ATTACHMENT_TYPE = 6;
 
 // post menu items id
 export const DELETE_POST_MENU_ITEM = 1;
@@ -67,6 +68,7 @@ export const SELECT_FILE = "file";
 // create post screen's text
 export const ADD_FILES = "Attach Files";
 export const ADD_IMAGES = "Add Photo";
+export const ADD_POLL = "Add Poll";
 export const ADD_VIDEOS = "Add Video";
 export const CREATE_POST_PLACEHOLDER_TEXT = "Write something here...";
 export const ADD_MORE_MEDIA = "Add More";
@@ -145,3 +147,40 @@ export const MAX_DEFAULT_COMMENT_LINES = 3;
 // comment levels
 export const PARENT_LEVEL_COMMENT = 0;
 export const CHILD_LEVEL_COMMENT = 1;
+
+// poll
+export const DATE_TEXT = "date";
+export const TIME_TEXT = "time";
+export const DATE_TIME_TEXT = "datetime";
+export const POLL_RESULT_TEXT = "Poll Results";
+export const QUESTION_WARNING = "Question Field cannot be empty";
+export const EXPIRY_TIME_WARNING = "Please select expiry time";
+export const FUTURE_TIME_WARNING = "Please select a time in the future.";
+export const POLLS_OPTIONS_WARNING = "Poll options can't be the same";
+export const POLLS_OPTIONS_LIMIT_WARNING = "Poll options can't be more than 10";
+export const EMPTY_OPTIONS_WARNING = "Empty options are not allowed";
+export const PLACEHOLDER_VALUE = "Ask a question";
+export const OPTION_TEXT = "Option";
+export const DATE_PLACEHOLDER = "DD-MM-YYYY hh:mm";
+export const ANONYMOUS_POLL_TEXT = "Anonymous Poll";
+export const LIVE_RESULT_TEXT = "Don't show live results";
+export const USER_CAN_VOTE_FOR = "User can vote for";
+export const SELECT_OPTION = "Select option";
+export const POST_TITLE = "POST";
+export const ADD_OPTION_TEXT = "+ Add an option";
+export const SUBMIT_VOTE_TITLE = "Submit Vote";
+export const EDIT_POLL_TEXT = "Edit Vote";
+export const ADD_NEW_POLL_OPTION = "Add new poll option";
+export const NEW_POLL_OPTION_TEXT =
+  "Enter an option that you think is missing in this poll. This can not be undone.";
+export const SUBMIT_TEXT = "SUBMIT";
+export const POLL_ENDED_WARNING = "Poll ended. Vote cannot be submitted now";
+export const POLL_SUBMITTED_SUCCESSFULLY = "Your vote is submitted succesfully";
+export const ANONYMOUS_POLL_TITLE = "Anonymous poll";
+export const ANONYMOUS_POLL_SUB_TITLE =
+  "This being an anonymous poll, the names of the voters can not be disclosed";
+export const POLL_MULTIPLE_STATE_EXACTLY = 0;
+export const POLL_MULTIPLE_STATE_MAX = 1;
+export const POLL_MULTIPLE_STATE_LEAST = 2;
+export const OKAY = "Okay";
+export const NO_RESPONSES = "No Response";

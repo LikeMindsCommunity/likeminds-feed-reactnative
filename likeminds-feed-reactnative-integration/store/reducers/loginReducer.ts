@@ -1,14 +1,14 @@
-import { INITIATE_API_SUCCESS, MEMBER_STATE_SUCCESS } from "../types/types";
+import { INITIATE_API_SUCCESS, MEMBER_STATE_SUCCESS, VALIDATE_API_SUCCESS } from "../types/types";
 
 export interface LoginReducerState {
   community: {};
-  accessToken: '';
+  accessToken: 'aaa';
   memberRights: [];
   member: {};
 }
 export const initialState: LoginReducerState = {
   community: {},
-  accessToken: '',
+  accessToken: 'aaa',
   memberRights: [],
   member: {},
 };
