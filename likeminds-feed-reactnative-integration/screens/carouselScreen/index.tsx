@@ -1,4 +1,11 @@
-import { View, Text, Image, TouchableOpacity, BackHandler } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  BackHandler,
+  ActivityIndicator,
+} from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { SwiperFlatList } from "react-native-swiper-flatlist";
 import Layout from "../../constants/Layout";
@@ -14,14 +21,18 @@ import styles from "./styles";
 import STYLES from "../../constants/Styles";
 import { STATUS_BAR_STYLE } from "../../store/types/types";
 import { useAppDispatch } from "../../store/store";
-import { ReactNativeZoomableView } from "@openspacelabs/react-native-zoomable-view";
 import { LMVideoPlayer } from "../../components";
 import { useLMFeedStyles } from "../../lmFeedProvider";
+import ImageViewer from "react-native-image-zoom-viewer";
 
 const CarouselScreen = ({ navigation, route }: any) => {
   const dispatch = useAppDispatch();
   const { index, dataObject, backIconPath } = route.params;
   const data = dataObject?.attachments;
+
+  const attachmentsUrls = data.map((item) => ({
+    ["url"]: item.attachmentMeta.url,
+  }));
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const viewabilityConfig = useRef({
@@ -114,6 +125,10 @@ const CarouselScreen = ({ navigation, route }: any) => {
     return () => backHandlerAndroid.remove();
   }, []);
 
+  const renderLoading = () => {
+    return <ActivityIndicator color={"white"} size={"large"} />;
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: "black" }}>
       <View style={styles.header}>
@@ -188,16 +203,23 @@ const CarouselScreen = ({ navigation, route }: any) => {
               }}
             >
               {item?.attachmentType === IMAGE_ATTACHMENT_TYPE ? (
-                <ReactNativeZoomableView
-                  maxZoom={30}
-                  contentWidth={300}
-                  contentHeight={150}
-                >
-                  <Image
-                    style={styles.image}
-                    source={{ uri: item?.attachmentMeta?.url }}
-                  />
-                </ReactNativeZoomableView>
+                <ImageViewer
+                  imageUrls={attachmentsUrls}
+                  style={styles.image}
+                  enablePreload={true}
+                  index={index}
+                  useNativeDriver={true}
+                  enableSwipeDown={false}
+                  loadingRender={renderLoading}
+                  saveToLocalByLongPress={false}
+                  renderIndicator={(currentIndex, allSize) => {
+                    return (
+                      <Text style={{ display: "none" }}>
+                        {currentIndex} / {allSize}
+                      </Text>
+                    );
+                  }}
+                />
               ) : item?.attachmentType === VIDEO_ATTACHMENT_TYPE &&
                 index === currentIndex ? (
                 <LMVideoPlayer url={item?.attachmentMeta?.url} />
