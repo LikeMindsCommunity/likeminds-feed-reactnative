@@ -100,7 +100,7 @@ export interface PostListContextValues {
   renderLoader: () => JSX.Element | null;
   getPostDetail: () => LMPostUI;
   handleDeletePost: (visible: boolean) => void;
-  handleEditPost: (id: string) => void;
+  handleEditPost: (id: string, post: LMPostUI | undefined) => void;
   fetchFeed: (page: number) => Promise<any>;
   handleLoadMore: () => void;
   postLikeHandler: (id: string) => void;
@@ -346,9 +346,9 @@ export const PostListContextProvider = ({
   };
 
   // this function handles the click on edit option of overlayMenu
-  const handleEditPost = (postId) => {
+  const handleEditPost = (postId, post) => {
     dispatch(autoPlayPostVideo(""));
-    navigation.navigate(CREATE_POST, { postId });
+    navigation.navigate(CREATE_POST, { postId, post });
   };
 
   // this handles the click on comment count section of footer

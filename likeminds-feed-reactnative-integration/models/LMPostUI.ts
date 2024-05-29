@@ -23,4 +23,5 @@ export interface LMPostUI {
   uuid: string;
   user: LMUserUI;
   topics: string[];
+  users: { [key: string]: LMUserUI };
 }

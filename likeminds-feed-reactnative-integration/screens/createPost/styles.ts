@@ -42,7 +42,6 @@ export const styles = StyleSheet.create({
     bottom: 0,
     width: layout.window.width,
     backgroundColor: "#fff",
-    height: 122,
   },
   optionItemView: {
     flexDirection: "row",

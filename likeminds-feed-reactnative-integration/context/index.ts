@@ -13,15 +13,55 @@ import {
   PostDetailContextValues,
   usePostDetailContext,
 } from "./postDetailContext";
-import { CreatePostContextProvider, CreatePostContextValues, useCreatePostContext } from "./createPostContext";
-import { PostLikesListContextProvider, PostLikesListContextValues, usePostLikesListContext } from "./postLikesListContext";
-import { LMPostContextProvider, LMPostContextValues, useLMPostContext } from "./postItemContext";
-import { UniversalFeedCustomisableMethodsContextProvider, UniversalFeedCustomisableMethodsContext, useUniversalFeedCustomisableMethodsContext } from "./universalFeedCallbacksContext";
-import { PostDetailCustomisableMethodsContextProvider, PostDetailCustomisableMethodsContext, usePostDetailCustomisableMethodsContext } from "./postDetailCallbacksContext";
-import { CreatePostCustomisableMethodsContextProvider, CreatePostCustomisableMethodsContext, useCreatePostCustomisableMethodsContext } from "./createPostCallbacksContext";
-import { PostLikesCustomisableMethodsContextProvider, PostLikesCustomisableMethodsContext, usePostLikesCustomisableMethodsContext } from "./postLikesListCallbacksContext";
-import { NotificationFeedContextProvider, NotificationFeedContextValues, useNotificationFeedContext } from "./notificationFeedContext";
-import { NotificationFeedCustomisableMethodsContextProvider, NotificationFeedCustomisableMethodsContext, useNotificationFeedCustomisableMethodsContext } from "./notificationFeedCallbacksContext";
+import {
+  useCreatePollContext,
+  CreatePollContextProvider,
+} from "./createPollContextProvider";
+import {
+  CreatePostContextProvider,
+  CreatePostContextValues,
+  useCreatePostContext,
+} from "./createPostContext";
+import {
+  PostLikesListContextProvider,
+  PostLikesListContextValues,
+  usePostLikesListContext,
+} from "./postLikesListContext";
+import {
+  LMPostContextProvider,
+  LMPostContextValues,
+  useLMPostContext,
+} from "./postItemContext";
+import {
+  UniversalFeedCustomisableMethodsContextProvider,
+  UniversalFeedCustomisableMethodsContext,
+  useUniversalFeedCustomisableMethodsContext,
+} from "./universalFeedCallbacksContext";
+import {
+  PostDetailCustomisableMethodsContextProvider,
+  PostDetailCustomisableMethodsContext,
+  usePostDetailCustomisableMethodsContext,
+} from "./postDetailCallbacksContext";
+import {
+  CreatePostCustomisableMethodsContextProvider,
+  CreatePostCustomisableMethodsContext,
+  useCreatePostCustomisableMethodsContext,
+} from "./createPostCallbacksContext";
+import {
+  PostLikesCustomisableMethodsContextProvider,
+  PostLikesCustomisableMethodsContext,
+  usePostLikesCustomisableMethodsContext,
+} from "./postLikesListCallbacksContext";
+import {
+  NotificationFeedContextProvider,
+  NotificationFeedContextValues,
+  useNotificationFeedContext,
+} from "./notificationFeedContext";
+import {
+  NotificationFeedCustomisableMethodsContextProvider,
+  NotificationFeedCustomisableMethodsContext,
+  useNotificationFeedCustomisableMethodsContext,
+} from "./notificationFeedCallbacksContext";
 export {
   UniversalFeedContextProvider,
   UniversalFeedContextValues,
@@ -58,5 +98,7 @@ export {
   useNotificationFeedContext,
   NotificationFeedCustomisableMethodsContext,
   NotificationFeedCustomisableMethodsContextProvider,
-  useNotificationFeedCustomisableMethodsContext
+  useNotificationFeedCustomisableMethodsContext,
+  useCreatePollContext,
+  CreatePollContextProvider,
 };

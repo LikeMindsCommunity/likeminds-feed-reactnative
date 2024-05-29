@@ -7,20 +7,23 @@ import {
   MEMBER_STATE_DATA,
   MEMBER_STATE_FAILED,
   MEMBER_STATE_SUCCESS,
+  VALIDATE_API,
+  VALIDATE_API_FAILED,
+  VALIDATE_API_SUCCESS,
 } from "../types/types";
-import { InitiateUserRequest } from "@likeminds.community/feed-js";
+import { ValidateUserRequest } from "@likeminds.community/feed-js";
 import { Client } from "../../client";
 
-// initiateUser API action
-export const initiateUser =
-  (payload: InitiateUserRequest, showLoader: boolean) => () => {
+// validateUser API action
+export const validateUser =
+  (payload: ValidateUserRequest, showLoader: boolean) => () => {
     try {
       return {
-        type: INITIATE_API_SUCCESS,
+        type: VALIDATE_API_SUCCESS,
         [CALL_API]: {
-          func: Client.myClient.initiateUser(payload),
+          func: Client.myClient.validateUser(payload),
           body: payload,
-          types: [INITIATE_API, INITIATE_API_SUCCESS, INITIATE_API_FAILED],
+          types: [VALIDATE_API, VALIDATE_API_SUCCESS, VALIDATE_API_FAILED],
           showLoader: showLoader,
         },
       };

@@ -5,11 +5,7 @@
 import {AppRegistry} from 'react-native';
 import App from './App.tsx';
 import {name as appName} from './app.json';
-import {
-  initMyClient,
-  getRoute,
-  getNotification,
-} from '@likeminds.community/feed-rn-core';
+import {getRoute, getNotification} from '@likeminds.community/feed-rn-core';
 import messaging from '@react-native-firebase/messaging';
 import notifee, {EventType} from '@notifee/react-native';
 import * as RootNavigation from './RootNavigation.js';

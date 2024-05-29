@@ -32,12 +32,14 @@ import {
   MAX_VIDEO_FILE_SIZE,
   MEDIA_UPLOAD_COUNT_VALIDATION,
   MIN_FILE_SIZE,
+  POLL_ATTACHMENT_TYPE,
   VIDEO_ATTACHMENT_TYPE,
 } from "../constants/Strings";
 import {
   convertDocumentMetaData,
   convertImageVideoMetaData,
   convertLinkMetaData,
+  convertPollMetaData,
   convertToLMPostUI,
 } from "../viewDataModels";
 import _ from "lodash";
@@ -59,12 +61,14 @@ import { RootStackParamList } from "../models/RootStackParamsList";
 import { LMAttachmentUI, LMOGTagsUI, LMPostUI, LMUserUI } from "../models";
 import {
   ADD_SELECTED_TOPICS,
+  CLEAR_POLL,
   CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
 } from "../store/types/types";
 import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
 import { Events } from "../enums/Events";
 import { Keys } from "../enums/Keys";
 import { CommunityConfigs } from "../communityConfigs";
+import { CREATE_POLL_SCREEN } from "../constants/screenNames";
 
 interface CreatePostContextProps {
   children: ReactNode;
@@ -89,6 +93,7 @@ export interface CreatePostContextValues {
   formattedDocumentAttachments: Array<LMAttachmentUI>;
   formattedMediaAttachments: Array<LMAttachmentUI>;
   formattedLinkAttachments: Array<LMAttachmentUI>;
+  formattedPollAttachments: Array<LMAttachmentUI>;
   showLinkPreview: boolean;
   closedOnce: boolean;
   showOptions: boolean;
@@ -122,13 +127,17 @@ export interface CreatePostContextValues {
   setFormattedDocumentAttachments: Dispatch<
     SetStateAction<Array<LMAttachmentUI>>
   >;
+  setFormattedPollAttachments: Dispatch<SetStateAction<Array<LMAttachmentUI>>>;
   setSelectedImageVideo: (type: string) => void;
   setSelectedDocuments: () => void;
   handleGallery: (type: string) => void;
   handleDocument: () => void;
+  handlePoll: () => void;
   removeDocumentAttachment: (index: number) => void;
   removeMediaAttachment: (index: number) => void;
   removeSingleAttachment: () => void;
+  removePollAttachment: () => void;
+  editPollAttachment: () => void;
   allAttachment: Array<LMAttachmentUI>;
   getPostData: () => void;
   postEdit: any;
@@ -139,7 +148,8 @@ export interface CreatePostContextValues {
     allMedia: Array<LMAttachmentUI>,
     linkData: Array<LMAttachmentUI>,
     content: string,
-    topics: string[]
+    topics: string[],
+    poll: any
   ) => void;
   handleScreenBackPress: () => void;
 }
@@ -164,6 +174,7 @@ export const CreatePostContextProvider = ({
   route,
 }: CreatePostContextProps) => {
   const memberData = useAppSelector((state) => state.login.member);
+  const poll = useAppSelector((state) => state.createPost.pollAttachment);
   const dispatch = useAppDispatch();
   const [formattedDocumentAttachments, setFormattedDocumentAttachments] =
     useState<Array<LMAttachmentUI>>([]);
@@ -171,6 +182,9 @@ export const CreatePostContextProvider = ({
     Array<LMAttachmentUI>
   >([]);
   const [formattedLinkAttachments, setFormattedLinkAttachments] = useState<
+    Array<LMAttachmentUI>
+  >([]);
+  const [formattedPollAttachments, setFormattedPollAttachments] = useState<
     Array<LMAttachmentUI>
   >([]);
   const [showLinkPreview, setShowLinkPreview] = useState(false);
@@ -320,7 +334,8 @@ export const CreatePostContextProvider = ({
     allMedia: Array<LMAttachmentUI>,
     linkData: Array<LMAttachmentUI>,
     content: string,
-    topics: string[]
+    topics: string[],
+    poll: any
   ) => {
     const isConnected = await NetworkUtil.isNetworkAvailable();
     if (isConnected) {
@@ -332,8 +347,10 @@ export const CreatePostContextProvider = ({
               linkAttachmentData: linkData,
               postContentData: content.trim(),
               topics: topics,
+              poll: poll,
             })
           );
+      dispatch({ type: CLEAR_POLL });
       navigation.goBack();
     } else {
       Alert.alert("", "Please check your internet connection");
@@ -414,6 +431,11 @@ export const CreatePostContextProvider = ({
     }
   };
 
+  // function handles the navigation to create poll screen
+  const handlePoll = () => {
+    navigation.navigate(CREATE_POLL_SCREEN, { memberData: memberData });
+  };
+
   // function removes the selected documents
   const removeDocumentAttachment = (index: number) => {
     const newDocAttachments = [...formattedDocumentAttachments];
@@ -437,6 +459,17 @@ export const CreatePostContextProvider = ({
   const removeSingleAttachment = () => {
     setFormattedMediaAttachments([]);
     setShowOptions(true);
+  };
+
+  // function removes poll attachment
+  const removePollAttachment = () => {
+    dispatch({ type: CLEAR_POLL });
+    setShowOptions(true);
+  };
+
+  // function edits poll attachment
+  const editPollAttachment = () => {
+    navigation.navigate(CREATE_POLL_SCREEN, { memberData: memberData });
   };
 
   useEffect(() => {
@@ -507,6 +540,12 @@ export const CreatePostContextProvider = ({
     };
   }, [postContentText, closedOnce]);
 
+  useEffect(() => {
+    if (Object.keys(poll)?.length > 0) {
+      setShowOptions(false);
+    }
+  }, [poll]);
+
   // all image/video/document media to be uploaded
   const allAttachment = [
     ...formattedMediaAttachments,
@@ -527,7 +566,11 @@ export const CreatePostContextProvider = ({
     );
 
     setPostDetail(
-      convertToLMPostUI(getPostResponse?.post, getPostResponse?.users)
+      convertToLMPostUI(
+        getPostResponse?.post,
+        getPostResponse?.users,
+        getPostResponse?.widgets
+      )
     );
     return getPostResponse;
   };
@@ -549,6 +592,7 @@ export const CreatePostContextProvider = ({
       const imageVideoMedia: any = [];
       const documentMedia: any = [];
       const linkPreview: any = [];
+      const pollPreview: any = [];
       for (const media of postDetail.attachments) {
         if (media.attachmentType === IMAGE_ATTACHMENT_TYPE) {
           imageVideoMedia.push(media);
@@ -556,6 +600,8 @@ export const CreatePostContextProvider = ({
           imageVideoMedia.push(media);
         } else if (media.attachmentType === DOCUMENT_ATTACHMENT_TYPE) {
           documentMedia.push(media);
+        } else if (media.attachmentType === POLL_ATTACHMENT_TYPE) {
+          pollPreview.push(media);
         } else {
           linkPreview.push(media);
         }
@@ -563,6 +609,7 @@ export const CreatePostContextProvider = ({
       setFormattedMediaAttachments(imageVideoMedia);
       setFormattedDocumentAttachments(documentMedia);
       setFormattedLinkAttachments(linkPreview);
+      setFormattedPollAttachments(pollPreview);
     }
     if (postDetail?.topics) {
       dispatch({
@@ -577,12 +624,20 @@ export const CreatePostContextProvider = ({
     // replace mentions with route
     const contentText = mentionToRouteConverter(postContentText);
     const linkAttachments = showLinkPreview ? formattedLinkAttachments : [];
+    const pollAttachments = convertPollMetaData(
+      formattedPollAttachments[0]?.attachmentMeta
+    );
+
     // call edit post api
     const editPostResponse = dispatch(
       editPost(
         EditPostRequest.builder()
           .setHeading("")
-          .setattachments([...allAttachment, ...linkAttachments])
+          .setattachments([
+            ...allAttachment,
+            ...linkAttachments,
+            pollAttachments,
+          ])
           .setpostId(postDetail?.id)
           .settext(contentText)
           .setTopicIds(topics)
@@ -685,6 +740,9 @@ export const CreatePostContextProvider = ({
     await dispatch({
       type: CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
     });
+    await dispatch({
+      type: CLEAR_POLL,
+    });
     navigation.goBack();
   };
 
@@ -695,6 +753,7 @@ export const CreatePostContextProvider = ({
     formattedDocumentAttachments,
     formattedMediaAttachments,
     formattedLinkAttachments,
+    formattedPollAttachments,
     showLinkPreview,
     closedOnce,
     showOptions,
@@ -726,13 +785,17 @@ export const CreatePostContextProvider = ({
     setFormattedLinkAttachments,
     setFormattedMediaAttachments,
     setFormattedDocumentAttachments,
+    setFormattedPollAttachments,
     setSelectedImageVideo,
     setSelectedDocuments,
     handleGallery,
     handleDocument,
+    handlePoll,
     removeDocumentAttachment,
     removeMediaAttachment,
     removeSingleAttachment,
+    removePollAttachment,
+    editPollAttachment,
     allAttachment,
     getPostData,
     postEdit,

@@ -384,6 +384,38 @@ export interface CarouselScreenStyle {
   headerSubtitle?: TextStyle;
 }
 
+export interface PollStyle {
+  pollQuestionStyles?: React.CSSProperties;
+  pollOptionSelectedColor?: string;
+  pollOptionOtherColor?: string;
+  pollOptionSelectedTextStyles?: React.CSSProperties;
+  pollOptionOtherTextStyles?: React.CSSProperties;
+  pollOptionEmptyTextStyles?: React.CSSProperties;
+  pollOptionAddedByTextStyles?: React.CSSProperties;
+  votesCountStyles?: React.CSSProperties;
+  memberVotedCountStyles?: React.CSSProperties;
+  pollInfoStyles?: React.CSSProperties;
+  submitButtonStyles?: React.CSSProperties;
+  submitButtonTextStyles?: React.CSSProperties;
+  allowAddPollOptionButtonStyles?: React.CSSProperties;
+  allowAddPollOptionButtonTextStyles?: React.CSSProperties;
+  editPollOptionsStyles?: React.CSSProperties;
+  editPollOptionsIcon?: string;
+  clearPollOptionsStyles?: React.CSSProperties;
+  clearPollOptionsIcon?: string;
+}
+
+export interface CreatePollStyle {
+  pollQuestionsStyle?: React.CSSProperties;
+  pollOptionsStyle?: React.CSSProperties;
+  pollExpiryTimeStyle?: React.CSSProperties;
+  pollAdvancedOptionTextStyle?: React.CSSProperties;
+  pollAdvancedOptionExpandIcon?: string;
+  pollAdvancedOptionMinimiseIcon?: string;
+  pollAdvanceOptionsSwitchThumbColor?: string;
+  pollAdvanceOptionsSwitchTrackColor?: string;
+}
+
 export interface ThemeContextProps {
   textStyle?: TextStyles;
   universalFeedStyle?: UniversalFeedStyleProps;
@@ -395,13 +427,15 @@ export interface ThemeContextProps {
   notificationFeedStyle?: NotificationFeedStyleProps;
   topicsStyle?: TopicsStyle;
   carouselScreenStyle?: CarouselScreenStyle;
+  pollStyle?: PollStyle;
+  createPollStyle?: CreatePollStyle;
 }
 
 export interface LMFeedProviderProps {
   myClient: LMFeedClient;
-  children: React.ReactNode;
-  userName: string;
-  userUniqueId: string;
+  children?: React.ReactNode;
+  accessToken: string;
+  refreshToken: string;
   lmFeedInterface?: any;
   themeStyles?: ThemeStyles;
   universalFeedStyle?: UniversalFeedStyleProps;
@@ -413,4 +447,6 @@ export interface LMFeedProviderProps {
   notificationFeedStyle?: NotificationFeedStyleProps;
   topicsStyle?: TopicsStyle;
   carouselScreenStyle?: CarouselScreenStyle;
+  pollStyle?: PollStyle;
+  createPollStyle?: CreatePollStyle;
 }

@@ -10,6 +10,8 @@ import {
   TopicFeed,
   LMFeedNotificationFeedListView,
   LMFeedNotificationFeedScreen,
+  LMFeedCreatePollScreen,
+  LMFeedPollResult,
 } from "./screens";
 import {
   UNIVERSAL_FEED,
@@ -28,6 +30,7 @@ import {
   usePostLikesListContext,
   useCreatePostContext,
   usePostListContext,
+  useCreatePollContext,
   PostDetailContextProvider,
   PostLikesListContextProvider,
   PostListContextProvider,
@@ -35,6 +38,7 @@ import {
   CreatePostContextProvider,
   NotificationFeedContextProvider,
   useNotificationFeedContext,
+  CreatePollContextProvider,
 } from "./context";
 import getNotification, { getRoute } from "./notification";
 import { LMFeedAnalytics } from "./analytics/LMFeedAnalytics";
@@ -57,6 +61,8 @@ export {
   PostLikesList,
   LMFeedNotificationFeedListView,
   LMFeedNotificationFeedScreen,
+  LMFeedCreatePollScreen,
+  LMFeedPollResult,
   UNIVERSAL_FEED,
   TOPIC_FEED,
   CAROUSEL_SCREEN,
@@ -72,11 +78,13 @@ export {
   usePostListContext,
   useUniversalFeedContext,
   useNotificationFeedContext,
+  useCreatePollContext,
   UniversalFeedContextProvider,
   PostDetailContextProvider,
   PostLikesListContextProvider,
   PostListContextProvider,
   CreatePostContextProvider,
+  CreatePollContextProvider,
   TopicFeed,
   CarouselScreen,
   NotificationFeedContextProvider,
