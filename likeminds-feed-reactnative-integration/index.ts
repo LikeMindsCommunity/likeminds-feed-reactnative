@@ -43,6 +43,7 @@ import {
 import getNotification, { getRoute } from "./notification";
 import { LMFeedAnalytics } from "./analytics/LMFeedAnalytics";
 import { LMFeedCallbacks } from "./callBacks/lmFeedCallback";
+import { LMCarouselScreenCallbacks } from "./callBacks/carouselScreenCallbacks";
 import {
   NAVIGATED_FROM_NOTIFICATION,
   NAVIGATED_FROM_COMMENT,
@@ -92,6 +93,7 @@ export {
   getNotification,
   LMFeedAnalytics,
   LMFeedCallbacks,
+  LMCarouselScreenCallbacks,
   NAVIGATED_FROM_NOTIFICATION,
   NAVIGATED_FROM_COMMENT,
   NAVIGATED_FROM_POST,

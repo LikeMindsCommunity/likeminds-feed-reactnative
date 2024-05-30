@@ -24,6 +24,7 @@ import {
   getNotification,
   getRoute,
   LMFeedCallbacks,
+  LMCarouselScreenCallbacks,
   NAVIGATED_FROM_NOTIFICATION,
   initMyClient,
 } from '@likeminds.community/feed-rn-core';
@@ -58,9 +59,12 @@ import {initiateAPI} from './registerDeviceApi';
 import {carouselScreenStyle, createPollStyle, pollStyle} from './styles';
 import CreatePollScreenWrapper from './feedScreen/createPollScreenWrapper';
 
-class CustomCallbacks implements LMFeedCallbacks {
+class CustomCallbacks implements LMFeedCallbacks, LMCarouselScreenCallbacks {
   onEventTriggered(eventName: string, eventProperties?: Map<string, string>) {
     // Override onEventTriggered with custom logic
+  }
+  onBackPressOnCarouselScreen() {
+    // Override onBackPressOnCarouselScreen with custom logic
   }
 }
 

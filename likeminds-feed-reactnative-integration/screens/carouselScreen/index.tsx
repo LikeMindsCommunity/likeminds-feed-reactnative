@@ -24,6 +24,7 @@ import { useAppDispatch } from "../../store/store";
 import { LMVideoPlayer } from "../../components";
 import { useLMFeedStyles } from "../../lmFeedProvider";
 import ImageViewer from "react-native-image-zoom-viewer";
+import { CallBack } from "../../callBacks/callBackClass";
 
 const CarouselScreen = ({ navigation, route }: any) => {
   const dispatch = useAppDispatch();
@@ -89,6 +90,8 @@ const CarouselScreen = ({ navigation, route }: any) => {
   const backIconStyle = carouselScreenStyle?.backIconStyle;
   const backIconStylesArray = backIconStyle ? [backIconStyle] : [];
 
+  const lmFeedInterface = CallBack.lmFeedInterface;
+
   let countText = "";
 
   if (imageCount > 0 && videoCount > 0) {
@@ -141,7 +144,9 @@ const CarouselScreen = ({ navigation, route }: any) => {
             <TouchableOpacity
               style={{ padding: Layout.normalize(10) }}
               onPress={() => {
-                navigation.goBack();
+                lmFeedInterface?.onBackPressOnCarouselScreen
+                  ? lmFeedInterface?.onBackPressOnCarouselScreen()
+                  : navigation.goBack();
                 dispatch({
                   type: STATUS_BAR_STYLE,
                   body: { color: STYLES.$STATUS_BAR_STYLE.default },
