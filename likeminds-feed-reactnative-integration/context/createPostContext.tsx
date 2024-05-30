@@ -225,6 +225,11 @@ export const CreatePostContextProvider = ({
         // checks the size of media
         if (res?.assets) {
           for (const media of res.assets) {
+            const imageHeight = media?.height;
+            const imageWidth = media?.width;
+            let mediaAspectRatio;
+            if (imageWidth && imageHeight)
+              mediaAspectRatio = imageWidth / imageHeight;
             if (
               media?.fileSize &&
               ((media?.type?.includes("image") &&
@@ -260,6 +265,11 @@ export const CreatePostContextProvider = ({
                     : FILE_UPLOAD_SIZE_VALIDATION,
                 })
               );
+            } else if (
+              mediaAspectRatio &&
+              (mediaAspectRatio < 0.8 || mediaAspectRatio > 1.91)
+            ) {
+              // Will add padding to images here
             } else {
               mediaWithSizeCheck.push(media);
             }
