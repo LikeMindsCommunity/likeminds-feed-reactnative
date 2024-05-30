@@ -12,6 +12,7 @@ import Video from "react-native-video";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { SET_MUTED_STATE } from "../../store/types/types";
 import Slider from "react-native-slider";
+import { useLMFeedStyles } from "../../lmFeedProvider";
 
 function LMVideoPlayer({ url }) {
   const ref = useRef<any>();
@@ -40,6 +41,31 @@ function LMVideoPlayer({ url }) {
   useEffect(() => {
     setMute(muteStatus);
   }, [muteStatus]);
+
+  const LMFeedContextStyles = useLMFeedStyles();
+  const { carouselScreenStyle }: any = LMFeedContextStyles;
+  const sliderThumbSize = carouselScreenStyle?.sliderThumbSize;
+  const thumbTintColor = carouselScreenStyle?.thumbTintColor;
+  const minimumTrackTintColor = carouselScreenStyle?.minimumTrackTintColor;
+  const maximumTrackTintColor = carouselScreenStyle?.maximumTrackTintColor;
+  const startTimeStyle = carouselScreenStyle?.startTimeStyle;
+  const endTimeStyle = carouselScreenStyle?.endTimeStyle;
+
+  const playIconPath = carouselScreenStyle?.playIconPath;
+  const isPlayIconLocalPath = carouselScreenStyle?.isPlayIconLocalPath;
+  const playIconStyle = carouselScreenStyle?.playIconStyle;
+
+  const pauseIconPath = carouselScreenStyle?.pauseIconPath;
+  const isPauseIconLocalPath = carouselScreenStyle?.isPauseIconLocalPath;
+  const pauseIconStyle = carouselScreenStyle?.pauseIconStyle;
+
+  const muteIconPath = carouselScreenStyle?.muteIconPath;
+  const isMuteIconLocalPath = carouselScreenStyle?.isMuteIconLocalPath;
+  const muteIconStyle = carouselScreenStyle?.muteIconStyle;
+
+  const unmuteIconPath = carouselScreenStyle?.unmuteIconPath;
+  const isUnmuteIconLocalPath = carouselScreenStyle?.isUnmuteIconLocalPath;
+  const unmuteIconStyle = carouselScreenStyle?.unmuteIconStyle;
 
   return (
     <View style={styles.video}>
@@ -104,13 +130,22 @@ function LMVideoPlayer({ url }) {
                 <Image
                   source={
                     puased
-                      ? require("../../assets/images/play-button.png")
+                      ? isPlayIconLocalPath && playIconPath
+                        ? playIconPath
+                        : !isPlayIconLocalPath && playIconPath
+                        ? { uri: playIconPath }
+                        : require("../../assets/images/play-button.png")
+                      : isPauseIconLocalPath && pauseIconPath
+                      ? pauseIconPath
+                      : !isPauseIconLocalPath && pauseIconPath
+                      ? { uri: pauseIconPath }
                       : require("../../assets/images/pause-button.png")
                   }
                   style={{
                     width: 40,
                     height: 40,
                     tintColor: "white",
+                    ...(puased ? playIconStyle : pauseIconStyle),
                   }}
                 />
               </TouchableOpacity>
@@ -127,27 +162,37 @@ function LMVideoPlayer({ url }) {
                 alignItems: "center",
               }}
             >
-              <Text style={{ color: "white" }}>
+              <Text style={{ color: "white", ...startTimeStyle }}>
                 {format(progress.currentTime)}
               </Text>
               <Slider
                 style={{ width: "80%", height: 40, marginHorizontal: 5 }}
                 minimumValue={0}
                 maximumValue={progress.seekableDuration}
-                minimumTrackTintColor="#FFFFFF"
-                maximumTrackTintColor="#FFFFFF"
+                minimumTrackTintColor={
+                  minimumTrackTintColor ? minimumTrackTintColor : "#FFFFFF"
+                }
+                maximumTrackTintColor={
+                  maximumTrackTintColor ? maximumTrackTintColor : "#FFFFFF"
+                }
                 step={0}
                 value={progress.currentTime}
                 onValueChange={(x) => {
                   ref.current.seek(x);
                 }}
-                thumbTouchSize={{
-                  height: 30,
-                  width: 30,
-                }}
-                thumbTintColor={"green"}
+                thumbTouchSize={
+                  sliderThumbSize
+                    ? sliderThumbSize
+                    : {
+                        height: 30,
+                        width: 30,
+                      }
+                }
+                thumbTintColor={thumbTintColor ? thumbTintColor : "green"}
               />
-              <Text style={{ color: "white", marginRight: 10 }}>
+              <Text
+                style={{ color: "white", marginRight: 10, ...endTimeStyle }}
+              >
                 {format(progress.seekableDuration)}
               </Text>
               <TouchableOpacity
@@ -163,13 +208,22 @@ function LMVideoPlayer({ url }) {
                 <Image
                   source={
                     mute
-                      ? require("../../assets/images/muted.png")
+                      ? isMuteIconLocalPath && muteIconPath
+                        ? muteIconPath
+                        : !isMuteIconLocalPath && muteIconPath
+                        ? { uri: muteIconPath }
+                        : require("../../assets/images/muted.png")
+                      : isUnmuteIconLocalPath && unmuteIconPath
+                      ? unmuteIconPath
+                      : !isUnmuteIconLocalPath && unmuteIconPath
+                      ? { uri: unmuteIconPath }
                       : require("../../assets/images/unmute.png")
                   }
                   style={{
                     height: 25,
                     width: 25,
                     tintColor: "white",
+                    ...(mute ? muteIconStyle : unmuteIconStyle),
                   }}
                 />
               </TouchableOpacity>
