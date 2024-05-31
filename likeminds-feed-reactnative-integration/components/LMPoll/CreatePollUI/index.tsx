@@ -68,11 +68,8 @@ const CreatePollUI = () => {
     resetDateTimePicker,
   }: CreatePollProps = useCreatePollContext();
 
-  const {
-    onPollExpiryTimeClicked,
-    onAddOptionClicked,
-    onPollOptionCleared,
-  } = useCreatePollCustomisableMethodsContext();
+  const { onPollExpiryTimeClicked, onAddOptionClicked, onPollOptionCleared } =
+    useCreatePollCustomisableMethodsContext();
 
   const LMFeedContextStyles = useLMFeedStyles();
   const { createPollStyle } = LMFeedContextStyles;
@@ -107,6 +104,7 @@ const CreatePollUI = () => {
               styles.font,
               styles.blackColor,
               { maxHeight: 100 },
+              /* @ts-ignore */
               pollQuestionsStyle ? pollQuestionsStyle : null,
             ]}
             placeholderTextColor="#c5c5c5"
@@ -142,6 +140,7 @@ const CreatePollUI = () => {
                     styles.option,
                     styles.blackColor,
                     { flex: 1 },
+                    /* @ts-ignore */
                     pollOptionsStyle ? pollOptionsStyle : null,
                   ]}
                   maxLength={40}
@@ -154,7 +153,10 @@ const CreatePollUI = () => {
                 {optionsArray.length > 2 ? (
                   <TouchableOpacity
                     onPress={() => {
-                      onPollOptionCleared ? onPollOptionCleared(index) : removeAnOption(index);
+                      onPollOptionCleared
+                        ? /* @ts-ignore */
+                          onPollOptionCleared(index)
+                        : removeAnOption(index);
                     }}
                   >
                     <Image
@@ -172,6 +174,7 @@ const CreatePollUI = () => {
         })}
 
         <TouchableOpacity
+          /* @ts-ignore */
           onPress={onAddOptionClicked ? onAddOptionClicked : addNewOption}
           style={[
             styles.alignRow,
@@ -195,6 +198,7 @@ const CreatePollUI = () => {
           <Text
             style={[
               styles.font,
+              /* @ts-ignore */
               pollExpiryTimeStyle ? pollExpiryTimeStyle : null,
             ]}
           >
@@ -204,7 +208,9 @@ const CreatePollUI = () => {
         <View style={styles.question}>
           <TouchableOpacity
             onPress={() => {
-              onPollExpiryTimeClicked ? onPollExpiryTimeClicked () : showDatePicker();
+              onPollExpiryTimeClicked
+                ? onPollExpiryTimeClicked()
+                : showDatePicker();
             }}
           >
             <View
@@ -273,6 +279,7 @@ const CreatePollUI = () => {
             styles.font,
             styles.lightGreyBackground,
             styles.textAlignCenter,
+            /* @ts-ignore */
             pollAdvancedOptionTextStyle ? pollAdvancedOptionTextStyle : null,
           ]}
         >

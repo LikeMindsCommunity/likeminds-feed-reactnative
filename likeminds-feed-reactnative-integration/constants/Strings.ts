@@ -95,6 +95,8 @@ export const CREATE_POST_PERMISSION =
   "You do not have permission to create a post.";
 export const FILE_UPLOAD_SIZE_VALIDATION =
   "Files below 100 KB and above 100MB are not allowed";
+export const FILE_UPLOAD_IMAGE_SIZE_VALIDATION = "Max file size allowed: <x>Mb";
+export const FILE_UPLOAD_VIDEO_SIZE_VALIDATION = "Max file size allowed: <x>Mb";
 export const MEDIA_UPLOAD_COUNT_VALIDATION = "You can select upto 10 items!";
 export const POST_SAVED_SUCCESS = "Post saved!";
 export const POST_UNSAVED_SUCCESS = "Post unsaved!";
@@ -103,9 +105,17 @@ export const POST_LIKES = "Post likes";
 export const COMMENT_LIKES = "Comment likes";
 export const DELETE_REASON_SELECTION = "Please select a reason for deletion";
 
+export const IMAGE_TEXT = "image";
+export const PHOTO_TEXT = "photo";
+export const PHOTOS_TEXT = "photos";
+export const VIDEOS_TEXT = "videos";
+export const VIDEO_TEXT = "video";
+
 // file size validation
 export const MAX_FILE_SIZE = 104857600; // 100MB in bytes
 export const MIN_FILE_SIZE = 100000; // 100KB in bytes
+export const MAX_IMAGE_FILE_SIZE = 5242880;
+export const MAX_VIDEO_FILE_SIZE = 104857600;
 
 export const NAVIGATED_FROM_POST = "FROM_POST";
 export const NAVIGATED_FROM_COMMENT = "FROM_COMMENTS";
@@ -145,7 +155,7 @@ export const DATE_TIME_TEXT = "datetime";
 export const POLL_RESULT_TEXT = "Poll Results";
 export const QUESTION_WARNING = "Question Field cannot be empty";
 export const EXPIRY_TIME_WARNING = "Please select expiry time";
-export const FUTURE_TIME_WARNING = "Please select a time in the future."
+export const FUTURE_TIME_WARNING = "Please select a time in the future.";
 export const POLLS_OPTIONS_WARNING = "Poll options can't be the same";
 export const POLLS_OPTIONS_LIMIT_WARNING = "Poll options can't be more than 10";
 export const EMPTY_OPTIONS_WARNING = "Empty options are not allowed";

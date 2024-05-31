@@ -23,9 +23,13 @@ import {
 } from "../utils";
 import {
   DOCUMENT_ATTACHMENT_TYPE,
+  FILE_UPLOAD_IMAGE_SIZE_VALIDATION,
   FILE_UPLOAD_SIZE_VALIDATION,
+  FILE_UPLOAD_VIDEO_SIZE_VALIDATION,
   IMAGE_ATTACHMENT_TYPE,
   MAX_FILE_SIZE,
+  MAX_IMAGE_FILE_SIZE,
+  MAX_VIDEO_FILE_SIZE,
   MEDIA_UPLOAD_COUNT_VALIDATION,
   MIN_FILE_SIZE,
   POLL_ATTACHMENT_TYPE,
@@ -63,6 +67,7 @@ import {
 import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
 import { Events } from "../enums/Events";
 import { Keys } from "../enums/Keys";
+import { CommunityConfigs } from "../communityConfigs";
 import { CREATE_POLL_SCREEN } from "../constants/screenNames";
 
 interface CreatePostContextProps {
@@ -209,20 +214,65 @@ export const CreatePostContextProvider = ({
         setShowSelecting(false);
       } else {
         const mediaWithSizeCheck: any = [];
+        const communityConfigs = CommunityConfigs.communityConfigs;
+        /* @ts-ignore */
+        const mediaLimitsObject = communityConfigs.find(
+          (obj) => obj.type === "media_limits"
+        );
+        const maxImageSize = mediaLimitsObject?.value?.maxImageSize * 1000;
+        const maxVideoSize = mediaLimitsObject?.value?.maxVideoSize * 1000;
+
         // checks the size of media
         if (res?.assets) {
           for (const media of res.assets) {
+            const imageHeight = media?.height;
+            const imageWidth = media?.width;
+            let mediaAspectRatio;
+            if (imageWidth && imageHeight)
+              mediaAspectRatio = imageWidth / imageHeight;
             if (
               media?.fileSize &&
-              (media?.fileSize > MAX_FILE_SIZE ||
-                media?.fileSize < MIN_FILE_SIZE)
+              ((media?.type?.includes("image") &&
+                (maxImageSize
+                  ? media?.fileSize > maxImageSize
+                  : media?.fileSize > MAX_IMAGE_FILE_SIZE)) ||
+                (media?.type?.includes("video") &&
+                  (maxVideoSize
+                    ? media?.fileSize > maxVideoSize
+                    : media?.fileSize > MAX_VIDEO_FILE_SIZE)))
             ) {
               dispatch(
                 showToastMessage({
                   isToast: true,
-                  message: FILE_UPLOAD_SIZE_VALIDATION,
+                  message: media?.type?.includes("image")
+                    ? FILE_UPLOAD_IMAGE_SIZE_VALIDATION.replace(
+                        "<x>",
+                        maxImageSize
+                          ? Math.round(maxImageSize / 1000000)?.toString()
+                          : Math.round(
+                              MAX_IMAGE_FILE_SIZE / 1000000
+                            )?.toString()
+                      )
+                    : media?.type?.includes("video")
+                    ? FILE_UPLOAD_VIDEO_SIZE_VALIDATION.replace(
+                        "<x>",
+                        maxVideoSize
+                          ? Math.round(maxVideoSize / 1000000)?.toString()
+                          : Math.round(
+                              MAX_VIDEO_FILE_SIZE / 1000000
+                            )?.toString()
+                      )
+                    : FILE_UPLOAD_SIZE_VALIDATION,
                 })
               );
+            } else if (
+              (media?.type?.includes("image") ||
+                media?.type?.includes("video")) &&
+              mediaAspectRatio &&
+              (mediaAspectRatio < 0.8 || mediaAspectRatio > 1.91)
+            ) {
+              // Will add padding to images here, keeping else code only as of now to not block the flow
+              mediaWithSizeCheck.push(media);
             } else {
               mediaWithSizeCheck.push(media);
             }
@@ -587,14 +637,20 @@ export const CreatePostContextProvider = ({
     // replace mentions with route
     const contentText = mentionToRouteConverter(postContentText);
     const linkAttachments = showLinkPreview ? formattedLinkAttachments : [];
-    const pollAttachments = convertPollMetaData(formattedPollAttachments[0]?.attachmentMeta)
+    const pollAttachments = convertPollMetaData(
+      formattedPollAttachments[0]?.attachmentMeta
+    );
 
     // call edit post api
     const editPostResponse = dispatch(
       editPost(
         EditPostRequest.builder()
           .setHeading("")
-          .setattachments([...allAttachment, ...linkAttachments, pollAttachments])
+          .setattachments([
+            ...allAttachment,
+            ...linkAttachments,
+            pollAttachments,
+          ])
           .setpostId(postDetail?.id)
           .settext(contentText)
           .setTopicIds(topics)
@@ -702,7 +758,7 @@ export const CreatePostContextProvider = ({
     });
     navigation.goBack();
   };
-  
+
   const contextValues: CreatePostContextValues = {
     navigation,
     route,

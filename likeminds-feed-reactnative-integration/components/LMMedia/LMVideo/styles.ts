@@ -34,6 +34,12 @@ export const defaultStyles = StyleSheet.create({
     borderWidth: 0,
     backgroundColor: "transparent",
   },
+  muteUnmuteVideoView: {
+    position: "absolute",
+    right: 15,
+    bottom: 15,
+    zIndex: 7000,
+  },
   videoControllerView: {
     position: "absolute",
     justifyContent: "center",
