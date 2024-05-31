@@ -271,7 +271,8 @@ export const CreatePostContextProvider = ({
               mediaAspectRatio &&
               (mediaAspectRatio < 0.8 || mediaAspectRatio > 1.91)
             ) {
-              // Will add padding to images here
+              // Will add padding to images here, keeping else code only as of now to not block the flow
+              mediaWithSizeCheck.push(media);
             } else {
               mediaWithSizeCheck.push(media);
             }
