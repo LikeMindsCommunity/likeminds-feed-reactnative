@@ -65,6 +65,7 @@ class CustomCallbacks implements LMFeedCallbacks, LMCarouselScreenCallbacks {
   }
   onBackPressOnCarouselScreen() {
     // Override onBackPressOnCarouselScreen with custom logic
+    navigationRef.goBack();
   }
 }
 
