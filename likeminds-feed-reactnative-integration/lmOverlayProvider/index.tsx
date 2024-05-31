@@ -20,6 +20,7 @@ export const LMOverlayProvider: any = ({
   topicsStyle,
   pollStyle,
   createPollStyle,
+  carouselScreenStyle,
 }: LMOverlayProviderProps) => {
   return (
     <ContextProvider>
@@ -37,6 +38,7 @@ export const LMOverlayProvider: any = ({
         topicsStyle={topicsStyle}
         pollStyle={pollStyle}
         createPollStyle={createPollStyle}
+        carouselScreenStyle={carouselScreenStyle}
         lmFeedInterface={lmFeedInterface}
       >
         <View style={styles.flexStyling}>{children}</View>

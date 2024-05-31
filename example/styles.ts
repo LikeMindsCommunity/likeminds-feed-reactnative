@@ -91,3 +91,24 @@ export const createPollStyle = {
   pollAdvanceOptionsSwitchThumbColor: 'green',
   pollAdvanceOptionsSwitchTrackColor: 'lightgreen',
 };
+
+export const carouselScreenStyle = {
+  headerTitle: {
+    color: 'green',
+  },
+  headerSubtitle: {
+    color: 'purple',
+  },
+  thumbTintColor: 'pink',
+  minimumTrackTintColor: 'red',
+  maximumTrackTintColor: 'blue',
+  muteIconPath:
+    'https://t4.ftcdn.net/jpg/07/68/25/99/240_F_768259926_Nd2TLAzX1MMDAeQUTypLjvuD3opDeLmt.jpg',
+  isMuteIconLocalPath: false,
+  muteIconStyle: {
+    tintColor: null,
+  },
+  unmuteIconStyle: {
+    tintColor: 'red',
+  },
+};

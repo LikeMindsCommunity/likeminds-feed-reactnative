@@ -24,6 +24,7 @@ import {
   getNotification,
   getRoute,
   LMFeedCallbacks,
+  LMCarouselScreenCallbacks,
   NAVIGATED_FROM_NOTIFICATION,
   initMyClient,
 } from '@likeminds.community/feed-rn-core';
@@ -36,7 +37,7 @@ import {
   Platform,
   ViewStyle,
 } from 'react-native';
-import {LinkingOptions, NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import {navigationRef} from './RootNavigation';
 import FeedWrapper from './feedScreen/feedWrapper';
 import DetailWrapper from './feedScreen/detailScreenWrapper';
@@ -55,12 +56,15 @@ import {
   POLL_RESULT,
 } from '@likeminds.community/feed-rn-core/constants/screenNames';
 import {initiateAPI} from './registerDeviceApi';
-import {createPollStyle, pollStyle} from './styles';
+import {carouselScreenStyle, createPollStyle, pollStyle} from './styles';
 import CreatePollScreenWrapper from './feedScreen/createPollScreenWrapper';
 
-class CustomCallbacks implements LMFeedCallbacks {
+class CustomCallbacks implements LMFeedCallbacks, LMCarouselScreenCallbacks {
   onEventTriggered(eventName: string, eventProperties?: Map<string, string>) {
     // Override onEventTriggered with custom logic
+  }
+  onBackPressOnCarouselScreen() {
+    // Override onBackPressOnCarouselScreen with custom logic
   }
 }
 
@@ -246,7 +250,8 @@ const App = () => {
           myClient={myClient}
           accessToken={accessToken}
           refreshToken={refreshToken}
-          lmFeedInterface={lmFeedInterface}>
+          lmFeedInterface={lmFeedInterface}
+          carouselScreenStyle={carouselScreenStyle}>
           <NavigationContainer ref={navigationRef} independent={true}>
             <Stack.Navigator screenOptions={{headerShown: false}}>
               <Stack.Screen name={UNIVERSAL_FEED} component={FeedWrapper} />
@@ -266,9 +271,6 @@ const App = () => {
                 options={{gestureEnabled: false}}
                 name={CAROUSEL_SCREEN}
                 component={CarouselScreen}
-                initialParams={{
-                  backIconPath: '', // add your back icon path here
-                }}
               />
               <Stack.Screen
                 name={POLL_RESULT}

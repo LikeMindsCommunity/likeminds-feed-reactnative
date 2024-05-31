@@ -24,10 +24,11 @@ import { useAppDispatch } from "../../store/store";
 import { LMVideoPlayer } from "../../components";
 import { useLMFeedStyles } from "../../lmFeedProvider";
 import ImageViewer from "react-native-image-zoom-viewer";
+import { CallBack } from "../../callBacks/callBackClass";
 
 const CarouselScreen = ({ navigation, route }: any) => {
   const dispatch = useAppDispatch();
-  const { index, dataObject, backIconPath } = route.params;
+  const { index, dataObject } = route.params;
   const data = dataObject?.attachments;
 
   const attachmentsUrls = data.map((item) => ({
@@ -84,6 +85,12 @@ const CarouselScreen = ({ navigation, route }: any) => {
 
   const headerTitle = carouselScreenStyle?.headerTitle;
   const headerSubtitle = carouselScreenStyle?.headerSubtitle;
+  const backIconPath = carouselScreenStyle?.backIconPath;
+  const isBackIconLocalPath = carouselScreenStyle?.isBackIconLocalPath;
+  const backIconStyle = carouselScreenStyle?.backIconStyle;
+  const backIconStylesArray = backIconStyle ? [backIconStyle] : [];
+
+  const lmFeedInterface = CallBack.lmFeedInterface;
 
   let countText = "";
 
@@ -137,21 +144,25 @@ const CarouselScreen = ({ navigation, route }: any) => {
             <TouchableOpacity
               style={{ padding: Layout.normalize(10) }}
               onPress={() => {
-                navigation.goBack();
+                lmFeedInterface?.onBackPressOnCarouselScreen
+                  ? lmFeedInterface?.onBackPressOnCarouselScreen()
+                  : navigation.goBack();
                 dispatch({
                   type: STATUS_BAR_STYLE,
                   body: { color: STYLES.$STATUS_BAR_STYLE.default },
                 });
               }}
             >
-              {backIconPath ? (
-                <Image source={backIconPath} style={styles.backBtn} />
-              ) : (
-                <Image
-                  source={require("../../assets/images/backArrow_icon3x.png")}
-                  style={styles.backBtn}
-                />
-              )}
+              <Image
+                source={
+                  isBackIconLocalPath && backIconPath
+                    ? backIconPath
+                    : !isBackIconLocalPath && backIconPath
+                    ? { uri: backIconPath }
+                    : require("../../assets/images/backArrow_icon3x.png")
+                }
+                style={[styles.backBtn, ...backIconStylesArray]}
+              />
             </TouchableOpacity>
             <View style={styles.chatRoomInfo}>
               <Text

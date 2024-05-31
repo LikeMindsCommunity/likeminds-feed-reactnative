@@ -382,6 +382,35 @@ export interface TopicsStyle {
 export interface CarouselScreenStyle {
   headerTitle?: TextStyle;
   headerSubtitle?: TextStyle;
+  sliderThumbSize?: {
+    height?: number;
+    width?: number;
+  };
+  thumbTintColor?: string;
+  minimumTrackTintColor?: string;
+  maximumTrackTintColor?: string;
+  startTimeStyle?: TextStyle;
+  endTimeStyle?: TextStyle;
+
+  backIconPath?: string;
+  isBackIconLocalPath?: boolean;
+  backIconStyle?: ImageStyle;
+
+  playIconPath?: string;
+  isPlayIconLocalPath?: boolean;
+  playIconStyle?: ImageStyle;
+
+  pauseIconPath?: string;
+  isPauseIconLocalPath?: boolean;
+  pauseIconStyle?: ImageStyle;
+
+  muteIconPath?: string;
+  isMuteIconLocalPath?: boolean;
+  muteIconStyle?: ImageStyle;
+
+  unmuteIconPath?: string;
+  isUnmuteIconLocalPath?: boolean;
+  unmuteIconStyle?: ImageStyle;
 }
 
 export interface PollStyle {
