@@ -266,6 +266,8 @@ export const CreatePostContextProvider = ({
                 })
               );
             } else if (
+              (media?.type?.includes("image") ||
+                media?.type?.includes("video")) &&
               mediaAspectRatio &&
               (mediaAspectRatio < 0.8 || mediaAspectRatio > 1.91)
             ) {
