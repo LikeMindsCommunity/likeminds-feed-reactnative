@@ -250,8 +250,7 @@ const App = () => {
           myClient={myClient}
           accessToken={accessToken}
           refreshToken={refreshToken}
-          lmFeedInterface={lmFeedInterface}
-          carouselScreenStyle={carouselScreenStyle}>
+          lmFeedInterface={lmFeedInterface}>
           <NavigationContainer ref={navigationRef} independent={true}>
             <Stack.Navigator screenOptions={{headerShown: false}}>
               <Stack.Screen name={UNIVERSAL_FEED} component={FeedWrapper} />
