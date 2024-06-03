@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Image,
+  Dimensions,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 // @ts-ignore the lib do not have TS declarations yet
@@ -63,6 +64,10 @@ const LMVideo = React.memo(
       setMute(muteStatus);
     }, [muteStatus]);
 
+    const ScreenWidth = Dimensions.get("window").width;
+    const desiredAspectRatio = width > height ? 1.91 : 0.8;
+    const maxHeight = ScreenWidth * (1 / desiredAspectRatio);
+
     return (
       <View
         style={StyleSheet.flatten([defaultStyles.videoContainer, boxStyle])}
@@ -105,9 +110,11 @@ const LMVideo = React.memo(
             style={StyleSheet.flatten([
               videoStyle,
               {
-                width: width ? width : defaultStyles.videoStyle.width,
-                height: height ? height : defaultStyles.videoStyle.height,
-                aspectRatio: aspectRatio ? aspectRatio : undefined,
+                // width: width ? width : defaultStyles.videoStyle.width,
+                // height: height ? height : defaultStyles.videoStyle.height,
+                height: maxHeight,
+                // aspectRatio: aspectRatio ? aspectRatio : undefined,
+                aspectRatio: desiredAspectRatio,
               },
             ])}
             paused={

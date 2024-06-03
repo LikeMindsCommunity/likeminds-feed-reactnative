@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
 import React, { useState } from "react";
 import { LMImageProps } from "./types";
 import { MEDIA_FETCH_ERROR } from "../../../constants/Strings";
@@ -23,6 +23,11 @@ const LMImage = React.memo(
   }: LMImageProps) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
+
+    const ScreenWidth = Dimensions.get("window").width;
+    const desiredAspectRatio = width > height ? 1.91 : 0.8;
+    const maxHeight = ScreenWidth * (1 / desiredAspectRatio);
+
     return (
       <View
         style={StyleSheet.flatten([defaultStyles.imageContainer, boxStyle])}
@@ -47,10 +52,12 @@ const LMImage = React.memo(
           style={StyleSheet.flatten([
             imageStyle,
             {
-              width: width ? width : defaultStyles.imageStyle.width,
-              height: height ? height : defaultStyles.imageStyle.height,
+              // width: width ? width : defaultStyles.imageStyle.width,
+              // height: height ? height : defaultStyles.imageStyle.height,
+              height: maxHeight,
               resizeMode: boxFit ? boxFit : defaultStyles.imageStyle.resizeMode,
-              aspectRatio: aspectRatio ? aspectRatio : undefined,
+              // aspectRatio: aspectRatio ? aspectRatio : undefined,
+              aspectRatio: desiredAspectRatio,
             },
           ])}
         />
@@ -58,8 +65,17 @@ const LMImage = React.memo(
         {showCancel && (
           <View style={defaultStyles.cancelButtonView}>
             {cancelButton ? (
-              <LMButton {...cancelButton}
-              onTap={onCancel ? () =>{onCancel(imageUrl); cancelButton?.onTap()} : () => null}  />
+              <LMButton
+                {...cancelButton}
+                onTap={
+                  onCancel
+                    ? () => {
+                        onCancel(imageUrl);
+                        cancelButton?.onTap();
+                      }
+                    : () => null
+                }
+              />
             ) : (
               <LMButton
                 onTap={onCancel ? () => onCancel(imageUrl) : () => null}
