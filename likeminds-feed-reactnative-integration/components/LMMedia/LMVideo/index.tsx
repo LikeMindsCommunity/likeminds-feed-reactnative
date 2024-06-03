@@ -66,7 +66,7 @@ const LMVideo = React.memo(
 
     const ScreenWidth = Dimensions.get("window").width;
     const desiredAspectRatio = width > height ? 1.91 : 0.8;
-    const maxHeight = ScreenWidth * (1 / desiredAspectRatio);
+    const heightCalculated = ScreenWidth * (1 / desiredAspectRatio);
 
     return (
       <View
@@ -110,11 +110,8 @@ const LMVideo = React.memo(
             style={StyleSheet.flatten([
               videoStyle,
               {
-                // width: width ? width : defaultStyles.videoStyle.width,
-                // height: height ? height : defaultStyles.videoStyle.height,
-                height: maxHeight,
-                // aspectRatio: aspectRatio ? aspectRatio : undefined,
-                aspectRatio: desiredAspectRatio,
+                height: heightCalculated,
+                aspectRatio: aspectRatio ? aspectRatio : desiredAspectRatio,
               },
             ])}
             paused={

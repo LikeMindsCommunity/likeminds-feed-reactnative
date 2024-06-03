@@ -26,7 +26,7 @@ const LMImage = React.memo(
 
     const ScreenWidth = Dimensions.get("window").width;
     const desiredAspectRatio = width > height ? 1.91 : 0.8;
-    const maxHeight = ScreenWidth * (1 / desiredAspectRatio);
+    const heightCalculated = ScreenWidth * (1 / desiredAspectRatio);
 
     return (
       <View
@@ -52,12 +52,9 @@ const LMImage = React.memo(
           style={StyleSheet.flatten([
             imageStyle,
             {
-              // width: width ? width : defaultStyles.imageStyle.width,
-              // height: height ? height : defaultStyles.imageStyle.height,
-              height: maxHeight,
+              height: heightCalculated,
               resizeMode: boxFit ? boxFit : defaultStyles.imageStyle.resizeMode,
-              // aspectRatio: aspectRatio ? aspectRatio : undefined,
-              aspectRatio: desiredAspectRatio,
+              aspectRatio: aspectRatio ? aspectRatio : desiredAspectRatio,
             },
           ])}
         />
