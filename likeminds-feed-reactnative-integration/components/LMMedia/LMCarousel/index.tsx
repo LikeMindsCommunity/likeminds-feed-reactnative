@@ -159,7 +159,6 @@ const LMCarousel = React.memo(
                       ? videoItem?.autoPlay
                       : true
                   }
-                  showPlayPause={true}
                   showCancel={
                     videoItem?.showCancel ? videoItem?.showCancel : showCancel
                   }

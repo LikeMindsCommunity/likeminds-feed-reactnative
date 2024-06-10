@@ -32,6 +32,8 @@ const LMPostMedia = React.memo(() => {
 
   const navigation = useNavigation<StackNavigationProp<any>>();
   const dispatch = useAppDispatch();
+  let routes = navigation.getState()?.routes;
+  let previousRoute = routes[routes?.length - 2];
   // this handles the rendering of posts with single attachment
   const renderSingleAttachment = () => {
     switch (post?.attachments && post?.attachments[0]?.attachmentType) {
@@ -91,7 +93,11 @@ const LMPostMedia = React.memo(() => {
                   ? mediaProps?.videoProps?.autoPlay
                   : true
               }
-              videoInFeed={mediaProps?.videoProps?.videoInFeed}
+              // videoInFeed={mediaProps?.videoProps?.videoInFeed}
+              videoInFeed={
+                previousRoute?.name === "UniversalFeed" ? false : true
+              }
+              videoInCarousel={false}
               showMuteUnmute={true}
             />
           </TouchableOpacity>
@@ -177,7 +183,8 @@ const LMPostMedia = React.memo(() => {
                 mediaProps?.videoProps?.autoPlay != undefined
                   ? mediaProps?.videoProps?.autoPlay
                   : true,
-              videoInFeed: mediaProps?.videoProps?.videoInFeed,
+              videoInFeed:
+                previousRoute?.name === "UniversalFeed" ? false : true,
               postId: post?.id,
             }}
           />

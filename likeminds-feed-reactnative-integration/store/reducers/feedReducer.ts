@@ -29,6 +29,7 @@ import {
   CLEAR_SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
   STATUS_BAR_STYLE,
   SET_MUTED_STATE,
+  SET_PAUSED_STATUS,
 } from "../types/types";
 import { LMPostUI } from "../../models";
 import Styles from "../../constants/Styles";
@@ -44,6 +45,7 @@ export interface FeedReducerState {
   selectedTopicsFromUniversalFeedScreen: [];
   statusBarStyle: string;
   muteStatus: boolean;
+  pauseStatus: boolean;
 }
 
 export const initialState: FeedReducerState = {
@@ -57,9 +59,14 @@ export const initialState: FeedReducerState = {
   selectedTopicsFromUniversalFeedScreen: [],
   statusBarStyle: Styles.$STATUS_BAR_STYLE.default,
   muteStatus: false,
+  pauseStatus: false,
 };
 export const feedReducer = (state = initialState, action) => {
   switch (action.type) {
+    case SET_PAUSED_STATUS: {
+      const { paused } = action.body;
+      return { ...state, pauseStatus: paused };
+    }
     case SET_MUTED_STATE: {
       const { mute } = action.body;
       return { ...state, muteStatus: mute };

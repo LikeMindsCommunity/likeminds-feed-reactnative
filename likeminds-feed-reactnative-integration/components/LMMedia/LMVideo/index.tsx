@@ -17,6 +17,8 @@ import { LMButton } from "../../../uiComponents";
 import { defaultStyles } from "./styles";
 import { useAppDispatch, useAppSelector } from "../../../store/store";
 import { SET_MUTED_STATE } from "../../../store/types/types";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 const LMVideo = React.memo(
   ({
@@ -56,6 +58,12 @@ const LMVideo = React.memo(
     const currentVideoId = useAppSelector(
       (state) => state.feed.autoPlayVideoPostId
     );
+
+    const pauseStatus = useAppSelector((state) => state.feed.pauseStatus);
+
+    const navigation = useNavigation<StackNavigationProp<any>>();
+    let routes = navigation.getState()?.routes;
+    let previousRoute = routes[routes?.length - 2];
 
     const [mute, setMute] = useState(false);
     const dispatch = useAppDispatch();
@@ -115,25 +123,25 @@ const LMVideo = React.memo(
               },
             ])}
             paused={
-              // Will work on below commented code while working on autoplay ticket
-              // videoInFeed
-              //   ? autoPlay
-              //     ? currentVideoId === postId
-              //       ? videoInCarousel
-              //         ? currentVideoInCarousel === videoUrl
-              //           ? false
-              //           : true
-              //         : false
-              //       : true
-              //     : playingStatus
-              //   : autoPlay
-              //   ? videoInCarousel
-              //     ? currentVideoInCarousel === videoUrl
-              //       ? false
-              //       : true
-              //     : false
-              //   : playingStatus
-              paused
+              pauseStatus === true && previousRoute?.name === "UniversalFeed"
+                ? pauseStatus
+                : videoInFeed
+                ? autoPlay
+                  ? currentVideoId === postId
+                    ? videoInCarousel
+                      ? currentVideoInCarousel === videoUrl
+                        ? false
+                        : true
+                      : false
+                    : true
+                  : playingStatus
+                : autoPlay
+                ? videoInCarousel
+                  ? currentVideoInCarousel === videoUrl
+                    ? false
+                    : true
+                  : false
+                : playingStatus
             } // handles the auto play/pause functionality
             muted={mute}
           />
@@ -238,7 +246,7 @@ const LMVideo = React.memo(
           </TouchableOpacity>
         )}
 
-        {showPlayPause && (
+        {showPlayPause && !autoPlay && (
           <View
             style={{
               flexDirection: "row",
