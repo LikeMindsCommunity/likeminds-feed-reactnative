@@ -16,6 +16,11 @@ import { NO_RESPONSES, POLL_RESULT_TEXT } from "../../constants/Strings";
 import { Client } from "../../client";
 import Layout from "../../constants/Layout";
 import { LMHeader } from "../../components";
+import { useIsFocused } from "@react-navigation/native";
+import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
+import { Events } from "../../enums/Events";
+import { Keys } from "../../enums/Keys";
+import { ScreenNames } from "../../enums/ScreenNames";
 
 const PollStack = createMaterialTopTabNavigator();
 
@@ -47,7 +52,12 @@ export const LMFeedPollResult = ({ navigation, route }: any) => {
             <PollStack.Screen
               name={val?.text}
               children={(props: any) => (
-                <TabScreenUI pollID={pollId} votes={val?.Id} {...props} />
+                <TabScreenUI
+                  pollID={pollId}
+                  votes={val?.Id}
+                  {...props}
+                  value={val}
+                />
               )}
               options={{
                 tabBarLabel: ({ focused }) => (
@@ -89,11 +99,26 @@ export const LMFeedPollResult = ({ navigation, route }: any) => {
   );
 };
 
-const TabScreenUI = ({ pollID, votes }: any) => {
+const TabScreenUI = ({ pollID, votes, value }: any) => {
   const [users, setUsers] = useState<any>();
   const [page, setPage] = useState(1);
+  const isFocused = useIsFocused();
 
   const PAGE_SIZE = 20;
+
+  useEffect(() => {
+    if (isFocused) {
+      LMFeedAnalytics.track(
+        Events.POLL_ANSWERS_TOGGLED,
+        new Map<string, string>([
+          [Keys.SCREEN_NAME, ScreenNames.OTHER],
+          [Keys.POLL_ID, pollID],
+          [Keys.OPTION_ID, value?.Id],
+          [Keys.OPTION_TEXT, value?.text],
+        ])
+      );
+    }
+  }, [isFocused]);
 
   useEffect(() => {
     fetchPollUsers(pollID);

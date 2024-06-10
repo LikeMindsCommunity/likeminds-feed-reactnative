@@ -12,13 +12,17 @@ import { Events } from "../../../enums/Events";
 import { Keys } from "../../../enums/Keys";
 import { getPostType, joinStrings } from "../../../utils/analytics";
 import { ScreenNames } from "../../../enums/ScreenNames";
+import { useRoute } from "@react-navigation/native";
+import { POST_DETAIL } from "../../../constants/screenNames";
 
 const LMPostHeader = React.memo(() => {
   const { post, headerProps }: any = useLMPostContext();
   const LMFeedContextStyles = useLMFeedStyles();
   const { postListStyle } = LMFeedContextStyles;
   const customPostHeaderStyle: any = postListStyle?.header;
-  const memberData = useAppSelector((state) => state.login.member);
+
+  let route: any = useRoute();
+  let isPostDetailScreen = route.name === POST_DETAIL ? true : false;
 
   const showMenuIcon =
     customPostHeaderStyle?.showMenuIcon != undefined
@@ -37,7 +41,12 @@ const LMPostHeader = React.memo(() => {
     LMFeedAnalytics.track(
       Events.POST_MENU_CLICKED,
       new Map<string, string>([
-        [Keys.SCREEN_NAME, ScreenNames.UNIVERSAL_FEED],
+        [
+          Keys.SCREEN_NAME,
+          isPostDetailScreen
+            ? ScreenNames.POST_DETAIL_SCREEN
+            : ScreenNames.UNIVERSAL_FEED,
+        ],
         [Keys.CREATED_BY_UUID, post?.user?.sdkClientInfo?.uuid],
         [Keys.POST_TYPE, getPostType(post?.attachments)],
         [Keys.POST_TOPICS, joinStrings(post?.topics)],
@@ -70,7 +79,12 @@ const LMPostHeader = React.memo(() => {
               LMFeedAnalytics.track(
                 Events.POST_PROFILE_PIC_CLICKED,
                 new Map<string, string>([
-                  [Keys.SCREEN_NAME, ScreenNames.UNIVERSAL_FEED],
+                  [
+                    Keys.SCREEN_NAME,
+                    isPostDetailScreen
+                      ? ScreenNames.POST_DETAIL_SCREEN
+                      : ScreenNames.UNIVERSAL_FEED,
+                  ],
                   [Keys.CREATED_BY_UUID, post?.user?.sdkClientInfo?.uuid],
                   [Keys.POST_ID, post?.id],
                   [Keys.POST_TYPE, getPostType(post?.attachments)],
@@ -100,7 +114,12 @@ const LMPostHeader = React.memo(() => {
                   LMFeedAnalytics.track(
                     Events.POST_PROFILE_NAME_CLICKED,
                     new Map<string, string>([
-                      [Keys.SCREEN_NAME, ScreenNames.UNIVERSAL_FEED],
+                      [
+                        Keys.SCREEN_NAME,
+                        isPostDetailScreen
+                          ? ScreenNames.POST_DETAIL_SCREEN
+                          : ScreenNames.UNIVERSAL_FEED,
+                      ],
                       [Keys.CREATED_BY_UUID, post?.user?.sdkClientInfo?.uuid],
                       [Keys.POST_ID, post?.id],
                       [Keys.POST_TYPE, getPostType(post?.attachments)],

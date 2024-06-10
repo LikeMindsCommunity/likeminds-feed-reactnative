@@ -38,6 +38,8 @@ export enum Keys {
   POLL_TITLE = "poll_title",
   OPTION_VOTED = "option_voted",
   OPTION_TEXT = "option_text",
+  OPTION_ID = "option_id",
   NUMBER_OF_VOTES_SELECTED = "number_of_votes_selected",
   SCREEN_NAME = "screen_name",
+  TOPIC_ID = "topic_id",
 }

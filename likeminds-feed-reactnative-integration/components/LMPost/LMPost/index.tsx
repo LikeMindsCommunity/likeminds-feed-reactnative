@@ -9,6 +9,13 @@ import { styles } from "./styles";
 import { LMPostContextProvider, useLMPostContext } from "../../../context";
 import { useAppSelector } from "../../../store/store";
 import Layout from "../../../constants/Layout";
+import { LMFeedAnalytics } from "../../../analytics/LMFeedAnalytics";
+import { Events } from "../../../enums/Events";
+import { Keys } from "../../../enums/Keys";
+import { ScreenNames } from "../../../enums/ScreenNames";
+import { getPostType, joinStrings } from "../../../utils/analytics";
+import { useRoute } from "@react-navigation/native";
+import { POST_DETAIL, UNIVERSAL_FEED } from "../../../constants/screenNames";
 
 const LMPost = ({
   navigation,
@@ -35,6 +42,8 @@ const LMPost = ({
 const LMPostComponent = React.memo(() => {
   const { post } = useLMPostContext();
   const allTopics = useAppSelector((state) => state.feed.topics);
+  let route: any = useRoute();
+  let isPostDetailScreen = route.name === POST_DETAIL ? true : false;
 
   return (
     <View style={styles.mainContainer}>
@@ -49,6 +58,27 @@ const LMPostComponent = React.memo(() => {
               <View key={index}>
                 <View>
                   <Text
+                    onPress={() => {
+                      LMFeedAnalytics.track(
+                        Events.POST_TOPIC_CLICKED,
+                        new Map<string, string>([
+                          [
+                            Keys.SCREEN_NAME,
+                            isPostDetailScreen
+                              ? ScreenNames.POST_DETAIL_SCREEN
+                              : ScreenNames.UNIVERSAL_FEED,
+                          ],
+                          [Keys.POST_ID, post?.id],
+                          [Keys.POST_TYPE, getPostType(post.attachments)],
+                          [Keys.POST_TOPICS, joinStrings(post?.topics)],
+                          [
+                            Keys.CREATED_BY_UUID,
+                            post?.user?.sdkClientInfo?.uuid,
+                          ],
+                          [Keys.TOPIC_ID, topicObject?.Id],
+                        ])
+                      );
+                    }}
                     style={{
                       fontSize: Layout.normalize(16),
                       color: "#5046E5",

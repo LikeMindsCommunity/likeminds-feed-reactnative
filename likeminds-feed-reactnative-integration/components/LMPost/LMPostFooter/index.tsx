@@ -9,12 +9,16 @@ import { Events } from "../../../enums/Events";
 import { Keys } from "../../../enums/Keys";
 import { getPostType, joinStrings } from "../../../utils/analytics";
 import { ScreenNames } from "../../../enums/ScreenNames";
+import { useRoute } from "@react-navigation/native";
+import { POST_DETAIL } from "../../../constants/screenNames";
 
 const LMPostFooter = React.memo(() => {
   const { post, footerProps }: LMPostContextValues = useLMPostContext();
   const LMFeedContextStyles = useLMFeedStyles();
   const { postListStyle } = LMFeedContextStyles;
   const footerStyle = postListStyle?.footer;
+  let route: any = useRoute();
+  let isPostDetailScreen = route.name === POST_DETAIL ? true : false;
 
   const [liked, setLiked] = useState(post?.isLiked);
   const [likeCount, setLikeCount] = useState(post?.likesCount);
@@ -39,7 +43,12 @@ const LMPostFooter = React.memo(() => {
     LMFeedAnalytics.track(
       Events.POST_LIKED,
       new Map<string, string>([
-        [Keys.SCREEN_NAME, ScreenNames.UNIVERSAL_FEED],
+        [
+          Keys.SCREEN_NAME,
+          isPostDetailScreen
+            ? ScreenNames.POST_DETAIL_SCREEN
+            : ScreenNames.UNIVERSAL_FEED,
+        ],
         [Keys.POST_ID, post?.id],
         [Keys.POST_TOPICS, joinStrings(post?.topics)],
         [Keys.POST_CREATED_BY_UUID, post?.user?.sdkClientInfo.uuid],
@@ -108,7 +117,12 @@ const LMPostFooter = React.memo(() => {
                       LMFeedAnalytics.track(
                         Events.POST_LIKE_LIST_CLICKED,
                         new Map<string, string>([
-                          [Keys.SCREEN_NAME, ScreenNames.UNIVERSAL_FEED],
+                          [
+                            Keys.SCREEN_NAME,
+                            isPostDetailScreen
+                              ? ScreenNames.POST_DETAIL_SCREEN
+                              : ScreenNames.UNIVERSAL_FEED,
+                          ],
                           [Keys.POST_ID, post?.id],
                           [Keys.POST_TOPICS, joinStrings(post?.topics)],
                           [
@@ -157,7 +171,12 @@ const LMPostFooter = React.memo(() => {
               LMFeedAnalytics.track(
                 Events.POST_COMMENT_CLICKED,
                 new Map<string, string>([
-                  [Keys.SCREEN_NAME, ScreenNames.UNIVERSAL_FEED],
+                  [
+                    Keys.SCREEN_NAME,
+                    isPostDetailScreen
+                      ? ScreenNames.POST_DETAIL_SCREEN
+                      : ScreenNames.UNIVERSAL_FEED,
+                  ],
                   [Keys.POST_ID, post?.id],
                   [Keys.POST_TYPE, getPostType(post.attachments)],
                   [Keys.POST_TOPICS, joinStrings(post?.topics)],
@@ -227,7 +246,12 @@ const LMPostFooter = React.memo(() => {
               LMFeedAnalytics.track(
                 Events.POST_SHARED,
                 new Map<string, string>([
-                  [Keys.SCREEN_NAME, ScreenNames.UNIVERSAL_FEED],
+                  [
+                    Keys.SCREEN_NAME,
+                    isPostDetailScreen
+                      ? ScreenNames.POST_DETAIL_SCREEN
+                      : ScreenNames.UNIVERSAL_FEED,
+                  ],
                   [Keys.POST_ID, post?.id],
                   [Keys.POST_TYPE, getPostType(post.attachments)],
                   [Keys.POST_TOPICS, joinStrings(post?.topics)],

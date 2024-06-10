@@ -41,7 +41,7 @@ export enum Events {
   POST_PROFILE_NAME_CLICKED = "post_profile_name_click",
   POST_MENU_CLICKED = "post_menu_click",
   POST_RESPONSE_CLICKED = "post_response_click",
-  POST_TOPIC_CLICKED = "post_topic_click", //
+  POST_TOPIC_CLICKED = "post_topic_click",
   POST_COMMENT_CLICKED = "post_comment_click",
   POST_SAVED = "post_saved",
   POST_SHARED = "post_shared",
@@ -57,5 +57,5 @@ export enum Events {
   POLL_ADDED = "poll_added", //
   POLL_OPTION_CREATED = "poll_option_created",
   POLL_ANSWERS_VIEWED = "poll_answers_viewed",
-  POLL_ANSWERS_TOGGLED = "poll_answers_toggled", //
+  POLL_ANSWERS_TOGGLED = "poll_answers_toggled",
 }
