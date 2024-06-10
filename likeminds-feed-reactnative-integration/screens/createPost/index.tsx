@@ -75,6 +75,7 @@ import { LMPostPollView } from "../../components/LMPoll";
 import { useRoute } from "@react-navigation/native";
 import STYLES from "../../constants/Styles";
 import { PollCustomisableMethodsContextProvider } from "../../context/pollCustomisableCallback";
+import { ScreenNames } from "../../enums/ScreenNames";
 
 interface CreatePostProps {
   children: React.ReactNode;
@@ -210,6 +211,11 @@ const CreatePostComponent = () => {
   );
   const route: any = useRoute();
   const post = route?.params?.post;
+
+  let isImage =
+    formattedMediaAttachments[0]?.attachmentType === IMAGE_ATTACHMENT_TYPE
+      ? true
+      : false;
 
   const getTopics = async () => {
     const apiRes = await myClient?.getTopics({
@@ -350,10 +356,12 @@ const CreatePostComponent = () => {
       }
 
       if (showTopics) {
-        map.set(Keys.TOPICS, mappedTopics);
+        map.set(Keys.POST_TOPICS, mappedTopics);
       } else {
-        map.set(Keys.TOPICS, "");
+        map.set(Keys.POST_TOPICS, "");
       }
+
+      map.set(Keys.SCREEN_NAME, ScreenNames.CREATE_POST_SCREEN);
 
       LMFeedAnalytics.track(Events.POST_CREATION_COMPLETED, map);
     }
@@ -610,6 +618,7 @@ const CreatePostComponent = () => {
                         LMFeedAnalytics.track(
                           Events.USER_TAGGED_IN_POST,
                           new Map<string, string>([
+                            [Keys.SCREEN_NAME, ScreenNames.CREATE_POST_SCREEN],
                             [Keys.TAGGED_USER_UUID, taggedUserIds],
                             [
                               Keys.TAGGED_USER_COUNT,
@@ -862,10 +871,25 @@ const CreatePostComponent = () => {
           allAttachment.length < 10 && (
             <LMButton
               onTap={() => {
+                const attachmentName =
+                  formattedMediaAttachments.length > 0
+                    ? isImage
+                      ? SELECT_IMAGE
+                      : SELECT_VIDEO
+                    : formattedDocumentAttachments.length > 0
+                    ? SELECT_FILE
+                    : SELECT_IMAGE;
+                LMFeedAnalytics.track(
+                  Events.ADD_MORE_ATTACHMENT_CLICKED,
+                  new Map<string, string>([
+                    [Keys.SCREEN_NAME, ScreenNames.CREATE_POST_SCREEN],
+                    [Keys.TYPE, attachmentName],
+                  ])
+                );
                 formattedMediaAttachments.length > 0
                   ? handleGalleryProp
-                    ? handleGalleryProp(SELECT_BOTH)
-                    : handleGallery(SELECT_BOTH)
+                    ? handleGalleryProp(isImage ? SELECT_IMAGE : SELECT_VIDEO)
+                    : handleGallery(isImage ? SELECT_IMAGE : SELECT_VIDEO)
                   : formattedDocumentAttachments.length > 0
                   ? handleDocumentProp
                     ? handleDocumentProp()
@@ -990,7 +1014,10 @@ const CreatePostComponent = () => {
 
               LMFeedAnalytics.track(
                 Events.CLICKED_ON_ATTACHMENT,
-                new Map<string, string>([[Keys.TYPE, SELECT_IMAGE]])
+                new Map<string, string>([
+                  [Keys.SCREEN_NAME, ScreenNames.CREATE_POST_SCREEN],
+                  [Keys.TYPE, SELECT_IMAGE],
+                ])
               );
             }}
           >
@@ -1018,7 +1045,10 @@ const CreatePostComponent = () => {
 
               LMFeedAnalytics.track(
                 Events.CLICKED_ON_ATTACHMENT,
-                new Map<string, string>([[Keys.TYPE, SELECT_VIDEO]])
+                new Map<string, string>([
+                  [Keys.SCREEN_NAME, ScreenNames.CREATE_POST_SCREEN],
+                  [Keys.TYPE, SELECT_VIDEO],
+                ])
               );
             }}
           >
@@ -1044,7 +1074,10 @@ const CreatePostComponent = () => {
 
               LMFeedAnalytics.track(
                 Events.CLICKED_ON_ATTACHMENT,
-                new Map<string, string>([[Keys.TYPE, SELECT_FILE]])
+                new Map<string, string>([
+                  [Keys.SCREEN_NAME, ScreenNames.CREATE_POST_SCREEN],
+                  [Keys.TYPE, SELECT_FILE],
+                ])
               );
             }}
           >

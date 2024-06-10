@@ -11,6 +11,7 @@ import { RootStackParamList } from "../models/RootStackParamsList";
 import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
 import { Events } from "../enums/Events";
 import { Keys } from "../enums/Keys";
+import { ScreenNames } from "../enums/ScreenNames";
 
 interface PostLikesListContextProps {
   children: ReactNode;
@@ -59,7 +60,10 @@ export const PostLikesListContextProvider = ({
     if (route.params[0] === POST_LIKES) {
       LMFeedAnalytics.track(
         Events.LIKE_LIST_OPEN,
-        new Map<string, string>([[Keys.POST_ID, route.params[1]]])
+        new Map<string, string>([
+          [Keys.SCREEN_NAME, ScreenNames.LIKES_SCREEN],
+          [Keys.POST_ID, route.params[1]],
+        ])
       );
     }
   }, []);

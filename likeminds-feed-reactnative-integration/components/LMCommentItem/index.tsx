@@ -11,6 +11,7 @@ import React, { useEffect, useState } from "react";
 import { LMCommentProps } from "./types";
 import { LMIcon, LMText, LMButton } from "../../uiComponents";
 import {
+  CHILD_LEVEL_COMMENT,
   MAX_DEFAULT_COMMENT_LINES,
   PARENT_LEVEL_COMMENT,
   VIEW_MORE_TEXT,
@@ -20,6 +21,12 @@ import { LMCommentUI } from "../../models";
 import { styles } from "./styles";
 import decode from "../../utils/decodeMentions";
 import { timeStamp } from "../../utils";
+import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
+import { Events } from "../../enums/Events";
+import { Keys } from "../../enums/Keys";
+import { usePostDetailContext } from "../../context";
+import { getPostType, joinStrings } from "../../utils/analytics";
+import { ScreenNames } from "../../enums/ScreenNames";
 
 const LMCommentItem = React.memo(
   ({
@@ -54,6 +61,7 @@ const LMCommentItem = React.memo(
     const [repliesArray, setRepliesArray] = useState<LMCommentUI[]>([]);
     const [replyPageNumber, setReplyPageNumber] = useState(2);
     const customLikeIcon = likeIconButton?.icon;
+    const { postDetail } = usePostDetailContext();
 
     // this handles the show more functionality
     const onTextLayout = (event) => {
@@ -122,6 +130,18 @@ const LMCommentItem = React.memo(
     ) => {
       onCommentOverflowMenuClick(event, commentId);
       menuIcon && menuIcon?.onTap();
+
+      LMFeedAnalytics.track(
+        Events.COMMENT_MENU_CLICKED,
+        new Map<string, string>([
+          [Keys.SCREEN_NAME, ScreenNames.POST_DETAIL_SCREEN],
+          [Keys.CREATED_BY_UUID, postDetail?.user?.sdkClientInfo?.uuid],
+          [Keys.POST_ID, postDetail?.id],
+          [Keys.POST_TYPE, getPostType(postDetail?.attachments)],
+          [Keys.POST_TOPICS, joinStrings(postDetail?.topics)],
+          [Keys.COMMENT_ID, comment?.id],
+        ])
+      );
     };
 
     // this sets the comment's like value and likeCount locally
@@ -154,6 +174,33 @@ const LMCommentItem = React.memo(
             styles.commentUserName,
             commentUserNameStyle,
           ])}
+          onPress={() => {
+            if (comment?.level === CHILD_LEVEL_COMMENT) {
+              LMFeedAnalytics.track(
+                Events.REPLY_PROFILE_NAME_CLICKED,
+                new Map<string, string>([
+                  [Keys.SCREEN_NAME, ScreenNames.POST_DETAIL_SCREEN],
+                  [Keys.CREATED_BY_UUID, postDetail?.user?.sdkClientInfo?.uuid],
+                  [Keys.POST_ID, postDetail?.id],
+                  [Keys.POST_TYPE, getPostType(postDetail?.attachments)],
+                  [Keys.POST_TOPICS, joinStrings(postDetail?.topics)],
+                  [Keys.COMMENT_ID, comment?.id],
+                ])
+              );
+            } else {
+              LMFeedAnalytics.track(
+                Events.COMMENT_PROFILE_NAME_CLICKED,
+                new Map<string, string>([
+                  [Keys.SCREEN_NAME, ScreenNames.POST_DETAIL_SCREEN],
+                  [Keys.CREATED_BY_UUID, postDetail?.user?.sdkClientInfo?.uuid],
+                  [Keys.POST_ID, postDetail?.id],
+                  [Keys.POST_TYPE, getPostType(postDetail?.attachments)],
+                  [Keys.POST_TOPICS, joinStrings(postDetail?.topics)],
+                  [Keys.COMMENT_ID, comment?.id],
+                ])
+              );
+            }
+          }}
         >
           {comment?.user?.name}
         </LMText>
@@ -222,7 +269,25 @@ const LMCommentItem = React.memo(
             {/* like text */}
             {commentLikeCount > 0 && (
               <LMButton
-                onTap={() => likeTextButton?.onTap(comment?.id)}
+                onTap={() => {
+                  likeTextButton?.onTap(comment?.id);
+                  LMFeedAnalytics.track(
+                    Events.COMMENT_LIKE_LIST_CLICKED,
+                    new Map<string, string>([
+                      [Keys.SCREEN_NAME, ScreenNames.POST_DETAIL_SCREEN],
+                      [Keys.POST_ID, postDetail?.id],
+                      [Keys.POST_TOPICS, joinStrings(postDetail?.topics)],
+                      [
+                        Keys.POST_CREATED_BY_UUID,
+                        postDetail?.user?.sdkClientInfo?.uuid,
+                      ],
+                      [
+                        Keys.COMMENT_CREATED_BY_UUID,
+                        comment?.user?.sdkClientInfo?.uuid,
+                      ],
+                    ])
+                  );
+                }}
                 text={{
                   children:
                     commentLikeCount > 1 ? (
@@ -367,7 +432,32 @@ const LMCommentItem = React.memo(
                             },
                           }}
                           likeTextButton={{
-                            onTap: () => likeTextButton?.onTap(item?.id),
+                            onTap: () => {
+                              likeTextButton?.onTap(item?.id);
+
+                              LMFeedAnalytics.track(
+                                Events.REPLY_LIKE_LIST_CLICKED,
+                                new Map<string, string>([
+                                  [
+                                    Keys.SCREEN_NAME,
+                                    ScreenNames.POST_DETAIL_SCREEN,
+                                  ],
+                                  [Keys.POST_ID, postDetail?.id],
+                                  [
+                                    Keys.POST_TOPICS,
+                                    joinStrings(postDetail?.topics),
+                                  ],
+                                  [
+                                    Keys.POST_CREATED_BY_UUID,
+                                    postDetail?.user?.sdkClientInfo?.uuid,
+                                  ],
+                                  [
+                                    Keys.COMMENT_CREATED_BY_UUID,
+                                    comment?.user?.sdkClientInfo?.uuid,
+                                  ],
+                                ])
+                              );
+                            },
                           }}
                           onCommentOverflowMenuClick={(event) =>
                             onOverflowMenuClick(event, item?.id)

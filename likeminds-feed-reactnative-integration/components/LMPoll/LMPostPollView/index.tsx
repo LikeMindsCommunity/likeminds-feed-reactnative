@@ -3,21 +3,12 @@ import React, { useEffect, useState } from "react";
 import {
   ANONYMOUS_POLL_SUB_TITLE,
   ANONYMOUS_POLL_TITLE,
-  EMPTY_OPTIONS_WARNING,
   MAX_DEFAULT_POST_CONTENT_LINES,
-  POLLS_OPTIONS_LIMIT_WARNING,
-  POLLS_OPTIONS_WARNING,
-  POLL_ENDED_WARNING,
-  POLL_MULTIPLE_STATE_EXACTLY,
-  POLL_MULTIPLE_STATE_LEAST,
-  POLL_MULTIPLE_STATE_MAX,
-  POLL_SUBMITTED_SUCCESSFULLY,
 } from "../../../constants/Strings";
 import LMPostPollUI from "../LMPostPollUI";
 import AnonymousPollModal from "../../../customModals/AnonymousPollModal";
 import AddOptionsModal from "../../../customModals/AddOptionModal";
-import { LMPostPollViewProps, LMPostPollViewState } from "../models";
-import { Client } from "../../../client";
+import { LMPostPollViewState } from "../models";
 import STYLES from "../../../constants/Styles";
 
 import { SHOW_TOAST } from "../../../store/types/loader";
@@ -27,6 +18,11 @@ import { PollMultiSelectState, PollType } from "../../../enums/Poll";
 import { GetPostRequest } from "@likeminds.community/feed-js";
 import { getPost } from "../../../store/actions/postDetail";
 import { useUniversalFeedContext } from "../../../context";
+import { LMFeedAnalytics } from "../../../analytics/LMFeedAnalytics";
+import { Events } from "../../../enums/Events";
+import { Keys } from "../../../enums/Keys";
+import { joinStrings } from "../../../utils/analytics";
+import { ScreenNames } from "../../../enums/ScreenNames";
 
 const LMPostPollView = ({
   item,
@@ -226,6 +222,9 @@ const LMPostPollView = ({
   // this function resets showResult state
   const resetShowResult = () => {
     const updatedSelectedPolls: number[] = [];
+    const votes = selectedPolls?.map((itemIndex: any) => {
+      return item?.options[itemIndex]?.Id;
+    });
     const arr = pollsArr.map((option: any, index: number) => {
       if (item?.multipleSelectNumber > 1 && option.isSelected) {
         updatedSelectedPolls.push(index);
@@ -241,6 +240,16 @@ const LMPostPollView = ({
     setShowResultsButton(false);
     setShouldShowVotes(false);
     setSelectedPolls(updatedSelectedPolls);
+    LMFeedAnalytics.track(
+      Events.POLL_VOTES_EDITED,
+      new Map<string, string>([
+        [Keys.SCREEN_NAME, ScreenNames.UNIVERSAL_FEED],
+        [Keys.POLL_ID, item?.id],
+        [Keys.POLL_TITLE, item?.title],
+        [Keys.OPTION_VOTED, joinStrings(votes)],
+        [Keys.NUMBER_OF_VOTES_SELECTED, votes.length],
+      ])
+    );
   };
 
   useEffect(() => {
@@ -408,6 +417,7 @@ const LMPostPollView = ({
     truncatedText: truncatedText,
     maxQuestionLines: MAX_LINES,
     post: post,
+    item: item,
   };
 
   return (

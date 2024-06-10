@@ -3,7 +3,7 @@ import {
   NativeSyntheticEvent,
   TextLayoutEventData,
   TextStyle,
-} from 'react-native';
+} from "react-native";
 
 // required and optional props expected in the LMText component
 export interface LMTextProps {
@@ -12,4 +12,5 @@ export interface LMTextProps {
   selectable?: boolean; // this represents the selection behaviour of the text
   onTextLayout?: (event: NativeSyntheticEvent<TextLayoutEventData>) => void; // callback function executed on change of text layout
   children?: React.ReactNode;
+  onPress?: () => void;
 }

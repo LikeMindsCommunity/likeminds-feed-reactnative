@@ -24,6 +24,10 @@ import { PollType } from "../../../enums/Poll";
 import { useLMFeedStyles } from "../../../lmFeedProvider";
 import { useUniversalFeedCustomisableMethodsContext } from "../../../context";
 import { usePollCustomisableMethodsContext } from "../../../context/pollCustomisableCallback";
+import { LMFeedAnalytics } from "../../../analytics/LMFeedAnalytics";
+import { Events } from "../../../enums/Events";
+import { Keys } from "../../../enums/Keys";
+import { ScreenNames } from "../../../enums/ScreenNames";
 
 const LMPostPollUI = ({
   text,
@@ -63,6 +67,7 @@ const LMPostPollUI = ({
   removePollAttachment,
   editPollAttachment,
   post,
+  item,
   isMultiChoicePoll,
   reloadPost,
   setSelectedPolls,
@@ -406,6 +411,14 @@ const LMPostPollUI = ({
           <Pressable
             onPress={() => {
               onNavigate("");
+              LMFeedAnalytics.track(
+                Events.POLL_ANSWERS_VIEWED,
+                new Map<string, string>([
+                  [Keys.SCREEN_NAME, ScreenNames.UNIVERSAL_FEED],
+                  [Keys.POLL_ID, item?.id],
+                  [Keys.POLL_TITLE, text],
+                ])
+              );
             }}
           >
             <Text

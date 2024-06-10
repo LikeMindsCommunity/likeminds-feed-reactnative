@@ -44,7 +44,8 @@ import LMPostMenu from "../../customModals/LMPostMenu";
 import { Events } from "../../enums/Events";
 import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Keys } from "../../enums/Keys";
-import { getPostType } from "../../utils/analytics";
+import { getPostType, joinStrings } from "../../utils/analytics";
+import { ScreenNames } from "../../enums/ScreenNames";
 
 const PostsList = ({ route, children, items }: any) => {
   const { navigation }: UniversalFeedContextValues = useUniversalFeedContext();
@@ -118,9 +119,11 @@ const PostsListComponent = ({ topics }: any) => {
       LMFeedAnalytics.track(
         event,
         new Map<string, string>([
-          [Keys.UUID, postDetail?.user?.sdkClientInfo?.uuid],
+          [Keys.SCREEN_NAME, ScreenNames.UNIVERSAL_FEED],
+          [Keys.POST_CREATED_BY_UUID, postDetail?.user?.sdkClientInfo?.uuid],
           [Keys.POST_ID, postId],
           [Keys.POST_TYPE, getPostType(postDetail?.attachments)],
+          [Keys.POST_TOPICS, postDetail ? joinStrings(postDetail.topics) : '']
         ])
       );
     }
@@ -139,7 +142,7 @@ const PostsListComponent = ({ topics }: any) => {
       LMFeedAnalytics.track(
         Events.POST_EDITED,
         new Map<string, string>([
-          [Keys.UUID, postDetail?.user?.sdkClientInfo.uuid],
+          [Keys.SCREEN_NAME, ScreenNames.UNIVERSAL_FEED],
           [Keys.POST_ID, postId],
           [Keys.POST_TYPE, getPostType(postDetail?.attachments)],
         ])

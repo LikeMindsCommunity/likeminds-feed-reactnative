@@ -7,6 +7,8 @@ import { useLMFeedStyles } from "../../../lmFeedProvider";
 import { LMFeedAnalytics } from "../../../analytics/LMFeedAnalytics";
 import { Events } from "../../../enums/Events";
 import { Keys } from "../../../enums/Keys";
+import { getPostType, joinStrings } from "../../../utils/analytics";
+import { ScreenNames } from "../../../enums/ScreenNames";
 
 const LMPostFooter = React.memo(() => {
   const { post, footerProps }: LMPostContextValues = useLMPostContext();
@@ -36,7 +38,12 @@ const LMPostFooter = React.memo(() => {
 
     LMFeedAnalytics.track(
       Events.POST_LIKED,
-      new Map<string, string>([[Keys.POST_ID, post?.id]])
+      new Map<string, string>([
+        [Keys.SCREEN_NAME, ScreenNames.UNIVERSAL_FEED],
+        [Keys.POST_ID, post?.id],
+        [Keys.POST_TOPICS, joinStrings(post?.topics)],
+        [Keys.POST_CREATED_BY_UUID, post?.user?.sdkClientInfo.uuid],
+      ])
     );
 
     //  todo : handle later
@@ -97,6 +104,19 @@ const LMPostFooter = React.memo(() => {
                       footerProps?.likeTextButton?.onTap(),
                         footerStyle?.likeTextButton?.onTap &&
                           footerStyle?.likeTextButton?.onTap();
+
+                      LMFeedAnalytics.track(
+                        Events.POST_LIKE_LIST_CLICKED,
+                        new Map<string, string>([
+                          [Keys.SCREEN_NAME, ScreenNames.UNIVERSAL_FEED],
+                          [Keys.POST_ID, post?.id],
+                          [Keys.POST_TOPICS, joinStrings(post?.topics)],
+                          [
+                            Keys.POST_CREATED_BY_UUID,
+                            post?.user?.sdkClientInfo?.uuid,
+                          ],
+                        ])
+                      );
                     }
                   : () => null
                 : () => null
@@ -129,11 +149,22 @@ const LMPostFooter = React.memo(() => {
         {/* comment section */}
         <View style={StyleSheet.flatten([styles.alignRow])}>
           <LMButton
-            onTap={
+            onTap={() => {
               footerStyle?.commentButton?.onTap
-                ? footerStyle?.commentButton.onTap
-                : footerProps?.commentButton?.onTap
-            }
+                ? footerStyle?.commentButton.onTap()
+                : footerProps?.commentButton?.onTap();
+
+              LMFeedAnalytics.track(
+                Events.POST_COMMENT_CLICKED,
+                new Map<string, string>([
+                  [Keys.SCREEN_NAME, ScreenNames.UNIVERSAL_FEED],
+                  [Keys.POST_ID, post?.id],
+                  [Keys.POST_TYPE, getPostType(post.attachments)],
+                  [Keys.POST_TOPICS, joinStrings(post?.topics)],
+                  [Keys.CREATED_BY_UUID, post?.user?.sdkClientInfo?.uuid],
+                ])
+              );
+            }}
             text={{
               children:
                 post?.commentsCount > 0
@@ -188,11 +219,22 @@ const LMPostFooter = React.memo(() => {
         {/* save section */}
         {showBookMarkIcon && (
           <LMButton
-            onTap={
+            onTap={() => {
               footerStyle?.saveButton?.onTap
-                ? footerStyle?.saveButton.onTap
-                : footerProps?.saveButton?.onTap
-            }
+                ? footerStyle?.saveButton.onTap()
+                : footerProps?.saveButton?.onTap();
+
+              LMFeedAnalytics.track(
+                Events.POST_SHARED,
+                new Map<string, string>([
+                  [Keys.SCREEN_NAME, ScreenNames.UNIVERSAL_FEED],
+                  [Keys.POST_ID, post?.id],
+                  [Keys.POST_TYPE, getPostType(post.attachments)],
+                  [Keys.POST_TOPICS, joinStrings(post?.topics)],
+                  [Keys.CREATED_BY_UUID, post?.user?.sdkClientInfo?.uuid],
+                ])
+              );
+            }}
             text={footerStyle?.saveButton?.text}
             icon={{
               assetPath: post?.isSaved

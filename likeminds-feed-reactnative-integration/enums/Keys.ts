@@ -1,5 +1,8 @@
 export enum Keys {
   POST_ID = "post_id",
+  POST_TOPICS = "post_topics",
+  POST_CREATED_BY_UUID = "post_created_by_uuid",
+  COMMENT_CREATED_BY_UUID = "comment_created_by_uuid",
   UUID = "uuid",
   TYPE = "type",
   POST_TYPE = "post_type",
@@ -31,4 +34,10 @@ export enum Keys {
   NO = "no",
   TOPICS_ADDED = "topics_added",
   UNIVERSAL_FEED = "universal_feed",
+  POLL_ID = "poll_id",
+  POLL_TITLE = "poll_title",
+  OPTION_VOTED = "option_voted",
+  OPTION_TEXT = "option_text",
+  NUMBER_OF_VOTES_SELECTED = "number_of_votes_selected",
+  SCREEN_NAME = "screen_name",
 }

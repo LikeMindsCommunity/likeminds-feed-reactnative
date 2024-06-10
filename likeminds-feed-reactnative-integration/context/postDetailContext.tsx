@@ -49,6 +49,7 @@ import {
 import {
   AddCommentRequest,
   EditCommentRequest,
+  EditCommentResponse,
   GetCommentRequest,
   GetPostRequest,
   GetTaggingListRequest,
@@ -87,9 +88,10 @@ import { LMCommentUI, LMPostUI, LMUserUI } from "../models";
 import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
 import { Events } from "../enums/Events";
 import { Keys } from "../enums/Keys";
-import { getPostType } from "../utils/analytics";
+import { getPostType, joinStrings } from "../utils/analytics";
 import { LMLoader } from "../components";
 import Layout from "../constants/Layout";
+import { ScreenNames } from "../enums/ScreenNames";
 
 interface PostDetailContextProps {
   children: ReactNode;
@@ -464,9 +466,11 @@ export const PostDetailContextProvider = ({
       LMFeedAnalytics.track(
         event,
         new Map<string, string>([
-          [Keys.UUID, postDetail?.user?.sdkClientInfo?.uuid],
+          [Keys.SCREEN_NAME, ScreenNames.POST_DETAIL_SCREEN],
+          [Keys.POST_CREATED_BY_UUID, postDetail?.user?.sdkClientInfo?.uuid],
           [Keys.POST_ID, postId],
           [Keys.POST_TYPE, getPostType(postDetail?.attachments)],
+          [Keys.POST_TOPICS, joinStrings(postDetail?.topics)],
         ])
       );
     }
@@ -482,7 +486,7 @@ export const PostDetailContextProvider = ({
       LMFeedAnalytics.track(
         Events.POST_EDITED,
         new Map<string, string>([
-          [Keys.UUID, postDetail?.user?.sdkClientInfo?.uuid],
+          [Keys.SCREEN_NAME, ScreenNames.POST_DETAIL_SCREEN],
           [Keys.POST_ID, postId],
           [Keys.POST_TYPE, getPostType(postDetail?.attachments)],
         ])
@@ -635,8 +639,15 @@ export const PostDetailContextProvider = ({
     LMFeedAnalytics.track(
       Events.COMMENT_POSTED,
       new Map<string, string>([
+        [Keys.SCREEN_NAME, ScreenNames.POST_DETAIL_SCREEN],
         [Keys.POST_ID, postDetail?.id],
         [Keys.COMMENT_ID, commentAddResponse?.comment?.Id],
+        [Keys.POST_TOPICS, joinStrings(postDetail?.topics)],
+        [Keys.POST_CREATED_BY_UUID, postDetail?.user?.sdkClientInfo?.uuid],
+        [
+          Keys.COMMENT_CREATED_BY_UUID,
+          commentAddResponse?.comment?.user?.sdkClientInfo?.uuid,
+        ],
       ])
     );
     return commentAddResponse;
@@ -678,10 +689,13 @@ export const PostDetailContextProvider = ({
     LMFeedAnalytics.track(
       Events.REPLY_POSTED,
       new Map<string, string>([
-        [Keys.UUID, replyOnComment?.userId],
+        [Keys.SCREEN_NAME, ScreenNames.POST_DETAIL_SCREEN],
         [Keys.POST_ID, postDetail?.id],
         [Keys.COMMENT_ID, replyOnComment?.commentId],
         [Keys.COMMENT_REPLY_ID, replyAddResponse?.comment?.Id],
+        [Keys.POST_TOPICS, joinStrings(postDetail?.topics)][
+          (Keys.POST_CREATED_BY_UUID, postDetail?.user?.sdkClientInfo?.uuid)
+        ][(Keys.COMMENT_CREATED_BY_UUID, replyOnComment?.userId)],
       ])
     );
     return replyAddResponse;
@@ -761,7 +775,7 @@ export const PostDetailContextProvider = ({
     };
     await dispatch(editCommentStateHandler(payload));
     // call edit comment api
-    const editCommentResponse = await dispatch(
+    const editCommentResponse: any = await dispatch(
       editComment(
         EditCommentRequest.builder()
           .setcommentId(selectedMenuItemCommentId)
@@ -772,6 +786,38 @@ export const PostDetailContextProvider = ({
       )
     );
     if (editCommentResponse !== undefined) {
+      if (replyOnComment?.commentId) {
+        LMFeedAnalytics.track(
+          Events.REPLY_EDITED,
+          new Map<string, string>([
+            [Keys.SCREEN_NAME, ScreenNames.POST_DETAIL_SCREEN],
+            [Keys.POST_ID, postDetail?.id],
+            [Keys.COMMENT_ID, editCommentResponse?.comment?.Id],
+            [Keys.POST_TOPICS, joinStrings(postDetail?.topics)],
+            [Keys.POST_CREATED_BY_UUID, postDetail?.user?.sdkClientInfo?.uuid],
+            [
+              Keys.COMMENT_CREATED_BY_UUID,
+              editCommentResponse?.comment?.user?.sdkClientInfo?.uuid,
+            ],
+          ])
+        );
+      } else {
+        LMFeedAnalytics.track(
+          Events.COMMENT_EDITED,
+          new Map<string, string>([
+            [Keys.SCREEN_NAME, ScreenNames.POST_DETAIL_SCREEN],
+            [Keys.POST_ID, postDetail?.id],
+            [Keys.COMMENT_ID, editCommentResponse?.comment?.Id],
+            [Keys.POST_TOPICS, joinStrings(postDetail?.topics)],
+            [Keys.POST_CREATED_BY_UUID, postDetail?.user?.sdkClientInfo?.uuid],
+            [
+              Keys.COMMENT_CREATED_BY_UUID,
+              editCommentResponse?.comment?.user?.sdkClientInfo?.uuid,
+            ],
+          ])
+        );
+      }
+
       setEditCommentFocus(false);
       setCommentToAdd("");
       setKeyboardFocusOnReply(false);

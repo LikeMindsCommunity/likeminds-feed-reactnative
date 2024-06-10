@@ -158,6 +158,8 @@ const ReportModal = ({
           commentId: commentDetail ? commentDetail?.id : undefined,
           commentReplyId:
             reportType === REPLY_TYPE ? commentDetail?.id : undefined,
+          commentCreatedByUuid: commentDetail?.user?.sdkClientInfo?.uuid,
+          post: postDetail,
         };
         reportAnalytics(params);
 

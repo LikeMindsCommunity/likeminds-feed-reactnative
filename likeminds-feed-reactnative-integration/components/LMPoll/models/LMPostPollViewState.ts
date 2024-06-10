@@ -33,4 +33,5 @@ export interface LMPostPollViewState {
   truncatedText: string;
   maxQuestionLines: number;
   post: LMPostUI;
+  item: any;
 }

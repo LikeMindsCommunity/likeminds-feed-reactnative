@@ -7,6 +7,11 @@ import { styles } from "./styles";
 import { LMPostContextValues, useLMPostContext } from "../../../context";
 import { useLMFeedStyles } from "../../../lmFeedProvider";
 import { useAppSelector } from "../../../store/store";
+import { LMFeedAnalytics } from "../../../analytics/LMFeedAnalytics";
+import { Events } from "../../../enums/Events";
+import { Keys } from "../../../enums/Keys";
+import { getPostType, joinStrings } from "../../../utils/analytics";
+import { ScreenNames } from "../../../enums/ScreenNames";
 
 const LMPostHeader = React.memo(() => {
   const { post, headerProps }: any = useLMPostContext();
@@ -29,6 +34,15 @@ const LMPostHeader = React.memo(() => {
     nativeEvent: { pageX: number; pageY: number };
   }) => {
     headerProps?.onOverlayMenuClick(event);
+    LMFeedAnalytics.track(
+      Events.POST_MENU_CLICKED,
+      new Map<string, string>([
+        [Keys.SCREEN_NAME, ScreenNames.UNIVERSAL_FEED],
+        [Keys.CREATED_BY_UUID, post?.user?.sdkClientInfo?.uuid],
+        [Keys.POST_TYPE, getPostType(post?.attachments)],
+        [Keys.POST_TOPICS, joinStrings(post?.topics)],
+      ])
+    );
   };
 
   return (
@@ -51,7 +65,19 @@ const LMPostHeader = React.memo(() => {
                 customPostHeaderStyle?.profilePicture?.fallbackTextStyle,
             }}
             imageUrl={post?.user?.imageUrl}
-            onTap={customPostHeaderStyle?.profilePicture?.onTap}
+            onTap={() => {
+              customPostHeaderStyle?.profilePicture?.onTap();
+              LMFeedAnalytics.track(
+                Events.POST_PROFILE_PIC_CLICKED,
+                new Map<string, string>([
+                  [Keys.SCREEN_NAME, ScreenNames.UNIVERSAL_FEED],
+                  [Keys.CREATED_BY_UUID, post?.user?.sdkClientInfo?.uuid],
+                  [Keys.POST_ID, post?.id],
+                  [Keys.POST_TYPE, getPostType(post?.attachments)],
+                  [Keys.POST_TOPICS, joinStrings(post?.topics)],
+                ])
+              );
+            }}
             size={customPostHeaderStyle?.profilePicture?.size}
             fallbackTextBoxStyle={
               customPostHeaderStyle?.profilePicture?.fallbackTextBoxStyle
@@ -70,6 +96,18 @@ const LMPostHeader = React.memo(() => {
                   styles.postAuthorName,
                   customPostHeaderStyle?.titleText,
                 ])}
+                onPress={() => {
+                  LMFeedAnalytics.track(
+                    Events.POST_PROFILE_NAME_CLICKED,
+                    new Map<string, string>([
+                      [Keys.SCREEN_NAME, ScreenNames.UNIVERSAL_FEED],
+                      [Keys.CREATED_BY_UUID, post?.user?.sdkClientInfo?.uuid],
+                      [Keys.POST_ID, post?.id],
+                      [Keys.POST_TYPE, getPostType(post?.attachments)],
+                      [Keys.POST_TOPICS, joinStrings(post?.topics)],
+                    ])
+                  );
+                }}
               >
                 {post?.user?.name}
               </LMText>

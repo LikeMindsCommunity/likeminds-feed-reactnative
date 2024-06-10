@@ -48,6 +48,8 @@ import { useRoute } from "@react-navigation/native";
 import { SHOW_TOAST } from "../store/types/loader";
 import { Client } from "../client";
 import { PollMultiSelectState, PollType } from "../enums/Poll";
+import { joinStrings } from "../utils/analytics";
+import { ScreenNames } from "../enums/ScreenNames";
 
 interface UniversalFeedContextProps {
   children: ReactNode;
@@ -166,7 +168,10 @@ export const UniversalFeedContextProvider = ({
   useEffect(() => {
     LMFeedAnalytics.track(
       Events.FEED_OPENED,
-      new Map<string, string>([[Keys.FEED_TYPE, Keys.UNIVERSAL_FEED]])
+      new Map<string, string>([
+        [Keys.SCREEN_NAME, ScreenNames.UNIVERSAL_FEED],
+        [Keys.FEED_TYPE, Keys.UNIVERSAL_FEED],
+      ])
     );
   }, []);
 
@@ -371,6 +376,16 @@ export const UniversalFeedContextProvider = ({
       };
       await myClient.addPollOption(payload);
       await reloadPost();
+
+      LMFeedAnalytics.track(
+        Events.POLL_OPTION_CREATED,
+        new Map<string, string>([
+          [Keys.SCREEN_NAME, ScreenNames.UNIVERSAL_FEED],
+          [Keys.POLL_ID, item?.id],
+          [Keys.POLL_TITLE, item?.title],
+          [Keys.OPTION_TEXT, payload.text],
+        ])
+      );
     } catch (error) {
       // process error
     }
@@ -518,6 +533,17 @@ export const UniversalFeedContextProvider = ({
           type: SHOW_TOAST,
           body: { isToast: true, message: POLL_SUBMITTED_SUCCESSFULLY },
         });
+
+        LMFeedAnalytics.track(
+          Events.POLL_VOTED,
+          new Map<string, string>([
+            [Keys.SCREEN_NAME, ScreenNames.UNIVERSAL_FEED],
+            [Keys.POLL_ID, item?.id],
+            [Keys.POLL_TITLE, item?.title],
+            [Keys.OPTION_VOTED, joinStrings(votes)],
+            [Keys.NUMBER_OF_VOTES_SELECTED, votes.length],
+          ])
+        );
       } catch (error) {
         // process error
       }

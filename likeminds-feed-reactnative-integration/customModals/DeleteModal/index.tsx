@@ -40,8 +40,9 @@ import { LMCommentUI, LMPostUI } from "../../models";
 import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Events } from "../../enums/Events";
 import { Keys } from "../../enums/Keys";
-import { getPostType } from "../../utils/analytics";
+import { getPostType, joinStrings } from "../../utils/analytics";
 import { UNIVERSAL_FEED } from "../../constants/screenNames";
+import { ScreenNames } from "../../enums/ScreenNames";
 
 // delete modal's props
 interface DeleteModalProps {
@@ -73,6 +74,13 @@ const DeleteModal = ({
   const [deletionReason, setDeletionReason] = useState("");
   const [otherReason, setOtherReason] = useState("");
   const [showReasons, setShowReasons] = useState(false);
+  let routes: any = navigation?.getState()?.routes;
+  let routesLength = routes?.length;
+  let isPostDetailScreen = routesLength
+    ? routesLength > 0 && routes[routesLength - 1]?.name !== UNIVERSAL_FEED
+      ? true
+      : false
+    : false;
 
   // this function calls the delete post api
   const postDelete = async () => {
@@ -102,12 +110,19 @@ const DeleteModal = ({
           Events.POST_DELETED,
           new Map<string, string>([
             [
+              Keys.SCREEN_NAME,
+              isPostDetailScreen
+                ? ScreenNames.POST_DETAIL_SCREEN
+                : ScreenNames.UNIVERSAL_FEED,
+            ],
+            [
               Keys.USER_STATE,
               !payload.deleteReason ? "Member" : "Community Manager",
             ],
-            [Keys.UUID, postDetail?.user?.sdkClientInfo.uuid],
+            [Keys.POST_CREATED_BY_UUID, postDetail?.user?.sdkClientInfo.uuid],
             [Keys.POST_ID, payload?.postId],
             [Keys.POST_TYPE, getPostType(postDetail?.attachments)],
+            [Keys.POST_TOPICS, joinStrings(postDetail?.topics)],
           ])
         );
         setDeletionReason("");
@@ -170,18 +185,48 @@ const DeleteModal = ({
         if (commentDetail?.level && commentDetail?.level > 0) {
           LMFeedAnalytics.track(
             Events.REPLY_DELETED,
-            new Map<string, string>([
+            new Map<string, string | undefined>([
+              [
+                Keys.SCREEN_NAME,
+                isPostDetailScreen
+                  ? ScreenNames.POST_DETAIL_SCREEN
+                  : ScreenNames.UNIVERSAL_FEED,
+              ],
               [Keys.POST_ID, payload.postId],
-              [Keys.COMMENT_ID, parentCommentId],
+              [Keys.COMMENT_ID, parentCommentId?.toString()],
               [Keys.COMMENT_REPLY_ID, payload.commentId],
+              [Keys.POST_TOPICS, joinStrings(postDetail?.topics)],
+              [
+                Keys.POST_CREATED_BY_UUID,
+                postDetail?.user?.sdkClientInfo?.uuid,
+              ],
+              [
+                Keys.COMMENT_CREATED_BY_UUID,
+                commentDetail?.user?.sdkClientInfo?.uuid,
+              ],
             ])
           );
         } else {
           LMFeedAnalytics.track(
             Events.COMMENT_DELETED,
-            new Map<string, string>([
+            new Map<string, string | undefined>([
+              [
+                Keys.SCREEN_NAME,
+                isPostDetailScreen
+                  ? ScreenNames.POST_DETAIL_SCREEN
+                  : ScreenNames.UNIVERSAL_FEED,
+              ],
               [Keys.POST_ID, payload.postId],
               [Keys.COMMENT_ID, payload.commentId],
+              [Keys.POST_TOPICS, joinStrings(postDetail?.topics)],
+              [
+                Keys.POST_CREATED_BY_UUID,
+                postDetail?.user?.sdkClientInfo?.uuid,
+              ],
+              [
+                Keys.COMMENT_CREATED_BY_UUID,
+                commentDetail?.user?.sdkClientInfo?.uuid,
+              ],
             ])
           );
         }

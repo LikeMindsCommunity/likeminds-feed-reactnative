@@ -69,6 +69,7 @@ import { Events } from "../enums/Events";
 import { Keys } from "../enums/Keys";
 import { CommunityConfigs } from "../communityConfigs";
 import { CREATE_POLL_SCREEN } from "../constants/screenNames";
+import { ScreenNames } from "../enums/ScreenNames";
 
 interface CreatePostContextProps {
   children: ReactNode;
@@ -326,16 +327,33 @@ export const CreatePostContextProvider = ({
 
         // sends image attached event if imageCount > 0
         if (imageCount > 0) {
+          // postToEdit
           LMFeedAnalytics.track(
             Events.IMAGE_ATTACHED_TO_POST,
-            new Map<string, string>([[Keys.IMAGE_COUNT, `${imageCount}`]])
+            new Map<string, string>([
+              [
+                Keys.SCREEN_NAME,
+                postToEdit
+                  ? ScreenNames.EDIT_POST_SCREEN
+                  : ScreenNames.CREATE_POST_SCREEN,
+              ],
+              [Keys.IMAGE_COUNT, `${imageCount}`],
+            ])
           );
         }
         // sends image attached event if videoCount > 0
         if (videoCount > 0) {
           LMFeedAnalytics.track(
             Events.VIDEO_ATTACHED_TO_POST,
-            new Map<string, string>([[Keys.VIDEO_COUNT, `${videoCount}`]])
+            new Map<string, string>([
+              [
+                Keys.SCREEN_NAME,
+                postToEdit
+                  ? ScreenNames.EDIT_POST_SCREEN
+                  : ScreenNames.CREATE_POST_SCREEN,
+              ],
+              [Keys.VIDEO_COUNT, `${videoCount}`],
+            ])
           );
         }
       }
@@ -391,6 +409,12 @@ export const CreatePostContextProvider = ({
       LMFeedAnalytics.track(
         Events.DOCUMENT_ATTACHED_TO_POST,
         new Map<string, string>([
+          [
+            Keys.SCREEN_NAME,
+            postToEdit
+              ? ScreenNames.EDIT_POST_SCREEN
+              : ScreenNames.CREATE_POST_SCREEN,
+          ],
           [Keys.DOCUMENT_COUNT, `${selectedDocuments.length}`],
         ])
       );
@@ -532,7 +556,15 @@ export const CreatePostContextProvider = ({
               if (link) {
                 LMFeedAnalytics.track(
                   Events.LINK_ATTACHED_IN_POST,
-                  new Map<string, string>([[Keys.LINK, link]])
+                  new Map<string, string>([
+                    [
+                      Keys.SCREEN_NAME,
+                      postToEdit
+                        ? ScreenNames.EDIT_POST_SCREEN
+                        : ScreenNames.CREATE_POST_SCREEN,
+                    ],
+                    [Keys.LINK, link],
+                  ])
                 );
               }
             }
