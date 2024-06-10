@@ -19,6 +19,7 @@ import { useAppDispatch, useAppSelector } from "../../../store/store";
 import { SET_MUTED_STATE } from "../../../store/types/types";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { UNIVERSAL_FEED } from "../../../constants/screenNames";
 
 const LMVideo = React.memo(
   ({
@@ -123,7 +124,7 @@ const LMVideo = React.memo(
               },
             ])}
             paused={
-              pauseStatus === true && previousRoute?.name === "UniversalFeed"
+              pauseStatus === true && previousRoute?.name === UNIVERSAL_FEED
                 ? pauseStatus
                 : videoInFeed
                 ? autoPlay
