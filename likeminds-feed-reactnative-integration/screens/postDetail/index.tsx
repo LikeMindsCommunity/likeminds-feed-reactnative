@@ -10,7 +10,7 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { POST_LIKES_LIST, UNIVERSAL_FEED } from "../../constants/screenNames";
@@ -58,6 +58,7 @@ import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Events } from "../../enums/Events";
 import { Keys } from "../../enums/Keys";
 import { PollCustomisableMethodsContextProvider } from "../../context/pollCustomisableCallback";
+import { ScreenNames } from "../../enums/ScreenNames";
 
 interface PostDetailProps {
   children: React.ReactNode;
@@ -310,7 +311,10 @@ const PostDetailComponent = React.memo(() => {
     if (postDetail?.replies?.length > 0) {
       LMFeedAnalytics.track(
         Events.COMMENT_LIST_OPEN,
-        new Map<string, string>([[Keys.POST_ID, postDetail?.id]])
+        new Map<string, string>([
+          [Keys.SCREEN_NAME, ScreenNames.POST_DETAIL_SCREEN],
+          [Keys.POST_ID, postDetail?.id],
+        ])
       );
     }
   }, [postDetail?.replies?.length]);
