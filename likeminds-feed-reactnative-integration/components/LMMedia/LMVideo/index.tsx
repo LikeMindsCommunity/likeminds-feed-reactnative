@@ -19,7 +19,11 @@ import { useAppDispatch, useAppSelector } from "../../../store/store";
 import { SET_MUTED_STATE } from "../../../store/types/types";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { UNIVERSAL_FEED } from "../../../constants/screenNames";
+import {
+  CAROUSEL_SCREEN,
+  CREATE_POST,
+  UNIVERSAL_FEED,
+} from "../../../constants/screenNames";
 
 const LMVideo = React.memo(
   ({
@@ -61,10 +65,14 @@ const LMVideo = React.memo(
     );
 
     const pauseStatus = useAppSelector((state) => state.feed.pauseStatus);
+    const flowFromCarouselScreen = useAppSelector(
+      (state) => state.feed.flowFromCarouselScreen
+    );
 
     const navigation = useNavigation<StackNavigationProp<any>>();
     let routes = navigation.getState()?.routes;
     let previousRoute = routes[routes?.length - 2];
+    let currentRoute = routes[routes.length - 1];
 
     const [mute, setMute] = useState(false);
     const dispatch = useAppDispatch();
@@ -83,7 +91,7 @@ const LMVideo = React.memo(
       >
         {/* this renders the loader until the first picture of video is displayed */}
         {loading ? (
-          <View style={[defaultStyles.videoStyle, defaultStyles.loaderView]}>
+          <View style={[defaultStyles.loaderView, videoStyle]}>
             {loaderWidget ? loaderWidget : <LMLoader />}
           </View>
         ) : null}
@@ -124,7 +132,11 @@ const LMVideo = React.memo(
               },
             ])}
             paused={
-              pauseStatus === true && previousRoute?.name === UNIVERSAL_FEED
+              flowFromCarouselScreen && currentVideoId === postId
+                ? false
+                : pauseStatus === true &&
+                  previousRoute?.name === UNIVERSAL_FEED &&
+                  currentRoute?.name !== CREATE_POST
                 ? pauseStatus
                 : videoInFeed
                 ? autoPlay

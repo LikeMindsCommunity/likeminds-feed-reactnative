@@ -34,13 +34,7 @@ const LMImage = React.memo(
       >
         {/* this renders the loader until the image renders */}
         {loading ? (
-          <View
-            style={[
-              defaultStyles.imageStyle,
-              defaultStyles.loaderView,
-              imageStyle,
-            ]}
-          >
+          <View style={[defaultStyles.loaderView, imageStyle]}>
             {loaderWidget ? loaderWidget : <LMLoader />}
           </View>
         ) : null}

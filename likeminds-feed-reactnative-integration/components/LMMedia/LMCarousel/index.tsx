@@ -14,10 +14,7 @@ import { useAppDispatch } from "../../../store/store";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { STATUS_BAR_STYLE } from "../../../store/types/types";
-import {
-  CAROUSEL_SCREEN,
-  UNIVERSAL_FEED,
-} from "../../../constants/screenNames";
+import { CAROUSEL_SCREEN } from "../../../constants/screenNames";
 
 const LMCarousel = React.memo(
   ({
@@ -126,18 +123,16 @@ const LMCarousel = React.memo(
             {item?.attachmentType === VIDEO_ATTACHMENT_TYPE && (
               <TouchableOpacity
                 onPress={() => {
-                  previousRoute?.name !== UNIVERSAL_FEED &&
-                    navigation.navigate(CAROUSEL_SCREEN, {
-                      dataObject: post,
-                      index,
-                    });
-                  previousRoute?.name !== UNIVERSAL_FEED &&
-                    dispatch({
-                      type: STATUS_BAR_STYLE,
-                      body: {
-                        color: STYLES.$STATUS_BAR_STYLE["light-content"],
-                      },
-                    });
+                  navigation.navigate(CAROUSEL_SCREEN, {
+                    dataObject: post,
+                    index,
+                  });
+                  dispatch({
+                    type: STATUS_BAR_STYLE,
+                    body: {
+                      color: STYLES.$STATUS_BAR_STYLE["light-content"],
+                    },
+                  });
                 }}
               >
                 <LMVideo
@@ -176,9 +171,7 @@ const LMCarousel = React.memo(
                     attachments[activeIndex]?.attachmentMeta?.url
                   }
                   postId={videoItem?.postId}
-                  showMuteUnmute={
-                    previousRoute?.name === UNIVERSAL_FEED ? false : true
-                  }
+                  showMuteUnmute={true}
                 />
               </TouchableOpacity>
             )}
