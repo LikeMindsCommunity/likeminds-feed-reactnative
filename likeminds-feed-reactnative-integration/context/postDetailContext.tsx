@@ -12,6 +12,7 @@ import React, {
 import { useAppDispatch, useAppSelector } from "../store/store";
 
 import {
+  CHILD_LEVEL_COMMENT,
   COMMENT_TYPE,
   DELETE_COMMENT_MENU_ITEM,
   DELETE_POST_MENU_ITEM,
@@ -783,7 +784,7 @@ export const PostDetailContextProvider = ({
       )
     );
     if (editCommentResponse !== undefined) {
-      if (replyOnComment?.commentId) {
+      if (editCommentResponse?.comment?.level === CHILD_LEVEL_COMMENT) {
         LMFeedAnalytics.track(
           Events.REPLY_EDITED,
           new Map<string, string>([
