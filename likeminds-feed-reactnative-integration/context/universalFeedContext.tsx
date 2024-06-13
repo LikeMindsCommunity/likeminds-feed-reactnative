@@ -164,17 +164,6 @@ export const UniversalFeedContextProvider = ({
     setRefreshing(false);
   };
 
-  // Analytics event
-  useEffect(() => {
-    LMFeedAnalytics.track(
-      Events.FEED_OPENED,
-      new Map<string, string>([
-        [Keys.SCREEN_NAME, ScreenNames.UNIVERSAL_FEED],
-        [Keys.FEED_TYPE, Keys.UNIVERSAL_FEED],
-      ])
-    );
-  }, []);
-
   // this function adds a new post
   const postAdd = async () => {
     // replace the mentions with route
@@ -258,6 +247,7 @@ export const UniversalFeedContextProvider = ({
         })
       );
     }
+
     return addPostResponse;
   };
 
@@ -453,6 +443,16 @@ export const UniversalFeedContextProvider = ({
             type: SHOW_TOAST,
             body: { isToast: true, message: POLL_SUBMITTED_SUCCESSFULLY },
           });
+          LMFeedAnalytics.track(
+            Events.POLL_VOTED,
+            new Map<string, string>([
+              [Keys.SCREEN_NAME, ScreenNames.UNIVERSAL_FEED],
+              [Keys.POLL_ID, item?.id],
+              [Keys.POLL_TITLE, item?.title],
+              [Keys.OPTION_VOTED, joinStrings([item?.options[pollIndex]?.Id])],
+              [Keys.NUMBER_OF_VOTES_SELECTED, 1],
+            ])
+          );
         } else {
           // for instant poll selection only for once
 
@@ -467,6 +467,20 @@ export const UniversalFeedContextProvider = ({
               type: SHOW_TOAST,
               body: { isToast: true, message: POLL_SUBMITTED_SUCCESSFULLY },
             });
+
+            LMFeedAnalytics.track(
+              Events.POLL_VOTED,
+              new Map<string, string>([
+                [Keys.SCREEN_NAME, ScreenNames.UNIVERSAL_FEED],
+                [Keys.POLL_ID, item?.id],
+                [Keys.POLL_TITLE, item?.title],
+                [
+                  Keys.OPTION_VOTED,
+                  joinStrings([item?.options[pollIndex]?.Id]),
+                ],
+                [Keys.NUMBER_OF_VOTES_SELECTED, 1],
+              ])
+            );
           }
         }
         return;

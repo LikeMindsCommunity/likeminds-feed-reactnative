@@ -270,23 +270,25 @@ const LMCommentItem = React.memo(
             {commentLikeCount > 0 && (
               <LMButton
                 onTap={() => {
+                  if (comment?.level === PARENT_LEVEL_COMMENT) {
+                    LMFeedAnalytics.track(
+                      Events.COMMENT_LIKE_LIST_CLICKED,
+                      new Map<string, string>([
+                        [Keys.SCREEN_NAME, ScreenNames.POST_DETAIL_SCREEN],
+                        [Keys.POST_ID, postDetail?.id],
+                        [Keys.POST_TOPICS, joinStrings(postDetail?.topics)],
+                        [
+                          Keys.POST_CREATED_BY_UUID,
+                          postDetail?.user?.sdkClientInfo?.uuid,
+                        ],
+                        [
+                          Keys.COMMENT_CREATED_BY_UUID,
+                          comment?.user?.sdkClientInfo?.uuid,
+                        ],
+                      ])
+                    );
+                  }
                   likeTextButton?.onTap(comment?.id);
-                  LMFeedAnalytics.track(
-                    Events.COMMENT_LIKE_LIST_CLICKED,
-                    new Map<string, string>([
-                      [Keys.SCREEN_NAME, ScreenNames.POST_DETAIL_SCREEN],
-                      [Keys.POST_ID, postDetail?.id],
-                      [Keys.POST_TOPICS, joinStrings(postDetail?.topics)],
-                      [
-                        Keys.POST_CREATED_BY_UUID,
-                        postDetail?.user?.sdkClientInfo?.uuid,
-                      ],
-                      [
-                        Keys.COMMENT_CREATED_BY_UUID,
-                        comment?.user?.sdkClientInfo?.uuid,
-                      ],
-                    ])
-                  );
                 }}
                 text={{
                   children:

@@ -1104,10 +1104,7 @@ const CreatePostComponent = () => {
             onPress={() => {
               handlePollProp ? handlePollProp() : handlePoll();
 
-              // LMFeedAnalytics.track(
-              //   Events.CLICKED_ON_ATTACHMENT,
-              //   new Map<string, string>([[Keys.TYPE, SELECT_FILE]])
-              // );
+              LMFeedAnalytics.track(Events.POLL_ADDED);
             }}
           >
             <LMIcon

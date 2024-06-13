@@ -56,6 +56,7 @@ import {
 import { Client } from "../../client";
 import Layout from "../../constants/Layout";
 import { PollCustomisableMethodsContextProvider } from "../../context/pollCustomisableCallback";
+import { ScreenNames } from "../../enums/ScreenNames";
 
 interface UniversalFeedProps {
   children: React.ReactNode;
@@ -175,6 +176,17 @@ const UniversalFeedComponent = () => {
     /* @ts-ignore */
     setUnreadNotifiCount(parseInt(latestUnreadCount?.data?.count));
   };
+
+  // Analytics event
+  useEffect(() => {
+    LMFeedAnalytics.track(
+      Events.FEED_OPENED,
+      new Map<string, string>([
+        [Keys.SCREEN_NAME, ScreenNames.UNIVERSAL_FEED],
+        [Keys.FEED_TYPE, Keys.UNIVERSAL_FEED],
+      ])
+    );
+  }, []);
 
   useEffect(() => {
     // Create a new state array named mappedTopics
@@ -508,7 +520,12 @@ const UniversalFeedComponent = () => {
           newPostButtonClickProps
             ? newPostButtonClickProps()
             : newPostButtonClick();
-          LMFeedAnalytics.track(Events.POST_CREATION_STARTED);
+          LMFeedAnalytics.track(
+            Events.POST_CREATION_STARTED,
+            new Map<string, string>([
+              [Keys.SCREEN_NAME, ScreenNames.UNIVERSAL_FEED],
+            ])
+          );
           dispatch({
             type: CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
           });

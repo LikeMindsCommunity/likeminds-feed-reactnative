@@ -222,12 +222,14 @@ const LMPostPollView = ({
   // this function resets showResult state
   const resetShowResult = () => {
     const updatedSelectedPolls: number[] = [];
+    const updatedSelectedOptions: any = [];
     const votes = selectedPolls?.map((itemIndex: any) => {
       return item?.options[itemIndex]?.Id;
     });
     const arr = pollsArr.map((option: any, index: number) => {
       if (item?.multipleSelectNumber > 1 && option.isSelected) {
         updatedSelectedPolls.push(index);
+        updatedSelectedOptions.push(option?.Id);
       }
       return {
         ...option,
@@ -246,8 +248,8 @@ const LMPostPollView = ({
         [Keys.SCREEN_NAME, ScreenNames.UNIVERSAL_FEED],
         [Keys.POLL_ID, item?.id],
         [Keys.POLL_TITLE, item?.title],
-        [Keys.OPTION_VOTED, joinStrings(votes)],
-        [Keys.NUMBER_OF_VOTES_SELECTED, votes.length],
+        [Keys.OPTION_VOTED, joinStrings(updatedSelectedOptions)],
+        [Keys.NUMBER_OF_VOTES_SELECTED, updatedSelectedOptions.length],
       ])
     );
   };

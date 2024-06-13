@@ -1,5 +1,6 @@
 export enum Events {
   POST_CREATION_STARTED = "post_creation_started",
+  POST_CREATION_ERROR = "post_creation_error",
   CLICKED_ON_ATTACHMENT = "clicked_on_attachment",
   ADD_MORE_ATTACHMENT_CLICKED = "add_more_attachment_clicked",
   USER_TAGGED_IN_POST = "user_tagged_in_post",

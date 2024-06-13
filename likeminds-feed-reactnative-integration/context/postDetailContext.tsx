@@ -644,10 +644,7 @@ export const PostDetailContextProvider = ({
         [Keys.COMMENT_ID, commentAddResponse?.comment?.Id],
         [Keys.POST_TOPICS, joinStrings(postDetail?.topics)],
         [Keys.POST_CREATED_BY_UUID, postDetail?.user?.sdkClientInfo?.uuid],
-        [
-          Keys.COMMENT_CREATED_BY_UUID,
-          commentAddResponse?.comment?.user?.sdkClientInfo?.uuid,
-        ],
+        [Keys.COMMENT_CREATED_BY_UUID, commentAddResponse?.comment?.userId],
       ])
     );
     return commentAddResponse;
@@ -693,9 +690,9 @@ export const PostDetailContextProvider = ({
         [Keys.POST_ID, postDetail?.id],
         [Keys.COMMENT_ID, replyOnComment?.commentId],
         [Keys.COMMENT_REPLY_ID, replyAddResponse?.comment?.Id],
-        [Keys.POST_TOPICS, joinStrings(postDetail?.topics)][
-          (Keys.POST_CREATED_BY_UUID, postDetail?.user?.sdkClientInfo?.uuid)
-        ][(Keys.COMMENT_CREATED_BY_UUID, replyOnComment?.userId)],
+        [Keys.POST_TOPICS, joinStrings(postDetail?.topics)],
+        [Keys.POST_CREATED_BY_UUID, postDetail?.user?.sdkClientInfo?.uuid],
+        [Keys.COMMENT_CREATED_BY_UUID, replyAddResponse?.comment?.userId],
       ])
     );
     return replyAddResponse;
@@ -797,7 +794,7 @@ export const PostDetailContextProvider = ({
             [Keys.POST_CREATED_BY_UUID, postDetail?.user?.sdkClientInfo?.uuid],
             [
               Keys.COMMENT_CREATED_BY_UUID,
-              editCommentResponse?.comment?.user?.sdkClientInfo?.uuid,
+              editCommentResponse?.comment?.userId,
             ],
           ])
         );
@@ -812,7 +809,7 @@ export const PostDetailContextProvider = ({
             [Keys.POST_CREATED_BY_UUID, postDetail?.user?.sdkClientInfo?.uuid],
             [
               Keys.COMMENT_CREATED_BY_UUID,
-              editCommentResponse?.comment?.user?.sdkClientInfo?.uuid,
+              editCommentResponse?.comment?.userId,
             ],
           ])
         );

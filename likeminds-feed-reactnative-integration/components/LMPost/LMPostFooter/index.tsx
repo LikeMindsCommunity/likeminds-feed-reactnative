@@ -40,20 +40,37 @@ const LMPostFooter = React.memo(() => {
     // prop drill one
     footerProps?.likeIconButton?.onTap();
 
-    LMFeedAnalytics.track(
-      Events.POST_LIKED,
-      new Map<string, string>([
-        [
-          Keys.SCREEN_NAME,
-          isPostDetailScreen
-            ? ScreenNames.POST_DETAIL_SCREEN
-            : ScreenNames.UNIVERSAL_FEED,
-        ],
-        [Keys.POST_ID, post?.id],
-        [Keys.POST_TOPICS, joinStrings(post?.topics)],
-        [Keys.POST_CREATED_BY_UUID, post?.user?.sdkClientInfo.uuid],
-      ])
-    );
+    if (liked) {
+      LMFeedAnalytics.track(
+        Events.POST_UNLIKED,
+        new Map<string, string>([
+          [
+            Keys.SCREEN_NAME,
+            isPostDetailScreen
+              ? ScreenNames.POST_DETAIL_SCREEN
+              : ScreenNames.UNIVERSAL_FEED,
+          ],
+          [Keys.POST_ID, post?.id],
+          [Keys.POST_TOPICS, joinStrings(post?.topics)],
+          [Keys.POST_CREATED_BY_UUID, post?.user?.sdkClientInfo.uuid],
+        ])
+      );
+    } else {
+      LMFeedAnalytics.track(
+        Events.POST_LIKED,
+        new Map<string, string>([
+          [
+            Keys.SCREEN_NAME,
+            isPostDetailScreen
+              ? ScreenNames.POST_DETAIL_SCREEN
+              : ScreenNames.UNIVERSAL_FEED,
+          ],
+          [Keys.POST_ID, post?.id],
+          [Keys.POST_TOPICS, joinStrings(post?.topics)],
+          [Keys.POST_CREATED_BY_UUID, post?.user?.sdkClientInfo.uuid],
+        ])
+      );
+    }
 
     //  todo : handle later
     // setLiked(!liked);
@@ -244,7 +261,7 @@ const LMPostFooter = React.memo(() => {
                 : footerProps?.saveButton?.onTap();
 
               LMFeedAnalytics.track(
-                Events.POST_SHARED,
+                Events.POST_SAVED,
                 new Map<string, string>([
                   [
                     Keys.SCREEN_NAME,
@@ -293,11 +310,27 @@ const LMPostFooter = React.memo(() => {
         {/* share section */}
         {showShareIcon && (
           <LMButton
-            onTap={
+            onTap={() => {
               footerStyle?.shareButton?.onTap
-                ? footerStyle?.shareButton.onTap
-                : footerProps?.shareButton?.onTap
-            }
+                ? footerStyle?.shareButton.onTap()
+                : footerProps?.shareButton?.onTap();
+
+              LMFeedAnalytics.track(
+                Events.POST_SHARED,
+                new Map<string, string>([
+                  [
+                    Keys.SCREEN_NAME,
+                    isPostDetailScreen
+                      ? ScreenNames.POST_DETAIL_SCREEN
+                      : ScreenNames.UNIVERSAL_FEED,
+                  ],
+                  [Keys.POST_ID, post?.id],
+                  [Keys.POST_TYPE, getPostType(post.attachments)],
+                  [Keys.POST_TOPICS, joinStrings(post?.topics)],
+                  [Keys.CREATED_BY_UUID, post?.user?.sdkClientInfo?.uuid],
+                ])
+              );
+            }}
             text={footerStyle?.shareButton?.text}
             icon={{
               assetPath: footerStyle?.shareButton?.icon?.assetPath
