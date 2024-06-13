@@ -674,24 +674,46 @@ export const CreatePostContextProvider = ({
     );
 
     // call edit post api
-    const editPostResponse = dispatch(
-      editPost(
-        EditPostRequest.builder()
-          .setHeading("")
-          .setattachments([
-            ...allAttachment,
-            ...linkAttachments,
-            pollAttachments,
-          ])
-          .setpostId(postDetail?.id)
-          .settext(contentText)
-          .setTopicIds(topics)
-          .build(),
-        false
-      )
-    );
 
-    return editPostResponse;
+    if(formattedPollAttachments[0]?.attachmentMeta){
+      const editPostResponse = dispatch(
+        editPost(
+          EditPostRequest.builder()
+            .setHeading("")
+            .setattachments([
+              ...allAttachment,
+              ...linkAttachments,
+              pollAttachments,
+            ])
+            .setpostId(postDetail?.id)
+            .settext(contentText)
+            .setTopicIds(topics)
+            .build(),
+          false
+        )
+      );
+      return editPostResponse;
+    }else{
+      const editPostResponse = dispatch(
+        editPost(
+          EditPostRequest.builder()
+            .setHeading("")
+            .setattachments([
+              ...allAttachment,
+              ...linkAttachments,
+            ])
+            .setpostId(postDetail?.id)
+            .settext(contentText)
+            .setTopicIds(topics)
+            .build(),
+          false
+        )
+      );
+      return editPostResponse;
+    }
+
+
+   
   };
 
   // this function is called on change text of inputText

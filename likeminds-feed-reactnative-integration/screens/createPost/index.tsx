@@ -590,6 +590,7 @@ const CreatePostComponent = () => {
               {
                 height: userTaggingListHeight,
               },
+              allTags.length === 0 && { borderTopWidth: 0 },
               postDetailStyle?.userTaggingListStyle?.taggingListView,
             ]}
           >
