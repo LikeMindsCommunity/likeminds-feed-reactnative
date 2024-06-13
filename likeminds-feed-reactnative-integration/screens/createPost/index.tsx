@@ -759,6 +759,7 @@ const CreatePostComponent = () => {
                   removeMediaAttachment(index);
                   postMediaStyle?.carousel?.onCancel();
                 }}
+                disabled={true}
               />
             ) : (
               <>

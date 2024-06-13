@@ -32,6 +32,7 @@ const LMCarousel = React.memo(
     showCancel,
     onCancel,
     cancelButton,
+    disabled,
   }: LMCarouselProps) => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [lastItem, setLastItem] = useState(false);
@@ -87,6 +88,7 @@ const LMCarousel = React.memo(
             {/* this section render image */}
             {item?.attachmentType === IMAGE_ATTACHMENT_TYPE && (
               <TouchableOpacity
+                disabled={disabled}
                 onPress={() => {
                   navigation.navigate(CAROUSEL_SCREEN, {
                     dataObject: post,
@@ -125,6 +127,7 @@ const LMCarousel = React.memo(
             {/* this section render video */}
             {item?.attachmentType === VIDEO_ATTACHMENT_TYPE && (
               <TouchableOpacity
+                disabled={disabled}
                 onPress={() => {
                   previousRoute?.name !== UNIVERSAL_FEED &&
                     navigation.navigate(CAROUSEL_SCREEN, {

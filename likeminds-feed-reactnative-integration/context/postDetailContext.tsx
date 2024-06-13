@@ -610,7 +610,7 @@ export const PostDetailContextProvider = ({
   // this functions calls the add new comment api
   const addNewComment = async (postId: string) => {
     // convert the mentions to route
-    const convertedNewComment = mentionToRouteConverter(commentToAdd);
+    const convertedNewComment = mentionToRouteConverter(commentToAdd.trim());
     const currentDate = new Date();
     const payload = {
       postId: postId,
@@ -656,7 +656,7 @@ export const PostDetailContextProvider = ({
   // this functions calls the add new reply to a comment api
   const addNewReply = async (postId: string, commentId: string) => {
     // convert the mentions to route
-    const convertedNewReply = mentionToRouteConverter(commentToAdd);
+    const convertedNewReply = mentionToRouteConverter(commentToAdd.trim());
     const currentDate = new Date();
     const payload = {
       postId: postId,
@@ -768,7 +768,7 @@ export const PostDetailContextProvider = ({
   // this function calls the edit comment api
   const commentEdit = async () => {
     // convert the mentions to route
-    const convertedEditedComment = mentionToRouteConverter(commentToAdd);
+    const convertedEditedComment = mentionToRouteConverter(commentToAdd.trim());
     const payload = {
       commentId: selectedMenuItemCommentId,
       commentText: convertedEditedComment.trim(),

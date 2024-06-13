@@ -845,23 +845,25 @@ const PostDetailComponent = React.memo(() => {
             rightIcon={{
               ...customCommentTextInput?.rightIcon,
               onTap: () => {
-                customCommentTextInput?.rightIcon?.onTap();
-                commentToAdd
-                  ? editCommentFocus
-                    ? commentEdit()
-                    : replyOnComment.textInputFocus
-                    ? addNewReplyProp
-                      ? addNewReplyProp(
-                          postDetail?.id,
-                          replyOnComment.commentId
-                        )
-                      : addNewReply(postDetail?.id, replyOnComment.commentId)
-                    : addNewCommentProp
-                    ? addNewCommentProp(postDetail?.id)
-                    : addNewComment(postDetail?.id)
-                  : {};
-                setAllTags([]);
-                setIsUserTagging(false);
+                if (commentToAdd?.trim()) {
+                  customCommentTextInput?.rightIcon?.onTap();
+                  commentToAdd
+                    ? editCommentFocus
+                      ? commentEdit()
+                      : replyOnComment.textInputFocus
+                      ? addNewReplyProp
+                        ? addNewReplyProp(
+                            postDetail?.id,
+                            replyOnComment.commentId
+                          )
+                        : addNewReply(postDetail?.id, replyOnComment.commentId)
+                      : addNewCommentProp
+                      ? addNewCommentProp(postDetail?.id)
+                      : addNewComment(postDetail?.id)
+                    : {};
+                  setAllTags([]);
+                  setIsUserTagging(false);
+                }
               },
               icon: {
                 assetPath: require("../../assets/images/send_icon3x.png"),

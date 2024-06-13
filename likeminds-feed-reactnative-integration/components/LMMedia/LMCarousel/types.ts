@@ -16,4 +16,5 @@ export interface LMCarouselProps {
   showCancel?: boolean; // this represents the visibility of cancel button
   onCancel?: (index: number) => void; // callback function that executes on click of cancel button,
   cancelButton?: LMButtonProps;
+  disabled?: boolean;
 }

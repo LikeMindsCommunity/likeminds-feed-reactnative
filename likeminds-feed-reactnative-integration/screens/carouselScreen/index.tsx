@@ -31,7 +31,7 @@ const CarouselScreen = ({ navigation, route }: any) => {
   const { index, dataObject } = route.params;
   const data = dataObject?.attachments;
 
-  const attachmentsUrls = data.map((item) => ({
+  const attachmentsUrls = data?.map((item) => ({
     ["url"]: item.attachmentMeta.url,
   }));
 
