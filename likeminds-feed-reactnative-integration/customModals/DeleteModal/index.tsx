@@ -84,7 +84,10 @@ const DeleteModal = ({
 
   // this function calls the delete post api
   const postDelete = async () => {
-    if (!deletionReason && loggedInUser.userUniqueId !== postDetail?.userId) {
+    if (
+      !deletionReason &&
+      loggedInUser.userUniqueId !== postDetail?.user?.uuid
+    ) {
       showToast();
     } else if (deletionReason === "Others" && otherReason === "") {
       showToast();
@@ -158,7 +161,7 @@ const DeleteModal = ({
   const commentDelete = async () => {
     if (
       !deletionReason &&
-      loggedInUser.userUniqueId !== commentDetail?.userId
+      loggedInUser.userUniqueId !== commentDetail?.user?.uuid
     ) {
       showToast();
     } else {
@@ -326,8 +329,9 @@ const DeleteModal = ({
                     </Text>
 
                     {/* delete reason selection section */}
-                    {loggedInUser.userUniqueId !== postDetail?.userId &&
-                      loggedInUser.userUniqueId !== commentDetail?.userId && (
+                    {loggedInUser.userUniqueId !== postDetail?.user?.uuid &&
+                      loggedInUser.userUniqueId !==
+                        commentDetail?.user.uuid && (
                         <TouchableOpacity
                           activeOpacity={0.8}
                           onPress={() => {
