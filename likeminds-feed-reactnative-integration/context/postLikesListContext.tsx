@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "../store/store";
 import {
   GetCommentLikesRequest,
   GetPostLikesRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-rn-beta";
 import { commentLikes, postLikes } from "../store/actions/postLikes";
 import { COMMENT_LIKES, POST_LIKES } from "../constants/Strings";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";

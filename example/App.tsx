@@ -45,7 +45,7 @@ import NotificationWrapper from './feedScreen/notificationWrapper';
 import messaging from '@react-native-firebase/messaging';
 import notifee, {EventType} from '@notifee/react-native';
 import {Credentials} from './login/credentials';
-import {LoginSchemaRO} from './login/loginSchemaRO';
+import {LoginSchemaRO, getUserFromLocalDB} from './login/loginSchemaRO';
 import {useQuery} from '@realm/react';
 import FetchKeyInputScreen from './login';
 import {
@@ -55,6 +55,7 @@ import {
 import {initiateAPI} from './registerDeviceApi';
 import {createPollStyle, pollStyle} from './styles';
 import CreatePollScreenWrapper from './feedScreen/createPollScreenWrapper';
+import {LMFeedClient} from '@likeminds.community/feed-rn-beta';
 
 class CustomCallbacks implements LMFeedCallbacks {
   onEventTriggered(eventName: string, eventProperties?: Map<string, string>) {
@@ -78,12 +79,30 @@ const App = () => {
   const [userName, setUserName] = useState(
     Credentials?.username?.length > 0 ? Credentials?.username : users?.userName,
   );
-  const [myClient, setMyClient] = useState();
+  const [myClient, setMyClient] = useState<LMFeedClient>();
   const [isTrue, setIsTrue] = useState(true);
   const [accessToken, setAccessToken] = useState('');
   const [refreshToken, setRefreshToken] = useState('');
 
   const loginSchemaArray: any = useQuery(LoginSchemaRO);
+
+  // useEffect(() => {
+  //   const res: any = initMyClient();
+  //   setMyClient(res);
+  // }, []);
+
+  useEffect(() => {
+      async function getTokens() {
+        const res: any = initMyClient();
+        const accessToken = await res?.getAccessTokenFromLocalStorage();
+        const refreshToken = await res?.getRefreshTokenFromLocalStorage();
+        setAccessToken(accessToken);
+        setRefreshToken(refreshToken);
+        setMyClient(res);
+      }
+
+      getTokens();
+  }, []);
 
   useEffect(() => {
     const userSchema = async () => {
@@ -115,33 +134,13 @@ const App = () => {
       Credentials?.apiKey?.length > 0 ? Credentials?.apiKey : users?.apiKey,
     );
   }, [users, isTrue]);
-
-  useEffect(() => {
-    async function callInitiateAPI() {
-      const payload: any = {
-        is_guest: false,
-        user_name: userName,
-        user_unique_id: userUniqueID,
-        api_key: apiKey,
-      };
-      const res: any = await initiateAPI(payload);
-      if (res) {
-        setAccessToken(res?.data?.access_token);
-        setRefreshToken(res?.data?.refresh_token);
-      }
-    }
-
-    if (apiKey) {
-      callInitiateAPI();
-    }
-  }, [apiKey]);
+  
 
   useEffect(() => {
     if (apiKey) {
-      const res: any = initMyClient();
-      setMyClient(res);
+      myClient?.setApiKeyInLocalStorage(apiKey);
     }
-  }, [isTrue, apiKey]);
+  }, [apiKey, myClient]);
 
   // custom style of new post button
   const regex = /post_id=([^&]+)/;
@@ -244,7 +243,11 @@ const App = () => {
           myClient={myClient}
           accessToken={accessToken}
           refreshToken={refreshToken}
-          lmFeedInterface={lmFeedInterface}>
+          apiKey={apiKey}
+          userName={userName}
+          userUniqueId={userUniqueID}
+          lmFeedInterface={lmFeedInterface}
+          getUserFromLocalDB={getUserFromLocalDB}>
           <NavigationContainer ref={navigationRef} independent={true}>
             <Stack.Navigator screenOptions={{headerShown: false}}>
               <Stack.Screen name={UNIVERSAL_FEED} component={FeedWrapper} />

@@ -57,7 +57,7 @@ import {
   PinPostRequest,
   ReplyCommentRequest,
   SavePostRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-rn-beta";
 import {
   autoPlayPostVideo,
   likePost,

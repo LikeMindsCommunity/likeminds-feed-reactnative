@@ -1,5 +1,5 @@
 import React from "react";
-import { LMFeedClient } from "@likeminds.community/feed-js";
+import { LMFeedClient } from "@likeminds.community/feed-rn-beta";
 import { ViewStyle, TextStyle, ImageProps, ImageStyle } from "react-native";
 import { LMHeaderProps, LMLoaderProps } from "../components";
 import {
@@ -428,8 +428,11 @@ export interface ThemeContextProps {
 export interface LMFeedProviderProps {
   myClient: LMFeedClient;
   children?: React.ReactNode;
-  accessToken: string;
-  refreshToken: string;
+  accessToken?: string;
+  refreshToken?: string;
+  apiKey?: string;
+  userName?: string;
+  userUniqueId?: string;
   lmFeedInterface?: any;
   themeStyles?: ThemeStyles;
   universalFeedStyle?: UniversalFeedStyleProps;
@@ -442,4 +445,5 @@ export interface LMFeedProviderProps {
   topicsStyle?: TopicsStyle;
   pollStyle?: PollStyle;
   createPollStyle?: CreatePollStyle;
+  getUserFromLocalDB?: () => void;
 }
