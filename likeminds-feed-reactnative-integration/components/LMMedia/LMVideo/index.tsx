@@ -20,8 +20,8 @@ import { SET_MUTED_STATE } from "../../../store/types/types";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import {
-  CAROUSEL_SCREEN,
   CREATE_POST,
+  POST_DETAIL,
   UNIVERSAL_FEED,
 } from "../../../constants/screenNames";
 
@@ -67,6 +67,9 @@ const LMVideo = React.memo(
     const pauseStatus = useAppSelector((state) => state.feed.pauseStatus);
     const flowFromCarouselScreen = useAppSelector(
       (state) => state.feed.flowFromCarouselScreen
+    );
+    const isReportModalOpened = useAppSelector(
+      (state) => state.feed.reportModalOpenedInPostDetail
     );
 
     const navigation = useNavigation<StackNavigationProp<any>>();
@@ -156,7 +159,7 @@ const LMVideo = React.memo(
                   : false
                 : playingStatus
             } // handles the auto play/pause functionality
-            muted={mute}
+            muted={isReportModalOpened ? true : mute}
           />
         </>
         {/* this renders the cancel button */}

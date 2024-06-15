@@ -30,6 +30,8 @@ import {
   STATUS_BAR_STYLE,
   SET_MUTED_STATE,
   SET_PAUSED_STATUS,
+  SET_CURRENT_ID_OF_VIDEO,
+  SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
 } from "../types/types";
 import { LMPostUI } from "../../models";
 import Styles from "../../constants/Styles";
@@ -46,6 +48,8 @@ export interface FeedReducerState {
   statusBarStyle: string;
   muteStatus: boolean;
   pauseStatus: boolean;
+  currentIdOfVideo: string;
+  reportModalOpenedInPostDetail: boolean;
 }
 
 export const initialState: FeedReducerState = {
@@ -60,9 +64,20 @@ export const initialState: FeedReducerState = {
   statusBarStyle: Styles.$STATUS_BAR_STYLE.default,
   muteStatus: false,
   pauseStatus: false,
+  currentIdOfVideo: "",
+  reportModalOpenedInPostDetail: false,
 };
+
 export const feedReducer = (state = initialState, action) => {
   switch (action.type) {
+    case SET_REPORT_MODEL_STATUS_IN_POST_DETAIL: {
+      const { reportModalStatus } = action.body;
+      return { ...state, reportModalOpenedInPostDetail: reportModalStatus };
+    }
+    case SET_CURRENT_ID_OF_VIDEO: {
+      const { currentIdOfVideo } = action.body;
+      return { ...state, currentIdOfVideo: currentIdOfVideo };
+    }
     case SET_PAUSED_STATUS: {
       const { paused } = action.body;
       return { ...state, pauseStatus: paused };
