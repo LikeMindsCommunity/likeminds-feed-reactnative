@@ -121,7 +121,7 @@ const App = () => {
     setApiKey(
       Credentials?.apiKey?.length > 0 ? Credentials?.apiKey : users?.apiKey,
     );
-  }, [users, isTrue]);
+  }, [users, isTrue]); 
 
   useEffect(() => {
     async function callInitiateAPI() {
@@ -254,7 +254,7 @@ const App = () => {
           lmFeedInterface={lmFeedInterface}>
           <NavigationContainer ref={navigationRef} independent={true}>
             <Stack.Navigator screenOptions={{headerShown: false}}>
-              <Stack.Screen name={UNIVERSAL_FEED} component={FeedWrapper} />
+              <Stack.Screen initialParams={{accessToken: accessToken}} name={UNIVERSAL_FEED} component={FeedWrapper} />
               <Stack.Screen name={POST_DETAIL} component={DetailWrapper} />
               <Stack.Screen name={CREATE_POST} component={CreateWrapper} />
               <Stack.Screen name={POST_LIKES_LIST} component={LikesWrapper} />

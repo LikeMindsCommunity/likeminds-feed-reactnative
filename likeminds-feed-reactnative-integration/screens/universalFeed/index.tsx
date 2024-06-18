@@ -230,7 +230,7 @@ const UniversalFeedComponent = () => {
       page: 1,
       pageSize: 10,
     } as any);
-    const topics = apiRes?.data?.topics;
+    const topics: any = apiRes?.data?.topics;
     if (topics?.length > 0) {
       setShowTopics(true);
       const topicsObject = {};

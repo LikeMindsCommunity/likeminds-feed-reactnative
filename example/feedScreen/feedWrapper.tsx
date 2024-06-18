@@ -6,7 +6,7 @@ const FeedWrapper = ({navigation, route}) => {
   return (
     <UniversalFeedContextProvider navigation={navigation} route={route}>
         <PostListContextProvider navigation={navigation} route={route} >
-            <Feed />
+            <Feed route={route} />
         </PostListContextProvider>
     </UniversalFeedContextProvider>
   )

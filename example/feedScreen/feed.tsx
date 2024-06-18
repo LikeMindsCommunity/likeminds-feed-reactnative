@@ -29,6 +29,7 @@ const Feed = ({route}) => {
     setSelectedPollOptions,
     submitPoll,
   } = useUniversalFeedContext();
+  const {accessToken} = route.params;
   const [FCMToken, setFCMToken] = useState('');
 
   const customPostLike = postId => {
@@ -138,11 +139,11 @@ const Feed = ({route}) => {
     });
   }, []);
 
-  // useEffect(() => {
-  //   if (FCMToken) {
-  //     pushAPI(FCMToken, accessToken);
-  //   }
-  // }, [FCMToken]);
+  useEffect(() => {
+    if (FCMToken) {
+      pushAPI(FCMToken, accessToken);
+    }
+  }, [FCMToken]);
 
   return (
     <UniversalFeed
