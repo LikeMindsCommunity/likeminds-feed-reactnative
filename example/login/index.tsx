@@ -12,8 +12,8 @@ import {
 import {Credentials} from './credentials';
 import STYLES from '@likeminds.community/feed-rn-core/constants/Styles';
 import {useRealm} from '@realm/react';
-import {LoginSchemaRO} from './loginSchemaRO';
 import {UpdateMode} from 'realm';
+import { LoginSchemaRO } from './loginSchemaRO';
 
 interface ChildProps {
   isTrue: boolean;
