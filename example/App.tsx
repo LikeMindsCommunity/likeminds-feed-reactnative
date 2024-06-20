@@ -17,6 +17,7 @@ import {
   LMFeedPollResult,
 } from '@likeminds.community/feed-rn-core';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {LMCoreCallbacks} from '@likeminds.community/feed-rn-core/setupFeed';
 import {
   NOTIFICATION_FEED,
   getNotification,
@@ -45,7 +46,6 @@ import NotificationWrapper from './feedScreen/notificationWrapper';
 import messaging from '@react-native-firebase/messaging';
 import notifee, {EventType} from '@notifee/react-native';
 import {Credentials} from './login/credentials';
-import {LoginSchemaRO, getUserFromLocalDB} from './login/loginSchemaRO';
 import {useQuery} from '@realm/react';
 import FetchKeyInputScreen from './login';
 import {
@@ -83,6 +83,7 @@ const App = () => {
   const [isTrue, setIsTrue] = useState(true);
   const [accessToken, setAccessToken] = useState('');
   const [refreshToken, setRefreshToken] = useState('');
+  const [isUserData, setIsUserData] = useState(false);
 
   const loginSchemaArray: any = useQuery(LoginSchemaRO);
 
@@ -92,16 +93,16 @@ const App = () => {
   // }, []);
 
   useEffect(() => {
-      async function getTokens() {
-        const res: any = initMyClient();
-        const accessToken = await res?.getAccessTokenFromLocalStorage();
-        const refreshToken = await res?.getRefreshTokenFromLocalStorage();
-        setAccessToken(accessToken);
-        setRefreshToken(refreshToken);
-        setMyClient(res);
-      }
+    async function getTokens() {
+      const res: any = initMyClient();
+      const accessToken = await res?.getAccessTokenFromLocalStorage();
+      const refreshToken = await res?.getRefreshTokenFromLocalStorage();
+      setAccessToken(accessToken);
+      setRefreshToken(refreshToken);
+      setMyClient(res);
+    }
 
-      getTokens();
+    getTokens();
   }, []);
 
   useEffect(() => {
@@ -134,11 +135,21 @@ const App = () => {
       Credentials?.apiKey?.length > 0 ? Credentials?.apiKey : users?.apiKey,
     );
   }, [users, isTrue]);
-  
 
   useEffect(() => {
+    async function setDataInLocalStorage() {
+      await myClient?.setApiKeyInLocalStorage(apiKey);
+      await myClient?.setUserInLocalStorage(
+        JSON.stringify({
+          apiKey: apiKey,
+          userName: userName,
+          userUniqueId: userUniqueID,
+        }),
+      );
+      setIsUserData(true);
+    }
     if (apiKey) {
-      myClient?.setApiKeyInLocalStorage(apiKey);
+      setDataInLocalStorage();
     }
   }, [apiKey, myClient]);
 
@@ -233,12 +244,20 @@ const App = () => {
       isMounted = false;
     };
   }, []);
-
+  const callbackClass = new LMCoreCallbacks(
+    (a: string, b: string) => {
+      console.log(`Testing ${a} and ${b}`);
+    },
+    function () {
+      console.log('BBBB');
+    },
+  );
+  
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{flex: 1}}>
-      {userName && userUniqueID && apiKey && myClient ? (
+      {userName && userUniqueID && apiKey && myClient && isUserData ? (
         <LMOverlayProvider
           myClient={myClient}
           accessToken={accessToken}
@@ -247,7 +266,7 @@ const App = () => {
           userName={userName}
           userUniqueId={userUniqueID}
           lmFeedInterface={lmFeedInterface}
-          getUserFromLocalDB={getUserFromLocalDB}>
+          callbackClass={callbackClass}>
           <NavigationContainer ref={navigationRef} independent={true}>
             <Stack.Navigator screenOptions={{headerShown: false}}>
               <Stack.Screen name={UNIVERSAL_FEED} component={FeedWrapper} />

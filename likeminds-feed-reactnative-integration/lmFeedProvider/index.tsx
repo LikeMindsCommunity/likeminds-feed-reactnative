@@ -70,7 +70,6 @@ export const LMFeedProvider = ({
   topicsStyle,
   pollStyle,
   createPollStyle,
-  getUserFromLocalDB
 }: LMFeedProviderProps): React.JSX.Element => {
   const [isInitiated, setIsInitiated] = useState(false);
   const dispatch = useAppDispatch();
@@ -143,12 +142,15 @@ export const LMFeedProvider = ({
         )
       );
       if (initiateResponse !== undefined && initiateResponse !== null) {
+        // calling getMemberState API
+        await dispatch(getMemberState());
         await myClient.setAccessTokenInLocalStorage(
           initiateResponse?.accessToken
         );
         await myClient.setRefreshTokenInLocalStorage(
           initiateResponse?.refreshToken
         );
+        setIsInitiated(true);
       }
     }
 

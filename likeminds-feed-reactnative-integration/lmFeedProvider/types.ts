@@ -445,5 +445,4 @@ export interface LMFeedProviderProps {
   topicsStyle?: TopicsStyle;
   pollStyle?: PollStyle;
   createPollStyle?: CreatePollStyle;
-  getUserFromLocalDB?: () => void;
 }

@@ -5,6 +5,7 @@ import {
 } from "@likeminds.community/feed-rn-beta";
 import { initMyClient } from "./setup";
 import { LoginSchemaRO } from "../example/login/loginSchemaRO";
+import { Client } from "./client";
 const Realm = require("realm");
 
 // create a class by LMFeedCoreCallbacks and take two functions in its contructors, assign these two functions to the class's functions
@@ -13,13 +14,13 @@ export class LMCoreCallbacks {
     accessToken: string,
     refreshToken: string
   ) => void;
-  onRefreshTokenExpired: (getUserFromLocalDB: () => void) => void;
+  onRefreshTokenExpired: () => void;
   constructor(
     onAccessTokenExpiredAndRefreshed: (
       accessToken: string,
       refreshToken: string
     ) => void,
-    onRefreshTokenExpired: (getUserFromLocalDB: () => void) => void
+    onRefreshTokenExpired: () => void
   ) {
     this.onAccessTokenExpiredAndRefreshed = onAccessTokenExpiredAndRefreshed;
     this.onRefreshTokenExpired = onRefreshTokenExpired;
@@ -40,25 +41,27 @@ export class LMSDKCallbacksImplementations extends LMSDKCallbacks {
       refreshToken
     );
   }
-  async onRefreshTokenExpired(getUserFromLocalDB) {
-    const user: any = await getUserFromLocalDB(); // replace with actual method to get user
+
+  async onRefreshTokenExpired() {
+    console.log("Hola Amigo");
+
+    const stringifiedUser: any =
+      await Client.myClient.getUserFromLocalStorage(); // replace with actual method to get user
+    const user = JSON.parse(stringifiedUser);
     if (user?.apiKey) {
-      const response: any = await this.client.initiateUser(
+      const response: any = await Client.myClient.initiateUser(
         InitiateUserRequest.builder()
           .setApiKey(user.apiKey)
-          .setUUID(user.sdkClientInfo.uuid)
-          .setUserName(user.name)
+          .setUUID(user.userUniqueId)
+          .setUserName(user.userName)
           .build()
       );
-
-      console.log("response", response);
       return {
         accessToken: response.accessToken,
         refreshToken: response.refreshToken,
       };
-    } else {
-      // Call Core Layer callback
-      return this.lmCoreCallbacks.onRefreshTokenExpired(getUserFromLocalDB);
+    }else{
+      this.lmCoreCallbacks.onRefreshTokenExpired();
     }
   }
   constructor(lmCoreCallbacks: LMCoreCallbacks, client: LMFeedClient) {

@@ -12,6 +12,7 @@ import {
   TopicsStyle,
   UniversalFeedStyleProps,
 } from "../lmFeedProvider/types";
+import { LMCoreCallbacks } from "../setupFeed";
 
 export interface LMOverlayProviderProps {
   myClient: LMFeedClient;
@@ -32,5 +33,5 @@ export interface LMOverlayProviderProps {
   topicsStyle?: TopicsStyle;
   pollStyle?: PollStyle;
   createPollStyle?: CreatePollStyle;
-  getUserFromLocalDB?: () => void;
+  callbackClass: LMCoreCallbacks
 }
