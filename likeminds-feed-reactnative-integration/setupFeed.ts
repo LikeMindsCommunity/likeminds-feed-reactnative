@@ -14,13 +14,13 @@ export class LMCoreCallbacks {
     accessToken: string,
     refreshToken: string
   ) => void;
-  onRefreshTokenExpired: () => void;
+  onRefreshTokenExpired: () => { accessToken: string; refreshToken: string };
   constructor(
     onAccessTokenExpiredAndRefreshed: (
       accessToken: string,
       refreshToken: string
     ) => void,
-    onRefreshTokenExpired: () => void
+    onRefreshTokenExpired: () => { accessToken: string; refreshToken: string }
   ) {
     this.onAccessTokenExpiredAndRefreshed = onAccessTokenExpiredAndRefreshed;
     this.onRefreshTokenExpired = onRefreshTokenExpired;
@@ -56,12 +56,24 @@ export class LMSDKCallbacksImplementations extends LMSDKCallbacks {
           .setUserName(user.userName)
           .build()
       );
+      await Client.myClient.setAccessTokenInLocalStorage(response.accessToken);
+      await Client.myClient.setRefreshTokenInLocalStorage(
+        response.refreshToken
+      );
       return {
         accessToken: response.accessToken,
         refreshToken: response.refreshToken,
       };
-    }else{
-      this.lmCoreCallbacks.onRefreshTokenExpired();
+    } else {
+      const response = await this.lmCoreCallbacks.onRefreshTokenExpired();
+      await Client.myClient.setAccessTokenInLocalStorage(response.accessToken);
+      await Client.myClient.setRefreshTokenInLocalStorage(
+        response.refreshToken
+      );
+      return {
+        accessToken: response.accessToken,
+        refreshToken: response.refreshToken,
+      };
     }
   }
   constructor(lmCoreCallbacks: LMCoreCallbacks, client: LMFeedClient) {

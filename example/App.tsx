@@ -56,6 +56,7 @@ import {initiateAPI} from './registerDeviceApi';
 import {createPollStyle, pollStyle} from './styles';
 import CreatePollScreenWrapper from './feedScreen/createPollScreenWrapper';
 import {LMFeedClient} from '@likeminds.community/feed-rn-beta';
+import {LoginSchemaRO} from './login/loginSchemaRO';
 
 class CustomCallbacks implements LMFeedCallbacks {
   onEventTriggered(eventName: string, eventProperties?: Map<string, string>) {
@@ -97,8 +98,10 @@ const App = () => {
       const res: any = initMyClient();
       const accessToken = await res?.getAccessTokenFromLocalStorage();
       const refreshToken = await res?.getRefreshTokenFromLocalStorage();
-      setAccessToken(accessToken);
-      setRefreshToken(refreshToken);
+      if (accessToken && refreshToken) {
+        setAccessToken(accessToken);
+        setRefreshToken(refreshToken);
+      }
       setMyClient(res);
     }
 
