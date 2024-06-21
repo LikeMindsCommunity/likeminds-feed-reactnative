@@ -13,7 +13,7 @@ import styles from "./styles";
 import {
   GetReportTagsRequest,
   PostReportRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-rn-beta";
 import {
   COMMENT_REPORTED_SUCCESSFULLY,
   COMMENT_REPORT_ENTITY_TYPE,

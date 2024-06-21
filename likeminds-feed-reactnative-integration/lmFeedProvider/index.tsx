@@ -12,10 +12,14 @@ import {
   InitiateUserRequest,
   LMFeedClient,
   ValidateUserRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-rn-beta";
 import { LMFeedProviderProps, ThemeContextProps } from "./types";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { getMemberState, validateUser } from "../store/actions/login";
+import {
+  getMemberState,
+  initiateUser,
+  validateUser,
+} from "../store/actions/login";
 import { LMToast } from "../components";
 import { CallBack } from "../callBacks/callBackClass";
 import { Client } from "../client";
@@ -51,6 +55,9 @@ export const LMFeedProvider = ({
   children,
   accessToken,
   refreshToken,
+  apiKey,
+  userName,
+  userUniqueId,
   lmFeedInterface,
   themeStyles,
   universalFeedStyle,
@@ -76,7 +83,7 @@ export const LMFeedProvider = ({
       CallBack.setLMFeedInterface(lmFeedInterface);
     }
     // storing myClient followed by community details
-    const callInitApi = async () => {
+    const callValidateApi = async () => {
       const validateResponse = await dispatch(
         validateUser(
           ValidateUserRequest.builder()
@@ -93,8 +100,35 @@ export const LMFeedProvider = ({
       }
       setIsInitiated(true);
     };
+
+    async function callInitiateAPI() {
+      const initiateResponse: any = await dispatch(
+        initiateUser(
+          InitiateUserRequest.builder()
+            .setUserName(userName)
+            .setApiKey(apiKey)
+            .setUUID(userUniqueId)
+            .build(),
+          true
+        )
+      );
+      if (initiateResponse !== undefined && initiateResponse !== null) {
+        // calling getMemberState API
+        await dispatch(getMemberState());
+        await myClient.setAccessTokenInLocalStorage(
+          initiateResponse?.accessToken
+        );
+        await myClient.setRefreshTokenInLocalStorage(
+          initiateResponse?.refreshToken
+        );
+        setIsInitiated(true);
+      }
+    }
+
     if (accessToken && refreshToken) {
-      callInitApi();
+      callValidateApi();
+    } else if (apiKey && userName && userUniqueId) {
+      callInitiateAPI();
     }
   }, [accessToken, refreshToken]);
 

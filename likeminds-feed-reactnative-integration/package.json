@@ -17,7 +17,7 @@
   "homepage": "https://likeminds.community/",
   "license": "ISC",
   "dependencies": {
-    "@likeminds.community/feed-js": "1.9.0",
+    "@likeminds.community/feed-rn-beta": "1.0.19",
     "@react-native-community/slider": "4.4.3",
     "@types/react-native-video": "5.0.14",
     "aws-sdk": "2.1548.0",

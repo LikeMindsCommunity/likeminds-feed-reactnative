@@ -82,7 +82,7 @@ const LMPostPollUI = ({
 
   //styling props
   const LMFeedContextStyles = useLMFeedStyles();
-  const { pollStyle } = LMFeedContextStyles;
+  const { pollStyle }: any = LMFeedContextStyles;
   const pollQuestionStyles = pollStyle?.pollQuestionStyles;
   const pollOptionSelectedColor = pollStyle?.pollOptionSelectedColor;
   const pollOptionSelectedTextStyles = pollStyle?.pollOptionSelectedTextStyles;
