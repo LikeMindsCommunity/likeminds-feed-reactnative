@@ -4,14 +4,14 @@ export interface CreatePollCallbacksContextProps {
   children?: ReactNode;
   onPollExpiryTimeClicked: () => void;
   onAddOptionClicked: () => void;
-  onPollOptionCleared: () => void;
+  onPollOptionCleared: (index: number | string) => void;
   onPollCompleteClicked: () => void;
 }
 
 export interface CreatePollCustomisableMethodsContext {
   onPollExpiryTimeClicked: () => void;
   onAddOptionClicked: () => void;
-  onPollOptionCleared: () => void;
+  onPollOptionCleared: (index: number | string) => void;
   onPollCompleteClicked: () => void;
 }
 

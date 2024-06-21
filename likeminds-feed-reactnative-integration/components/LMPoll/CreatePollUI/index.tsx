@@ -72,7 +72,7 @@ const CreatePollUI = () => {
     useCreatePollCustomisableMethodsContext();
 
   const LMFeedContextStyles = useLMFeedStyles();
-  const { createPollStyle } = LMFeedContextStyles;
+  const { createPollStyle }: any = LMFeedContextStyles;
 
   const pollQuestionsStyle = createPollStyle?.pollQuestionsStyle;
   const pollOptionsStyle = createPollStyle?.pollOptionsStyle;
@@ -174,8 +174,9 @@ const CreatePollUI = () => {
         })}
 
         <TouchableOpacity
-          /* @ts-ignore */
-          onPress={onAddOptionClicked ? onAddOptionClicked : addNewOption}
+          onPress={() => {
+            onAddOptionClicked ? onAddOptionClicked() : addNewOption();
+          }}
           style={[
             styles.alignRow,
             styles.marginSpace,

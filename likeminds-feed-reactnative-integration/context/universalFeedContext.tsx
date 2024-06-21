@@ -12,7 +12,7 @@ import React, {
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { mentionToRouteConverter, uploadFilesToAWS } from "../utils";
 import { addPost, setUploadAttachments } from "../store/actions/createPost";
-import { AddPostRequest, GetFeedRequest } from "@likeminds.community/feed-js";
+import { AddPostRequest, GetFeedRequest } from "@likeminds.community/feed-rn-beta";
 import { autoPlayPostVideo, refreshFeed } from "../store/actions/feed";
 import {
   CREATE_POST_PERMISSION,

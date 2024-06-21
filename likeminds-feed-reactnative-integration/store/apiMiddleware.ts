@@ -45,11 +45,13 @@ const apiMiddleware = async (next, action) => {
     if (responseBody?.data || responseBody?.success) {
       successType &&
         next({
-          body: { ...responseBody?.data},
+          body: { ...responseBody?.data },
           type: successType,
         });
 
       return responseBody?.data;
+    } else {
+      return responseBody;
     }
   } catch (error: any) {
     if (Number(error.message) === 401) {

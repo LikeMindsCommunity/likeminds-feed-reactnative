@@ -327,11 +327,6 @@ const PostDetailComponent = React.memo(() => {
     return () => backHandler.remove();
   }, []);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setShowLoader(false);
-    }, 1000);
-  }, []);
   return (
     <SafeAreaView edges={["left", "right", "top"]} style={styles.flexView}>
       <KeyboardAvoidingView

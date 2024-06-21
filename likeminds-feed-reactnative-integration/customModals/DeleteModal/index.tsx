@@ -12,7 +12,7 @@ import styles from "./styles";
 import {
   DeleteCommentRequest,
   DeletePostRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-rn-beta";
 import DeleteReasonsModal from "../DeleteReasonsModal";
 import {
   COMMENT_DELETE,

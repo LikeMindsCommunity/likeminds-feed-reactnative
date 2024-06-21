@@ -19,6 +19,7 @@ import {
   LMFeedPollResult,
 } from '@likeminds.community/feed-rn-core';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {LMCoreCallbacks} from '@likeminds.community/feed-rn-core/setupFeed';
 import {
   NOTIFICATION_FEED,
   getNotification,
@@ -48,7 +49,6 @@ import NotificationWrapper from './feedScreen/notificationWrapper';
 import messaging from '@react-native-firebase/messaging';
 import notifee, {EventType} from '@notifee/react-native';
 import {Credentials} from './login/credentials';
-import {LoginSchemaRO} from './login/loginSchemaRO';
 import {useQuery} from '@realm/react';
 import FetchKeyInputScreen from './login';
 import {
@@ -58,6 +58,8 @@ import {
 import {initiateAPI} from './registerDeviceApi';
 import {carouselScreenStyle, createPollStyle, pollStyle} from './styles';
 import CreatePollScreenWrapper from './feedScreen/createPollScreenWrapper';
+import {LMFeedClient} from '@likeminds.community/feed-rn-beta';
+import {LoginSchemaRO} from './login/loginSchemaRO';
 
 class CustomCallbacks implements LMFeedCallbacks, LMCarouselScreenCallbacks {
   onEventTriggered(eventName: string, eventProperties?: Map<string, string>) {
@@ -85,12 +87,28 @@ const App = () => {
   const [userName, setUserName] = useState(
     Credentials?.username?.length > 0 ? Credentials?.username : users?.userName,
   );
-  const [myClient, setMyClient] = useState();
+  const [myClient, setMyClient] = useState<LMFeedClient>();
   const [isTrue, setIsTrue] = useState(true);
   const [accessToken, setAccessToken] = useState('');
   const [refreshToken, setRefreshToken] = useState('');
+  const [isUserData, setIsUserData] = useState(false);
 
   const loginSchemaArray: any = useQuery(LoginSchemaRO);
+
+  useEffect(() => {
+    async function getTokens() {
+      const res: any = initMyClient();
+      const accessToken = await res?.getAccessTokenFromLocalStorage();
+      const refreshToken = await res?.getRefreshTokenFromLocalStorage();
+      if (accessToken && refreshToken) {
+        setAccessToken(accessToken);
+        setRefreshToken(refreshToken);
+      }
+      setMyClient(res);
+    }
+
+    getTokens();
+  }, []);
 
   useEffect(() => {
     const userSchema = async () => {
@@ -124,31 +142,21 @@ const App = () => {
   }, [users, isTrue]);
 
   useEffect(() => {
-    async function callInitiateAPI() {
-      const payload: any = {
-        is_guest: false,
-        user_name: userName,
-        user_unique_id: userUniqueID,
-        api_key: apiKey,
-      };
-      const res: any = await initiateAPI(payload);
-      if (res) {
-        setAccessToken(res?.data?.access_token);
-        setRefreshToken(res?.data?.refresh_token);
-      }
+    async function setDataInLocalStorage() {
+      await myClient?.setApiKeyInLocalStorage(apiKey);
+      await myClient?.setUserInLocalStorage(
+        JSON.stringify({
+          apiKey: apiKey,
+          userName: userName,
+          userUniqueId: userUniqueID,
+        }),
+      );
+      setIsUserData(true);
     }
-
     if (apiKey) {
-      callInitiateAPI();
+      setDataInLocalStorage();
     }
-  }, [apiKey]);
-
-  useEffect(() => {
-    if (apiKey) {
-      const res: any = initMyClient();
-      setMyClient(res);
-    }
-  }, [isTrue, apiKey]);
+  }, [apiKey, myClient]);
 
   // custom style of new post button
   const regex = /post_id=([^&]+)/;
@@ -241,17 +249,29 @@ const App = () => {
       isMounted = false;
     };
   }, []);
-
+  const callbackClass = new LMCoreCallbacks(
+    (a: string, b: string) => {
+      console.log(`Testing ${a} and ${b}`);
+    },
+    function () {
+      console.log('onRefreshTokenExpired called');
+    },
+  );
+  
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{flex: 1}}>
-      {userName && userUniqueID && apiKey && myClient ? (
+      {userName && userUniqueID && apiKey && myClient && isUserData ? (
         <LMOverlayProvider
           myClient={myClient}
           accessToken={accessToken}
           refreshToken={refreshToken}
-          lmFeedInterface={lmFeedInterface}>
+          apiKey={apiKey}
+          userName={userName}
+          userUniqueId={userUniqueID}
+          lmFeedInterface={lmFeedInterface}
+          callbackClass={callbackClass}>
           <NavigationContainer ref={navigationRef} independent={true}>
             <Stack.Navigator screenOptions={{headerShown: false}}>
               <Stack.Screen name={UNIVERSAL_FEED} component={FeedWrapper} />

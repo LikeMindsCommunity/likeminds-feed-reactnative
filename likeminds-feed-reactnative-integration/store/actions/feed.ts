@@ -39,7 +39,7 @@ import {
   PinPostRequest,
   PostReportRequest,
   SavePostRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-rn-beta";
 
 // get universal feed API action
 export const getFeed = (payload: GetFeedRequest, showLoader: boolean) => () => {

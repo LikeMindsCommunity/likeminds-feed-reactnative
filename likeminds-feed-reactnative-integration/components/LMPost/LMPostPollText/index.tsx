@@ -13,7 +13,7 @@ const LMPostPollText = ({ truncatedText, fullText }: LMPostPollTextProps) => {
   const [showMore, setShowMore] = React.useState(false);
   const LMFeedContextStyles = useLMFeedStyles();
   const { pollStyle } = LMFeedContextStyles;
-  const pollQuestionStyles = pollStyle?.pollQuestionStyles;
+  const pollQuestionStyles: any = pollStyle?.pollQuestionStyles;
   return (
     <Text
       /* @ts-ignore */

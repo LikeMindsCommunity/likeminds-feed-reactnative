@@ -1,14 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { LMOverlayProviderProps } from "./types";
 import { LMFeedProvider } from "../lmFeedProvider";
 import { StyleSheet, View } from "react-native";
 import { ContextProvider } from "../store/contextStore";
+import { LMCoreCallbacks, LMSDKCallbacksImplementations } from "../setupFeed";
 
 export const LMOverlayProvider: any = ({
   myClient,
   children,
   accessToken,
   refreshToken,
+  apiKey,
+  userName,
+  userUniqueId,
   lmFeedInterface,
   universalFeedStyle,
   postListStyle,
@@ -20,14 +24,24 @@ export const LMOverlayProvider: any = ({
   topicsStyle,
   pollStyle,
   createPollStyle,
+  callbackClass,
   carouselScreenStyle,
-}: LMOverlayProviderProps) => {
+}: // Create a prop for passing LMCoreCallbacks
+LMOverlayProviderProps) => {
+  useEffect(() => {
+    myClient.setLMSDKCallbacks(
+      new LMSDKCallbacksImplementations(callbackClass, myClient)
+    );
+  }, [callbackClass, myClient]);
   return (
     <ContextProvider>
       <LMFeedProvider
         myClient={myClient}
         accessToken={accessToken}
         refreshToken={refreshToken}
+        apiKey={apiKey}
+        userName={userName}
+        userUniqueId={userUniqueId}
         universalFeedStyle={universalFeedStyle}
         postDetailStyle={postDetailStyle}
         postListStyle={postListStyle}
@@ -40,6 +54,7 @@ export const LMOverlayProvider: any = ({
         createPollStyle={createPollStyle}
         carouselScreenStyle={carouselScreenStyle}
         lmFeedInterface={lmFeedInterface}
+        // add a prop for adding lmcorecallbacks
       >
         <View style={styles.flexStyling}>{children}</View>
       </LMFeedProvider>
