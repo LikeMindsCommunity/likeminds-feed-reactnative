@@ -43,8 +43,6 @@ export class LMSDKCallbacksImplementations extends LMSDKCallbacks {
   }
 
   async onRefreshTokenExpired() {
-    console.log("Hola Amigo");
-
     const stringifiedUser: any =
       await Client.myClient.getUserFromLocalStorage(); // replace with actual method to get user
     const user = JSON.parse(stringifiedUser);

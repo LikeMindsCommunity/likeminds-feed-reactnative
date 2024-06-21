@@ -254,7 +254,7 @@ const App = () => {
       console.log(`Testing ${a} and ${b}`);
     },
     function () {
-      console.log('BBBB');
+      console.log('onRefreshTokenExpired called');
     },
   );
   
