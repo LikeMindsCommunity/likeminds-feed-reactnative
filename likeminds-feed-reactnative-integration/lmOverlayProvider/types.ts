@@ -1,6 +1,7 @@
 import React from "react";
 import { LMFeedClient } from "@likeminds.community/feed-rn-beta";
 import {
+  CarouselScreenStyle,
   CreatePollStyle,
   CreatePostStyleProps,
   LoaderStyleProps,
@@ -34,4 +35,5 @@ export interface LMOverlayProviderProps {
   pollStyle?: PollStyle;
   createPollStyle?: CreatePollStyle;
   callbackClass: LMCoreCallbacks
+  carouselScreenStyle?: CarouselScreenStyle;
 }

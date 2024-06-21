@@ -23,7 +23,7 @@ import {
 import { LMToast } from "../components";
 import { CallBack } from "../callBacks/callBackClass";
 import { Client } from "../client";
-import { LMCoreCallbacks, LMSDKCallbacksImplementations } from "../setupFeed";
+import { CommunityConfigs } from "../communityConfigs";
 
 // Create the theme context
 export const LMFeedStylesContext = createContext<ThemeContextProps | undefined>(
@@ -68,6 +68,7 @@ export const LMFeedProvider = ({
   createPostStyle,
   notificationFeedStyle,
   topicsStyle,
+  carouselScreenStyle,
   pollStyle,
   createPollStyle,
 }: LMFeedProviderProps): React.JSX.Element => {
@@ -131,6 +132,17 @@ export const LMFeedProvider = ({
     }
   }, [accessToken, refreshToken]);
 
+  useEffect(() => {
+    const callGetCommunityConfigurations = async () => {
+      const response = await myClient?.getCommunityConfigurations();
+      CommunityConfigs.setCommunityConfigs(
+        /* @ts-ignore */
+        response?.data?.communityConfigurations
+      );
+    };
+    if (isInitiated) callGetCommunityConfigurations();
+  }, [isInitiated]);
+
   useMemo(() => {
     if (themeStyles) {
       STYLES.setTheme(themeStyles);
@@ -149,6 +161,7 @@ export const LMFeedProvider = ({
           createPostStyle,
           notificationFeedStyle,
           topicsStyle,
+          carouselScreenStyle,
           pollStyle,
           createPollStyle,
         }}

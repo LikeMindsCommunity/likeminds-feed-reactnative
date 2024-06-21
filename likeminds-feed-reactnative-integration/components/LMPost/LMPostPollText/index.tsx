@@ -16,6 +16,7 @@ const LMPostPollText = ({ truncatedText, fullText }: LMPostPollTextProps) => {
   const pollQuestionStyles: any = pollStyle?.pollQuestionStyles;
   return (
     <Text
+      /* @ts-ignore */
       style={StyleSheet.flatten([
         styles.contentText,
         { color: "black" },
@@ -35,6 +36,7 @@ const LMPostPollText = ({ truncatedText, fullText }: LMPostPollTextProps) => {
           style={StyleSheet.flatten([
             styles.showMoreText,
             { marginTop: 5 },
+            /* @ts-ignore */
             pollQuestionStyles?.showMoreText,
           ])}
         >

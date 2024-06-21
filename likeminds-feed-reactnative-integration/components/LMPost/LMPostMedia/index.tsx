@@ -1,6 +1,5 @@
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
-import { LMPostMediaProps } from "./types";
 import {
   LMCarousel,
   LMDocument,
@@ -17,6 +16,12 @@ import {
 } from "../../../constants/Strings";
 import { LMPostContextValues, useLMPostContext } from "../../../context";
 import { useLMFeedStyles } from "../../../lmFeedProvider";
+import { useAppDispatch } from "../../../store/store";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { STATUS_BAR_STYLE } from "../../../store/types/types";
+import { CAROUSEL_SCREEN } from "../../../constants/screenNames";
+import STYLES from "../../../constants/Styles";
 import LMPostPollView from "../../LMPoll/LMPostPollView";
 
 const LMPostMedia = React.memo(() => {
@@ -24,44 +29,72 @@ const LMPostMedia = React.memo(() => {
   const LMFeedContextStyles = useLMFeedStyles();
   const { postListStyle } = LMFeedContextStyles;
   const customPostMediaStyle: any = postListStyle?.media;
+
+  const navigation = useNavigation<StackNavigationProp<any>>();
+  const dispatch = useAppDispatch();
   // this handles the rendering of posts with single attachment
   const renderSingleAttachment = () => {
     switch (post?.attachments && post?.attachments[0]?.attachmentType) {
       case IMAGE_ATTACHMENT_TYPE: {
         return (
-          /* @ts-ignore */
-          <LMImage
-            imageUrl={
-              post?.attachments
-                ? post?.attachments[0]?.attachmentMeta.url
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate(CAROUSEL_SCREEN, {
+                dataObject: post,
+                index: 0,
+              });
+              dispatch({
+                type: STATUS_BAR_STYLE,
+                body: { color: STYLES.$STATUS_BAR_STYLE["light-content"] },
+              });
+            }}
+          >
+            <LMImage
+              imageUrl={
+                post?.attachments
                   ? post?.attachments[0]?.attachmentMeta.url
+                    ? post?.attachments[0]?.attachmentMeta.url
+                    : ""
                   : ""
-                : ""
-            }
-            {...customPostMediaStyle?.image}
-          />
+              }
+              {...customPostMediaStyle?.image}
+            />
+          </TouchableOpacity>
         );
       }
       case VIDEO_ATTACHMENT_TYPE: {
         return (
-          /* @ts-ignore */
-          <LMVideo
-            videoUrl={
-              post?.attachments
-                ? post?.attachments[0]?.attachmentMeta.url
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate(CAROUSEL_SCREEN, {
+                dataObject: post,
+                index: 0,
+              });
+              dispatch({
+                type: STATUS_BAR_STYLE,
+                body: { color: STYLES.$STATUS_BAR_STYLE["light-content"] },
+              });
+            }}
+          >
+            <LMVideo
+              videoUrl={
+                post?.attachments
                   ? post?.attachments[0]?.attachmentMeta.url
+                    ? post?.attachments[0]?.attachmentMeta.url
+                    : ""
                   : ""
-                : ""
-            }
-            postId={post?.id}
-            {...customPostMediaStyle?.video}
-            autoPlay={
-              mediaProps?.videoProps?.autoPlay != undefined
-                ? mediaProps?.videoProps?.autoPlay
-                : true
-            }
-            videoInFeed={mediaProps?.videoProps?.videoInFeed}
-          />
+              }
+              postId={post?.id}
+              {...customPostMediaStyle?.video}
+              autoPlay={
+                mediaProps?.videoProps?.autoPlay != undefined
+                  ? mediaProps?.videoProps?.autoPlay
+                  : true
+              }
+              videoInFeed={mediaProps?.videoProps?.videoInFeed}
+              showMuteUnmute={true}
+            />
+          </TouchableOpacity>
         );
       }
       case DOCUMENT_ATTACHMENT_TYPE: {
@@ -87,8 +120,11 @@ const LMPostMedia = React.memo(() => {
       case POLL_ATTACHMENT_TYPE: {
         return (
           /* @ts-ignore */
-          <View style={{paddingHorizontal:20}}>
-            <LMPostPollView item={post?.attachments && post?.attachments[0]?.attachmentMeta} post={post}  />
+          <View style={{ paddingHorizontal: 20 }}>
+            <LMPostPollView
+              item={post?.attachments && post?.attachments[0]?.attachmentMeta}
+              post={post}
+            />
           </View>
         );
       }
@@ -131,6 +167,7 @@ const LMPostMedia = React.memo(() => {
             item?.attachmentType === VIDEO_ATTACHMENT_TYPE
         ).length >= 2 ? (
           <LMCarousel
+            post={post}
             attachments={getData(IMAGE_ATTACHMENT_TYPE, VIDEO_ATTACHMENT_TYPE)}
             {...customPostMediaStyle?.carousel}
             imageItem={customPostMediaStyle?.image}

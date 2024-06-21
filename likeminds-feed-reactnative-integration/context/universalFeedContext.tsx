@@ -42,6 +42,7 @@ import {
 import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
 import { Events } from "../enums/Events";
 import { Keys } from "../enums/Keys";
+import { createThumbnail } from "react-native-create-thumbnail";
 import { convertPollMetaData } from "../viewDataModels";
 import { useRoute } from "@react-navigation/native";
 import { SHOW_TOAST } from "../store/types/loader";
@@ -176,9 +177,35 @@ export const UniversalFeedContextProvider = ({
     // upload media to aws
     const uploadPromises = mediaAttachmemnts?.map(
       async (item: LMAttachmentUI) => {
+        if (item?.attachmentType == 2) {
+          await createThumbnail({
+            url: item?.attachmentMeta?.url,
+            timeStamp: 10000,
+          }).then(async (response) => {
+            const newName =
+              item.attachmentMeta.name &&
+              item.attachmentMeta.name.substring(
+                0,
+                item.attachmentMeta.name.lastIndexOf(".")
+              ) + ".jpeg";
+            const thumbnailMeta = {
+              ...item.attachmentMeta,
+              name: newName,
+              format: "image/jpeg",
+              thumbnailUrl: response?.path,
+            };
+            const thumbnailRes = await uploadFilesToAWS(
+              thumbnailMeta,
+              memberData.userUniqueId,
+              response?.path
+            );
+            item.attachmentMeta.thumbnailUrl = thumbnailRes.Location;
+          });
+        }
         return uploadFilesToAWS(
           item.attachmentMeta,
-          memberData.userUniqueId
+          memberData.userUniqueId,
+          item.attachmentMeta?.url
         ).then((res) => {
           item.attachmentMeta.url = res.Location;
           return item; // Return the updated item

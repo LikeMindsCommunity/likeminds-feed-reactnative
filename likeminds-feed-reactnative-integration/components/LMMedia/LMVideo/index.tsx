@@ -6,7 +6,7 @@ import {
   TouchableWithoutFeedback,
   Image,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 // @ts-ignore the lib do not have TS declarations yet
 import Video, { VideoRef } from "react-native-video";
 import { LMVideoProps } from "./types";
@@ -14,7 +14,8 @@ import { MEDIA_FETCH_ERROR } from "../../../constants/Strings";
 import LMLoader from "../../LMLoader";
 import { LMButton } from "../../../uiComponents";
 import { defaultStyles } from "./styles";
-import { useAppSelector } from "../../../store/store";
+import { useAppDispatch, useAppSelector } from "../../../store/store";
+import { SET_MUTED_STATE } from "../../../store/types/types";
 
 const LMVideo = React.memo(
   ({
@@ -32,6 +33,7 @@ const LMVideo = React.memo(
     loaderWidget,
     pauseButton,
     playButton,
+    showMuteUnmute,
     errorWidget,
     showCancel,
     onCancel,
@@ -39,6 +41,7 @@ const LMVideo = React.memo(
     videoInFeed,
     videoInCarousel,
     currentVideoInCarousel,
+    showPlayPause,
   }: LMVideoProps) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -47,10 +50,18 @@ const LMVideo = React.memo(
       showControls ? showControls : true
     );
     const player = useRef<VideoRef>(null);
+    const [paused, setPaused] = useState(true);
 
     const currentVideoId = useAppSelector(
       (state) => state.feed.autoPlayVideoPostId
     );
+
+    const [mute, setMute] = useState(false);
+    const dispatch = useAppDispatch();
+    const muteStatus = useAppSelector((state) => state.feed.muteStatus);
+    useEffect(() => {
+      setMute(muteStatus);
+    }, [muteStatus]);
 
     return (
       <View
@@ -100,45 +111,27 @@ const LMVideo = React.memo(
               },
             ])}
             paused={
-              videoInFeed
-                ? autoPlay
-                  ? currentVideoId === postId
-                    ? videoInCarousel
-                      ? currentVideoInCarousel === videoUrl
-                        ? false
-                        : true
-                      : false
-                    : true
-                  : playingStatus
-                : autoPlay
-                ? videoInCarousel
-                  ? currentVideoInCarousel === videoUrl
-                    ? false
-                    : true
-                  : false
-                : playingStatus
+              // Will work on below commented code while working on autoplay ticket
+              // videoInFeed
+              //   ? autoPlay
+              //     ? currentVideoId === postId
+              //       ? videoInCarousel
+              //         ? currentVideoInCarousel === videoUrl
+              //           ? false
+              //           : true
+              //         : false
+              //       : true
+              //     : playingStatus
+              //   : autoPlay
+              //   ? videoInCarousel
+              //     ? currentVideoInCarousel === videoUrl
+              //       ? false
+              //       : true
+              //     : false
+              //   : playingStatus
+              paused
             } // handles the auto play/pause functionality
-            muted={
-              videoInFeed
-                ? autoPlay
-                  ? currentVideoId === postId
-                    ? videoInCarousel
-                      ? currentVideoInCarousel === videoUrl
-                        ? false
-                        : true
-                      : false
-                    : true
-                  : playingStatus
-                  ? true
-                  : false
-                : autoPlay
-                ? videoInCarousel
-                  ? currentVideoInCarousel === videoUrl
-                    ? false
-                    : true
-                  : false
-                : playingStatus
-            } // this handles the mute of the video according to the video being played
+            muted={mute}
           />
         </>
         {/* this renders the cancel button */}
@@ -167,6 +160,35 @@ const LMVideo = React.memo(
                 }}
               />
             )}
+          </View>
+        )}
+
+        {/* this renders the mute/unmute button */}
+        {showMuteUnmute && (
+          <View style={defaultStyles.muteUnmuteVideoView}>
+            <TouchableOpacity
+              onPress={() => {
+                let currentMuteStatus = mute;
+                setMute(!currentMuteStatus);
+                dispatch({
+                  type: SET_MUTED_STATE,
+                  body: { mute: !currentMuteStatus },
+                });
+              }}
+            >
+              <Image
+                source={
+                  mute
+                    ? require("../../../assets/images/muted.png")
+                    : require("../../../assets/images/unmute.png")
+                }
+                style={{
+                  height: 25,
+                  width: 25,
+                  tintColor: "white",
+                }}
+              />
+            </TouchableOpacity>
           </View>
         )}
 
@@ -210,6 +232,39 @@ const LMVideo = React.memo(
               </>
             </TouchableOpacity>
           </TouchableOpacity>
+        )}
+
+        {showPlayPause && (
+          <View
+            style={{
+              flexDirection: "row",
+              width: "100%",
+              height: "100%",
+              position: "absolute",
+              backgroundColor: "rgba(0,0,0,.5)",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                setPaused(!paused);
+              }}
+            >
+              <Image
+                source={
+                  paused
+                    ? require("../../../assets/images/play-button.png")
+                    : require("../../../assets/images/pause-button.png")
+                }
+                style={{
+                  width: 40,
+                  height: 40,
+                  tintColor: "white",
+                }}
+              />
+            </TouchableOpacity>
+          </View>
         )}
       </View>
     );

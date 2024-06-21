@@ -104,6 +104,7 @@ const CreatePollUI = () => {
               styles.font,
               styles.blackColor,
               { maxHeight: 100 },
+              /* @ts-ignore */
               pollQuestionsStyle ? pollQuestionsStyle : null,
             ]}
             placeholderTextColor="#c5c5c5"
@@ -139,6 +140,7 @@ const CreatePollUI = () => {
                     styles.option,
                     styles.blackColor,
                     { flex: 1 },
+                    /* @ts-ignore */
                     pollOptionsStyle ? pollOptionsStyle : null,
                   ]}
                   maxLength={40}
@@ -152,7 +154,8 @@ const CreatePollUI = () => {
                   <TouchableOpacity
                     onPress={() => {
                       onPollOptionCleared
-                        ? onPollOptionCleared(index)
+                        ? /* @ts-ignore */
+                          onPollOptionCleared(index)
                         : removeAnOption(index);
                     }}
                   >
@@ -196,6 +199,7 @@ const CreatePollUI = () => {
           <Text
             style={[
               styles.font,
+              /* @ts-ignore */
               pollExpiryTimeStyle ? pollExpiryTimeStyle : null,
             ]}
           >
@@ -276,6 +280,7 @@ const CreatePollUI = () => {
             styles.font,
             styles.lightGreyBackground,
             styles.textAlignCenter,
+            /* @ts-ignore */
             pollAdvancedOptionTextStyle ? pollAdvancedOptionTextStyle : null,
           ]}
         >

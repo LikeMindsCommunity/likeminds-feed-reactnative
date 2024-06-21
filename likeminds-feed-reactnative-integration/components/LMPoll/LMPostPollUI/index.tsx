@@ -116,6 +116,7 @@ const LMPostPollUI = ({
             ) : (
               <LMText
                 maxLines={maxQuestionLines}
+                /* @ts-ignore */
                 textStyle={[styles.text, styles.blackColor, pollQuestionStyles]}
                 onTextLayout={(e) => onQuestionTextLayout(e)}
               >
@@ -133,6 +134,7 @@ const LMPostPollUI = ({
               }}
             >
               <TouchableOpacity
+                /* @ts-ignore */
                 style={editPollOptionsStyles ? editPollOptionsStyles : null}
                 onPress={
                   onPollEditClicked ? onPollEditClicked : editPollAttachment
@@ -148,6 +150,7 @@ const LMPostPollUI = ({
                 />
               </TouchableOpacity>
               <TouchableOpacity
+                /* @ts-ignore */
                 style={clearPollOptionsStyles ? clearPollOptionsStyles : null}
                 onPress={
                   onPollClearClicked ? onPollClearClicked : removePollAttachment
@@ -172,6 +175,7 @@ const LMPostPollUI = ({
               styles.mediumText,
               styles.greyColor,
               { marginTop: Layout.normalize(15) },
+              /* @ts-ignore */
               pollInfoStyles ? pollInfoStyles : null,
             ]}
           >
@@ -252,6 +256,7 @@ const LMPostPollUI = ({
                       styles.blackColor,
                       styles.optionText,
                       allowAddOption ? styles.addedByOptionText : null,
+                      /* @ts-ignore */
                       isPollSentByMe
                         ? pollOptionSelectedTextStyles
                           ? pollOptionSelectedTextStyles
@@ -272,6 +277,7 @@ const LMPostPollUI = ({
                         style={[
                           styles.smallText10,
                           styles.greyColor,
+                          /* @ts-ignore */
                           pollOptionAddedByTextStyles
                             ? pollOptionAddedByTextStyles
                             : null,
@@ -341,6 +347,7 @@ const LMPostPollUI = ({
                           styles.smallText,
                           { marginLeft: Layout.normalize(5) },
                           styles.greyColor,
+                          /* @ts-ignore */
                           votesCountStyles ? votesCountStyles : null,
                         ]}
                       >{`${voteCount} ${
@@ -364,6 +371,7 @@ const LMPostPollUI = ({
                 onPress={() => {
                   setIsAddPollOptionModalVisible(true);
                 }}
+                /* @ts-ignore */
                 style={({ pressed }) => [
                   styles.greyPollButton,
                   {
@@ -382,6 +390,7 @@ const LMPostPollUI = ({
                     styles.text,
                     styles.blackColor,
                     styles.textAlignCenter,
+                    /* @ts-ignore */
                     allowAddPollOptionButtonTextStyles
                       ? allowAddPollOptionButtonTextStyles
                       : null,
@@ -404,6 +413,7 @@ const LMPostPollUI = ({
                 styles.mediumText,
                 styles.extraMarginSpace,
                 hue ? { color: `hsl(${hue}, 53%, 15%)` } : null,
+                /* @ts-ignore */
                 memberVotedCountStyles ? memberVotedCountStyles : null,
               ]}
             >
@@ -411,6 +421,7 @@ const LMPostPollUI = ({
               <Text
                 style={[
                   styles.messageCustomTitle,
+                  /* @ts-ignore */
                   memberVotedCountStyles ? memberVotedCountStyles : null,
                   { color: STYLES.$COLORS.MSG },
                 ]}
@@ -432,6 +443,7 @@ const LMPostPollUI = ({
                   }}
                   style={[
                     styles.mediumText,
+                    /* @ts-ignore */
                     memberVotedCountStyles ? memberVotedCountStyles : null,
                   ]}
                 >{` ${EDIT_POLL_TEXT}
@@ -468,6 +480,7 @@ const LMPostPollUI = ({
                     ? { backgroundColor: styles.whiteColor.color }
                     : null,
                   hue ? { backgroundColor: `hsl(${hue}, 47%, 31%)` } : null,
+                  /* @ts-ignore */
                   submitButtonStyles ? submitButtonStyles : null,
                 ]}
               >
@@ -477,6 +490,7 @@ const LMPostPollUI = ({
                     styles.smallTextMedium,
                     { color: "white" },
                     !shouldShowSubmitPollButton ? styles.greyColor : null,
+                    /* @ts-ignore */
                     submitButtonTextStyles ? submitButtonTextStyles : null,
                   ]}
                 >

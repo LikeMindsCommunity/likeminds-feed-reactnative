@@ -20,6 +20,7 @@ import {
   POST_DETAIL,
   POST_LIKES_LIST,
   TOPIC_FEED,
+  CAROUSEL_SCREEN,
   NOTIFICATION_FEED,
   NOTIFICATION_LIST,
 } from "./constants/screenNames";
@@ -42,11 +43,14 @@ import {
 import getNotification, { getRoute } from "./notification";
 import { LMFeedAnalytics } from "./analytics/LMFeedAnalytics";
 import { LMFeedCallbacks } from "./callBacks/lmFeedCallback";
+import { LMCarouselScreenCallbacks } from "./callBacks/carouselScreenCallbacks";
 import {
   NAVIGATED_FROM_NOTIFICATION,
   NAVIGATED_FROM_COMMENT,
   NAVIGATED_FROM_POST,
 } from "./constants/Strings";
+import CarouselScreen from "./screens/carouselScreen";
+
 export {
   LMOverlayProvider,
   initMyClient,
@@ -62,6 +66,7 @@ export {
   LMFeedPollResult,
   UNIVERSAL_FEED,
   TOPIC_FEED,
+  CAROUSEL_SCREEN,
   CREATE_POST,
   POSTS_LIST,
   POST_DETAIL,
@@ -82,11 +87,13 @@ export {
   CreatePostContextProvider,
   CreatePollContextProvider,
   TopicFeed,
+  CarouselScreen,
   NotificationFeedContextProvider,
   getRoute,
   getNotification,
   LMFeedAnalytics,
   LMFeedCallbacks,
+  LMCarouselScreenCallbacks,
   NAVIGATED_FROM_NOTIFICATION,
   NAVIGATED_FROM_COMMENT,
   NAVIGATED_FROM_POST,

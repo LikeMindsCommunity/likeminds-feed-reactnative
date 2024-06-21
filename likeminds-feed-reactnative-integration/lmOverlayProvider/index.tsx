@@ -25,9 +25,9 @@ export const LMOverlayProvider: any = ({
   pollStyle,
   createPollStyle,
   callbackClass,
+  carouselScreenStyle,
 }: // Create a prop for passing LMCoreCallbacks
 LMOverlayProviderProps) => {
-  
   useEffect(() => {
     myClient.setLMSDKCallbacks(
       new LMSDKCallbacksImplementations(callbackClass, myClient)
@@ -52,6 +52,7 @@ LMOverlayProviderProps) => {
         topicsStyle={topicsStyle}
         pollStyle={pollStyle}
         createPollStyle={createPollStyle}
+        carouselScreenStyle={carouselScreenStyle}
         lmFeedInterface={lmFeedInterface}
         // add a prop for adding lmcorecallbacks
       >

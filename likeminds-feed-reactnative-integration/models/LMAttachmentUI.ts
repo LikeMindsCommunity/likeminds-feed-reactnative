@@ -1,4 +1,4 @@
-import {LMAttachmentMetaUI} from './LMAttachmentMetaUI';
+import { LMAttachmentMetaUI } from "./LMAttachmentMetaUI";
 
 // data model for array of attachments
 export interface LMAttachmentUI {

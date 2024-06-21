@@ -11,8 +11,10 @@ import {
   POSTS_LIST,
   POST_DETAIL,
   CREATE_POST,
+  CAROUSEL_SCREEN,
   POST_LIKES_LIST,
   LMOverlayProvider,
+  CarouselScreen,
   LMFeedCreatePollScreen,
   LMFeedPollResult,
 } from '@likeminds.community/feed-rn-core';
@@ -23,6 +25,7 @@ import {
   getNotification,
   getRoute,
   LMFeedCallbacks,
+  LMCarouselScreenCallbacks,
   NAVIGATED_FROM_NOTIFICATION,
   initMyClient,
 } from '@likeminds.community/feed-rn-core';
@@ -35,7 +38,7 @@ import {
   Platform,
   ViewStyle,
 } from 'react-native';
-import {LinkingOptions, NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import {navigationRef} from './RootNavigation';
 import FeedWrapper from './feedScreen/feedWrapper';
 import DetailWrapper from './feedScreen/detailScreenWrapper';
@@ -53,14 +56,18 @@ import {
   POLL_RESULT,
 } from '@likeminds.community/feed-rn-core/constants/screenNames';
 import {initiateAPI} from './registerDeviceApi';
-import {createPollStyle, pollStyle} from './styles';
+import {carouselScreenStyle, createPollStyle, pollStyle} from './styles';
 import CreatePollScreenWrapper from './feedScreen/createPollScreenWrapper';
 import {LMFeedClient} from '@likeminds.community/feed-rn-beta';
 import {LoginSchemaRO} from './login/loginSchemaRO';
 
-class CustomCallbacks implements LMFeedCallbacks {
+class CustomCallbacks implements LMFeedCallbacks, LMCarouselScreenCallbacks {
   onEventTriggered(eventName: string, eventProperties?: Map<string, string>) {
     // Override onEventTriggered with custom logic
+  }
+  onBackPressOnCarouselScreen() {
+    // Override onBackPressOnCarouselScreen with custom logic
+    navigationRef.goBack();
   }
 }
 
@@ -279,6 +286,11 @@ const App = () => {
               <Stack.Screen
                 name={NOTIFICATION_FEED}
                 component={NotificationWrapper}
+              />
+              <Stack.Screen
+                options={{gestureEnabled: false}}
+                name={CAROUSEL_SCREEN}
+                component={CarouselScreen}
               />
               <Stack.Screen
                 name={POLL_RESULT}
