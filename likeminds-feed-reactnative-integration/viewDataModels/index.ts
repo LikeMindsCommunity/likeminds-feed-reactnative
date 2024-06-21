@@ -35,7 +35,6 @@ import {
   LMSDKClientInfoUI,
   LMUserUI,
 } from "../models";
-// import { GetNotificationFeedResponse } from "@likeminds.community/feed-rn-beta/dist/notificationFeed/model/GetNotificationFeedResponse";
 
 /**
  * @param data: [GetFeedResponse]

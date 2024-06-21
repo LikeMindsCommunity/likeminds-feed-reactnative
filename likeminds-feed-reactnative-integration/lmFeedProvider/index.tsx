@@ -74,36 +74,6 @@ export const LMFeedProvider = ({
   const [isInitiated, setIsInitiated] = useState(false);
   const dispatch = useAppDispatch();
   const showToast = useAppSelector((state) => state.loader.isToast);
-  // useEffect(() => {
-  //   // add lmcorecallbacks which you recieved from prop to client
-  //   // myClient.setLMSDKCallbacks() is function m set krdio
-  // });
-
-  // useEffect(() => {
-  //   const lmSdkImplementation = new LMSDKCallbacksImplementations(
-  //     // TODO this below implementation of LMCoreCallbacks. This class will be decalred on example layer and the instance of which will be passed as prop
-  //     new LMCoreCallbacks(
-  //       (a: string, b: string) => {
-  //         console.log("its working");
-  //       },
-  //       // In this function there will be implementation of initiateuser from client
-  //       async () => {
-  //         return {
-  //           accessToken: accessToken,
-  //           refreshToken: refreshToken,
-  //         };
-  //       }
-  //     ),
-  //     myClient as any
-  //   );
-  //   return myClient.setLMSDKCallbacks(
-  //     lmSdkImplementation.onAccessTokenExpiredAndRefreshed(
-  //       accessToken as string,
-  //       refreshToken as string
-  //     ),
-  //     lmSdkImplementation.onRefreshTokenExpired(getUserFromLocalDB)
-  //   );
-  // }, []);
 
   useEffect(() => {
     //setting client in Client class

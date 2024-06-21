@@ -88,11 +88,6 @@ const App = () => {
 
   const loginSchemaArray: any = useQuery(LoginSchemaRO);
 
-  // useEffect(() => {
-  //   const res: any = initMyClient();
-  //   setMyClient(res);
-  // }, []);
-
   useEffect(() => {
     async function getTokens() {
       const res: any = initMyClient();
