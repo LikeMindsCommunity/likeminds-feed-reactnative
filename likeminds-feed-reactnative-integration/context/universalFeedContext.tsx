@@ -48,7 +48,10 @@ import { useRoute } from "@react-navigation/native";
 import { SHOW_TOAST } from "../store/types/loader";
 import { Client } from "../client";
 import { PollMultiSelectState, PollType } from "../enums/Poll";
-import { SET_PAUSED_STATUS } from "../store/types/types";
+import {
+  SET_FLOW_TO_CREATE_POST_SCREEN,
+  SET_PAUSED_STATUS,
+} from "../store/types/types";
 
 interface UniversalFeedContextProps {
   children: ReactNode;
@@ -273,6 +276,10 @@ export const UniversalFeedContextProvider = ({
         await dispatch({
           type: SET_PAUSED_STATUS,
           body: { paused: true },
+        });
+        await dispatch({
+          type: SET_FLOW_TO_CREATE_POST_SCREEN,
+          body: { flowToCreatePostScreen: true },
         });
         navigation.navigate(CREATE_POST);
       }

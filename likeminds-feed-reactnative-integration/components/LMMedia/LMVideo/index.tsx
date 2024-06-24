@@ -65,6 +65,9 @@ const LMVideo = React.memo(
     );
 
     const pauseStatus = useAppSelector((state) => state.feed.pauseStatus);
+    const flowToCreatePostScreen = useAppSelector(
+      (state) => state.feed.flowToCreatePostScreen
+    );
     const flowFromCarouselScreen = useAppSelector(
       (state) => state.feed.flowFromCarouselScreen
     );
@@ -137,6 +140,8 @@ const LMVideo = React.memo(
             paused={
               flowFromCarouselScreen && currentVideoId === postId
                 ? false
+                : flowToCreatePostScreen
+                ? true
                 : pauseStatus === true &&
                   previousRoute?.name === UNIVERSAL_FEED &&
                   currentRoute?.name !== CREATE_POST

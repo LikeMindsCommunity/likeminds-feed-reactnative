@@ -63,6 +63,8 @@ import {
   ADD_SELECTED_TOPICS,
   CLEAR_POLL,
   CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
+  SET_FLOW_TO_CREATE_POST_SCREEN,
+  SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
 } from "../store/types/types";
 import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
 import { Events } from "../enums/Events";
@@ -212,6 +214,10 @@ export const CreatePostContextProvider = ({
     selectImageVideo(type)?.then((res) => {
       if (res?.didCancel) {
         setShowSelecting(false);
+        dispatch({
+          type: SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
+          body: { reportModalStatus: false },
+        });
       } else {
         const mediaWithSizeCheck: any = [];
         const communityConfigs = CommunityConfigs.communityConfigs;
@@ -274,6 +280,10 @@ export const CreatePostContextProvider = ({
         ) {
           setFormattedMediaAttachments([...formattedMediaAttachments]);
           setShowSelecting(false);
+          dispatch({
+            type: SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
+            body: { reportModalStatus: false },
+          });
           dispatch(
             showToastMessage({
               isToast: true,
@@ -290,6 +300,10 @@ export const CreatePostContextProvider = ({
             setShowOptions(true);
           }
           setShowSelecting(false);
+          dispatch({
+            type: SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
+            body: { reportModalStatus: false },
+          });
           setFormattedMediaAttachments([
             ...formattedMediaAttachments,
             ...selectedImagesVideos,
@@ -742,6 +756,10 @@ export const CreatePostContextProvider = ({
     });
     await dispatch({
       type: CLEAR_POLL,
+    });
+    await dispatch({
+      type: SET_FLOW_TO_CREATE_POST_SCREEN,
+      body: { flowToCreatePostScreen: false },
     });
     navigation.goBack();
   };

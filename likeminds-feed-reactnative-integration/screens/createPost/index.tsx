@@ -64,6 +64,8 @@ import {
   ADD_SELECTED_TOPICS,
   CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
   SET_DISABLED_TOPICS,
+  SET_FLOW_TO_CREATE_POST_SCREEN,
+  SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
 } from "../../store/types/types";
 import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Events } from "../../enums/Events";
@@ -1015,6 +1017,16 @@ const CreatePostComponent = () => {
               handleGalleryProp
                 ? handleGalleryProp(SELECT_VIDEO)
                 : handleGallery(SELECT_VIDEO);
+
+              dispatch({
+                type: SET_FLOW_TO_CREATE_POST_SCREEN,
+                body: { flowToCreatePostScreen: false },
+              });
+
+              dispatch({
+                type: SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
+                body: { reportModalStatus: true },
+              });
 
               LMFeedAnalytics.track(
                 Events.CLICKED_ON_ATTACHMENT,
