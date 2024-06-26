@@ -24,14 +24,23 @@ const LMImage = React.memo(
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [heightCalculated, setHeightCalculated] = useState(0);
-
-    const ScreenWidth = Dimensions.get("window").width;
-    const desiredAspectRatio = width > height ? 1.91 : 0.8;
+    const [desiredAspectRatio, setDesiredAspectRatio] = useState(0);
 
     useEffect(() => {
-      const calculatedHeight = ScreenWidth * (1 / desiredAspectRatio);
-      setHeightCalculated(calculatedHeight);
-    }, [ScreenWidth, desiredAspectRatio]);
+      Image.getSize(
+        imageUrl,
+        (width, height) => {
+          const ScreenWidth = Dimensions.get("window").width;
+          const desiredAspectRatio = width > height ? 1.91 : 0.8;
+          const heightCalculated = ScreenWidth * (1 / desiredAspectRatio);
+          setHeightCalculated(heightCalculated);
+          setDesiredAspectRatio(desiredAspectRatio);
+        },
+        (error) => {
+          console.error("Error getting image size:", error);
+        }
+      );
+    }, [imageUrl]);
 
     return (
       <View

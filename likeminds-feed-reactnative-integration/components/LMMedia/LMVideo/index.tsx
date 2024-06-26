@@ -59,6 +59,9 @@ const LMVideo = React.memo(
     );
     const player = useRef<VideoRef>(null);
     const [paused, setPaused] = useState(true);
+    const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+    const [heightCalculated, setHeightCalculated] = useState(0);
+    const [desiredAspectRatio, setDesiredAspectRatio] = useState(0);
 
     const currentVideoId = useAppSelector(
       (state) => state.feed.autoPlayVideoPostId
@@ -91,9 +94,20 @@ const LMVideo = React.memo(
       setMute(muteStatus);
     }, [muteStatus]);
 
-    const ScreenWidth = Dimensions.get("window").width;
-    const desiredAspectRatio = width > height ? 1.91 : 0.8;
-    const heightCalculated = ScreenWidth * (1 / desiredAspectRatio);
+    const onLoad = (data) => {
+      const { width, height } = data.naturalSize;
+      console.log("width", width);
+      console.log("height", height);
+      setDimensions({ width, height });
+    };
+
+    useEffect(() => {
+      const ScreenWidth = Dimensions.get("window").width;
+      const desiredAspectRatio = width > height ? 1.91 : 0.8;
+      const heightCalculated = ScreenWidth * (1 / desiredAspectRatio);
+      setHeightCalculated(heightCalculated);
+      setDesiredAspectRatio(desiredAspectRatio);
+    }, [dimensions]);
 
     return (
       <View
@@ -123,7 +137,8 @@ const LMVideo = React.memo(
             ref={player}
             source={{ uri: videoUrl }}
             key={videoUrl}
-            onLoad={() => {
+            onLoad={(data) => {
+              onLoad(data);
               player.current.seek(0); // this will set first frame of video as thumbnail
               setLoading(false);
             }}
