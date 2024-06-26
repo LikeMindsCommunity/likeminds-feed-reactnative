@@ -19,7 +19,10 @@ import { useLMFeedStyles } from "../../../lmFeedProvider";
 import { useAppDispatch } from "../../../store/store";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { STATUS_BAR_STYLE } from "../../../store/types/types";
+import {
+  SET_FLOW_TO_CAROUSEL_SCREEN,
+  STATUS_BAR_STYLE,
+} from "../../../store/types/types";
 import {
   CAROUSEL_SCREEN,
   UNIVERSAL_FEED,
@@ -52,6 +55,10 @@ const LMPostMedia = React.memo(() => {
                 type: STATUS_BAR_STYLE,
                 body: { color: STYLES.$STATUS_BAR_STYLE["light-content"] },
               });
+              dispatch({
+                type: SET_FLOW_TO_CAROUSEL_SCREEN,
+                body: { flowToCarouselScreen: true },
+              });
             }}
           >
             <LMImage
@@ -78,6 +85,10 @@ const LMPostMedia = React.memo(() => {
               dispatch({
                 type: STATUS_BAR_STYLE,
                 body: { color: STYLES.$STATUS_BAR_STYLE["light-content"] },
+              });
+              dispatch({
+                type: SET_FLOW_TO_CAROUSEL_SCREEN,
+                body: { flowToCarouselScreen: true },
               });
             }}
           >

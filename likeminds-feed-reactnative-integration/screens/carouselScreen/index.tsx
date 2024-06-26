@@ -19,7 +19,10 @@ import {
 } from "../../constants/Strings";
 import styles from "./styles";
 import STYLES from "../../constants/Styles";
-import { STATUS_BAR_STYLE } from "../../store/types/types";
+import {
+  SET_FLOW_TO_CAROUSEL_SCREEN,
+  STATUS_BAR_STYLE,
+} from "../../store/types/types";
 import { useAppDispatch } from "../../store/store";
 import { LMVideoPlayer } from "../../components";
 import { useLMFeedStyles } from "../../lmFeedProvider";
@@ -120,6 +123,10 @@ const CarouselScreen = ({ navigation, route }: any) => {
         type: STATUS_BAR_STYLE,
         body: { color: STYLES.$STATUS_BAR_STYLE.default },
       });
+      dispatch({
+        type: SET_FLOW_TO_CAROUSEL_SCREEN,
+        body: { flowToCarouselScreen: false },
+      });
       navigation.goBack();
       return true;
     }
@@ -150,6 +157,10 @@ const CarouselScreen = ({ navigation, route }: any) => {
                 dispatch({
                   type: STATUS_BAR_STYLE,
                   body: { color: STYLES.$STATUS_BAR_STYLE.default },
+                });
+                dispatch({
+                  type: SET_FLOW_TO_CAROUSEL_SCREEN,
+                  body: { flowToCarouselScreen: false },
                 });
               }}
             >

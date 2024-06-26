@@ -65,6 +65,10 @@ const LMVideo = React.memo(
     );
 
     const pauseStatus = useAppSelector((state) => state.feed.pauseStatus);
+    const flowToCarouselScreen = useAppSelector(
+      (state) => state.feed.flowToCarouselScreen
+    );
+
     const flowToCreatePostScreen = useAppSelector(
       (state) => state.feed.flowToCreatePostScreen
     );
@@ -164,7 +168,7 @@ const LMVideo = React.memo(
                   : false
                 : playingStatus
             } // handles the auto play/pause functionality
-            muted={isReportModalOpened ? true : mute}
+            muted={isReportModalOpened || flowToCarouselScreen ? true : mute}
           />
         </>
         {/* this renders the cancel button */}

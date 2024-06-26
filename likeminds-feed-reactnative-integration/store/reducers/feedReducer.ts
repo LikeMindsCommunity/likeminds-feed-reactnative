@@ -33,6 +33,7 @@ import {
   SET_CURRENT_ID_OF_VIDEO,
   SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
   SET_FLOW_TO_CREATE_POST_SCREEN,
+  SET_FLOW_TO_CAROUSEL_SCREEN,
 } from "../types/types";
 import { LMPostUI } from "../../models";
 import Styles from "../../constants/Styles";
@@ -52,6 +53,7 @@ export interface FeedReducerState {
   currentIdOfVideo: string;
   reportModalOpenedInPostDetail: boolean;
   flowToCreatePostScreen: boolean;
+  flowToCarouselScreen: boolean;
 }
 
 export const initialState: FeedReducerState = {
@@ -69,10 +71,15 @@ export const initialState: FeedReducerState = {
   currentIdOfVideo: "",
   reportModalOpenedInPostDetail: false,
   flowToCreatePostScreen: false,
+  flowToCarouselScreen: false,
 };
 
 export const feedReducer = (state = initialState, action) => {
   switch (action.type) {
+    case SET_FLOW_TO_CAROUSEL_SCREEN: {
+      const { flowToCarouselScreen } = action.body;
+      return { ...state, flowToCarouselScreen: flowToCarouselScreen };
+    }
     case SET_FLOW_TO_CREATE_POST_SCREEN: {
       const { flowToCreatePostScreen } = action.body;
       return { ...state, flowToCreatePostScreen: flowToCreatePostScreen };

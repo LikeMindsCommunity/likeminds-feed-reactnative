@@ -1,5 +1,5 @@
 import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LMImageProps } from "./types";
 import { MEDIA_FETCH_ERROR } from "../../../constants/Strings";
 import LMLoader from "../../LMLoader";
@@ -23,10 +23,15 @@ const LMImage = React.memo(
   }: LMImageProps) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
+    const [heightCalculated, setHeightCalculated] = useState(0);
 
     const ScreenWidth = Dimensions.get("window").width;
     const desiredAspectRatio = width > height ? 1.91 : 0.8;
-    const heightCalculated = ScreenWidth * (1 / desiredAspectRatio);
+
+    useEffect(() => {
+      const calculatedHeight = ScreenWidth * (1 / desiredAspectRatio);
+      setHeightCalculated(calculatedHeight);
+    }, [ScreenWidth, desiredAspectRatio]);
 
     return (
       <View
