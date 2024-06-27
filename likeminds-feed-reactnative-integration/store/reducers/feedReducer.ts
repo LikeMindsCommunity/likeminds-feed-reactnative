@@ -29,6 +29,11 @@ import {
   CLEAR_SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
   STATUS_BAR_STYLE,
   SET_MUTED_STATE,
+  SET_PAUSED_STATUS,
+  SET_CURRENT_ID_OF_VIDEO,
+  SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
+  SET_FLOW_TO_CREATE_POST_SCREEN,
+  SET_FLOW_TO_CAROUSEL_SCREEN,
 } from "../types/types";
 import { LMPostUI } from "../../models";
 import Styles from "../../constants/Styles";
@@ -44,6 +49,11 @@ export interface FeedReducerState {
   selectedTopicsFromUniversalFeedScreen: [];
   statusBarStyle: string;
   muteStatus: boolean;
+  pauseStatus: boolean;
+  currentIdOfVideo: string;
+  reportModalOpenedInPostDetail: boolean;
+  flowToCreatePostScreen: boolean;
+  flowToCarouselScreen: boolean;
 }
 
 export const initialState: FeedReducerState = {
@@ -57,9 +67,35 @@ export const initialState: FeedReducerState = {
   selectedTopicsFromUniversalFeedScreen: [],
   statusBarStyle: Styles.$STATUS_BAR_STYLE.default,
   muteStatus: false,
+  pauseStatus: false,
+  currentIdOfVideo: "",
+  reportModalOpenedInPostDetail: false,
+  flowToCreatePostScreen: false,
+  flowToCarouselScreen: false,
 };
+
 export const feedReducer = (state = initialState, action) => {
   switch (action.type) {
+    case SET_FLOW_TO_CAROUSEL_SCREEN: {
+      const { flowToCarouselScreen } = action.body;
+      return { ...state, flowToCarouselScreen: flowToCarouselScreen };
+    }
+    case SET_FLOW_TO_CREATE_POST_SCREEN: {
+      const { flowToCreatePostScreen } = action.body;
+      return { ...state, flowToCreatePostScreen: flowToCreatePostScreen };
+    }
+    case SET_REPORT_MODEL_STATUS_IN_POST_DETAIL: {
+      const { reportModalStatus } = action.body;
+      return { ...state, reportModalOpenedInPostDetail: reportModalStatus };
+    }
+    case SET_CURRENT_ID_OF_VIDEO: {
+      const { currentIdOfVideo } = action.body;
+      return { ...state, currentIdOfVideo: currentIdOfVideo };
+    }
+    case SET_PAUSED_STATUS: {
+      const { paused } = action.body;
+      return { ...state, pauseStatus: paused };
+    }
     case SET_MUTED_STATE: {
       const { mute } = action.body;
       return { ...state, muteStatus: mute };

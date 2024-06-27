@@ -135,7 +135,9 @@ const PostsListComponent = ({ topics }: any) => {
         : handleDeletePost(true);
     }
     if (itemId === EDIT_POST_MENU_ITEM) {
-      selectEditPostProp ? selectEditPostProp(postId, postDetail) : handleEditPost(postId, postDetail);
+      selectEditPostProp
+        ? selectEditPostProp(postId, postDetail)
+        : handleEditPost(postId, postDetail);
       LMFeedAnalytics.track(
         Events.POST_EDITED,
         new Map<string, string>([
@@ -146,6 +148,7 @@ const PostsListComponent = ({ topics }: any) => {
       );
     }
   };
+  const currentVideoId = useAppSelector((state) => state.feed.currentIdOfVideo);
 
   return (
     <View style={{ flex: 1 }}>
@@ -285,7 +288,10 @@ const PostsListComponent = ({ topics }: any) => {
       {showReportModal && (
         <ReportModal
           visible={showReportModal}
-          closeModal={() => setShowReportModal(false)}
+          closeModal={() => {
+            dispatch(autoPlayPostVideo(currentVideoId));
+            setShowReportModal(false);
+          }}
           reportType={POST_TYPE}
           postDetail={getPostDetail()}
         />
