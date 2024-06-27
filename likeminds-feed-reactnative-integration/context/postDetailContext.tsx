@@ -90,6 +90,7 @@ import { Keys } from "../enums/Keys";
 import { getPostType } from "../utils/analytics";
 import { LMLoader } from "../components";
 import Layout from "../constants/Layout";
+import { SET_REPORT_MODEL_STATUS_IN_POST_DETAIL } from "../store/types/types";
 
 interface PostDetailContextProps {
   children: ReactNode;
@@ -441,6 +442,10 @@ export const PostDetailContextProvider = ({
 
   // this function handles the functionality on the report option of post
   const handleReportPost = async () => {
+    dispatch({
+      type: SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
+      body: { reportModalStatus: true },
+    });
     dispatch(autoPlayPostVideo(""));
     setShowReportModal(true);
   };
