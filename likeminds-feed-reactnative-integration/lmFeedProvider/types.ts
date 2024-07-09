@@ -1,5 +1,5 @@
 import React from "react";
-import { LMFeedClient } from "@likeminds.community/feed-rn-beta";
+import { LMFeedClient } from "@likeminds.community/feed-rn";
 import { ViewStyle, TextStyle, ImageProps, ImageStyle } from "react-native";
 import { LMHeaderProps, LMLoaderProps } from "../components";
 import {

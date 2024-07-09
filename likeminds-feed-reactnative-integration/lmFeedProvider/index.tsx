@@ -12,7 +12,7 @@ import {
   InitiateUserRequest,
   LMFeedClient,
   ValidateUserRequest,
-} from "@likeminds.community/feed-rn-beta";
+} from "@likeminds.community/feed-rn";
 import { LMFeedProviderProps, ThemeContextProps } from "./types";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import {
@@ -115,10 +115,8 @@ export const LMFeedProvider = ({
       if (initiateResponse !== undefined && initiateResponse !== null) {
         // calling getMemberState API
         await dispatch(getMemberState());
-        await myClient.setAccessTokenInLocalStorage(
-          initiateResponse?.accessToken
-        );
-        await myClient.setRefreshTokenInLocalStorage(
+        await myClient.setTokens(
+          initiateResponse?.accessToken,
           initiateResponse?.refreshToken
         );
         setIsInitiated(true);

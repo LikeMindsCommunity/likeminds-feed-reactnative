@@ -58,7 +58,7 @@ import {
 import {initiateAPI} from './registerDeviceApi';
 import {carouselScreenStyle, createPollStyle, pollStyle} from './styles';
 import CreatePollScreenWrapper from './feedScreen/createPollScreenWrapper';
-import {LMFeedClient} from '@likeminds.community/feed-rn-beta';
+import {LMFeedClient} from '@likeminds.community/feed-rn';
 import {LoginSchemaRO} from './login/loginSchemaRO';
 
 class CustomCallbacks implements LMFeedCallbacks, LMCarouselScreenCallbacks {
@@ -98,8 +98,7 @@ const App = () => {
   useEffect(() => {
     async function getTokens() {
       const res: any = initMyClient();
-      const accessToken = await res?.getAccessTokenFromLocalStorage();
-      const refreshToken = await res?.getRefreshTokenFromLocalStorage();
+      const {accessToken, refreshToken} = await res?.getTokens();
       if (accessToken && refreshToken) {
         setAccessToken(accessToken);
         setRefreshToken(refreshToken);
@@ -257,7 +256,7 @@ const App = () => {
       console.log('onRefreshTokenExpired called');
     },
   );
-  
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

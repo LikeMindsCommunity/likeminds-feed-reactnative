@@ -9,8 +9,8 @@ import {
   IPost,
   IUser,
   Like,
-  GetPostLikesResponse
-} from "@likeminds.community/feed-rn-beta";
+  GetPostLikesResponse,
+} from "@likeminds.community/feed-rn";
 import {
   DocumentMetaData,
   ImageVideoMetaData,
@@ -22,7 +22,7 @@ import {
   POLL_ATTACHMENT_TYPE,
   VIDEO_ATTACHMENT_TYPE,
 } from "../constants/Strings";
-import { IComment } from "@likeminds.community/feed-rn-beta";
+import { IComment } from "@likeminds.community/feed-rn";
 import {
   LMActivityEntityUI,
   LMActivityUI,

@@ -1,4 +1,4 @@
-import { LMFeedClient } from "@likeminds.community/feed-rn-beta";
+import { LMFeedClient } from "@likeminds.community/feed-rn";
 
 export const initMyClient = () => {
   const lmFeedClient = LMFeedClient.Builder()

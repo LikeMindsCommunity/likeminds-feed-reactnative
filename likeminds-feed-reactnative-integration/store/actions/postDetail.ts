@@ -45,7 +45,7 @@ import {
   GetTaggingListRequest,
   LikeCommentRequest,
   ReplyCommentRequest,
-} from "@likeminds.community/feed-rn-beta";
+} from "@likeminds.community/feed-rn";
 
 interface EditCommentState {
   commentId: string;

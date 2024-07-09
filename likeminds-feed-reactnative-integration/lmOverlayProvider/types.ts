@@ -1,5 +1,5 @@
 import React from "react";
-import { LMFeedClient } from "@likeminds.community/feed-rn-beta";
+import { LMFeedClient } from "@likeminds.community/feed-rn";
 import {
   CarouselScreenStyle,
   CreatePollStyle,
@@ -34,6 +34,6 @@ export interface LMOverlayProviderProps {
   topicsStyle?: TopicsStyle;
   pollStyle?: PollStyle;
   createPollStyle?: CreatePollStyle;
-  callbackClass: LMCoreCallbacks
+  callbackClass: LMCoreCallbacks;
   carouselScreenStyle?: CarouselScreenStyle;
 }
