@@ -219,7 +219,7 @@ const UniversalFeedComponent = () => {
       pageSize: 10,
     } as any);
     const topics: any = apiRes?.data?.topics;
-    if (topics?.length > 0) {
+    if (topics && topics?.length > 0) {
       setShowTopics(true);
       const topicsObject = {};
       topics.forEach((topic) => {
@@ -443,7 +443,7 @@ const UniversalFeedComponent = () => {
         <View style={styles.postUploadingView}>
           <View style={styles.uploadingPostContentView}>
             {/* post uploading media preview */}
-            {uploadingMediaAttachmentType === IMAGE_ATTACHMENT_TYPE && (
+            {/* {uploadingMediaAttachmentType === IMAGE_ATTACHMENT_TYPE && (
               <LMImage
                 imageUrl={uploadingMediaAttachment}
                 imageStyle={styles.uploadingImageStyle}
@@ -471,7 +471,7 @@ const UniversalFeedComponent = () => {
                 height={styles.uploadingPdfIconSize.height}
                 width={styles.uploadingPdfIconSize.width}
               />
-            )}
+            )} */}
             <Text style={styles.postUploadingText}>{POST_UPLOADING}</Text>
           </View>
           {/* progress loader */}

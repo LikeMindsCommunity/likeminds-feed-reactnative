@@ -1,5 +1,5 @@
-import { View, Text, Image, StyleSheet } from "react-native";
-import React, { useState } from "react";
+import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
+import React, { useEffect, useState } from "react";
 import { LMImageProps } from "./types";
 import { MEDIA_FETCH_ERROR } from "../../../constants/Strings";
 import LMLoader from "../../LMLoader";
@@ -23,19 +23,32 @@ const LMImage = React.memo(
   }: LMImageProps) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
+    const [heightCalculated, setHeightCalculated] = useState(0);
+    const [desiredAspectRatio, setDesiredAspectRatio] = useState(0);
+
+    useEffect(() => {
+      Image.getSize(
+        imageUrl,
+        (width, height) => {
+          const ScreenWidth = Dimensions.get("window").width;
+          const desiredAspectRatio = width > height ? 1.91 : 0.8;
+          const heightCalculated = ScreenWidth * (1 / desiredAspectRatio);
+          setHeightCalculated(heightCalculated);
+          setDesiredAspectRatio(desiredAspectRatio);
+        },
+        (error) => {
+          console.error("Error getting image size:", error);
+        }
+      );
+    }, [imageUrl]);
+
     return (
       <View
         style={StyleSheet.flatten([defaultStyles.imageContainer, boxStyle])}
       >
         {/* this renders the loader until the image renders */}
         {loading ? (
-          <View
-            style={[
-              defaultStyles.imageStyle,
-              defaultStyles.loaderView,
-              imageStyle,
-            ]}
-          >
+          <View style={[defaultStyles.loaderView, imageStyle]}>
             {loaderWidget ? loaderWidget : <LMLoader />}
           </View>
         ) : null}
@@ -47,10 +60,9 @@ const LMImage = React.memo(
           style={StyleSheet.flatten([
             imageStyle,
             {
-              width: width ? width : defaultStyles.imageStyle.width,
-              height: height ? height : defaultStyles.imageStyle.height,
+              height: heightCalculated,
               resizeMode: boxFit ? boxFit : defaultStyles.imageStyle.resizeMode,
-              aspectRatio: aspectRatio ? aspectRatio : undefined,
+              aspectRatio: aspectRatio ? aspectRatio : desiredAspectRatio,
             },
           ])}
         />
@@ -58,8 +70,17 @@ const LMImage = React.memo(
         {showCancel && (
           <View style={defaultStyles.cancelButtonView}>
             {cancelButton ? (
-              <LMButton {...cancelButton}
-              onTap={onCancel ? () =>{onCancel(imageUrl); cancelButton?.onTap()} : () => null}  />
+              <LMButton
+                {...cancelButton}
+                onTap={
+                  onCancel
+                    ? () => {
+                        onCancel(imageUrl);
+                        cancelButton?.onTap();
+                      }
+                    : () => null
+                }
+              />
             ) : (
               <LMButton
                 onTap={onCancel ? () => onCancel(imageUrl) : () => null}

@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
   uploadingVideoStyle: { backgroundColor: STYLES.$BACKGROUND_COLORS.LIGHT },
   uploadingImageStyle: { backgroundColor: STYLES.$BACKGROUND_COLORS.LIGHT },
   uploadingDocumentStyle: { marginRight: 2, resizeMode: "contain" },
-  postUploadingText: { color: "#333333" },
+  postUploadingText: { color: "#333333", marginLeft: 10 },
   newPostButtonView: {
     backgroundColor: "#5046E5",
     flexDirection: "row",

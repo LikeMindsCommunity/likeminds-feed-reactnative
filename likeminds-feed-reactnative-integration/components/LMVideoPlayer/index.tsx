@@ -157,8 +157,7 @@ function LMVideoPlayer({ url }) {
                 justifyContent: "space-between",
                 position: "absolute",
                 bottom: 0,
-                paddingLeft: 10,
-                paddingRight: 50,
+                paddingHorizontal: 10, // Combine left and right padding for consistency
                 alignItems: "center",
               }}
             >
@@ -166,7 +165,7 @@ function LMVideoPlayer({ url }) {
                 {format(progress.currentTime)}
               </Text>
               <Slider
-                style={{ width: "80%", height: 40, marginHorizontal: 5 }}
+                style={{ flex: 1, height: 40, marginHorizontal: 5 }} // Use flex to dynamically allocate space
                 minimumValue={0}
                 maximumValue={progress.seekableDuration}
                 minimumTrackTintColor={
@@ -228,6 +227,7 @@ function LMVideoPlayer({ url }) {
                 />
               </TouchableOpacity>
             </View>
+
             <View
               style={{
                 width: "100%",

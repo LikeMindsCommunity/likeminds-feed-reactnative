@@ -19,8 +19,14 @@ import { useLMFeedStyles } from "../../../lmFeedProvider";
 import { useAppDispatch } from "../../../store/store";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { STATUS_BAR_STYLE } from "../../../store/types/types";
-import { CAROUSEL_SCREEN } from "../../../constants/screenNames";
+import {
+  SET_FLOW_TO_CAROUSEL_SCREEN,
+  STATUS_BAR_STYLE,
+} from "../../../store/types/types";
+import {
+  CAROUSEL_SCREEN,
+  UNIVERSAL_FEED,
+} from "../../../constants/screenNames";
 import STYLES from "../../../constants/Styles";
 import LMPostPollView from "../../LMPoll/LMPostPollView";
 
@@ -32,6 +38,8 @@ const LMPostMedia = React.memo(() => {
 
   const navigation = useNavigation<StackNavigationProp<any>>();
   const dispatch = useAppDispatch();
+  let routes = navigation.getState()?.routes;
+  let previousRoute = routes[routes?.length - 2];
   // this handles the rendering of posts with single attachment
   const renderSingleAttachment = () => {
     switch (post?.attachments && post?.attachments[0]?.attachmentType) {
@@ -46,6 +54,10 @@ const LMPostMedia = React.memo(() => {
               dispatch({
                 type: STATUS_BAR_STYLE,
                 body: { color: STYLES.$STATUS_BAR_STYLE["light-content"] },
+              });
+              dispatch({
+                type: SET_FLOW_TO_CAROUSEL_SCREEN,
+                body: { flowToCarouselScreen: true },
               });
             }}
           >
@@ -74,6 +86,10 @@ const LMPostMedia = React.memo(() => {
                 type: STATUS_BAR_STYLE,
                 body: { color: STYLES.$STATUS_BAR_STYLE["light-content"] },
               });
+              dispatch({
+                type: SET_FLOW_TO_CAROUSEL_SCREEN,
+                body: { flowToCarouselScreen: true },
+              });
             }}
           >
             <LMVideo
@@ -91,7 +107,11 @@ const LMPostMedia = React.memo(() => {
                   ? mediaProps?.videoProps?.autoPlay
                   : true
               }
-              videoInFeed={mediaProps?.videoProps?.videoInFeed}
+              // videoInFeed={mediaProps?.videoProps?.videoInFeed}
+              videoInFeed={
+                previousRoute?.name === UNIVERSAL_FEED ? false : true
+              }
+              videoInCarousel={false}
               showMuteUnmute={true}
             />
           </TouchableOpacity>
@@ -177,7 +197,8 @@ const LMPostMedia = React.memo(() => {
                 mediaProps?.videoProps?.autoPlay != undefined
                   ? mediaProps?.videoProps?.autoPlay
                   : true,
-              videoInFeed: mediaProps?.videoProps?.videoInFeed,
+              videoInFeed:
+                previousRoute?.name === UNIVERSAL_FEED ? false : true,
               postId: post?.id,
             }}
           />

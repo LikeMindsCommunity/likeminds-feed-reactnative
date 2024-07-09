@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Image,
+  Dimensions,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 // @ts-ignore the lib do not have TS declarations yet
@@ -16,6 +17,13 @@ import { LMButton } from "../../../uiComponents";
 import { defaultStyles } from "./styles";
 import { useAppDispatch, useAppSelector } from "../../../store/store";
 import { SET_MUTED_STATE } from "../../../store/types/types";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import {
+  CREATE_POST,
+  POST_DETAIL,
+  UNIVERSAL_FEED,
+} from "../../../constants/screenNames";
 
 const LMVideo = React.memo(
   ({
@@ -51,10 +59,33 @@ const LMVideo = React.memo(
     );
     const player = useRef<VideoRef>(null);
     const [paused, setPaused] = useState(true);
+    const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+    const [heightCalculated, setHeightCalculated] = useState(0);
+    const [desiredAspectRatio, setDesiredAspectRatio] = useState(0);
 
     const currentVideoId = useAppSelector(
       (state) => state.feed.autoPlayVideoPostId
     );
+
+    const pauseStatus = useAppSelector((state) => state.feed.pauseStatus);
+    const flowToCarouselScreen = useAppSelector(
+      (state) => state.feed.flowToCarouselScreen
+    );
+
+    const flowToCreatePostScreen = useAppSelector(
+      (state) => state.feed.flowToCreatePostScreen
+    );
+    const flowFromCarouselScreen = useAppSelector(
+      (state) => state.feed.flowFromCarouselScreen
+    );
+    const isReportModalOpened = useAppSelector(
+      (state) => state.feed.reportModalOpenedInPostDetail
+    );
+
+    const navigation = useNavigation<StackNavigationProp<any>>();
+    let routes = navigation.getState()?.routes;
+    let previousRoute = routes[routes?.length - 2];
+    let currentRoute = routes[routes.length - 1];
 
     const [mute, setMute] = useState(false);
     const dispatch = useAppDispatch();
@@ -63,13 +94,28 @@ const LMVideo = React.memo(
       setMute(muteStatus);
     }, [muteStatus]);
 
+    const onLoad = (data) => {
+      const { width, height } = data.naturalSize;
+      console.log("width", width);
+      console.log("height", height);
+      setDimensions({ width, height });
+    };
+
+    useEffect(() => {
+      const ScreenWidth = Dimensions.get("window").width;
+      const desiredAspectRatio = width > height ? 1.91 : 0.8;
+      const heightCalculated = ScreenWidth * (1 / desiredAspectRatio);
+      setHeightCalculated(heightCalculated);
+      setDesiredAspectRatio(desiredAspectRatio);
+    }, [dimensions]);
+
     return (
       <View
         style={StyleSheet.flatten([defaultStyles.videoContainer, boxStyle])}
       >
         {/* this renders the loader until the first picture of video is displayed */}
         {loading ? (
-          <View style={[defaultStyles.videoStyle, defaultStyles.loaderView]}>
+          <View style={[defaultStyles.loaderView, videoStyle]}>
             {loaderWidget ? loaderWidget : <LMLoader />}
           </View>
         ) : null}
@@ -91,7 +137,8 @@ const LMVideo = React.memo(
             ref={player}
             source={{ uri: videoUrl }}
             key={videoUrl}
-            onLoad={() => {
+            onLoad={(data) => {
+              onLoad(data);
               player.current.seek(0); // this will set first frame of video as thumbnail
               setLoading(false);
             }}
@@ -105,33 +152,38 @@ const LMVideo = React.memo(
             style={StyleSheet.flatten([
               videoStyle,
               {
-                width: width ? width : defaultStyles.videoStyle.width,
-                height: height ? height : defaultStyles.videoStyle.height,
-                aspectRatio: aspectRatio ? aspectRatio : undefined,
+                height: heightCalculated,
+                aspectRatio: aspectRatio ? aspectRatio : desiredAspectRatio,
               },
             ])}
             paused={
-              // Will work on below commented code while working on autoplay ticket
-              // videoInFeed
-              //   ? autoPlay
-              //     ? currentVideoId === postId
-              //       ? videoInCarousel
-              //         ? currentVideoInCarousel === videoUrl
-              //           ? false
-              //           : true
-              //         : false
-              //       : true
-              //     : playingStatus
-              //   : autoPlay
-              //   ? videoInCarousel
-              //     ? currentVideoInCarousel === videoUrl
-              //       ? false
-              //       : true
-              //     : false
-              //   : playingStatus
-              paused
+              flowFromCarouselScreen && currentVideoId === postId
+                ? false
+                : flowToCreatePostScreen
+                ? true
+                : pauseStatus === true &&
+                  previousRoute?.name === UNIVERSAL_FEED &&
+                  currentRoute?.name !== CREATE_POST
+                ? pauseStatus
+                : videoInFeed
+                ? autoPlay
+                  ? currentVideoId === postId
+                    ? videoInCarousel
+                      ? currentVideoInCarousel === videoUrl
+                        ? false
+                        : true
+                      : false
+                    : true
+                  : playingStatus
+                : autoPlay
+                ? videoInCarousel
+                  ? currentVideoInCarousel === videoUrl
+                    ? false
+                    : true
+                  : false
+                : playingStatus
             } // handles the auto play/pause functionality
-            muted={mute}
+            muted={isReportModalOpened || flowToCarouselScreen ? true : mute}
           />
         </>
         {/* this renders the cancel button */}
@@ -234,7 +286,7 @@ const LMVideo = React.memo(
           </TouchableOpacity>
         )}
 
-        {showPlayPause && (
+        {showPlayPause && !autoPlay && (
           <View
             style={{
               flexDirection: "row",
