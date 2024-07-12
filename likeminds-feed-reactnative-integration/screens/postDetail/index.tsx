@@ -228,6 +228,12 @@ const PostDetailComponent = React.memo(() => {
   const customCommentItemStyle: any = postDetailStyle?.commentItemStyle;
   const customReplyingViewStyle: any = postDetailStyle?.replyingViewStyle;
   const customCommentTextInput: any = postDetailStyle?.commentTextInputStyle;
+  const loggedInUserMemberRights = useAppSelector(
+    (state) => state.login.memberRights
+  );
+  const commentingRight = loggedInUserMemberRights.find(
+    (item) => item.state === 10
+  );
 
   // this function returns the id of the item selected from menu list and handles further functionalities accordingly for comment
   const onCommentMenuItemSelect = async (
@@ -322,7 +328,6 @@ const PostDetailComponent = React.memo(() => {
       "hardwareBackPress",
       () => {
         navigation.goBack();
-        dispatch(clearPostDetail());
         return true;
       }
     );
@@ -802,7 +807,7 @@ const PostDetailComponent = React.memo(() => {
           </View>
         ) : null}
         {/* input field */}
-        {postDetail?.id && (
+        {postDetail?.id && commentingRight?.isSelected ? (
           <LMInputText
             {...customCommentTextInput}
             inputText={commentToAdd}
@@ -888,6 +893,12 @@ const PostDetailComponent = React.memo(() => {
               },
             ]}
           />
+        ) : (
+          <View style={styles.textContainer}>
+            <Text style={styles.disabledText}>
+              You don't have permission to comment
+            </Text>
+          </View>
         )}
       </KeyboardAvoidingView>
 

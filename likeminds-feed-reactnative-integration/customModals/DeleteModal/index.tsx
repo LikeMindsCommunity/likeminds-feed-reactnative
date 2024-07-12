@@ -281,7 +281,7 @@ const DeleteModal = ({
                     </Text>
 
                     {/* delete reason selection section */}
-                    {loggedInUser.userUniqueId !== postDetail?.userId &&
+                    {loggedInUser.userUniqueId !== postDetail?.uuid &&
                       loggedInUser.userUniqueId !== commentDetail?.userId && (
                         <TouchableOpacity
                           activeOpacity={0.8}

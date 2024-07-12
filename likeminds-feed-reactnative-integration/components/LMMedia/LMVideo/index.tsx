@@ -96,8 +96,6 @@ const LMVideo = React.memo(
 
     const onLoad = (data) => {
       const { width, height } = data.naturalSize;
-      console.log("width", width);
-      console.log("height", height);
       setDimensions({ width, height });
     };
 

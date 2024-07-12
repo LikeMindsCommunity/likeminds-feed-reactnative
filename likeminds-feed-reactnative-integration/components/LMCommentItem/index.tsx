@@ -20,6 +20,7 @@ import { LMCommentUI } from "../../models";
 import { styles } from "./styles";
 import decode from "../../utils/decodeMentions";
 import { timeStamp } from "../../utils";
+import { useAppSelector } from "../../store/store";
 
 const LMCommentItem = React.memo(
   ({
@@ -54,6 +55,12 @@ const LMCommentItem = React.memo(
     const [repliesArray, setRepliesArray] = useState<LMCommentUI[]>([]);
     const [replyPageNumber, setReplyPageNumber] = useState(2);
     const customLikeIcon = likeIconButton?.icon;
+    const loggedInUserMemberRights = useAppSelector(
+      (state) => state.login.memberRights
+    );
+    const commentingRight = loggedInUserMemberRights.find(
+      (item) => item.state === 10
+    );
 
     // this handles the show more functionality
     const onTextLayout = (event) => {
@@ -250,15 +257,11 @@ const LMCommentItem = React.memo(
                 <LMButton
                   {...replyTextProps}
                   text={{
-                    children: replyTextProps ? (
-                      replyTextProps.text?.children ? (
-                        replyTextProps.text.children
-                      ) : (
-                        <Text>Reply</Text>
-                      )
-                    ) : (
-                      <Text>Reply</Text>
-                    ),
+                    children: replyTextProps
+                      ? replyTextProps.text?.children
+                        ? replyTextProps.text.children
+                        : commentingRight?.isSelected && <Text>Reply</Text>
+                      : commentingRight?.isSelected && <Text>Reply</Text>,
                     textStyle: StyleSheet.flatten([
                       { fontSize: 13, color: "#0F1E3D66" },
                       replyTextProps?.text?.textStyle,
@@ -296,10 +299,13 @@ const LMCommentItem = React.memo(
                       }}
                       text={{
                         children:
-                          comment.repliesCount > 1 ? (
+                          comment.repliesCount > 1 &&
+                          commentingRight?.isSelected ? (
                             <Text>{comment.repliesCount} Replies</Text>
                           ) : (
-                            <Text>{comment.repliesCount} Reply</Text>
+                            commentingRight?.isSelected && (
+                              <Text>{comment.repliesCount} Reply</Text>
+                            )
                           ),
                         textStyle: StyleSheet.flatten([
                           { fontSize: 13, color: "#5046E5" },

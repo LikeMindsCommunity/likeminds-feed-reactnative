@@ -34,6 +34,7 @@ import {
   SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
   SET_FLOW_TO_CREATE_POST_SCREEN,
   SET_FLOW_TO_CAROUSEL_SCREEN,
+  SET_NOTIFICATION_COUNT,
 } from "../types/types";
 import { LMPostUI } from "../../models";
 import Styles from "../../constants/Styles";
@@ -54,6 +55,7 @@ export interface FeedReducerState {
   reportModalOpenedInPostDetail: boolean;
   flowToCreatePostScreen: boolean;
   flowToCarouselScreen: boolean;
+  notificationCount: number;
 }
 
 export const initialState: FeedReducerState = {
@@ -72,10 +74,15 @@ export const initialState: FeedReducerState = {
   reportModalOpenedInPostDetail: false,
   flowToCreatePostScreen: false,
   flowToCarouselScreen: false,
+  notificationCount: 0,
 };
 
 export const feedReducer = (state = initialState, action) => {
   switch (action.type) {
+    case SET_NOTIFICATION_COUNT: {
+      const { notificationCount } = action.body;
+      return { ...state, notificationCount: notificationCount };
+    }
     case SET_FLOW_TO_CAROUSEL_SCREEN: {
       const { flowToCarouselScreen } = action.body;
       return { ...state, flowToCarouselScreen: flowToCarouselScreen };
