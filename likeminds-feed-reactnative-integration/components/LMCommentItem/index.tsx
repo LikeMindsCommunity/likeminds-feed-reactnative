@@ -120,7 +120,9 @@ const LMCommentItem = React.memo(
       },
       commentId: string
     ) => {
-      onCommentOverflowMenuClick(event, commentId);
+      onCommentOverflowMenuClick
+        ? onCommentOverflowMenuClick(event, commentId)
+        : null;
       menuIcon && menuIcon?.onTap();
     };
 

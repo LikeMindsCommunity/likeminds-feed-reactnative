@@ -1,5 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {
+  LMCreatePostButton,
+  LMFilterTopics,
+  LMPostUploadIndicator,
+  LMUniversalFeedHeader,
+  PostsList,
   UniversalFeed,
   usePostListContext,
   useUniversalFeedContext,
@@ -8,6 +13,7 @@ import {getUniqueId} from 'react-native-device-info';
 import {Alert, Platform, Share} from 'react-native';
 import {validateRegisterDeviceRequest} from '../registerDeviceApi';
 import {pushAPI, token} from '../pushNotification';
+import {useAppSelector} from '@likeminds.community/feed-rn-core/store/store';
 
 const Feed = ({route}) => {
   const {
@@ -29,6 +35,7 @@ const Feed = ({route}) => {
     setSelectedPollOptions,
     submitPoll,
   } = useUniversalFeedContext();
+  const mappedTopics = useAppSelector(state => state.feed.mappedTopics);
   const [FCMToken, setFCMToken] = useState('');
 
   const customPostLike = postId => {
@@ -166,7 +173,13 @@ const Feed = ({route}) => {
       onSharePostClicked={id => customShareTap(id)}
       onSubmitButtonClicked={customPollSubmitButtonClick}
       onAddPollOptionsClicked={customAddPollOptionsClick}
-      onPollOptionClicked={customPollOptionClicked}></UniversalFeed>
+      onPollOptionClicked={customPollOptionClicked}>
+      <LMUniversalFeedHeader />
+      <LMFilterTopics />
+      <LMPostUploadIndicator />
+      <PostsList items={mappedTopics} />
+      <LMCreatePostButton />
+    </UniversalFeed>
   );
 };
 
