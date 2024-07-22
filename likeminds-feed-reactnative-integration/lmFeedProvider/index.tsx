@@ -53,11 +53,11 @@ export const useLMFeedStyles = () => {
 export const LMFeedProvider = ({
   myClient,
   children,
-  accessToken,
-  refreshToken,
   apiKey,
   userName,
   userUniqueId,
+  accessToken,
+  refreshToken,
   lmFeedInterface,
   themeStyles,
   universalFeedStyle,

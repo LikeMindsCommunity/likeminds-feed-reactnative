@@ -18,11 +18,11 @@ import { LMCoreCallbacks } from "../setupFeed";
 export interface LMOverlayProviderProps {
   myClient: LMFeedClient;
   children: React.ReactNode;
-  accessToken?: string;
-  refreshToken?: string;
   apiKey?: string;
   userName?: string;
   userUniqueId?: string;
+  accessToken?: string;
+  refreshToken?: string;
   lmFeedInterface?: any;
   universalFeedStyle?: UniversalFeedStyleProps;
   postListStyle?: PostListStyleProps;

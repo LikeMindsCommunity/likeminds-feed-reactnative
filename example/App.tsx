@@ -91,7 +91,6 @@ const App = () => {
   const [isTrue, setIsTrue] = useState(true);
   const [accessToken, setAccessToken] = useState('');
   const [refreshToken, setRefreshToken] = useState('');
-  const [isUserData, setIsUserData] = useState(false);
 
   const loginSchemaArray: any = useQuery(LoginSchemaRO);
 
@@ -139,23 +138,6 @@ const App = () => {
       Credentials?.apiKey?.length > 0 ? Credentials?.apiKey : users?.apiKey,
     );
   }, [users, isTrue]);
-
-  useEffect(() => {
-    async function setDataInLocalStorage() {
-      await myClient?.setApiKeyInLocalStorage(apiKey);
-      await myClient?.setUserInLocalStorage(
-        JSON.stringify({
-          apiKey: apiKey,
-          userName: userName,
-          userUniqueId: userUniqueID,
-        }),
-      );
-      setIsUserData(true);
-    }
-    if (apiKey) {
-      setDataInLocalStorage();
-    }
-  }, [apiKey, myClient]);
 
   // custom style of new post button
   const regex = /post_id=([^&]+)/;
@@ -248,6 +230,7 @@ const App = () => {
       isMounted = false;
     };
   }, []);
+
   const callbackClass = new LMCoreCallbacks(
     (a: string, b: string) => {
       console.log(`Testing ${a} and ${b}`);
@@ -261,13 +244,13 @@ const App = () => {
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{flex: 1}}>
-      {userName && userUniqueID && apiKey && myClient && isUserData ? (
+      {userName && userUniqueID && apiKey && myClient ? (
         <LMOverlayProvider
           myClient={myClient}
-          accessToken={accessToken}
-          refreshToken={refreshToken}
           apiKey={apiKey}
           userName={userName}
+          accessToken={accessToken}
+          refreshToken={refreshToken}
           userUniqueId={userUniqueID}
           lmFeedInterface={lmFeedInterface}
           callbackClass={callbackClass}>
