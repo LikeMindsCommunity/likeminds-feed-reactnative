@@ -14,7 +14,7 @@ import {
 import {
   InitiateUserRequest,
   ValidateUserRequest,
-} from "@likeminds.community/feed-rn-beta";
+} from "@likeminds.community/feed-rn";
 import { Client } from "../../client";
 
 // validateUser API action

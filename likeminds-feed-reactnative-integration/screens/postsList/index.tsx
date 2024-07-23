@@ -45,6 +45,7 @@ import { Events } from "../../enums/Events";
 import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Keys } from "../../enums/Keys";
 import { getPostType } from "../../utils/analytics";
+import { SET_FLOW_TO_POST_DETAIL_SCREEN } from "../../store/types/types";
 
 const PostsList = ({ route, children, items }: any) => {
   const { navigation }: UniversalFeedContextValues = useUniversalFeedContext();
@@ -181,6 +182,10 @@ const PostsListComponent = ({ topics }: any) => {
                     style={{ backgroundColor: "#e0e0e0" }}
                     onPress={() => {
                       dispatch(clearPostDetail() as any);
+                      dispatch({
+                        type: SET_FLOW_TO_POST_DETAIL_SCREEN,
+                        body: { flowToPostDetailScreen: true },
+                      });
                       navigation.navigate(POST_DETAIL, [
                         item?.id,
                         NAVIGATED_FROM_POST,

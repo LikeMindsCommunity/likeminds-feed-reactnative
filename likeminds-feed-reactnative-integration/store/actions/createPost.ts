@@ -17,7 +17,7 @@ import {
   AddPostRequest,
   DecodeURLRequest,
   EditPostRequest,
-} from "@likeminds.community/feed-rn-beta";
+} from "@likeminds.community/feed-rn";
 
 // get decoded url data api action
 export const getDecodedUrl =

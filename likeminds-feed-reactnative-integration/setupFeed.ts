@@ -2,7 +2,7 @@ import {
   InitiateUserRequest,
   LMFeedClient,
   LMSDKCallbacks,
-} from "@likeminds.community/feed-rn-beta";
+} from "@likeminds.community/feed-rn";
 import { initMyClient } from "./setup";
 import { LoginSchemaRO } from "../example/login/loginSchemaRO";
 import { Client } from "./client";
@@ -54,8 +54,8 @@ export class LMSDKCallbacksImplementations extends LMSDKCallbacks {
           .setUserName(user.userName)
           .build()
       );
-      await Client.myClient.setAccessTokenInLocalStorage(response.accessToken);
-      await Client.myClient.setRefreshTokenInLocalStorage(
+      await Client.myClient.setTokens(
+        response.accessToken,
         response.refreshToken
       );
       return {
@@ -64,8 +64,8 @@ export class LMSDKCallbacksImplementations extends LMSDKCallbacks {
       };
     } else {
       const response = await this.lmCoreCallbacks.onRefreshTokenExpired();
-      await Client.myClient.setAccessTokenInLocalStorage(response.accessToken);
-      await Client.myClient.setRefreshTokenInLocalStorage(
+      await Client.myClient.setTokens(
+        response.accessToken,
         response.refreshToken
       );
       return {

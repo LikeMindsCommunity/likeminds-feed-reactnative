@@ -12,7 +12,7 @@ import styles from "./styles";
 import {
   DeleteCommentRequest,
   DeletePostRequest,
-} from "@likeminds.community/feed-rn-beta";
+} from "@likeminds.community/feed-rn";
 import DeleteReasonsModal from "../DeleteReasonsModal";
 import {
   COMMENT_DELETE,
@@ -42,6 +42,7 @@ import { Events } from "../../enums/Events";
 import { Keys } from "../../enums/Keys";
 import { getPostType } from "../../utils/analytics";
 import { UNIVERSAL_FEED } from "../../constants/screenNames";
+import { Client } from "../../client";
 
 // delete modal's props
 interface DeleteModalProps {
@@ -76,7 +77,7 @@ const DeleteModal = ({
 
   // this function calls the delete post api
   const postDelete = async () => {
-    if (!deletionReason && loggedInUser.userUniqueId !== postDetail?.userId) {
+    if (!deletionReason && loggedInUser.userUniqueId !== postDetail?.uuid) {
       showToast();
     } else if (deletionReason === "Others" && otherReason === "") {
       showToast();
@@ -87,17 +88,15 @@ const DeleteModal = ({
       };
       displayModal(false);
       dispatch(deletePostStateHandler(payload.postId));
-      const deletePostResponse = await dispatch(
-        deletePost(
-          DeletePostRequest.builder()
-            .setdeleteReason(payload.deleteReason)
-            .setpostId(payload.postId)
-            .build(),
-          false
-        )
+      const deletePostPayload = DeletePostRequest.builder()
+        .setdeleteReason(payload.deleteReason)
+        .setpostId(payload.postId)
+        .build();
+      const deletePostResponse = await Client.myClient.deletePost(
+        deletePostPayload
       );
       // toast message action
-      if (deletePostResponse !== undefined) {
+      if (deletePostResponse?.success == true) {
         LMFeedAnalytics.track(
           Events.POST_DELETED,
           new Map<string, string>([
@@ -271,7 +270,9 @@ const DeleteModal = ({
                 onPress={() => displayModal(false)}
               >
                 {/* toast component */}
-                <Toast config={toastConfig} />
+                {loggedInUser.userUniqueId !== postDetail?.uuid && (
+                  <Toast config={toastConfig} />
+                )}
                 {/* main modal section */}
                 <TouchableWithoutFeedback>
                   <View style={styles.modalContainer}>
@@ -281,7 +282,7 @@ const DeleteModal = ({
                     </Text>
 
                     {/* delete reason selection section */}
-                    {loggedInUser.userUniqueId !== postDetail?.userId &&
+                    {loggedInUser.userUniqueId !== postDetail?.uuid &&
                       loggedInUser.userUniqueId !== commentDetail?.userId && (
                         <TouchableOpacity
                           activeOpacity={0.8}

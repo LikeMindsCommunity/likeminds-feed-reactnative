@@ -145,7 +145,6 @@ const UniversalFeedComponent = () => {
     uploadingMediaAttachment,
     uploadingMediaAttachmentType,
     newPostButtonClick,
-    unreadNotificationCount,
     onTapNotificationBell,
   }: UniversalFeedContextValues = useUniversalFeedContext();
   const myClient = Client.myClient;
@@ -156,13 +155,17 @@ const UniversalFeedComponent = () => {
   const { newPostButtonClickProps, onTapNotificationBellProp } =
     useUniversalFeedCustomisableMethodsContext();
   const [mappedTopics, setMappedTopics] = useState([] as any);
-  const [unreadNotifiCount, setUnreadNotifiCount] = useState(
-    unreadNotificationCount
+  const unreadNotificationCount = useAppSelector(
+    (state) => state.notification.activitiesCount
   );
+  const [unreadNotifiCount, setUnreadNotifiCount] = useState(0);
   const selectedTopics = useAppSelector(
     (state) => state.feed.selectedTopicsForUniversalFeedScreen
   );
   const topics = useAppSelector((state) => state.feed.topics);
+  const notificationCount = useAppSelector(
+    (state) => state.feed.notificationCount
+  );
 
   const allTopicPlaceholder = topicsStyle?.allTopicPlaceholder;
   const allTopicsStyle = topicsStyle?.allTopic;
@@ -170,11 +173,13 @@ const UniversalFeedComponent = () => {
   const crossIconStyle = topicsStyle?.crossIconStyle;
   const arrowDownStyle = topicsStyle?.arrowDownStyle;
 
-  const getUnreadCount = async () => {
-    const latestUnreadCount = await myClient?.getUnreadNotificationCount();
-    /* @ts-ignore */
-    setUnreadNotifiCount(parseInt(latestUnreadCount?.data?.count));
-  };
+  useEffect(() => {
+    setUnreadNotifiCount(notificationCount);
+  }, [notificationCount]);
+
+  useEffect(() => {
+    setUnreadNotifiCount(unreadNotificationCount);
+  }, [unreadNotificationCount]);
 
   useEffect(() => {
     // Create a new state array named mappedTopics
@@ -183,7 +188,6 @@ const UniversalFeedComponent = () => {
       name: topics[topicId]?.name || "Unknown", // Use optional chaining and provide a default name if not found
     }));
     setMappedTopics(filteredTopicArray);
-    getUnreadCount();
   }, [selectedTopics, topics]);
 
   const handleAllTopicPress = () => {

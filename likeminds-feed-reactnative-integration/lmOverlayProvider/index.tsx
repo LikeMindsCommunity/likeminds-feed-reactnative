@@ -8,11 +8,11 @@ import { LMCoreCallbacks, LMSDKCallbacksImplementations } from "../setupFeed";
 export const LMOverlayProvider: any = ({
   myClient,
   children,
-  accessToken,
-  refreshToken,
   apiKey,
   userName,
   userUniqueId,
+  accessToken,
+  refreshToken,
   lmFeedInterface,
   universalFeedStyle,
   postListStyle,
@@ -37,11 +37,11 @@ LMOverlayProviderProps) => {
     <ContextProvider>
       <LMFeedProvider
         myClient={myClient}
-        accessToken={accessToken}
-        refreshToken={refreshToken}
         apiKey={apiKey}
         userName={userName}
         userUniqueId={userUniqueId}
+        accessToken={accessToken}
+        refreshToken={refreshToken}
         universalFeedStyle={universalFeedStyle}
         postDetailStyle={postDetailStyle}
         postListStyle={postListStyle}
