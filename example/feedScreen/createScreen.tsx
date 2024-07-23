@@ -4,7 +4,7 @@ import {
   useCreatePostContext,
 } from '@likeminds.community/feed-rn-core';
 
-const CreateScreen = ({navigation}) => {
+const CreateScreen = () => {
   const {
     handleDocument,
     handleGallery,

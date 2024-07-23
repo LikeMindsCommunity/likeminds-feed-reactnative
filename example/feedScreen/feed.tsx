@@ -14,6 +14,8 @@ import {Alert, Platform, Share} from 'react-native';
 import {validateRegisterDeviceRequest} from '../registerDeviceApi';
 import {pushAPI, token} from '../pushNotification';
 import {useAppSelector} from '@likeminds.community/feed-rn-core/store/store';
+import FilterTopics from '../components/FilterTopics';
+import CreatePostButton from '../components/CreatePostButton';
 
 const Feed = ({route}) => {
   const {
@@ -175,10 +177,10 @@ const Feed = ({route}) => {
       onAddPollOptionsClicked={customAddPollOptionsClick}
       onPollOptionClicked={customPollOptionClicked}>
       <LMUniversalFeedHeader />
-      <LMFilterTopics />
+      <FilterTopics />
       <LMPostUploadIndicator />
       <PostsList items={mappedTopics} />
-      <LMCreatePostButton />
+      <CreatePostButton />
     </UniversalFeed>
   );
 };

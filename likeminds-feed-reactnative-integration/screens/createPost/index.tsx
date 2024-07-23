@@ -135,6 +135,9 @@ const CreatePost = ({
 const CreatePostComponent = () => {
   const dispatch = useAppDispatch();
   const LMFeedContextStyles = useLMFeedStyles();
+  const predefinedTopics = useAppSelector(
+    (state) => state.createPost.predefinedTopics
+  );
   const { postListStyle, createPostStyle, postDetailStyle, topicsStyle }: any =
     LMFeedContextStyles;
   const customTextInputStyle = createPostStyle?.createPostTextInputStyle;
@@ -221,7 +224,7 @@ const CreatePostComponent = () => {
       page: 1,
       pageSize: 10,
     } as any);
-    const topics = apiRes?.data?.topics;
+    const topics: any = apiRes?.data?.topics;
     if (topics?.length > 0) {
       setShowTopics(true);
     }
@@ -278,14 +281,14 @@ const CreatePostComponent = () => {
           allAttachment,
           formattedLinkAttachments,
           postContentText,
-          idValuesArray,
+          predefinedTopics ? [...predefinedTopics] : idValuesArray,
           poll
         )
       : onPostClick(
           allAttachment,
           formattedLinkAttachments,
           postContentText,
-          idValuesArray,
+          predefinedTopics ? [...predefinedTopics] : idValuesArray,
           poll
         );
     if (!postToEdit) {
@@ -352,7 +355,10 @@ const CreatePostComponent = () => {
       }
 
       if (showTopics) {
-        map.set(Keys.TOPICS, mappedTopics);
+        map.set(
+          Keys.TOPICS,
+          predefinedTopics ? predefinedTopics : mappedTopics
+        );
       } else {
         map.set(Keys.TOPICS, "");
       }
@@ -434,7 +440,9 @@ const CreatePostComponent = () => {
           />
         </View>
 
-        {mappedTopics.length > 0 && showTopics ? (
+        {mappedTopics.length > 0 &&
+        showTopics &&
+        !(predefinedTopics.length > 0) ? (
           <View
             style={{
               flexDirection: "row",
@@ -487,52 +495,50 @@ const CreatePostComponent = () => {
               </View>
             ))}
           </View>
-        ) : (
-          showTopics && (
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginLeft: Layout.normalize(15),
-                marginTop: Layout.normalize(15),
-              }}
-            >
-              <TouchableOpacity onPress={() => handleAllTopicPress()}>
-                <View
+        ) : showTopics && !(predefinedTopics.length > 0) ? (
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginLeft: Layout.normalize(15),
+              marginTop: Layout.normalize(15),
+            }}
+          >
+            <TouchableOpacity onPress={() => handleAllTopicPress()}>
+              <View
+                style={{
+                  paddingVertical: Layout.normalize(7),
+                  backgroundColor: "hsla(244, 75%, 59%, 0.1)",
+                  borderRadius: Layout.normalize(5),
+                  flexDirection: "row",
+                  alignItems: "center",
+                  paddingHorizontal: Layout.normalize(12),
+                }}
+              >
+                <Image
+                  source={require("../../assets/images/plusAdd_icon3x.png")}
                   style={{
-                    paddingVertical: Layout.normalize(7),
-                    backgroundColor: "hsla(244, 75%, 59%, 0.1)",
-                    borderRadius: Layout.normalize(5),
-                    flexDirection: "row",
-                    alignItems: "center",
-                    paddingHorizontal: Layout.normalize(12),
+                    tintColor: "#5046E5",
+                    width: Layout.normalize(15),
+                    height: Layout.normalize(15),
+                    marginRight: Layout.normalize(5), // Add margin to separate Image and Text
+                    ...(plusIconStyle !== undefined ? plusIconStyle : {}),
+                  }}
+                />
+                <Text
+                  style={{
+                    fontSize: Layout.normalize(16),
+                    color: "#5046E5",
                   }}
                 >
-                  <Image
-                    source={require("../../assets/images/plusAdd_icon3x.png")}
-                    style={{
-                      tintColor: "#5046E5",
-                      width: Layout.normalize(15),
-                      height: Layout.normalize(15),
-                      marginRight: Layout.normalize(5), // Add margin to separate Image and Text
-                      ...(plusIconStyle !== undefined ? plusIconStyle : {}),
-                    }}
-                  />
-                  <Text
-                    style={{
-                      fontSize: Layout.normalize(16),
-                      color: "#5046E5",
-                    }}
-                  >
-                    {selectTopicPlaceholder !== undefined
-                      ? selectTopicPlaceholder
-                      : "Select Topics"}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          )
-        )}
+                  {selectTopicPlaceholder !== undefined
+                    ? selectTopicPlaceholder
+                    : "Select Topics"}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        ) : null}
 
         {/* text input field */}
         <LMInputText
