@@ -58,6 +58,7 @@ import Layout from "../constants/Layout";
 import STYLES from "../constants/Styles";
 import { useUniversalFeedContext } from "../context/universalFeedContext";
 import { useIsFocused } from "@react-navigation/native";
+import { SET_CURRENT_ID_OF_VIDEO } from "../store/types/types";
 
 interface PostListContextProps {
   children: ReactNode;
@@ -162,6 +163,10 @@ export const PostListContextProvider = ({
   // handles the auto play/pause of video in viewport
   useEffect(() => {
     if (postInViewport && isFocus) {
+      dispatch({
+        type: SET_CURRENT_ID_OF_VIDEO,
+        body: { currentIdOfVideo: postInViewport },
+      });
       dispatch(autoPlayPostVideo(postInViewport));
     }
   }, [postInViewport, isFocus]);

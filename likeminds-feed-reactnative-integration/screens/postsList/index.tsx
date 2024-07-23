@@ -148,6 +148,7 @@ const PostsListComponent = ({ topics }: any) => {
       );
     }
   };
+  const currentVideoId = useAppSelector((state) => state.feed.currentIdOfVideo);
 
   return (
     <View style={{ flex: 1 }}>
@@ -294,7 +295,10 @@ const PostsListComponent = ({ topics }: any) => {
       {showReportModal && (
         <ReportModal
           visible={showReportModal}
-          closeModal={() => setShowReportModal(false)}
+          closeModal={() => {
+            dispatch(autoPlayPostVideo(currentVideoId));
+            setShowReportModal(false);
+          }}
           reportType={POST_TYPE}
           postDetail={getPostDetail()}
         />

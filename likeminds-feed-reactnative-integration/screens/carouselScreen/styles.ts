@@ -5,7 +5,7 @@ import Layout from "../../constants/Layout";
 const styles = StyleSheet.create({
   header: {
     display: "flex",
-    flex: 1,
+    flex: 0,
     top: Platform.OS === "ios" ? 50 : 20,
     justifyContent: "center",
     position: "absolute",
@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
     right: 0,
     zIndex: 1,
     opacity: 0.8,
+    backgroundColor: "black",
   },
   activityIndicatorContainer: {
     position: "absolute",
@@ -28,9 +29,10 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    flex: 1,
     paddingVertical: Layout.normalize(10),
-    marginTop: Layout.normalize(40),
+    paddingHorizontal: Layout.normalize(10),
+    width: "100%",
+    marginTop: Layout.normalize(10),
   },
   image: {
     width: Layout.window.width,

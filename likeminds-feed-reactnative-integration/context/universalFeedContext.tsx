@@ -48,6 +48,10 @@ import { useRoute } from "@react-navigation/native";
 import { SHOW_TOAST } from "../store/types/loader";
 import { Client } from "../client";
 import { PollMultiSelectState, PollType } from "../enums/Poll";
+import {
+  SET_FLOW_TO_CREATE_POST_SCREEN,
+  SET_PAUSED_STATUS,
+} from "../store/types/types";
 
 interface UniversalFeedContextProps {
   children: ReactNode;
@@ -257,23 +261,36 @@ export const UniversalFeedContextProvider = ({
   };
 
   // this handles the functionality of new post button
-  const newPostButtonClick = () => {
+  const newPostButtonClick = async () => {
     dispatch(autoPlayPostVideo(""));
-    showCreatePost
-      ? postUploading
-        ? dispatch(
-            showToastMessage({
-              isToast: true,
-              message: POST_UPLOAD_INPROGRESS,
-            })
-          )
-        : navigation.navigate(CREATE_POST)
-      : dispatch(
+
+    if (showCreatePost) {
+      if (postUploading) {
+        dispatch(
           showToastMessage({
             isToast: true,
-            message: CREATE_POST_PERMISSION,
+            message: POST_UPLOAD_INPROGRESS,
           })
         );
+      } else {
+        await dispatch({
+          type: SET_PAUSED_STATUS,
+          body: { paused: true },
+        });
+        await dispatch({
+          type: SET_FLOW_TO_CREATE_POST_SCREEN,
+          body: { flowToCreatePostScreen: true },
+        });
+        navigation.navigate(CREATE_POST);
+      }
+    } else {
+      dispatch(
+        showToastMessage({
+          isToast: true,
+          message: CREATE_POST_PERMISSION,
+        })
+      );
+    }
   };
 
   // this useEffect handles the execution of addPost api

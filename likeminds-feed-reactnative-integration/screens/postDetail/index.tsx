@@ -12,7 +12,7 @@ import {
   View,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import { POST_LIKES_LIST, UNIVERSAL_FEED } from "../../constants/screenNames";
+import { POST_LIKES_LIST } from "../../constants/screenNames";
 import {
   COMMENT_LIKES,
   COMMENT_TYPE,
@@ -32,8 +32,9 @@ import {
   replaceLastMention,
   routeToMentionConverter,
 } from "../../utils";
+import { autoPlayPostVideo } from "../../store/actions/feed";
 import { useLMFeedStyles } from "../../lmFeedProvider";
-import { useAppDispatch } from "../../store/store";
+import { useAppDispatch, useAppSelector } from "../../store/store";
 import { clearComments, clearPostDetail } from "../../store/actions/postDetail";
 import {
   PostDetailContextProvider,
@@ -58,6 +59,7 @@ import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Events } from "../../enums/Events";
 import { Keys } from "../../enums/Keys";
 import { PollCustomisableMethodsContextProvider } from "../../context/pollCustomisableCallback";
+import { SET_REPORT_MODEL_STATUS_IN_POST_DETAIL } from "../../store/types/types";
 
 interface PostDetailProps {
   children: React.ReactNode;
@@ -905,7 +907,13 @@ const PostDetailComponent = React.memo(() => {
       {showReportModal && (
         <ReportModal
           visible={showReportModal}
-          closeModal={() => setShowReportModal(false)}
+          closeModal={() => {
+            dispatch({
+              type: SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
+              body: { reportModalStatus: false },
+            });
+            setShowReportModal(false);
+          }}
           reportType={selectedMenuItemPostId ? POST_TYPE : COMMENT_TYPE}
           postDetail={postDetail}
           commentDetail={getCommentDetail(postDetail?.replies)?.commentDetail}
