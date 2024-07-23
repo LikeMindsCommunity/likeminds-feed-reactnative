@@ -213,6 +213,11 @@ const CreatePostComponent = () => {
   const route: any = useRoute();
   const post = route?.params?.post;
 
+  let isImage =
+    formattedMediaAttachments[0]?.attachmentType === IMAGE_ATTACHMENT_TYPE
+      ? true
+      : false;
+
   const getTopics = async () => {
     const apiRes = await myClient?.getTopics({
       isEnabled: null,
@@ -584,6 +589,7 @@ const CreatePostComponent = () => {
               {
                 height: userTaggingListHeight,
               },
+              allTags.length === 0 && { borderTopWidth: 0 },
               postDetailStyle?.userTaggingListStyle?.taggingListView,
             ]}
           >
@@ -866,8 +872,8 @@ const CreatePostComponent = () => {
               onTap={() => {
                 formattedMediaAttachments.length > 0
                   ? handleGalleryProp
-                    ? handleGalleryProp(SELECT_BOTH)
-                    : handleGallery(SELECT_BOTH)
+                    ? handleGalleryProp(isImage ? SELECT_IMAGE : SELECT_VIDEO)
+                    : handleGallery(isImage ? SELECT_IMAGE : SELECT_VIDEO)
                   : formattedDocumentAttachments.length > 0
                   ? handleDocumentProp
                     ? handleDocumentProp()

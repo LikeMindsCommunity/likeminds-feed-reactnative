@@ -377,7 +377,9 @@ export function convertPollMetaData(item: any): LMAttachmentUI {
       url: "",
       title: item?.title,
       expiryTime: item?.expiryTime,
-      options: convertPollOptionsMetaData(item?.options),
+      options: item?.options
+        ? convertPollOptionsMetaData(item?.options)
+        : undefined,
       multipleSelectState: item?.multipleSelectState,
       pollType: item?.pollType,
       multipleSelectNumber: item?.multipleSelectNumber,

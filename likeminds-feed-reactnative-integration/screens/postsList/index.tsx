@@ -245,6 +245,11 @@ const PostsListComponent = ({ topics }: any) => {
                               : onTapCommentCount(item?.id);
                           },
                         },
+                        shareButton: {
+                          onTap: () => {
+                            onSharePostClicked ? onSharePostClicked(item?.id) : {};
+                          },
+                        },
                       }}
                     />
                   </TouchableOpacity>
@@ -270,7 +275,9 @@ const PostsListComponent = ({ topics }: any) => {
           />
         ) : (
           <View style={[styles.noDataView, postListStyle?.noPostView]}>
-            <Text style={postListStyle?.noPostText}>No Post</Text>
+            <Text style={[{ color: "black" }, postListStyle?.noPostText]}>
+              No Post
+            </Text>
           </View>
         )
       ) : (

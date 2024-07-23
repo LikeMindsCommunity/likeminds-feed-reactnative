@@ -350,7 +350,7 @@ export const UniversalFeedContextProvider = ({
   }) {
     const item = poll?.attachments[0]?.attachmentMeta;
     try {
-      if (addOptionInputField.length === 0) {
+      if (addOptionInputField.trim().length === 0) {
         return;
       } else if (pollsArr.length >= 10) {
         setIsAddPollOptionModalVisible(false);
