@@ -58,7 +58,7 @@ import {
 import {initiateAPI} from './registerDeviceApi';
 import {carouselScreenStyle, createPollStyle, pollStyle} from './styles';
 import CreatePollScreenWrapper from './feedScreen/createPollScreenWrapper';
-import {LMFeedClient} from '@likeminds.community/feed-rn';
+import {LMFeedClient, InitiateUserRequest} from '@likeminds.community/feed-rn';
 import {LoginSchemaRO} from './login/loginSchemaRO';
 
 class CustomCallbacks implements LMFeedCallbacks, LMCarouselScreenCallbacks {
@@ -228,9 +228,23 @@ const App = () => {
       // when accessToken is expired then flow comes here
       console.log(`Testing ${a} and ${b}`);
     },
-    function () {
+    async function () {
       // here client should call the initiateApi and return accessToken and refreshToken
       console.log('onRefreshTokenExpired called');
+      const initiateUserRequest = InitiateUserRequest.builder()
+        .setUserName(userName)
+        .setApiKey(apiKey)
+        .setUUID(userUniqueID)
+        .build();
+      const initiateUserResponse = await myClient.initiateUser(
+        initiateUserRequest,
+      );
+      const accessToken = initiateUserResponse?.accessToken;
+      const refreshToken = initiateUserResponse?.refreshToken;
+      return {
+        accessToken,
+        refreshToken,
+      };
     },
   );
 
@@ -243,8 +257,12 @@ const App = () => {
           myClient={myClient}
           apiKey={apiKey}
           userName={userName}
-          accessToken={accessToken}
-          refreshToken={refreshToken}
+          // accessToken={
+          //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiMzRpcGNxMlBGZ0QyY3hHRFZXMWNpbjYzZE1GakRpNmtVZEIyaXViSWc0UEx6dVBpWVdvbHl3UzZpTFk4WkNnYlNaaHlpbTQ1cWorTWtCeVhVY3pnSVBDRjA0cTlpMGRXWWYvdnFNRWFkc2tkMm1PcUVrMFNaMDN3Z3hyRmhvR0ZMbWdaMzRDV1FnWTk4SFIwR2xrR0VNWVhLeHNabklXN291MEJyelJjeE9zTFBlR0cxMWNSYkd3enFzNTFkOEo5VEFzMzNQVlljbnVISjI5MWJUa1RyQUFyQmRkNTRsWjFwWnZHaFZNVnpoWThOMUFRWEFiTHoyS291OEZMQmZTQmRhR3BUZ2ZIUjRRMkxmZEUiLCJleHAiOjE3MjE3NDgxOTV9.QekU3B91zvBv3jeNqR7_elhFGqvmGYdn6CJxUeLkZxY'
+          // }
+          // refreshToken={
+          //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiNGhEeTV2VndtRXdGa3pZVmFFbUtYZDFjUEtKcVdQbnNPWlhSTkVFSlNXY04zbllXS3lUTFJEb1pvREtWZFB3Y1pkczJBemQreHdUS2pQbmw2QnZlc3lkWCtUci9ISXl3MC9BWWFQb0x0UWZpTGRxb3Z1Szk0NzVkVzdTZWhhZVdIeituWnErbko3TmRCZWxQOGN6am00TjZZbW9OZy9WQ3AwZ2FWc2RGaXFpR3R5RU05MUV3NlZjaGFqc2FpL3dacEliSy9YNDRmd2RxWVVMU2UxVHhKWm9hRkxQRCszdUtPNmNOelI1WGFQcnhhSmdZdWp2SnBMSGVIeWtVZ0gxbXhUQ1BTZ1NjckhMOUY2M3RCZz09IiwiZXhwIjoxNzIxNzQ4MjU1fQ.-DSI6AY-lInP6ho_qXCUnRT3LNjXHuUO5OwKHg9sQCE'
+          // }
           userUniqueId={userUniqueID}
           lmFeedInterface={lmFeedInterface}
           callbackClass={callbackClass}>
