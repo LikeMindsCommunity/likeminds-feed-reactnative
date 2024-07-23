@@ -229,7 +229,7 @@ const App = () => {
       console.log(`Testing ${a} and ${b}`);
     },
     function () {
-      // here client should call the initApi and return accessToken and refreshToken
+      // here client should call the initiateApi and return accessToken and refreshToken
       console.log('onRefreshTokenExpired called');
     },
   );

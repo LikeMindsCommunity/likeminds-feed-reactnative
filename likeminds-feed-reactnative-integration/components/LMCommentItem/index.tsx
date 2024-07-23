@@ -21,6 +21,7 @@ import { styles } from "./styles";
 import decode from "../../utils/decodeMentions";
 import { timeStamp } from "../../utils";
 import { useAppSelector } from "../../store/store";
+import { MemberRightsEnum } from "../../enums/MemberRightsEnum";
 
 const LMCommentItem = React.memo(
   ({
@@ -59,7 +60,7 @@ const LMCommentItem = React.memo(
       (state) => state.login.memberRights
     );
     const commentingRight = loggedInUserMemberRights.find(
-      (item) => item.state === 10
+      (item) => item.state === MemberRightsEnum.CommentingRightState
     );
 
     // this handles the show more functionality
