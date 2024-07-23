@@ -89,23 +89,16 @@ const App = () => {
   );
   const [myClient, setMyClient] = useState<LMFeedClient>();
   const [isTrue, setIsTrue] = useState(true);
-  const [accessToken, setAccessToken] = useState('');
-  const [refreshToken, setRefreshToken] = useState('');
 
   const loginSchemaArray: any = useQuery(LoginSchemaRO);
 
   useEffect(() => {
-    async function getTokens() {
+    async function generateClient() {
       const res: any = initMyClient();
-      const {accessToken, refreshToken} = await res?.getTokens();
-      if (accessToken && refreshToken) {
-        setAccessToken(accessToken);
-        setRefreshToken(refreshToken);
-      }
       setMyClient(res);
     }
 
-    getTokens();
+    generateClient();
   }, []);
 
   useEffect(() => {
@@ -174,7 +167,6 @@ const App = () => {
       let routes = getRoute(detail?.notification?.data?.route);
       switch (type) {
         case EventType.DISMISSED:
-          console.log('User dismissed notification', detail.notification);
           break;
         case EventType.PRESS:
           if (!!navigationRef) {
@@ -233,9 +225,11 @@ const App = () => {
 
   const callbackClass = new LMCoreCallbacks(
     (a: string, b: string) => {
+      // when accessToken is expired then flow comes here
       console.log(`Testing ${a} and ${b}`);
     },
     function () {
+      // here client should call the initApi and return accessToken and refreshToken
       console.log('onRefreshTokenExpired called');
     },
   );

@@ -102,6 +102,11 @@ export const LMFeedProvider = ({
     };
 
     async function callInitiateAPI() {
+      const { accessToken, refreshToken } = await myClient?.getTokens();
+      if (accessToken && refreshToken) {
+        callValidateApi();
+        return;
+      }
       const initiateResponse: any = await dispatch(
         initiateUser(
           InitiateUserRequest.builder()

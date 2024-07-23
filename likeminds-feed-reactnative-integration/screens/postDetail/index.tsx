@@ -59,7 +59,10 @@ import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Events } from "../../enums/Events";
 import { Keys } from "../../enums/Keys";
 import { PollCustomisableMethodsContextProvider } from "../../context/pollCustomisableCallback";
-import { SET_REPORT_MODEL_STATUS_IN_POST_DETAIL } from "../../store/types/types";
+import {
+  SET_FLOW_TO_POST_DETAIL_SCREEN,
+  SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
+} from "../../store/types/types";
 
 interface PostDetailProps {
   children: React.ReactNode;
@@ -328,6 +331,10 @@ const PostDetailComponent = React.memo(() => {
       "hardwareBackPress",
       () => {
         navigation.goBack();
+        dispatch({
+          type: SET_FLOW_TO_POST_DETAIL_SCREEN,
+          body: { flowToPostDetailScreen: false },
+        });
         return true;
       }
     );

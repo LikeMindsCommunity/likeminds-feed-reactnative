@@ -42,7 +42,7 @@ import { Events } from "../../enums/Events";
 import { Keys } from "../../enums/Keys";
 import { getPostType } from "../../utils/analytics";
 import { UNIVERSAL_FEED } from "../../constants/screenNames";
-import { Client } from "@likeminds.community/feed-rn-core/client";
+import { Client } from "../../client";
 
 // delete modal's props
 interface DeleteModalProps {
