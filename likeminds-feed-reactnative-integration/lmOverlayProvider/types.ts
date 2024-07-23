@@ -1,5 +1,5 @@
 import React from "react";
-import { LMFeedClient } from "@likeminds.community/feed-js";
+import { LMFeedClient } from "@likeminds.community/feed-rn";
 import {
   CarouselScreenStyle,
   CreatePollStyle,
@@ -13,12 +13,16 @@ import {
   TopicsStyle,
   UniversalFeedStyleProps,
 } from "../lmFeedProvider/types";
+import { LMCoreCallbacks } from "../setupFeed";
 
 export interface LMOverlayProviderProps {
   myClient: LMFeedClient;
   children: React.ReactNode;
-  accessToken: string;
-  refreshToken: string;
+  apiKey?: string;
+  userName?: string;
+  userUniqueId?: string;
+  accessToken?: string;
+  refreshToken?: string;
   lmFeedInterface?: any;
   universalFeedStyle?: UniversalFeedStyleProps;
   postListStyle?: PostListStyleProps;
@@ -30,5 +34,6 @@ export interface LMOverlayProviderProps {
   topicsStyle?: TopicsStyle;
   pollStyle?: PollStyle;
   createPollStyle?: CreatePollStyle;
+  callbackClass: LMCoreCallbacks;
   carouselScreenStyle?: CarouselScreenStyle;
 }

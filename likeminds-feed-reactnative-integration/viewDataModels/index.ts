@@ -8,9 +8,9 @@ import {
   IOgTag,
   IPost,
   IUser,
-} from "@likeminds.community/feed-js";
-import { GetPostLikesResponse } from "@likeminds.community/feed-js/dist/post/model/GetPostLikesResponse";
-import Like from "@likeminds.community/feed-js/dist/post/model/Like";
+  Like,
+  GetPostLikesResponse,
+} from "@likeminds.community/feed-rn";
 import {
   DocumentMetaData,
   ImageVideoMetaData,
@@ -22,7 +22,7 @@ import {
   POLL_ATTACHMENT_TYPE,
   VIDEO_ATTACHMENT_TYPE,
 } from "../constants/Strings";
-import { IComment } from "@likeminds.community/feed-js";
+import { IComment } from "@likeminds.community/feed-rn";
 import {
   LMActivityEntityUI,
   LMActivityUI,
@@ -35,7 +35,6 @@ import {
   LMSDKClientInfoUI,
   LMUserUI,
 } from "../models";
-import { GetNotificationFeedResponse } from "@likeminds.community/feed-js/dist/notificationFeed/model/GetNotificationFeedResponse";
 
 /**
  * @param data: [GetFeedResponse]
@@ -378,7 +377,9 @@ export function convertPollMetaData(item: any): LMAttachmentUI {
       url: "",
       title: item?.title,
       expiryTime: item?.expiryTime,
-      options: convertPollOptionsMetaData(item?.options),
+      options: item?.options
+        ? convertPollOptionsMetaData(item?.options)
+        : undefined,
       multipleSelectState: item?.multipleSelectState,
       pollType: item?.pollType,
       multipleSelectNumber: item?.multipleSelectNumber,

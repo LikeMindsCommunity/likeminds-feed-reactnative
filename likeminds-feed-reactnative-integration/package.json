@@ -1,6 +1,6 @@
 {
   "name": "@likeminds.community/feed-rn-core",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "LikeMinds ReactNative Core SDK for feed",
   "scripts": {
     "android": "react-native run-android",
@@ -11,13 +11,14 @@
     "eslint:fix": "eslint --fix .",
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
-    "build": "rm -rf dist && microbundle --tsconfig tsconfig.json --no-sourcemap"
+    "build": "rm -rf dist && microbundle --tsconfig tsconfig.json --no-sourcemap",
+    "npm-deploy": "rm -rf dist && microbundle --tsconfig tsconfig.json --no-sourcemap && npm publish --access public"
   },
   "author": "LikeMinds",
   "homepage": "https://likeminds.community/",
   "license": "ISC",
   "dependencies": {
-    "@likeminds.community/feed-js": "1.9.1",
+    "@likeminds.community/feed-rn": "1.0.0",
     "@react-native-community/slider": "4.4.3",
     "@types/react-native-video": "5.0.14",
     "aws-sdk": "2.1548.0",

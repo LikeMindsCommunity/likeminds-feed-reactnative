@@ -12,7 +12,7 @@ import React, {
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { mentionToRouteConverter, uploadFilesToAWS } from "../utils";
 import { addPost, setUploadAttachments } from "../store/actions/createPost";
-import { AddPostRequest, GetFeedRequest } from "@likeminds.community/feed-js";
+import { AddPostRequest, GetFeedRequest } from "@likeminds.community/feed-rn";
 import { autoPlayPostVideo, refreshFeed } from "../store/actions/feed";
 import {
   CREATE_POST_PERMISSION,
@@ -350,7 +350,7 @@ export const UniversalFeedContextProvider = ({
   }) {
     const item = poll?.attachments[0]?.attachmentMeta;
     try {
-      if (addOptionInputField.length === 0) {
+      if (addOptionInputField.trim().length === 0) {
         return;
       } else if (pollsArr.length >= 10) {
         setIsAddPollOptionModalVisible(false);

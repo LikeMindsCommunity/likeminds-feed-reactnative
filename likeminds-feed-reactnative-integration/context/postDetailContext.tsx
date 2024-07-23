@@ -57,7 +57,7 @@ import {
   PinPostRequest,
   ReplyCommentRequest,
   SavePostRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-rn";
 import {
   autoPlayPostVideo,
   likePost,
@@ -90,7 +90,10 @@ import { Keys } from "../enums/Keys";
 import { getPostType } from "../utils/analytics";
 import { LMLoader } from "../components";
 import Layout from "../constants/Layout";
-import { SET_REPORT_MODEL_STATUS_IN_POST_DETAIL } from "../store/types/types";
+import {
+  SET_FLOW_TO_POST_DETAIL_SCREEN,
+  SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
+} from "../store/types/types";
 
 interface PostDetailContextProps {
   children: ReactNode;
@@ -875,6 +878,10 @@ export const PostDetailContextProvider = ({
   const handleScreenBackPress = () => {
     Keyboard.dismiss();
     navigation.goBack();
+    dispatch({
+      type: SET_FLOW_TO_POST_DETAIL_SCREEN,
+      body: { flowToPostDetailScreen: false },
+    });
     dispatch(clearPostDetail());
   };
 

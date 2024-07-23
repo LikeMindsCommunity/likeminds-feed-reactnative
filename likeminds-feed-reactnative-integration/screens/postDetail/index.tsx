@@ -59,7 +59,10 @@ import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Events } from "../../enums/Events";
 import { Keys } from "../../enums/Keys";
 import { PollCustomisableMethodsContextProvider } from "../../context/pollCustomisableCallback";
-import { SET_REPORT_MODEL_STATUS_IN_POST_DETAIL } from "../../store/types/types";
+import {
+  SET_FLOW_TO_POST_DETAIL_SCREEN,
+  SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
+} from "../../store/types/types";
 
 interface PostDetailProps {
   children: React.ReactNode;
@@ -228,6 +231,12 @@ const PostDetailComponent = React.memo(() => {
   const customCommentItemStyle: any = postDetailStyle?.commentItemStyle;
   const customReplyingViewStyle: any = postDetailStyle?.replyingViewStyle;
   const customCommentTextInput: any = postDetailStyle?.commentTextInputStyle;
+  const loggedInUserMemberRights = useAppSelector(
+    (state) => state.login.memberRights
+  );
+  const commentingRight = loggedInUserMemberRights.find(
+    (item) => item.state === 10
+  );
 
   // this function returns the id of the item selected from menu list and handles further functionalities accordingly for comment
   const onCommentMenuItemSelect = async (
@@ -322,17 +331,14 @@ const PostDetailComponent = React.memo(() => {
       "hardwareBackPress",
       () => {
         navigation.goBack();
-        dispatch(clearPostDetail());
+        dispatch({
+          type: SET_FLOW_TO_POST_DETAIL_SCREEN,
+          body: { flowToPostDetailScreen: false },
+        });
         return true;
       }
     );
     return () => backHandler.remove();
-  }, []);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setShowLoader(false);
-    }, 1000);
   }, []);
 
   return (
@@ -802,7 +808,7 @@ const PostDetailComponent = React.memo(() => {
           </View>
         ) : null}
         {/* input field */}
-        {postDetail?.id && (
+        {postDetail?.id && commentingRight?.isSelected ? (
           <LMInputText
             {...customCommentTextInput}
             inputText={commentToAdd}
@@ -888,6 +894,12 @@ const PostDetailComponent = React.memo(() => {
               },
             ]}
           />
+        ) : (
+          <View style={styles.textContainer}>
+            <Text style={styles.disabledText}>
+              You don't have permission to comment
+            </Text>
+          </View>
         )}
       </KeyboardAvoidingView>
 
