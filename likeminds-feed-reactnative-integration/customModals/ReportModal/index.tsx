@@ -35,7 +35,7 @@ import { useAppDispatch, useAppSelector } from "../../store/store";
 import { getReportTags, postReport } from "../../store/actions/feed";
 import Toast from "react-native-toast-message";
 import { showToastMessage } from "../../store/actions/toast";
-import { LMLoader } from "../../components";
+import LMLoader from "../../components/LMLoader";
 import { LMCommentUI, LMPostUI } from "../../models";
 import { getPostType, reportAnalytics } from "../../utils/analytics";
 import Layout from "../../constants/Layout";

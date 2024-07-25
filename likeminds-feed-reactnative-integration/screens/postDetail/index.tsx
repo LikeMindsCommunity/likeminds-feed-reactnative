@@ -45,7 +45,10 @@ import {
 } from "../../context";
 import { postLikesClear } from "../../store/actions/postLikes";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { LMCommentItem, LMHeader, LMLoader, LMPost } from "../../components";
+import LMHeader from "../../components/LMHeader";
+import LMLoader from "../../components/LMLoader";
+import LMCommentItem from "../../components/LMCommentItem";
+import LMPost from "../../components/LMPost/LMPost";
 import { LMMenuItemsUI, LMUserUI, RootStackParamList } from "../../models";
 import {
   LMIcon,
@@ -62,35 +65,35 @@ import { PollCustomisableMethodsContextProvider } from "../../context/pollCustom
 import { SET_REPORT_MODEL_STATUS_IN_POST_DETAIL } from "../../store/types/types";
 
 interface PostDetailProps {
-  children: React.ReactNode;
-  navigation: NativeStackNavigationProp<RootStackParamList, "PostDetail">;
-  route: {
+  children?: React.ReactNode;
+  navigation?: NativeStackNavigationProp<RootStackParamList, "PostDetail">;
+  route?: {
     key: string;
     name: string;
     params: Array<string>;
     path: undefined;
   };
-  getCommentsRepliesProp: (
+  getCommentsRepliesProp?: (
     postId: string,
     commentId: string,
     repliesResponseCallback: any,
     pageNo: number
   ) => void;
-  addNewCommentProp: (postId: string) => void;
-  addNewReplyProp: (postId: string, commentId: string) => void;
-  commentLikeHandlerProp: (postId: string, commentId: string) => void;
-  handleReportCommentProp: (commentId: string) => void;
-  handleDeleteCommentProp: (visible: boolean, commentId: string) => void;
-  handleEditCommentProp: (commentId: string) => void;
-  handleScreenBackPressProp: () => void;
-  onCommentOverflowMenuClickProp: (
+  addNewCommentProp?: (postId: string) => void;
+  addNewReplyProp?: (postId: string, commentId: string) => void;
+  commentLikeHandlerProp?: (postId: string, commentId: string) => void;
+  handleReportCommentProp?: (commentId: string) => void;
+  handleDeleteCommentProp?: (visible: boolean, commentId: string) => void;
+  handleEditCommentProp?: (commentId: string) => void;
+  handleScreenBackPressProp?: () => void;
+  onCommentOverflowMenuClickProp?: (
     event: {
       nativeEvent: { pageX: number; pageY: number };
     },
     menuItems: LMMenuItemsUI[],
     commentId: string
   ) => void;
-  onSharePostClicked: (id: string) => void;
+  onSharePostClicked?: (id: string) => void;
   onSubmitButtonClicked: any;
   onAddPollOptionsClicked: any;
   onPollOptionClicked: any;

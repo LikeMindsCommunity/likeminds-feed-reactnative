@@ -15,7 +15,7 @@ import STYLES from "../../constants/Styles";
 import { NO_RESPONSES, POLL_RESULT_TEXT } from "../../constants/Strings";
 import { Client } from "../../client";
 import Layout from "../../constants/Layout";
-import { LMHeader } from "../../components";
+import LMHeader from "../../components/LMHeader";
 
 const PollStack = createMaterialTopTabNavigator();
 

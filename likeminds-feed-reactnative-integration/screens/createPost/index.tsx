@@ -49,15 +49,13 @@ import {
   LMText,
 } from "../../uiComponents";
 import { LMAttachmentUI, LMUserUI, RootStackParamList } from "../../models";
-import {
-  LMCarousel,
-  LMDocument,
-  LMHeader,
-  LMImage,
-  LMLinkPreview,
-  LMLoader,
-  LMVideo,
-} from "../../components";
+import LMCarousel from "../../components/LMMedia/LMCarousel";
+import LMDocument from "../../components/LMMedia/LMDocument";
+import LMImage from "../../components/LMMedia/LMImage";
+import LMLinkPreview from "../../components/LMMedia/LMLinkPreview";
+import LMVideo from "../../components/LMMedia/LMVideo";
+import LMLoader from "../../components/LMLoader";
+import LMHeader from "../../components/LMHeader";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TOPIC_FEED } from "../../constants/screenNames";
 import {
@@ -79,25 +77,25 @@ import STYLES from "../../constants/Styles";
 import { PollCustomisableMethodsContextProvider } from "../../context/pollCustomisableCallback";
 
 interface CreatePostProps {
-  children: React.ReactNode;
-  navigation: NativeStackNavigationProp<RootStackParamList, "CreatePost">;
-  route: {
+  children?: React.ReactNode;
+  navigation?: NativeStackNavigationProp<RootStackParamList, "CreatePost">;
+  route?: {
     key: string;
     name: string;
     params: { postId: string };
     path: undefined;
   };
-  handleGalleryProp: (type: string) => void;
-  handleDocumentProp: () => void;
-  handlePollProp: () => void;
-  onPostClickProp: (
+  handleGalleryProp?: (type: string) => void;
+  handleDocumentProp?: () => void;
+  handlePollProp?: () => void;
+  onPostClickProp?: (
     allMedia: Array<LMAttachmentUI>,
     linkData: Array<LMAttachmentUI>,
     content: string,
     topics: string[],
     poll: any
   ) => void;
-  handleScreenBackPressProp: () => void;
+  handleScreenBackPressProp?: () => void;
   onPollEditClicked: any;
   onPollClearClicked: any;
 }

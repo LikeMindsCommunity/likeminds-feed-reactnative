@@ -3,45 +3,45 @@ import React, { createContext, ReactNode, useContext } from "react";
 
 export interface UniversalFeedCallbacksContextProps {
   children?: ReactNode;
-  postLikeHandlerProp: (id: string) => void;
-  savePostHandlerProp: (id: string, saved?: boolean) => void;
-  selectPinPostProp: (id: string, pinned?: boolean) => void;
-  selectEditPostProp: (id: string, post: LMPostUI | undefined) => void;
-  onSelectCommentCountProp: (id: string) => void;
-  onTapLikeCountProps: (id: string) => void;
-  handleDeletePostProps: (visible: boolean, postId: string) => void;
-  handleReportPostProps: (postId: string) => void;
-  newPostButtonClickProps: () => void;
-  onOverlayMenuClickProp: (
+  postLikeHandlerProp?: (id: string) => void;
+  savePostHandlerProp?: (id: string, saved?: boolean) => void;
+  selectPinPostProp?: (id: string, pinned?: boolean) => void;
+  selectEditPostProp?: (id: string, post: LMPostUI | undefined) => void;
+  onSelectCommentCountProp?: (id: string) => void;
+  onTapLikeCountProps?: (id: string) => void;
+  handleDeletePostProps?: (visible: boolean, postId: string) => void;
+  handleReportPostProps?: (postId: string) => void;
+  newPostButtonClickProps?: () => void;
+  onOverlayMenuClickProp?: (
     event: {
       nativeEvent: { pageX: number; pageY: number };
     },
     menuItems: LMMenuItemsUI[],
     postId: string
   ) => void;
-  onTapNotificationBellProp: () => void;
-  onSharePostClicked: (id: string) => void;
+  onTapNotificationBellProp?: () => void;
+  onSharePostClicked?: (id: string) => void;
 }
 
 export interface UniversalFeedCustomisableMethodsContext {
-  postLikeHandlerProp: (id: string) => void;
-  savePostHandlerProp: (id: string, saved?: boolean) => void;
-  selectPinPostProp: (id: string, pinned?: boolean) => void;
-  selectEditPostProp: (id: string, post: LMPostUI | undefined) => void;
-  onSelectCommentCountProp: (id: string) => void;
-  onTapLikeCountProps: (id: string) => void;
-  handleDeletePostProps: (visible: boolean, postId: string) => void;
-  handleReportPostProps: (postId: string) => void;
-  newPostButtonClickProps: () => void;
-  onOverlayMenuClickProp: (
+  postLikeHandlerProp?: (id: string) => void;
+  savePostHandlerProp?: (id: string, saved?: boolean) => void;
+  selectPinPostProp?: (id: string, pinned?: boolean) => void;
+  selectEditPostProp?: (id: string, post: LMPostUI | undefined) => void;
+  onSelectCommentCountProp?: (id: string) => void;
+  onTapLikeCountProps?: (id: string) => void;
+  handleDeletePostProps?: (visible: boolean, postId: string) => void;
+  handleReportPostProps?: (postId: string) => void;
+  newPostButtonClickProps?: () => void;
+  onOverlayMenuClickProp?: (
     event: {
       nativeEvent: { pageX: number; pageY: number };
     },
     menuItems: LMMenuItemsUI[],
     postId: string
   ) => void;
-  onTapNotificationBellProp: () => void;
-  onSharePostClicked: (id: string) => void;
+  onTapNotificationBellProp?: () => void;
+  onSharePostClicked?: (id: string) => void;
 }
 
 const UniversalFeedCustomisableMethodsContext = createContext<

@@ -17,7 +17,7 @@ import {useAppSelector} from '@likeminds.community/feed-rn-core/store/store';
 import FilterTopics from '../components/FilterTopics';
 import CreatePostButton from '../components/CreatePostButton';
 
-const Feed = ({route}) => {
+const Feed = () => {
   const {
     postLikeHandler,
     savePostHandler,
@@ -30,7 +30,6 @@ const Feed = ({route}) => {
     onOverlayMenuClick,
   } = usePostListContext();
   const {
-    navigation,
     newPostButtonClick,
     onTapNotificationBell,
     addPollOption,
@@ -155,8 +154,6 @@ const Feed = ({route}) => {
 
   return (
     <UniversalFeed
-      navigation={navigation}
-      route={route}
       postLikeHandlerProp={id => customPostLike(id)}
       savePostHandlerProp={(id, saved) => customPostSave(id, saved)}
       onSelectCommentCountProp={id => customHandleCommentClick(id)}

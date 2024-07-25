@@ -9,21 +9,23 @@ import {
   usePostLikesListContext,
 } from "../../context";
 import { useLMFeedStyles } from "../../lmFeedProvider";
-import { LMHeader, LMLoader, LMMemberListItem } from "../../components";
+import { LMMemberListItem } from "../../components";
+import LMHeader from "../../components/LMHeader";
+import LMLoader from "../../components/LMLoader";
 import { LMLikeUI, LMUserUI, RootStackParamList } from "../../models";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 interface PostLikesProps {
-  children: React.ReactNode;
-  navigation: NativeStackNavigationProp<RootStackParamList, "PostLikesList">;
-  route: {
+  children?: React.ReactNode;
+  navigation?: NativeStackNavigationProp<RootStackParamList, "PostLikesList">;
+  route?: {
     key: string;
     name: string;
     params: Array<string>;
     path: undefined;
   };
-  onTapUserItemProp: (user: LMUserUI) => void;
-  handleScreenBackPressProp: () => void;
+  onTapUserItemProp?: (user: LMUserUI) => void;
+  handleScreenBackPressProp?: () => void;
 }
 
 const PostLikesList = ({

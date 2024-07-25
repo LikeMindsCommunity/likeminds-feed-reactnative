@@ -16,7 +16,7 @@ import {
 import { LMFeedProviderProps, ThemeContextProps } from "./types";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { getMemberState, validateUser } from "../store/actions/login";
-import { LMToast } from "../components";
+import LMToast from "../components/LMToast"
 import { CallBack } from "../callBacks/callBackClass";
 import { Client } from "../client";
 import { CommunityConfigs } from "../communityConfigs";

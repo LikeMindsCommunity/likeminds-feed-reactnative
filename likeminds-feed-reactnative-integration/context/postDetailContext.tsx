@@ -70,25 +70,21 @@ import {
 import _ from "lodash";
 import {
   CREATE_POST,
-  POST_LIKES_LIST,
-  UNIVERSAL_FEED,
 } from "../constants/screenNames";
 import {
   detectMentions,
   mentionToRouteConverter,
   routeToMentionConverter,
 } from "../utils";
-import { postLikesClear } from "../store/actions/postLikes";
 import { showToastMessage } from "../store/actions/toast";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../models/RootStackParamsList";
-import LMPost from "../components/LMPost/LMPost";
 import { LMCommentUI, LMPostUI, LMUserUI } from "../models";
 import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
 import { Events } from "../enums/Events";
 import { Keys } from "../enums/Keys";
 import { getPostType } from "../utils/analytics";
-import { LMLoader } from "../components";
+import LMLoader from "../components/LMLoader";
 import Layout from "../constants/Layout";
 import { SET_REPORT_MODEL_STATUS_IN_POST_DETAIL } from "../store/types/types";
 

@@ -6,7 +6,7 @@ import STYLES from "../../constants/Styles";
 import { DELETE_TAGS_TYPE, DELETION_REASON } from "../../constants/Strings";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { getReportTags } from "../../store/actions/feed";
-import { LMLoader } from "../../components";
+import LMLoader from "../../components/LMLoader";
 
 // delete reason's modal props
 interface DeleteReasonsModalProps {

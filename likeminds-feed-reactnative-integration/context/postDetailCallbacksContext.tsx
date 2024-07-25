@@ -3,39 +3,51 @@ import React, { createContext, ReactNode, useContext } from "react";
 
 export interface PostDetailCallbacksContextProps {
   children?: ReactNode;
-  getCommentsRepliesProp: (    postId: string,
+  getCommentsRepliesProp?: (
+    postId: string,
     commentId: string,
     repliesResponseCallback: any,
-    pageNo: number) => void;
-  addNewCommentProp: (postId: string) => void;
-  addNewReplyProp: (postId: string, commentId: string) => void;
-  commentLikeHandlerProp: (postId: string, commentId: string) => void;
-  handleReportCommentProp: (commentId: string) => void;
-  handleDeleteCommentProp: (visible: boolean,commentId: string) => void;
-  handleEditCommentProp: (commentId: string) => void;
-  handleScreenBackPressProp: () => void;
-  onCommentOverflowMenuClickProp: (event: {
-    nativeEvent: { pageX: number; pageY: number };
-  },menuItems: LMMenuItemsUI[], commentId: string) => void;
-  onSharePostClicked: (id:string) => void;
+    pageNo: number
+  ) => void;
+  addNewCommentProp?: (postId: string) => void;
+  addNewReplyProp?: (postId: string, commentId: string) => void;
+  commentLikeHandlerProp?: (postId: string, commentId: string) => void;
+  handleReportCommentProp?: (commentId: string) => void;
+  handleDeleteCommentProp?: (visible: boolean, commentId: string) => void;
+  handleEditCommentProp?: (commentId: string) => void;
+  handleScreenBackPressProp?: () => void;
+  onCommentOverflowMenuClickProp?: (
+    event: {
+      nativeEvent: { pageX: number; pageY: number };
+    },
+    menuItems: LMMenuItemsUI[],
+    commentId: string
+  ) => void;
+  onSharePostClicked?: (id: string) => void;
 }
 
 export interface PostDetailCustomisableMethodsContext {
-  getCommentsRepliesProp: (    postId: string,
+  getCommentsRepliesProp?: (
+    postId: string,
     commentId: string,
     repliesResponseCallback: any,
-    pageNo: number) => void;
-  addNewCommentProp: (postId: string) => void;
-  addNewReplyProp: (postId: string, commentId: string) => void;
-  commentLikeHandlerProp: (postId: string, commentId: string) => void;
-  handleReportCommentProp: (commentId: string) => void;
-  handleDeleteCommentProp: (visible: boolean,commentId: string) => void;
-  handleEditCommentProp: (commentId: string) => void;
-  handleScreenBackPressProp: () => void;
-  onCommentOverflowMenuClickProp: (event: {
-    nativeEvent: { pageX: number; pageY: number };
-  },menuItems: LMMenuItemsUI[], commentId: string) => void;
-  onSharePostClicked: (id:string) => void;
+    pageNo: number
+  ) => void;
+  addNewCommentProp?: (postId: string) => void;
+  addNewReplyProp?: (postId: string, commentId: string) => void;
+  commentLikeHandlerProp?: (postId: string, commentId: string) => void;
+  handleReportCommentProp?: (commentId: string) => void;
+  handleDeleteCommentProp?: (visible: boolean, commentId: string) => void;
+  handleEditCommentProp?: (commentId: string) => void;
+  handleScreenBackPressProp?: () => void;
+  onCommentOverflowMenuClickProp?: (
+    event: {
+      nativeEvent: { pageX: number; pageY: number };
+    },
+    menuItems: LMMenuItemsUI[],
+    commentId: string
+  ) => void;
+  onSharePostClicked?: (id: string) => void;
 }
 
 const PostDetailCustomisableMethodsContext = createContext<
@@ -63,7 +75,7 @@ export const PostDetailCustomisableMethodsContextProvider = ({
   handleReportCommentProp,
   handleScreenBackPressProp,
   onCommentOverflowMenuClickProp,
-  onSharePostClicked
+  onSharePostClicked,
 }: PostDetailCallbacksContextProps) => {
   const contextValues: PostDetailCustomisableMethodsContext = {
     getCommentsRepliesProp,
@@ -75,7 +87,7 @@ export const PostDetailCustomisableMethodsContextProvider = ({
     handleReportCommentProp,
     handleScreenBackPressProp,
     onCommentOverflowMenuClickProp,
-    onSharePostClicked
+    onSharePostClicked,
   };
 
   return (

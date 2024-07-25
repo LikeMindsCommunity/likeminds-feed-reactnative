@@ -3,13 +3,13 @@ import React, { createContext, ReactNode, useContext } from "react";
 
 export interface PostLikesCallbacksContextProps {
   children?: ReactNode;
-  onTapUserItemProp: (user: LMUserUI) => void;
-  handleScreenBackPressProp: () => void;
+  onTapUserItemProp?: (user: LMUserUI) => void;
+  handleScreenBackPressProp?: () => void;
 }
 
 export interface PostLikesCustomisableMethodsContext {
-  onTapUserItemProp: (user: LMUserUI) => void;
-  handleScreenBackPressProp: () => void;
+  onTapUserItemProp?: (user: LMUserUI) => void;
+  handleScreenBackPressProp?: () => void;
 }
 
 const PostLikesCustomisableMethodsContext = createContext<
@@ -29,11 +29,11 @@ export const usePostLikesCustomisableMethodsContext = () => {
 export const PostLikesCustomisableMethodsContextProvider = ({
   children,
   onTapUserItemProp,
-  handleScreenBackPressProp
+  handleScreenBackPressProp,
 }: PostLikesCallbacksContextProps) => {
   const contextValues: PostLikesCustomisableMethodsContext = {
     onTapUserItemProp,
-    handleScreenBackPressProp
+    handleScreenBackPressProp,
   };
 
   return (

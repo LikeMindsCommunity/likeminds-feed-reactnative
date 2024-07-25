@@ -38,7 +38,7 @@ import {
 import { postLikesClear } from "../../store/actions/postLikes";
 import LMPost from "../../components/LMPost/LMPost";
 import { LMPostUI } from "../../models";
-import { LMLoader } from "../../components";
+import LMLoader from "../../components/LMLoader";
 import { autoPlayPostVideo } from "../../store/actions/feed";
 import LMPostMenu from "../../customModals/LMPostMenu";
 import { Events } from "../../enums/Events";

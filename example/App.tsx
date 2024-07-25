@@ -17,6 +17,7 @@ import {
   CarouselScreen,
   LMFeedCreatePollScreen,
   LMFeedPollResult,
+  initMyClient,
 } from '@likeminds.community/feed-rn-core';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
@@ -26,11 +27,8 @@ import {
   LMFeedCallbacks,
   LMCarouselScreenCallbacks,
   NAVIGATED_FROM_NOTIFICATION,
-  initMyClient,
 } from '@likeminds.community/feed-rn-core';
-import {myClient} from '.';
 import {
-  ActivityIndicator,
   KeyboardAvoidingView,
   Linking,
   PermissionsAndroid,

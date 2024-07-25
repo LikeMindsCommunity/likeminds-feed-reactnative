@@ -1,6 +1,7 @@
 import { View, Text, FlatList, RefreshControl, Image } from "react-native";
 import React, { useEffect, useState } from "react";
-import { LMLoader, LMNotificationFeedItem } from "../../components";
+import LMNotificationFeedItem from "../../components/LMNotificationFeedItem"
+import LMLoader from "../../components/LMLoader";
 import {
   useNotificationFeedContext,
   useNotificationFeedCustomisableMethodsContext,

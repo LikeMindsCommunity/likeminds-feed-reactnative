@@ -24,7 +24,7 @@ import {
   STATUS_BAR_STYLE,
 } from "../../store/types/types";
 import { useAppDispatch } from "../../store/store";
-import { LMVideoPlayer } from "../../components";
+import LMVideoPlayer from "../../components/LMVideoPlayer";
 import { useLMFeedStyles } from "../../lmFeedProvider";
 import ImageViewer from "react-native-image-zoom-viewer";
 import { CallBack } from "../../callBacks/callBackClass";

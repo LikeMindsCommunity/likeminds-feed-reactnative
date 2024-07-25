@@ -2,17 +2,17 @@ import React, { createContext, ReactNode, useContext } from "react";
 
 export interface CreatePollCallbacksContextProps {
   children?: ReactNode;
-  onPollExpiryTimeClicked: () => void;
-  onAddOptionClicked: () => void;
-  onPollOptionCleared: () => void;
-  onPollCompleteClicked: () => void;
+  onPollExpiryTimeClicked?: () => void;
+  onAddOptionClicked?: () => void;
+  onPollOptionCleared?: (index: any) => void;
+  onPollCompleteClicked?: () => void;
 }
 
 export interface CreatePollCustomisableMethodsContext {
-  onPollExpiryTimeClicked: () => void;
-  onAddOptionClicked: () => void;
-  onPollOptionCleared: () => void;
-  onPollCompleteClicked: () => void;
+  onPollExpiryTimeClicked?: () => void;
+  onAddOptionClicked?: () => void;
+  onPollOptionCleared?: (index: any) => void;
+  onPollCompleteClicked?: () => void;
 }
 
 const CreatePollCustomisableMethodsContext = createContext<

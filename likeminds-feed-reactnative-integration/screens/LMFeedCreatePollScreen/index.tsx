@@ -13,7 +13,7 @@ import {
   CreatePollContextProvider,
   useCreatePollContext,
 } from "../../context/createPollContextProvider";
-import { LMHeader } from "../../components";
+import LMHeader from "../../components/LMHeader";
 import { LMProfilePicture, LMText } from "../../uiComponents";
 import { nameInitials } from "../../utils";
 import { CreatePostContextValues, useCreatePostContext } from "../../context";
