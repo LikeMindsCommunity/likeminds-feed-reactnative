@@ -10,6 +10,7 @@ import {
   Image,
   ScrollView,
   Alert,
+  Platform,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { NetworkUtil, nameInitials, replaceLastMention } from "../../utils";
@@ -1079,8 +1080,14 @@ const CreatePostComponent = () => {
           <TouchableOpacity
             activeOpacity={0.8}
             style={[
-              styles.optionItemView,
-              customAttachmentOptionsStyle?.filesAttachmentView,
+              {
+                ...styles.optionItemView,
+                ...(Platform.OS === "ios" && { marginBottom: 10 }),
+              },
+              {
+                ...customAttachmentOptionsStyle?.filesAttachmentView,
+                ...(Platform.OS === "ios" && { marginBottom: 10 }),
+              },
             ]}
             onPress={() => {
               handlePollProp ? handlePollProp() : handlePoll();

@@ -68,9 +68,7 @@ import {
   savePostStateHandler,
 } from "../store/actions/feed";
 import _ from "lodash";
-import {
-  CREATE_POST,
-} from "../constants/screenNames";
+import { CREATE_POST } from "../constants/screenNames";
 import {
   detectMentions,
   mentionToRouteConverter,
@@ -785,6 +783,7 @@ export const PostDetailContextProvider = ({
 
   // this function is called on change text of textInput
   const handleInputChange = async (event: string) => {
+    event = event.replace(/^\s+/, "");
     setCommentToAdd(event);
 
     const newMentions = detectMentions(event);
