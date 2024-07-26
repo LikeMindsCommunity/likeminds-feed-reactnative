@@ -10,6 +10,7 @@ import {
   StyleSheet,
   Text,
   View,
+  SafeAreaView
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { POST_LIKES_LIST } from "../../constants/screenNames";
@@ -44,7 +45,6 @@ import {
   usePostDetailCustomisableMethodsContext,
 } from "../../context";
 import { postLikesClear } from "../../store/actions/postLikes";
-import { SafeAreaView } from "react-native-safe-area-context";
 import LMHeader from "../../components/LMHeader";
 import LMLoader from "../../components/LMLoader";
 import LMCommentItem from "../../components/LMCommentItem";
