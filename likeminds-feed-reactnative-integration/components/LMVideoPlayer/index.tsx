@@ -11,7 +11,7 @@ import STYLES from "../../constants/Styles";
 import Video from "react-native-video";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { SET_MUTED_STATE } from "../../store/types/types";
-import Slider from "react-native-slider";
+import Slider from "@react-native-community/slider";
 import { useLMFeedStyles } from "../../lmFeedProvider";
 
 function LMVideoPlayer({ url }) {
@@ -44,7 +44,7 @@ function LMVideoPlayer({ url }) {
 
   const LMFeedContextStyles = useLMFeedStyles();
   const { carouselScreenStyle }: any = LMFeedContextStyles;
-  const sliderThumbSize = carouselScreenStyle?.sliderThumbSize;
+  const thumbImage = carouselScreenStyle?.sliderThumbImage;
   const thumbTintColor = carouselScreenStyle?.thumbTintColor;
   const minimumTrackTintColor = carouselScreenStyle?.minimumTrackTintColor;
   const maximumTrackTintColor = carouselScreenStyle?.maximumTrackTintColor;
@@ -179,14 +179,7 @@ function LMVideoPlayer({ url }) {
                 onValueChange={(x) => {
                   ref.current.seek(x);
                 }}
-                thumbTouchSize={
-                  sliderThumbSize
-                    ? sliderThumbSize
-                    : {
-                        height: 30,
-                        width: 30,
-                      }
-                }
+                thumbImage={thumbImage}
                 thumbTintColor={thumbTintColor ? thumbTintColor : "green"}
               />
               <Text

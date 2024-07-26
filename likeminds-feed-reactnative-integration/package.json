@@ -11,15 +11,14 @@
     "eslint:fix": "eslint --fix .",
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
-    "build": "rm -rf dist && microbundle --tsconfig tsconfig.json --no-sourcemap"
+    "build": "rm -rf dist && microbundle --tsconfig tsconfig.json --no-sourcemap",
+    "npm-deploy": "rm -rf dist && microbundle --tsconfig tsconfig.json --no-sourcemap && npm publish --access public"
   },
   "author": "LikeMinds",
   "homepage": "https://likeminds.community/",
   "license": "ISC",
   "dependencies": {
     "@likeminds.community/feed-js": "1.9.1",
-    "@react-native-community/slider": "4.4.3",
-    "@types/react-native-video": "5.0.14",
     "aws-sdk": "2.1548.0",
     "diff": "5.1.0",
     "lodash": "4.17.21",
@@ -50,7 +49,18 @@
     "react-native-image-picker": ">=7.1.0",
     "react-native-pager-view": ">=6.1.4",
     "react-native-tab-view": ">=3.5.0",
-    "react-native-toast-message": ">=2.2.0"
+    "react-native-toast-message": ">=2.2.0",
+    "@react-native-community/slider": ">=4.4.3",
+    "react-native-create-thumbnail": ">=1.6.4",
+    "react-native-dotenv": ">=3.4.9",
+    "react-native-file-viewer": ">=2.1.5",
+    "react-native-image-zoom-viewer": ">=3.0.1",
+    "react-native-safe-area-context": ">=4.8.2",
+    "react-native-screens": ">=3.29.0",
+    "react-native-swiper-flatlist": ">=3.2.3",
+    "react-native-video": ">=5.2.1",
+    "@types/react-native-video": ">=5.0.14",
+    "typescript": ">=5.3.3"
   },
   "devDependencies": {
     "@react-native-community/netinfo": ">=11.3.0",
