@@ -22,7 +22,7 @@ import {
 import {
   GetNotificationFeedRequest,
   MarkReadNotificationRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-rn";
 import { clearPostDetail } from "../store/actions/postDetail";
 import {
   CREATE_POST,
@@ -30,6 +30,8 @@ import {
   UNIVERSAL_FEED,
 } from "../constants/screenNames";
 import { NAVIGATED_FROM_NOTIFICATION } from "../constants/Strings";
+import { Client } from "../client";
+import { SET_NOTIFICATION_COUNT } from "../store/types/types";
 
 interface NotificationFeedContextProps {
   children: ReactNode;
@@ -132,7 +134,13 @@ export const NotificationFeedContextProvider = ({
     fetchNotificationFeed(notificationFeedPageNumber);
   }, []);
 
-  const handleScreenBackPress = () => {
+  const handleScreenBackPress = async () => {
+    const latestUnreadCount =
+      await Client.myClient?.getUnreadNotificationCount();
+    await dispatch({
+      type: SET_NOTIFICATION_COUNT,
+      body: { notificationCount: latestUnreadCount?.data?.count },
+    });
     navigation.goBack();
   };
 

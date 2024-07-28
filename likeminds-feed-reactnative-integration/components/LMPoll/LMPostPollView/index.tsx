@@ -24,7 +24,7 @@ import { SHOW_TOAST } from "../../../store/types/loader";
 import { useAppDispatch, useAppSelector } from "../../../store/store";
 import { POLL_RESULT } from "../../../constants/screenNames";
 import { PollMultiSelectState, PollType } from "../../../enums/Poll";
-import { GetPostRequest } from "@likeminds.community/feed-js";
+import { GetPostRequest } from "@likeminds.community/feed-rn";
 import { getPost } from "../../../store/actions/postDetail";
 import { useUniversalFeedContext } from "../../../context";
 

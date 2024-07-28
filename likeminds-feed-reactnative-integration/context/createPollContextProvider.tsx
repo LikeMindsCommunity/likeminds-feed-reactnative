@@ -89,7 +89,7 @@ export const CreatePollContextProvider = ({
   const [userVoteForOptionsArrValue, setUserVoteForOptionsArrValue] = useState(
     []
   );
-  
+
   const userCanVoteForArr = ["Exactly", "At max", "At least"];
 
   const dispatch = useAppDispatch();
@@ -332,10 +332,10 @@ export const CreatePollContextProvider = ({
         title: question,
         options: polls,
         pollType: liveResultsEnabled ? PollType.DEFERRED : PollType.INSTANT,
-        multipleSelectState: showAdvancedOption ? userVoteFor : null,
-        multipleSelectNumber: showAdvancedOption ? voteAllowedPerUser : null,
-        isAnonymous: showAdvancedOption ? anonymousPollEnabled : false,
-        allowAddOption: showAdvancedOption ? addOptionsEnabled : false,
+        multipleSelectState: userVoteFor ?? null,
+        multipleSelectNumber: voteAllowedPerUser ?? null,
+        isAnonymous: anonymousPollEnabled ?? false,
+        allowAddOption: addOptionsEnabled ?? false,
         expiryTime: Date.parse(time.toString()),
         disabled: true, // to disable buttons on poll preview.
       };

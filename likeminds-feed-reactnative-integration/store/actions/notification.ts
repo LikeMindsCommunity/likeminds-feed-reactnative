@@ -18,7 +18,7 @@ import { Client } from "../../client";
 import {
   GetNotificationFeedRequest,
   MarkReadNotificationRequest,
-} from "@likeminds.community/feed-js";
+} from "@likeminds.community/feed-rn";
 
 // get notification feed api
 export const getNotificationFeed =
