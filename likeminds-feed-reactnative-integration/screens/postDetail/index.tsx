@@ -345,7 +345,7 @@ const PostDetailComponent = React.memo(() => {
   }, []);
 
   return (
-    <SafeAreaView edges={["left", "right", "top"]} style={styles.flexView}>
+    <SafeAreaView style={styles.flexView}>
       <KeyboardAvoidingView
         enabled={true}
         behavior={"height"}
