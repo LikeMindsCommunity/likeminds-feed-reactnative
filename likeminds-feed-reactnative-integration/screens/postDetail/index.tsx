@@ -66,6 +66,7 @@ import {
   SET_FLOW_TO_POST_DETAIL_SCREEN,
   SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
 } from "../../store/types/types";
+import STYLES from "../../constants/Styles";
 
 interface PostDetailProps {
   children?: React.ReactNode;
@@ -807,7 +808,15 @@ const PostDetailComponent = React.memo(() => {
           <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
           >
-            <Text>Deleted Post</Text>
+            <Text
+              style={{
+                color: STYLES.$IS_DARK_THEME
+                  ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+                  : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+              }}
+            >
+              Deleted Post
+            </Text>
           </View>
         ) : null}
         {/* input field */}
@@ -847,7 +856,9 @@ const PostDetailComponent = React.memo(() => {
             placeholderTextColor={
               customCommentTextInput?.placeholderTextColor
                 ? customCommentTextInput?.placeholderTextColor
-                : "#9B9B9B"
+                : STYLES.$IS_DARK_THEME
+                ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
             }
             inputRef={myRef}
             rightIcon={{

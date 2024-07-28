@@ -24,7 +24,9 @@ export const defaultStyles = StyleSheet.create({
     zIndex: 1000,
   },
   errorView: {
-    backgroundColor: STYLES.$COLORS.LIGHT_GREY,
+    backgroundColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     position: "absolute",
     justifyContent: "center",
     alignItems: "center",

@@ -6,9 +6,12 @@ interface StylesProps {
   primaryColor?: string;
   secondaryColor?: string;
   lightBackgroundColor?: string;
+  isDarkTheme?: boolean;
 }
 
 export class STYLES {
+  static $IS_DARK_THEME = false;
+  static $HUE = 244;
   static $COLORS = {
     PRIMARY: "hsl(244, 75%, 59%)",
     SECONDARY: "hsl(240, 64%, 91%)",
@@ -16,16 +19,16 @@ export class STYLES {
     MSG: "#777e8e",
     FONT_PRIMARY: "hsl(244, 75%, 59%)",
     JOINED_BTN: "hsl(222, 22%, 93%)",
-    WHITE: '#ffffff',
-    BLACK: '#000000',
-    THEME: '#5046E5',
-    TEXT_COLOR: '#484F67',
-    LIGHT_GREY: '#e0e0e0',
-    RED: '#ff0000',
-    whiteTextColor: '#ffffff',
-    darkTextColor: '#000000',
-    lightGreyTextColor: '#00000077',
-    darkGreyTextColor: '#00000099',
+    WHITE: "#ffffff",
+    BLACK: "#000000",
+    THEME: "#5046E5",
+    TEXT_COLOR: "#484F67",
+    LIGHT_GREY: "#e0e0e0",
+    RED: "#ff0000",
+    whiteTextColor: "#ffffff",
+    darkTextColor: "#000000",
+    lightGreyTextColor: "#00000077",
+    darkGreyTextColor: "#00000099",
   };
   static $FONT_SIZES = {
     XS: 10,
@@ -36,12 +39,12 @@ export class STYLES {
     XL: 18,
     XXL: 20,
   };
-  static $FONT_WEIGHT ={
-    LIGHT: '300' as const,
-    REGULAR: '400' as const,
-    MEDIUM: '500' as const ,
-    BOLD: '600' as const,
-    BOLDER: '700' as const
+  static $FONT_WEIGHT = {
+    LIGHT: "300" as const,
+    REGULAR: "400" as const,
+    MEDIUM: "500" as const,
+    BOLD: "600" as const,
+    BOLDER: "700" as const,
   };
   static $FONT_TYPES = {
     LIGHT: "SofiaPro-Light",
@@ -53,8 +56,16 @@ export class STYLES {
   static $BACKGROUND_COLORS = {
     LIGHT: "#ffffff",
     DARK: "#000000",
-    DARKTRANSPARENT: '#00000088',
+    DARKTRANSPARENT: "#00000088",
   };
+
+  static $TEXT_COLOR = {
+    PRIMARY_TEXT_LIGHT: "#000000",
+    SECONDARY_TEXT_LIGHT: "grey",
+    PRIMARY_TEXT_DARK: "#ffffff",
+    SECONDARY_TEXT_DARK: "grey",
+  };
+
   static $SHADOWS = {
     LIGHT: "0 5px 10px rgba(0, 0, 0, 0.1)",
     MEDIUM: "0 8px 30px rgba(0, 0, 0, 0.3)",
@@ -65,14 +76,14 @@ export class STYLES {
     SMALL: 10,
     MEDIUM: 15,
     LARGE: 20,
-    XL:25
+    XL: 25,
   };
   static $PADDINGS = {
-    XS:5,
+    XS: 5,
     SMALL: 10,
     MEDIUM: 15,
     LARGE: 20,
-    XL: 25
+    XL: 25,
   };
   static $AVATAR = {
     WIDTH: 50,
@@ -101,6 +112,7 @@ export class STYLES {
     primaryColor,
     secondaryColor,
     lightBackgroundColor,
+    isDarkTheme,
   }: StylesProps) {
     STYLES.$COLORS = {
       ...STYLES.$COLORS,
@@ -110,11 +122,17 @@ export class STYLES {
       SECONDARY: secondaryColor
         ? secondaryColor
         : `hsl(${hue ? hue : 222}, 47%, 31%)`,
-      FONT_PRIMARY: fontColor ? fontColor : `hsl(${hue ? hue : 222}, 53%, 15%)`,
+      FONT_PRIMARY: fontColor
+        ? fontColor
+        : primaryColor
+        ? primaryColor
+        : `hsl(${hue ? hue : 222}, 53%, 15%)`,
       JOINED_BTN: lightBackgroundColor
         ? lightBackgroundColor
         : `hsl(${hue ? hue : 222}, 22%, 93%)`,
     };
+    STYLES.$IS_DARK_THEME = isDarkTheme ? isDarkTheme : false;
+    STYLES.$HUE = hue ? hue : 244;
   }
 }
 

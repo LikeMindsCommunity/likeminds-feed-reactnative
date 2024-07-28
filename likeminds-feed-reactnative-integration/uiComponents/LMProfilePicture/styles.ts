@@ -7,7 +7,7 @@ export const defaultStyles = StyleSheet.create({
       height: 48,
       borderRadius: 25,
       justifyContent: "center",
-      backgroundColor: STYLES.$COLORS.THEME,
+      backgroundColor: STYLES.$COLORS.PRIMARY,
       alignItems: "center",
       resizeMode: "contain",
     },

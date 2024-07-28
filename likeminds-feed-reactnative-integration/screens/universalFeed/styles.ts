@@ -8,12 +8,25 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   uploadingPostContentView: { flexDirection: "row", alignItems: "center" },
-  uploadingVideoStyle: { backgroundColor: STYLES.$BACKGROUND_COLORS.LIGHT },
-  uploadingImageStyle: { backgroundColor: STYLES.$BACKGROUND_COLORS.LIGHT },
+  uploadingVideoStyle: {
+    backgroundColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$BACKGROUND_COLORS.DARK
+      : STYLES.$BACKGROUND_COLORS.LIGHT,
+  },
+  uploadingImageStyle: {
+    backgroundColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$BACKGROUND_COLORS.DARK
+      : STYLES.$BACKGROUND_COLORS.LIGHT,
+  },
   uploadingDocumentStyle: { marginRight: 2, resizeMode: "contain" },
-  postUploadingText: { color: "#333333", marginLeft: 10 },
+  postUploadingText: {
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+    marginLeft: 10,
+  },
   newPostButtonView: {
-    backgroundColor: "#5046E5",
+    backgroundColor: STYLES.$COLORS.PRIMARY,
     flexDirection: "row",
     width: "40%",
     alignItems: "center",
@@ -45,7 +58,9 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$BACKGROUND_COLORS.DARK
+      : STYLES.$BACKGROUND_COLORS.LIGHT,
     marginBottom: 10,
     height: 50,
   },
@@ -61,7 +76,9 @@ export const styles = StyleSheet.create({
     color: STYLES.$COLORS.FONT_PRIMARY,
   },
   uploadingImageVideoBox: {
-    backgroundColor: "#fff",
+    backgroundColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$BACKGROUND_COLORS.DARK
+      : STYLES.$BACKGROUND_COLORS.LIGHT,
     width: 49,
     height: 42,
     marginRight: 10,

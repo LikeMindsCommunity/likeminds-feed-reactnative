@@ -39,7 +39,7 @@ import LMLoader from "../../components/LMLoader";
 import { LMCommentUI, LMPostUI } from "../../models";
 import { getPostType, reportAnalytics } from "../../utils/analytics";
 import Layout from "../../constants/Layout";
-import { Client } from "@likeminds.community/feed-rn-core/client";
+import { Client } from "../../client";
 
 // interface for post report api request
 interface ReportRequest {

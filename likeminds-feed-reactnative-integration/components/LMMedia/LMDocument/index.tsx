@@ -30,7 +30,7 @@ const LMDocument = React.memo(
     onCancel,
     showMoreText = true,
     cancelButton,
-    showMoreTextStyle
+    showMoreTextStyle,
   }: LMDocumentProps) => {
     const [showFullList, setShowFullList] = useState(false);
 
@@ -57,7 +57,7 @@ const LMDocument = React.memo(
                     ? Linking.openURL(item?.attachmentMeta?.url)
                     : FileViewer.open(item?.attachmentMeta?.url)
                   : null;
-                  onTap && onTap();
+                onTap && onTap();
               }}
               key={index}
               style={styles.postMedia}
@@ -128,7 +128,9 @@ const LMDocument = React.memo(
                             },
                           ])}
                         >
-                          {item?.attachmentMeta?.pageCount > 1 ? `${item?.attachmentMeta?.pageCount} Pages` : `${item?.attachmentMeta?.pageCount} Page` }
+                          {item?.attachmentMeta?.pageCount > 1
+                            ? `${item?.attachmentMeta?.pageCount} Pages`
+                            : `${item?.attachmentMeta?.pageCount} Page`}
                         </Text>
                         <Image
                           source={require("../../../assets/images/single_dot3x.png")}
@@ -207,9 +209,17 @@ const LMDocument = React.memo(
                 {showCancel && (
                   <>
                     {cancelButton ? (
-                      <LMButton {...cancelButton}
-                      onTap={onCancel ? () => {onCancel(index); cancelButton.onTap()} : () => null}
-                       />
+                      <LMButton
+                        {...cancelButton}
+                        onTap={
+                          onCancel
+                            ? () => {
+                                onCancel(index);
+                                cancelButton.onTap();
+                              }
+                            : () => null
+                        }
+                      />
                     ) : (
                       <LMButton
                         onTap={onCancel ? () => onCancel(index) : () => null}
@@ -236,9 +246,12 @@ const LMDocument = React.memo(
             style={styles.showMoreView}
             accessibilityRole="button"
           >
-            <LMText textStyle={StyleSheet.flatten([styles.showMoreText, showMoreTextStyle])}>{`+ ${
-              attachments.length - 2
-            } More`}</LMText>
+            <LMText
+              textStyle={StyleSheet.flatten([
+                styles.showMoreText,
+                showMoreTextStyle,
+              ])}
+            >{`+ ${attachments.length - 2} More`}</LMText>
           </TouchableOpacity>
         )}
       </View>

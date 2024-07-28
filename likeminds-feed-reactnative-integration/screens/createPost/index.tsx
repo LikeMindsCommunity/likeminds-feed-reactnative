@@ -464,9 +464,9 @@ const CreatePostComponent = () => {
                   <Text
                     style={{
                       fontSize: Layout.normalize(17),
-                      color: "#5046E5",
+                      color: STYLES.$COLORS.PRIMARY,
                       paddingVertical: Layout.normalize(5),
-                      backgroundColor: "hsla(244, 75%, 59%, 0.1)",
+                      backgroundColor: `hsla(${STYLES.$HUE}, 75%, 59%, 0.1)`,
                       borderRadius: Layout.normalize(5),
                       paddingHorizontal: Layout.normalize(12),
                       margin: Layout.normalize(5),
@@ -483,7 +483,7 @@ const CreatePostComponent = () => {
                     <TouchableOpacity
                       onPress={() => handleAllTopicPress()}
                       style={{
-                        backgroundColor: "hsla(244, 75%, 59%, 0.1)",
+                        backgroundColor: `hsla(${STYLES.$HUE}, 75%, 59%, 0.1)`,
                         borderRadius: 5,
                         paddingHorizontal: 15,
                         marginLeft: 5,
@@ -512,7 +512,7 @@ const CreatePostComponent = () => {
               <View
                 style={{
                   paddingVertical: Layout.normalize(7),
-                  backgroundColor: "hsla(244, 75%, 59%, 0.1)",
+                  backgroundColor: `hsla(${STYLES.$HUE}, 75%, 59%, 0.1)`,
                   borderRadius: Layout.normalize(5),
                   flexDirection: "row",
                   alignItems: "center",
@@ -522,7 +522,7 @@ const CreatePostComponent = () => {
                 <Image
                   source={require("../../assets/images/plusAdd_icon3x.png")}
                   style={{
-                    tintColor: "#5046E5",
+                    tintColor: STYLES.$COLORS.PRIMARY,
                     width: Layout.normalize(15),
                     height: Layout.normalize(15),
                     marginRight: Layout.normalize(5), // Add margin to separate Image and Text
@@ -532,7 +532,7 @@ const CreatePostComponent = () => {
                 <Text
                   style={{
                     fontSize: Layout.normalize(16),
-                    color: "#5046E5",
+                    color: STYLES.$COLORS.PRIMARY,
                   }}
                 >
                   {selectTopicPlaceholder !== undefined
@@ -555,7 +555,9 @@ const CreatePostComponent = () => {
           placeholderTextColor={
             customTextInputStyle?.placeholderTextColor
               ? customTextInputStyle?.placeholderTextColor
-              : "#0F1E3D66"
+              : STYLES.$IS_DARK_THEME
+              ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+              : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
           }
           inputTextStyle={[
             styles.textInputView,

@@ -9,7 +9,9 @@ export const styles = StyleSheet.create({
   },
   docView: {
     flexDirection: "row",
-    borderColor: STYLES.$COLORS.LIGHT_GREY,
+    borderColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     borderWidth: 1,
     marginHorizontal: 15,
     borderRadius: 5,
@@ -27,23 +29,29 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   docTitle: {
-    color: "#666666",
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     fontSize: 16,
     fontWeight: "500",
   },
   docDetail: {
-    color: "#666666",
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     fontSize: 13,
   },
   dotImageSize: {
     width: layout.normalize(5),
     height: layout.normalize(5),
     marginHorizontal: 5,
-    tintColor: "#666666",
+    tintColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
   },
   showMoreText: {
     fontSize: 16,
-    color: STYLES.$COLORS.THEME,
+    color: STYLES.$COLORS.PRIMARY,
   },
   documentDetailView: {
     marginLeft: 12,

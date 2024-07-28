@@ -150,10 +150,21 @@ const LMFilterTopics = () => {
     }
   }, [mappedTopics, feedData]);
   return (
-    <View>
+    <View
+      style={{
+        backgroundColor: STYLES.$IS_DARK_THEME
+          ? STYLES.$BACKGROUND_COLORS.DARK
+          : STYLES.$BACKGROUND_COLORS.LIGHT,
+      }}
+    >
       {/* all topics filter */}
       {mappedTopics?.length > 0 && showTopics ? (
-        <View style={{ justifyContent: "space-between", flexDirection: "row" }}>
+        <View
+          style={{
+            justifyContent: "space-between",
+            flexDirection: "row",
+          }}
+        >
           <ScrollView
             style={{ flexGrow: 0, margin: Layout.normalize(10) }}
             horizontal={true}
@@ -168,14 +179,14 @@ const LMFilterTopics = () => {
                         alignItems: "center",
                         padding: Layout.normalize(7),
                         borderWidth: 1,
-                        borderColor: "#5046E5",
+                        borderColor: STYLES.$COLORS.PRIMARY,
                         borderRadius: Layout.normalize(5),
                       }}
                     >
                       <Text
                         style={{
                           fontSize: Layout.normalize(16),
-                          color: "#5046E5",
+                          color: STYLES.$COLORS.PRIMARY,
                           marginRight: Layout.normalize(8),
                           fontWeight: "400",
                           ...(filteredTopicsStyle !== undefined
@@ -190,7 +201,7 @@ const LMFilterTopics = () => {
                         <Image
                           source={require("../../assets/images/close_tag3x.png")}
                           style={{
-                            tintColor: "#5046E5",
+                            tintColor: STYLES.$COLORS.PRIMARY,
                             width: Layout.normalize(15),
                             height: Layout.normalize(15),
                             ...(crossIconStyle !== undefined
@@ -221,7 +232,7 @@ const LMFilterTopics = () => {
               }}
             >
               <Text
-                style={{ color: "#5046E5", fontSize: Layout.normalize(17) }}
+                style={{ color: STYLES.$COLORS.PRIMARY, fontSize: Layout.normalize(17) }}
               >
                 Clear
               </Text>
@@ -234,12 +245,14 @@ const LMFilterTopics = () => {
             style={{
               flexDirection: "row",
               alignItems: "center",
-              backgroundColor: STYLES.$BACKGROUND_COLORS.LIGHT,
               borderBottomWidth: 1,
               borderBottomColor: "#D0D8E2",
               borderTopWidth: 1,
               borderTopColor: "#D0D8E2",
               paddingVertical: Layout.normalize(10),
+              backgroundColor: STYLES.$IS_DARK_THEME
+                ? STYLES.$BACKGROUND_COLORS.DARK
+                : STYLES.$BACKGROUND_COLORS.LIGHT,
             }}
           >
             <TouchableOpacity onPress={() => handleAllTopicPress()}>
@@ -256,9 +269,11 @@ const LMFilterTopics = () => {
                 <Text
                   style={{
                     fontSize: Layout.normalize(16),
-                    color: "#666666",
                     marginRight: Layout.normalize(5),
                     fontWeight: "400",
+                    color: STYLES.$IS_DARK_THEME
+                      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
                     ...(allTopicsStyle !== undefined ? allTopicsStyle : {}),
                   }}
                 >

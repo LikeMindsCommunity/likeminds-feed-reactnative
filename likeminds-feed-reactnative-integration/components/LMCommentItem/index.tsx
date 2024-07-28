@@ -22,6 +22,7 @@ import decode from "../../utils/decodeMentions";
 import { timeStamp } from "../../utils";
 import { useAppSelector } from "../../store/store";
 import { MemberRightsEnum } from "../../enums/MemberRightsEnum";
+import STYLES from "../../constants/Styles";
 
 const LMCommentItem = React.memo(
   ({
@@ -99,7 +100,11 @@ const LMCommentItem = React.memo(
         : numberOfLines,
       textStyle: commentContentProps?.textStyle
         ? commentContentProps?.textStyle
-        : { color: "#222020" },
+        : {
+            color: STYLES.$IS_DARK_THEME
+              ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+              : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+          },
       selectable: commentContentProps?.selectable
         ? commentContentProps?.selectable
         : true,
@@ -217,7 +222,11 @@ const LMCommentItem = React.memo(
                   : require("../../assets/images/heart_icon3x.png"),
                 iconUrl: customLikeIcon?.iconUrl,
                 iconStyle: customLikeIcon?.iconStyle,
-                color: customLikeIcon?.color,
+                color: customLikeIcon?.color
+                  ? customLikeIcon?.color
+                  : STYLES.$IS_DARK_THEME
+                  ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+                  : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
                 height: customLikeIcon?.height
                   ? likeIconButton?.icon?.height
                   : 20.5,
@@ -243,7 +252,9 @@ const LMCommentItem = React.memo(
                   textStyle: {
                     fontSize: 13,
                     marginLeft: 5,
-                    color: "#0F1E3D66",
+                    color: STYLES.$IS_DARK_THEME
+                      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
                   },
                 }}
                 buttonStyle={styles.likeTextButton}
@@ -266,7 +277,12 @@ const LMCommentItem = React.memo(
                         : commentingRight?.isSelected && <Text>Reply</Text>
                       : commentingRight?.isSelected && <Text>Reply</Text>,
                     textStyle: StyleSheet.flatten([
-                      { fontSize: 13, color: "#0F1E3D66" },
+                      {
+                        fontSize: 13,
+                        color: STYLES.$IS_DARK_THEME
+                          ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                          : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
+                      },
                       replyTextProps?.text?.textStyle,
                     ]),
                   }}
@@ -287,7 +303,11 @@ const LMCommentItem = React.memo(
                       width={styles.dotImageSize.width}
                       height={styles.dotImageSize.height}
                       iconStyle={styles.dotImageSize}
-                      color="#0F1E3D66"
+                      color={
+                        STYLES.$IS_DARK_THEME
+                          ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                          : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
+                      }
                     />
                     <LMButton
                       onTap={() => {
@@ -311,7 +331,7 @@ const LMCommentItem = React.memo(
                             )
                           ),
                         textStyle: StyleSheet.flatten([
-                          { fontSize: 13, color: "#5046E5" },
+                          { fontSize: 13, color: STYLES.$COLORS.PRIMARY },
                           repliesCountTextStyle,
                         ]),
                       }}
@@ -338,7 +358,11 @@ const LMCommentItem = React.memo(
                   width={styles.dotImageSize.width}
                   height={styles.dotImageSize.height}
                   iconStyle={styles.dotImageSize}
-                  color="#0F1E3D66"
+                  color={
+                    STYLES.$IS_DARK_THEME
+                      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
+                  }
                 />
               </>
             )}

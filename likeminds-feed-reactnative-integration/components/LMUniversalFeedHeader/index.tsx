@@ -10,6 +10,7 @@ import {
 import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Events } from "../../enums/Events";
 import { APP_TITLE } from "../../constants/Strings";
+import STYLES from "../../constants/Styles";
 
 const LMUniversalFeedHeader = () => {
   const {
@@ -22,7 +23,13 @@ const LMUniversalFeedHeader = () => {
     useUniversalFeedCustomisableMethodsContext();
 
   return (
-    <View>
+    <View
+      style={{
+        backgroundColor: STYLES.$IS_DARK_THEME
+          ? STYLES.$BACKGROUND_COLORS.DARK
+          : STYLES.$BACKGROUND_COLORS.LIGHT,
+      }}
+    >
       {/* header */}
       <LMHeader
         heading={APP_TITLE}
@@ -38,7 +45,14 @@ const LMUniversalFeedHeader = () => {
           >
             <Image
               source={require("../../assets/images/notification_bell.png")}
-              style={{ width: 24, height: 24, resizeMode: "contain" }}
+              style={{
+                width: 24,
+                height: 24,
+                resizeMode: "contain",
+                tintColor: STYLES.$IS_DARK_THEME
+                  ? STYLES.$BACKGROUND_COLORS.LIGHT
+                  : STYLES.$BACKGROUND_COLORS.DARK,
+              }}
             />
             {unreadNotificationCount > 0 && (
               <View
@@ -55,7 +69,9 @@ const LMUniversalFeedHeader = () => {
                 }}
               >
                 <Text style={{ color: "#fff", fontSize: 12 }}>
-                  {unreadNotificationCount < 100 ? unreadNotificationCount : `99+`}
+                  {unreadNotificationCount < 100
+                    ? unreadNotificationCount
+                    : `99+`}
                 </Text>
               </View>
             )}

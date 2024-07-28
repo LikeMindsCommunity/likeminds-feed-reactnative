@@ -6,7 +6,9 @@ import layout from "../../../constants/Layout";
 export const styles = StyleSheet.create({
   mainContainer: {
     width: layout.window.width,
-    backgroundColor: STYLES.$BACKGROUND_COLORS.LIGHT,
+    backgroundColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$BACKGROUND_COLORS.DARK
+      : STYLES.$BACKGROUND_COLORS.LIGHT,
     marginBottom: 10,
     paddingTop: 10,
   },

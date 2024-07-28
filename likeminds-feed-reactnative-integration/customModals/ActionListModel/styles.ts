@@ -12,7 +12,9 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginHorizontal: Layout.normalize(20),
-    backgroundColor: "white",
+    backgroundColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$BACKGROUND_COLORS.DARK
+      : STYLES.$BACKGROUND_COLORS.LIGHT,
     borderRadius: Layout.normalize(8),
     opacity: 1,
     maxHeight: Layout.normalize(250),
@@ -24,6 +26,8 @@ export const styles = StyleSheet.create({
   filterText: {
     fontSize: STYLES.$FONT_SIZES.LARGE,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
-    color: STYLES.$COLORS.BLACK,
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
   },
 });

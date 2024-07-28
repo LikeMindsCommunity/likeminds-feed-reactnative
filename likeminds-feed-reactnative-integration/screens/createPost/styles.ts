@@ -5,7 +5,9 @@ import STYLES from "../../constants/Styles";
 
 export const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
+    backgroundColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$BACKGROUND_COLORS.DARK
+      : STYLES.$BACKGROUND_COLORS.LIGHT,
     height: layout.window.height,
   },
   profileContainer: {
@@ -17,7 +19,9 @@ export const styles = StyleSheet.create({
   userNameText: {
     fontSize: 16,
     fontWeight: "500",
-    color: "#222020",
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
     marginLeft: 8,
     textTransform: "capitalize",
   },
@@ -30,7 +34,7 @@ export const styles = StyleSheet.create({
   },
   addMoreButtonView: {
     width: "35%",
-    borderColor: "#5046E5",
+    borderColor: STYLES.$COLORS.PRIMARY,
     borderWidth: 1,
     borderRadius: 8,
     alignSelf: "center",
@@ -41,12 +45,16 @@ export const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     width: layout.window.width,
-    backgroundColor: "#fff",
+    backgroundColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$BACKGROUND_COLORS.DARK
+      : STYLES.$BACKGROUND_COLORS.LIGHT,
   },
   optionItemView: {
     flexDirection: "row",
     alignItems: "center",
-    borderBottomColor: "#D0D8E280",
+    borderBottomColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     borderBottomWidth: 1,
     paddingHorizontal: 15,
     paddingVertical: 7,
@@ -54,12 +62,14 @@ export const styles = StyleSheet.create({
   addMoreButtonText: {
     fontSize: 14,
     fontWeight: "500",
-    color: "#5046E5",
+    color: STYLES.$COLORS.PRIMARY,
     marginLeft: 5,
   },
   selectionOptionstext: {
     marginLeft: 8,
-    color: "#222020",
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
   },
   postButtonDisabled: {
     opacity: 0.5,
@@ -67,7 +77,11 @@ export const styles = StyleSheet.create({
   postButtonEnable: {
     opacity: 1,
   },
-  postTextStyle: { color: "#5046E5", fontSize: 16, fontWeight: "500" },
+  postTextStyle: {
+    color: STYLES.$COLORS.PRIMARY,
+    fontSize: 16,
+    fontWeight: "500",
+  },
   scrollViewStyleWithOptions: {
     flex: 1,
     marginBottom: 125,
@@ -85,19 +99,26 @@ export const styles = StyleSheet.create({
     height: Layout.normalize(34),
     width: Layout.normalize(25),
     resizeMode: "contain",
-    tintColor: "#5046E5",
+    tintColor: STYLES.$COLORS.PRIMARY,
   },
   border: {
     borderBottomWidth: 1,
-    borderBottomColor: "#D0D8E2",
+    borderBottomColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     marginLeft: 20,
     marginRight: 20,
     marginTop: 20,
   },
-  selectingMediaText: { color: "#666666", marginTop: 12 },
+  selectingMediaText: {
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
+    marginTop: 12,
+  },
   rowAlignMent: { flex: 1, justifyContent: "center" },
   headerRightComponentText: {
-    color: "#5046E5",
+    color: STYLES.$COLORS.PRIMARY,
     fontSize: 16,
     fontWeight: "500",
   },
@@ -108,10 +129,14 @@ export const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     width: "100%",
     position: "relative",
-    borderColor: "grey",
+    borderColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     overflow: "hidden",
     borderTopWidth: 0.5,
-    backgroundColor: "#fff",
+    backgroundColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$BACKGROUND_COLORS.DARK
+      : STYLES.$BACKGROUND_COLORS.LIGHT,
   },
   taggingListItem: {
     display: "flex",
@@ -119,7 +144,9 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 10,
     paddingVertical: 5,
-    borderBottomColor: "#e0e0e0",
+    borderBottomColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     borderBottomWidth: 1,
   },
   taggingListProfileBoxStyle: {
@@ -131,6 +158,11 @@ export const styles = StyleSheet.create({
     paddingVertical: 15,
     gap: Platform.OS === "ios" ? 5 : 0,
   },
-  taggingListText: { fontSize: 14, color: "#000" },
+  taggingListText: {
+    fontSize: 14,
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+  },
   taggingLoaderView: { paddingVertical: 20 },
 });
