@@ -820,7 +820,7 @@ const PostDetailComponent = React.memo(() => {
           </View>
         ) : null}
         {/* input field */}
-        {postDetail?.id && commentingRight?.isSelected ? (
+        {postDetail?.id && commentingRight?.isSelected && !showLoader ? (
           <LMInputText
             {...customCommentTextInput}
             inputText={commentToAdd}
@@ -909,11 +909,13 @@ const PostDetailComponent = React.memo(() => {
             ]}
           />
         ) : (
-          <View style={styles.textContainer}>
-            <Text style={styles.disabledText}>
-              You don't have permission to comment
-            </Text>
-          </View>
+          !showLoader && (
+            <View style={styles.textContainer}>
+              <Text style={styles.disabledText}>
+                You don't have permission to comment
+              </Text>
+            </View>
+          )
         )}
       </KeyboardAvoidingView>
 
