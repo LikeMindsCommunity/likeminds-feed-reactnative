@@ -53,6 +53,7 @@ export class STYLES {
     BOLD: "SofiaPro-Bold",
     BLACK: "SofiaPro-Black",
   };
+  
   static $BACKGROUND_COLORS = {
     LIGHT: "#ffffff",
     DARK: "#000000",
@@ -134,6 +135,7 @@ export class STYLES {
     STYLES.$IS_DARK_THEME = isDarkTheme ? isDarkTheme : false;
     STYLES.$HUE = hue ? hue : 244;
   }
+
 }
 
 export default STYLES;

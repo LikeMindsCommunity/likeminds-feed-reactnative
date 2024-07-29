@@ -111,8 +111,8 @@ export const styles = StyleSheet.create({
   },
   lightGreyColorText: {
     color: STYLES.$IS_DARK_THEME
-      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
-      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
+      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
   },
   taggingListView: {
     borderTopRightRadius: 10,

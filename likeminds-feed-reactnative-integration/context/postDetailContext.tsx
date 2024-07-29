@@ -88,6 +88,7 @@ import {
   SET_FLOW_TO_POST_DETAIL_SCREEN,
   SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
 } from "../store/types/types";
+import { commentResponseModelConvertor } from "../utils/commentResponseModelConvertor";
 
 interface PostDetailContextProps {
   children: ReactNode;
@@ -578,11 +579,7 @@ export const PostDetailContextProvider = ({
     // sets the api response in the callback function
     repliesResponseCallback(
       postDetail?.replies &&
-        postDetail?.replies[
-          postDetail.replies?.findIndex(
-            (item: LMCommentUI) => item.id === commentId
-          )
-        ]?.replies
+      commentResponseModelConvertor(commentsRepliesResponse)?.replies
     );
     return commentsRepliesResponse;
   };

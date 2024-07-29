@@ -234,7 +234,7 @@ const App = () => {
         .setApiKey(apiKey)
         .setUUID(userUniqueID)
         .build();
-      const initiateUserResponse = await myClient.initiateUser(
+      const initiateUserResponse: any = await myClient?.initiateUser(
         initiateUserRequest,
       );
       const accessToken = initiateUserResponse?.accessToken;

@@ -120,7 +120,7 @@ const FilterTopics = () => {
   }, [mappedTopics, feedData]);
 
   return (
-    <View>
+    <View style={{backgroundColor: 'white'}}>
       {/* all topics filter */}
       {Object.keys(topics)?.length > 0 && showTopics ? (
         <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>

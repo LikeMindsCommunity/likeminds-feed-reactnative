@@ -46,6 +46,7 @@ import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Keys } from "../../enums/Keys";
 import { getPostType } from "../../utils/analytics";
 import { SET_FLOW_TO_POST_DETAIL_SCREEN } from "../../store/types/types";
+import STYLES from "../../constants/Styles";
 
 const PostsList = ({ route, children, items }: any) => {
   const { navigation }: UniversalFeedContextValues = useUniversalFeedContext();
@@ -152,7 +153,14 @@ const PostsListComponent = ({ topics }: any) => {
   const currentVideoId = useAppSelector((state) => state.feed.currentIdOfVideo);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: STYLES.$IS_DARK_THEME
+          ? STYLES.$BACKGROUND_COLORS.DARK
+          : STYLES.$BACKGROUND_COLORS.LIGHT,
+      }}
+    >
       {/* posts list section */}
       {!feedFetching ? (
         feedData?.length > 0 ? (
@@ -247,7 +255,9 @@ const PostsListComponent = ({ topics }: any) => {
                         },
                         shareButton: {
                           onTap: () => {
-                            onSharePostClicked ? onSharePostClicked(item?.id) : {};
+                            onSharePostClicked
+                              ? onSharePostClicked(item?.id)
+                              : {};
                           },
                         },
                       }}
@@ -275,7 +285,16 @@ const PostsListComponent = ({ topics }: any) => {
           />
         ) : (
           <View style={[styles.noDataView, postListStyle?.noPostView]}>
-            <Text style={[{ color: "black" }, postListStyle?.noPostText]}>
+            <Text
+              style={[
+                {
+                  color: STYLES.$IS_DARK_THEME
+                    ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+                    : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+                },
+                postListStyle?.noPostText,
+              ]}
+            >
               No Post
             </Text>
           </View>

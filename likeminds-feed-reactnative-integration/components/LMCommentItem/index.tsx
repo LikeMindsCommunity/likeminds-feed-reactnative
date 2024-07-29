@@ -222,11 +222,7 @@ const LMCommentItem = React.memo(
                   : require("../../assets/images/heart_icon3x.png"),
                 iconUrl: customLikeIcon?.iconUrl,
                 iconStyle: customLikeIcon?.iconStyle,
-                color: customLikeIcon?.color
-                  ? customLikeIcon?.color
-                  : STYLES.$IS_DARK_THEME
-                  ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
-                  : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+                color: customLikeIcon?.color,
                 height: customLikeIcon?.height
                   ? likeIconButton?.icon?.height
                   : 20.5,
@@ -261,86 +257,88 @@ const LMCommentItem = React.memo(
               />
             )}
             {/* reply section */}
-            {comment?.level === PARENT_LEVEL_COMMENT && (
-              <>
-                <LMText
-                  children={<Text> | </Text>}
-                  textStyle={styles.replyTextStyle}
-                />
-                {/* this opens the input text to reply */}
-                <LMButton
-                  {...replyTextProps}
-                  text={{
-                    children: replyTextProps
-                      ? replyTextProps.text?.children
-                        ? replyTextProps.text.children
-                        : commentingRight?.isSelected && <Text>Reply</Text>
-                      : commentingRight?.isSelected && <Text>Reply</Text>,
-                    textStyle: StyleSheet.flatten([
-                      {
-                        fontSize: 13,
-                        color: STYLES.$IS_DARK_THEME
-                          ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
-                          : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
-                      },
-                      replyTextProps?.text?.textStyle,
-                    ]),
-                  }}
-                  onTap={() => {
-                    replyTextProps?.onTap();
-                  }}
-                  buttonStyle={StyleSheet.flatten([
-                    styles.replyTextButton,
-                    replyTextProps?.buttonStyle,
-                  ])}
-                />
+            {comment?.level === PARENT_LEVEL_COMMENT &&
+              commentingRight?.isSelected && (
+                <>
+                  <LMText
+                    children={<Text> | </Text>}
+                    textStyle={styles.replyTextStyle}
+                  />
+                  {/* this opens the input text to reply */}
+                  <LMButton
+                    {...replyTextProps}
+                    text={{
+                      children: replyTextProps ? (
+                        replyTextProps.text?.children ? (
+                          replyTextProps.text.children
+                        ) : (
+                          <Text>Reply</Text>
+                        )
+                      ) : (
+                        <Text>Reply</Text>
+                      ),
+                      textStyle: StyleSheet.flatten([
+                        {
+                          fontSize: 13,
+                          color: STYLES.$IS_DARK_THEME
+                            ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                            : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
+                        },
+                        replyTextProps?.text?.textStyle,
+                      ]),
+                    }}
+                    onTap={() => {
+                      replyTextProps?.onTap();
+                    }}
+                    buttonStyle={StyleSheet.flatten([
+                      styles.replyTextButton,
+                      replyTextProps?.buttonStyle,
+                    ])}
+                  />
 
-                {/* this shows all the replies of a comment */}
-                {comment.repliesCount > 0 && (
-                  <>
-                    <LMIcon
-                      assetPath={require("../../assets/images/single_dot3x.png")}
-                      width={styles.dotImageSize.width}
-                      height={styles.dotImageSize.height}
-                      iconStyle={styles.dotImageSize}
-                      color={
-                        STYLES.$IS_DARK_THEME
-                          ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
-                          : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
-                      }
-                    />
-                    <LMButton
-                      onTap={() => {
-                        onTapReplies
-                          ? (onTapReplies(
-                              (data: Array<LMCommentUI>) =>
-                                setRepliesArray(data),
-                              ""
-                            ),
-                            handleReplies())
-                          : handleReplies();
-                      }}
-                      text={{
-                        children:
-                          comment.repliesCount > 1 &&
-                          commentingRight?.isSelected ? (
-                            <Text>{comment.repliesCount} Replies</Text>
-                          ) : (
-                            commentingRight?.isSelected && (
+                  {/* this shows all the replies of a comment */}
+                  {comment.repliesCount > 0 && (
+                    <>
+                      <LMIcon
+                        assetPath={require("../../assets/images/single_dot3x.png")}
+                        width={styles.dotImageSize.width}
+                        height={styles.dotImageSize.height}
+                        iconStyle={styles.dotImageSize}
+                        color={
+                          STYLES.$IS_DARK_THEME
+                            ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                            : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
+                        }
+                      />
+                      <LMButton
+                        onTap={() => {
+                          onTapReplies
+                            ? (onTapReplies(
+                                (data: Array<LMCommentUI>) =>
+                                  setRepliesArray(data),
+                                ""
+                              ),
+                              handleReplies())
+                            : handleReplies();
+                        }}
+                        text={{
+                          children:
+                            comment.repliesCount > 1 ? (
+                              <Text>{comment.repliesCount} Replies</Text>
+                            ) : (
                               <Text>{comment.repliesCount} Reply</Text>
-                            )
-                          ),
-                        textStyle: StyleSheet.flatten([
-                          { fontSize: 13, color: STYLES.$COLORS.PRIMARY },
-                          repliesCountTextStyle,
-                        ]),
-                      }}
-                      buttonStyle={styles.repliesCountTextButton}
-                    />
-                  </>
-                )}
-              </>
-            )}
+                            ),
+                          textStyle: StyleSheet.flatten([
+                            { fontSize: 13, color: STYLES.$COLORS.PRIMARY },
+                            repliesCountTextStyle,
+                          ]),
+                        }}
+                        buttonStyle={styles.repliesCountTextButton}
+                      />
+                    </>
+                  )}
+                </>
+              )}
           </View>
           <View style={styles.rowAlignment}>
             {comment?.isEdited && (
