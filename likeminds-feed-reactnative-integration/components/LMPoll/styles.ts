@@ -189,7 +189,9 @@ export const styles = StyleSheet.create({
   },
   pollQuestion: {
     padding: Layout.normalize(15),
-    backgroundColor: STYLES.$COLORS.TERTIARY,
+    backgroundColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$BACKGROUND_COLORS.DARK
+      : STYLES.$BACKGROUND_COLORS.LIGHT,
   },
   question: {
     marginTop: Layout.normalize(10),
@@ -197,12 +199,16 @@ export const styles = StyleSheet.create({
   answerOptions: {
     paddingVertical: Layout.normalize(10),
     paddingHorizontal: 0,
-    backgroundColor: STYLES.$COLORS.TERTIARY,
+    backgroundColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$BACKGROUND_COLORS.DARK
+      : STYLES.$BACKGROUND_COLORS.LIGHT,
     marginTop: Layout.normalize(10),
   },
   advancedOptions: {
     paddingHorizontal: 0,
-    backgroundColor: STYLES.$COLORS.TERTIARY,
+    backgroundColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$BACKGROUND_COLORS.DARK
+      : STYLES.$BACKGROUND_COLORS.LIGHT,
     marginTop: Layout.normalize(15),
     paddingBottom: Layout.normalize(10),
   },
@@ -399,17 +405,21 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 15,
     paddingTop: 12,
-    backgroundColor: "white",
+    backgroundColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$BACKGROUND_COLORS.DARK
+      : STYLES.$BACKGROUND_COLORS.LIGHT,
   },
   userNameText: {
     fontSize: 16,
     fontWeight: "500",
-    color: "#222020",
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
     marginLeft: 8,
     textTransform: "capitalize",
   },
   headerRightComponentText: {
-    color: "#5046E5",
+    color: STYLES.$COLORS.FONT_PRIMARY,
     fontSize: 16,
     fontWeight: "500",
   },

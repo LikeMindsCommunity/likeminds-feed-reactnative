@@ -225,6 +225,11 @@ const CreatePollUI = () => {
                 style={[
                   styles.font,
                   formatedDateTime ? styles.blackColor : styles.placeHolder,
+                  {
+                    color: STYLES.$IS_DARK_THEME
+                      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
+                  },
                 ]}
               >
                 {formatedDateTime ? formatedDateTime : DATE_PLACEHOLDER}
@@ -270,6 +275,11 @@ const CreatePollUI = () => {
           styles.alignRow,
           styles.justifyCenter,
           styles.gap,
+          {
+            backgroundColor: STYLES.$IS_DARK_THEME
+              ? STYLES.$BACKGROUND_COLORS.DARK
+              : STYLES.$BACKGROUND_COLORS.LIGHT,
+          },
         ]}
         onPress={() => {
           handleShowAdvanceOption();

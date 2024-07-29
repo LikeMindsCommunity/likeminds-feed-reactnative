@@ -101,6 +101,11 @@ const LMNotificationFeedItem = React.memo(
               ? unreadBackgroundColor
               : STYLES.$COLORS.LIGHT_GREY,
           },
+          {
+            backgroundColor: STYLES.$IS_DARK_THEME
+              ? STYLES.$BACKGROUND_COLORS.DARK
+              : STYLES.$BACKGROUND_COLORS.LIGHT,
+          },
         ])}
       >
         <TouchableOpacity
@@ -166,33 +171,59 @@ const LMNotificationFeedItem = React.memo(
 
           {/* activity content text */}
           <View style={styles.contentView}>
-              {notificationFeedStyle?.activityTextComponent ? <View>{notificationFeedStyle?.activityTextComponent(activity)}</View> :<><Text
-                style={StyleSheet.flatten([
-                  styles.activityText,
-                  notificationFeedStyle?.activityTextStyles,
-                ])}
-                onTextLayout={(e) => onTextLayout(e)}
-                numberOfLines={MAX_LINES}
-                ellipsizeMode="tail"
-              >
-                {activityTextArray.map((item, index) =>{
-                  return item?.styleType === BOLD_STYLE ? (
-                    <Text  key={index} style={{ fontWeight: "500" }} >{item?.content}</Text>
-                  ) : (
-                    <Text key={index}>{item?.content}</Text>
-                  )
-                }
-                )}
-              </Text>
+            {notificationFeedStyle?.activityTextComponent ? (
+              <View>
+                {notificationFeedStyle?.activityTextComponent(activity)}
+              </View>
+            ) : (
+              <>
+                <Text
+                  style={StyleSheet.flatten([
+                    styles.activityText,
+                    notificationFeedStyle?.activityTextStyles,
+                  ])}
+                  onTextLayout={(e) => onTextLayout(e)}
+                  numberOfLines={MAX_LINES}
+                  ellipsizeMode="tail"
+                >
+                  {activityTextArray.map((item, index) => {
+                    return item?.styleType === BOLD_STYLE ? (
+                      <Text
+                        key={index}
+                        style={{
+                          fontWeight: "500",
+                          color: STYLES.$IS_DARK_THEME
+                            ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+                            : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+                        }}
+                      >
+                        {item?.content}
+                      </Text>
+                    ) : (
+                      <Text
+                        key={index}
+                        style={{
+                          color: STYLES.$IS_DARK_THEME
+                            ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+                            : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+                        }}
+                      >
+                        {item?.content}
+                      </Text>
+                    );
+                  })}
+                </Text>
 
-            <LMText
-              textStyle={StyleSheet.flatten([
-                styles.notificationTimeStamp,
-                notificationFeedStyle?.timestampTextStyles,
-              ])}
-            >
-              {timeStamp(Number(activity.updatedAt))} ago
-            </LMText></>}
+                <LMText
+                  textStyle={StyleSheet.flatten([
+                    styles.notificationTimeStamp,
+                    notificationFeedStyle?.timestampTextStyles,
+                  ])}
+                >
+                  {timeStamp(Number(activity.updatedAt))} ago
+                </LMText>
+              </>
+            )}
           </View>
         </TouchableOpacity>
       </View>

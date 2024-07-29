@@ -80,6 +80,11 @@ export const LMFeedPollResult = ({ navigation, route }: any) => {
                     </Text>
                   </View>
                 ),
+                tabBarStyle: {
+                  backgroundColor: STYLES.$IS_DARK_THEME
+                    ? STYLES.$BACKGROUND_COLORS.DARK
+                    : STYLES.$BACKGROUND_COLORS.LIGHT,
+                },
               }}
             />
           );

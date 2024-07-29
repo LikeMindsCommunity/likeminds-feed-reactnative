@@ -23,16 +23,17 @@ export const styles = StyleSheet.create({
   notificationTypeIcon: {
     position: "absolute",
     top: 27,
-    left:22
+    left: 22,
   },
   contentView: { width: "82%", marginLeft: 10 },
-  activityText:{fontSize: 15,
+  activityText: {
+    fontSize: 15,
     color: "black",
     textAlign: "auto",
     fontStyle: "normal",
   },
   notificationTimeStamp: {
-    color: '#9b9b9b',
-    marginTop:5
-  }
+    color: "#9b9b9b",
+    marginTop: 5,
+  },
 });

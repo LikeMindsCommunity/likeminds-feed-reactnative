@@ -187,7 +187,11 @@ const PostsListComponent = ({ topics }: any) => {
                 return (
                   <TouchableOpacity
                     activeOpacity={0.8}
-                    style={{ backgroundColor: "#e0e0e0" }}
+                    style={{
+                      backgroundColor: STYLES.$IS_DARK_THEME
+                        ? STYLES.$BACKGROUND_COLORS.DARK
+                        : STYLES.$BACKGROUND_COLORS.LIGHT,
+                    }}
                     onPress={() => {
                       dispatch(clearPostDetail() as any);
                       dispatch({
