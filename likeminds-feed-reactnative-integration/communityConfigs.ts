@@ -1,4 +1,4 @@
-import { GetCommunityConfigurationsResponse } from "@likeminds.community/feed-js/dist/initiateUser/model/GetCommunityConfigurationsResponse";
+import { GetCommunityConfigurationsResponse } from "@likeminds.community/feed-rn";
 
 export class CommunityConfigs {
   private static communityConfig: GetCommunityConfigurationsResponse;

@@ -50,6 +50,10 @@ import {
   NAVIGATED_FROM_POST,
 } from "./constants/Strings";
 import CarouselScreen from "./screens/carouselScreen";
+import LMCreatePostButton from "./components/LMCreatePostButton";
+import LMFilterTopics from "./components/LMFilterTopics";
+import LMPostUploadIndicator from "./components/LMPostUploadIndicator";
+import LMUniversalFeedHeader from "./components/LMUniversalFeedHeader";
 
 export {
   LMOverlayProvider,
@@ -64,6 +68,10 @@ export {
   LMFeedNotificationFeedScreen,
   LMFeedCreatePollScreen,
   LMFeedPollResult,
+  LMCreatePostButton,
+  LMFilterTopics,
+  LMPostUploadIndicator,
+  LMUniversalFeedHeader,
   UNIVERSAL_FEED,
   TOPIC_FEED,
   CAROUSEL_SCREEN,

@@ -7,6 +7,7 @@ import { styles } from "./styles";
 import { LMPostContextValues, useLMPostContext } from "../../../context";
 import { useLMFeedStyles } from "../../../lmFeedProvider";
 import { useAppSelector } from "../../../store/store";
+import STYLES from "../../../constants/Styles";
 
 const LMPostHeader = React.memo(() => {
   const { post, headerProps }: any = useLMPostContext();
@@ -114,7 +115,11 @@ const LMPostHeader = React.memo(() => {
                     width={styles.dotImageSize.width}
                     height={styles.dotImageSize.height}
                     iconStyle={styles.dotImageSize}
-                    color="#0F1E3D66"
+                    color={
+                      STYLES.$IS_DARK_THEME
+                        ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                        : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
+                    }
                   />
                   <LMText
                     textStyle={StyleSheet.flatten([
@@ -152,7 +157,13 @@ const LMPostHeader = React.memo(() => {
                     : styles.iconSize
                 }
                 iconUrl={customPostHeaderStyle?.pinIcon?.iconUrl}
-                color={customPostHeaderStyle?.pinIcon?.color}
+                color={
+                  customPostHeaderStyle?.pinIcon?.color
+                    ? customPostHeaderStyle?.pinIcon?.color
+                    : STYLES.$IS_DARK_THEME
+                    ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+                    : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT
+                }
                 width={
                   customPostHeaderStyle?.pinIcon?.width
                     ? customPostHeaderStyle?.pinIcon?.width
@@ -189,7 +200,13 @@ const LMPostHeader = React.memo(() => {
                     : styles.iconSize
                 }
                 iconUrl={customPostHeaderStyle?.menuIcon?.iconUrl}
-                color={customPostHeaderStyle?.menuIcon?.color}
+                color={
+                  customPostHeaderStyle?.menuIcon?.color
+                    ? customPostHeaderStyle?.menuIcon?.color
+                    : STYLES.$IS_DARK_THEME
+                    ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+                    : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT
+                }
                 width={
                   customPostHeaderStyle?.menuIcon?.width
                     ? customPostHeaderStyle?.menuIcon.width

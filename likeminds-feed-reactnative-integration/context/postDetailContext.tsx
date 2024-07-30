@@ -68,32 +68,27 @@ import {
   savePostStateHandler,
 } from "../store/actions/feed";
 import _ from "lodash";
-import {
-  CREATE_POST,
-  POST_LIKES_LIST,
-  UNIVERSAL_FEED,
-} from "../constants/screenNames";
+import { CREATE_POST } from "../constants/screenNames";
 import {
   detectMentions,
   mentionToRouteConverter,
   routeToMentionConverter,
 } from "../utils";
-import { postLikesClear } from "../store/actions/postLikes";
 import { showToastMessage } from "../store/actions/toast";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../models/RootStackParamsList";
-import LMPost from "../components/LMPost/LMPost";
 import { LMCommentUI, LMPostUI, LMUserUI } from "../models";
 import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
 import { Events } from "../enums/Events";
 import { Keys } from "../enums/Keys";
 import { getPostType } from "../utils/analytics";
-import { LMLoader } from "../components";
+import LMLoader from "../components/LMLoader";
 import Layout from "../constants/Layout";
 import {
   SET_FLOW_TO_POST_DETAIL_SCREEN,
   SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
 } from "../store/types/types";
+import { commentResponseModelConvertor } from "../utils/commentResponseModelConvertor";
 
 interface PostDetailContextProps {
   children: ReactNode;
@@ -584,11 +579,7 @@ export const PostDetailContextProvider = ({
     // sets the api response in the callback function
     repliesResponseCallback(
       postDetail?.replies &&
-        postDetail?.replies[
-          postDetail.replies?.findIndex(
-            (item: LMCommentUI) => item.id === commentId
-          )
-        ]?.replies
+      commentResponseModelConvertor(commentsRepliesResponse)?.replies
     );
     return commentsRepliesResponse;
   };
@@ -792,6 +783,7 @@ export const PostDetailContextProvider = ({
 
   // this function is called on change text of textInput
   const handleInputChange = async (event: string) => {
+    event = event.replace(/^\s+/, "");
     setCommentToAdd(event);
 
     const newMentions = detectMentions(event);

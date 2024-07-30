@@ -4,23 +4,31 @@ import Layout from "../../constants/Layout";
 
 const styles = StyleSheet.create({
   page: {
-    backgroundColor: STYLES.$BACKGROUND_COLORS.LIGHT,
+    backgroundColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$BACKGROUND_COLORS.DARK
+      : STYLES.$BACKGROUND_COLORS.LIGHT,
     flex: 1,
     paddingTop: STYLES.$PADDINGS.SMALL,
   },
   textHeading: {
-    color: STYLES.$COLORS.darkTextColor,
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
     fontSize: STYLES.$FONT_SIZES.LARGE,
     fontWeight: STYLES.$FONT_WEIGHT.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
   },
   text: {
-    color: STYLES.$COLORS.darkGreyTextColor,
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     fontSize: STYLES.$FONT_SIZES.LARGE,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
   },
   btnText: {
-    color: STYLES.$COLORS.darkGreyTextColor,
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
   },
@@ -30,14 +38,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: STYLES.$PADDINGS.MEDIUM,
     margin: 8,
     borderWidth: 1,
-    borderColor: "#9B9B9B",
+    borderColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
   },
   reportBtnParent: {
     justifyContent: "center",
     alignSelf: "center",
     position: "absolute",
-    // bottom: 40,
-    // zIndex: -1,
   },
   reportBtn: {
     backgroundColor: STYLES.$COLORS.RED,
@@ -46,13 +54,17 @@ const styles = StyleSheet.create({
     paddingVertical: STYLES.$PADDINGS.MEDIUM,
   },
   reportBtnText: {
-    color: STYLES.$COLORS.whiteTextColor,
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
     fontSize: STYLES.$FONT_SIZES.LARGE,
     fontWeight: STYLES.$FONT_WEIGHT.BOLD,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
   },
   disabledReportBtn: {
-    backgroundColor: "#D0D8E2",
+    backgroundColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     borderRadius: 25,
     paddingHorizontal: 50,
     paddingVertical: STYLES.$PADDINGS.MEDIUM,
@@ -60,7 +72,9 @@ const styles = StyleSheet.create({
   titleView: {
     flexDirection: "row",
     justifyContent: "space-between",
-    borderBottomColor: "#D8D8D8",
+    borderBottomColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     borderBottomWidth: 1,
     paddingHorizontal: STYLES.$PADDINGS.LARGE,
     paddingVertical: STYLES.$PADDINGS.SMALL,
@@ -94,7 +108,9 @@ const styles = StyleSheet.create({
     paddingLeft: 0,
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
-    color: STYLES.$COLORS.darkTextColor,
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
   },
   dropdownIcon: {
     width: Layout.normalize(18),
@@ -116,23 +132,33 @@ const styles = StyleSheet.create({
   filterText: {
     fontSize: STYLES.$FONT_SIZES.LARGE,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
-    color: STYLES.$COLORS.whiteTextColor,
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
   },
   toastViewStyle: { zIndex: 4000 },
   contentBox: { flex: 1 },
   selectedReasonItemView: {
-    backgroundColor: "#5046E5",
-    borderColor: "#5046E5",
+    backgroundColor: STYLES.$COLORS.PRIMARY,
+    borderColor: STYLES.$COLORS.PRIMARY,
   },
   defaultReasonItemView: {
-    backgroundColor: "#ffffff",
-    borderColor: "#777e8e",
+    backgroundColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$BACKGROUND_COLORS.DARK
+      : STYLES.$BACKGROUND_COLORS.LIGHT,
+    borderColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
   },
   selectedReasonText: {
-    color: "#ffffff",
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
   },
   defaultReasonText: {
-    color: "#777e8e",
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
   },
   loaderView: {
     flex: 1,

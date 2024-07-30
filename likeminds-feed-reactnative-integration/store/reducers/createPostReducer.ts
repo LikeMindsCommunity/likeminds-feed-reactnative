@@ -5,6 +5,7 @@ import {
   DECODE_URL_SUCCESS,
   SET_DISABLED_TOPICS,
   SET_POLL,
+  SET_PREDEFINED_TOPICS,
   UPLOAD_ATTACHMENTS,
 } from "../types/types";
 
@@ -17,6 +18,7 @@ export interface CreatePostReducerState {
   poll: {};
   selectedTopics: [];
   disbaledTopics: [];
+  predefinedTopics: [];
   pollAttachment: {};
 }
 
@@ -29,6 +31,7 @@ export const initialState: CreatePostReducerState = {
   poll: {}, // to send poll data on universal feed screen
   selectedTopics: [],
   disbaledTopics: [],
+  predefinedTopics: [],
   pollAttachment: {}, // for local preview of poll data
 };
 
@@ -39,6 +42,13 @@ export function createPostReducer(state = initialState, action) {
       return {
         ...state,
         selectedTopics: topics,
+      };
+    }
+    case SET_PREDEFINED_TOPICS: {
+      const { topics = {} } = action.body;
+      return {
+        ...state,
+        predefinedTopics: topics,
       };
     }
     case CLEAR_SELECTED_TOPICS: {

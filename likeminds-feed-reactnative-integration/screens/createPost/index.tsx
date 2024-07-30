@@ -10,6 +10,7 @@ import {
   Image,
   ScrollView,
   Alert,
+  Platform,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { NetworkUtil, nameInitials, replaceLastMention } from "../../utils";
@@ -49,15 +50,13 @@ import {
   LMText,
 } from "../../uiComponents";
 import { LMAttachmentUI, LMUserUI, RootStackParamList } from "../../models";
-import {
-  LMCarousel,
-  LMDocument,
-  LMHeader,
-  LMImage,
-  LMLinkPreview,
-  LMLoader,
-  LMVideo,
-} from "../../components";
+import LMCarousel from "../../components/LMMedia/LMCarousel";
+import LMDocument from "../../components/LMMedia/LMDocument";
+import LMImage from "../../components/LMMedia/LMImage";
+import LMLinkPreview from "../../components/LMMedia/LMLinkPreview";
+import LMVideo from "../../components/LMMedia/LMVideo";
+import LMLoader from "../../components/LMLoader";
+import LMHeader from "../../components/LMHeader";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TOPIC_FEED } from "../../constants/screenNames";
 import {
@@ -79,25 +78,25 @@ import STYLES from "../../constants/Styles";
 import { PollCustomisableMethodsContextProvider } from "../../context/pollCustomisableCallback";
 
 interface CreatePostProps {
-  children: React.ReactNode;
-  navigation: NativeStackNavigationProp<RootStackParamList, "CreatePost">;
-  route: {
+  children?: React.ReactNode;
+  navigation?: NativeStackNavigationProp<RootStackParamList, "CreatePost">;
+  route?: {
     key: string;
     name: string;
     params: { postId: string };
     path: undefined;
   };
-  handleGalleryProp: (type: string) => void;
-  handleDocumentProp: () => void;
-  handlePollProp: () => void;
-  onPostClickProp: (
+  handleGalleryProp?: (type: string) => void;
+  handleDocumentProp?: () => void;
+  handlePollProp?: () => void;
+  onPostClickProp?: (
     allMedia: Array<LMAttachmentUI>,
     linkData: Array<LMAttachmentUI>,
     content: string,
     topics: string[],
     poll: any
   ) => void;
-  handleScreenBackPressProp: () => void;
+  handleScreenBackPressProp?: () => void;
   onPollEditClicked: any;
   onPollClearClicked: any;
 }
@@ -135,6 +134,9 @@ const CreatePost = ({
 const CreatePostComponent = () => {
   const dispatch = useAppDispatch();
   const LMFeedContextStyles = useLMFeedStyles();
+  const predefinedTopics = useAppSelector(
+    (state) => state.createPost.predefinedTopics
+  );
   const { postListStyle, createPostStyle, postDetailStyle, topicsStyle }: any =
     LMFeedContextStyles;
   const customTextInputStyle = createPostStyle?.createPostTextInputStyle;
@@ -212,6 +214,7 @@ const CreatePostComponent = () => {
   );
   const route: any = useRoute();
   const post = route?.params?.post;
+  const hidePoll = route?.params?.hidePoll;
 
   let isImage =
     formattedMediaAttachments[0]?.attachmentType === IMAGE_ATTACHMENT_TYPE
@@ -226,7 +229,7 @@ const CreatePostComponent = () => {
       page: 1,
       pageSize: 10,
     } as any);
-    const topics = apiRes?.data?.topics;
+    const topics: any = apiRes?.data?.topics;
     if (topics?.length > 0) {
       setShowTopics(true);
     }
@@ -283,14 +286,14 @@ const CreatePostComponent = () => {
           allAttachment,
           formattedLinkAttachments,
           postContentText,
-          idValuesArray,
+          predefinedTopics ? [...predefinedTopics] : idValuesArray,
           poll
         )
       : onPostClick(
           allAttachment,
           formattedLinkAttachments,
           postContentText,
-          idValuesArray,
+          predefinedTopics ? [...predefinedTopics] : idValuesArray,
           poll
         );
     if (!postToEdit) {
@@ -357,7 +360,10 @@ const CreatePostComponent = () => {
       }
 
       if (showTopics) {
-        map.set(Keys.TOPICS, mappedTopics);
+        map.set(
+          Keys.TOPICS,
+          predefinedTopics ? predefinedTopics : mappedTopics
+        );
       } else {
         map.set(Keys.TOPICS, "");
       }
@@ -439,7 +445,9 @@ const CreatePostComponent = () => {
           />
         </View>
 
-        {mappedTopics.length > 0 && showTopics ? (
+        {mappedTopics.length > 0 &&
+        showTopics &&
+        !(predefinedTopics.length > 0) ? (
           <View
             style={{
               flexDirection: "row",
@@ -457,9 +465,9 @@ const CreatePostComponent = () => {
                   <Text
                     style={{
                       fontSize: Layout.normalize(17),
-                      color: "#5046E5",
+                      color: STYLES.$COLORS.PRIMARY,
                       paddingVertical: Layout.normalize(5),
-                      backgroundColor: "hsla(244, 75%, 59%, 0.1)",
+                      backgroundColor: `hsla(${STYLES.$HUE}, 75%, 59%, 0.1)`,
                       borderRadius: Layout.normalize(5),
                       paddingHorizontal: Layout.normalize(12),
                       margin: Layout.normalize(5),
@@ -476,7 +484,7 @@ const CreatePostComponent = () => {
                     <TouchableOpacity
                       onPress={() => handleAllTopicPress()}
                       style={{
-                        backgroundColor: "hsla(244, 75%, 59%, 0.1)",
+                        backgroundColor: `hsla(${STYLES.$HUE}, 75%, 59%, 0.1)`,
                         borderRadius: 5,
                         paddingHorizontal: 15,
                         marginLeft: 5,
@@ -492,52 +500,50 @@ const CreatePostComponent = () => {
               </View>
             ))}
           </View>
-        ) : (
-          showTopics && (
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginLeft: Layout.normalize(15),
-                marginTop: Layout.normalize(15),
-              }}
-            >
-              <TouchableOpacity onPress={() => handleAllTopicPress()}>
-                <View
+        ) : showTopics && !(predefinedTopics.length > 0) ? (
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginLeft: Layout.normalize(15),
+              marginTop: Layout.normalize(15),
+            }}
+          >
+            <TouchableOpacity onPress={() => handleAllTopicPress()}>
+              <View
+                style={{
+                  paddingVertical: Layout.normalize(7),
+                  backgroundColor: `hsla(${STYLES.$HUE}, 75%, 59%, 0.1)`,
+                  borderRadius: Layout.normalize(5),
+                  flexDirection: "row",
+                  alignItems: "center",
+                  paddingHorizontal: Layout.normalize(12),
+                }}
+              >
+                <Image
+                  source={require("../../assets/images/plusAdd_icon3x.png")}
                   style={{
-                    paddingVertical: Layout.normalize(7),
-                    backgroundColor: "hsla(244, 75%, 59%, 0.1)",
-                    borderRadius: Layout.normalize(5),
-                    flexDirection: "row",
-                    alignItems: "center",
-                    paddingHorizontal: Layout.normalize(12),
+                    tintColor: STYLES.$COLORS.PRIMARY,
+                    width: Layout.normalize(15),
+                    height: Layout.normalize(15),
+                    marginRight: Layout.normalize(5), // Add margin to separate Image and Text
+                    ...(plusIconStyle !== undefined ? plusIconStyle : {}),
+                  }}
+                />
+                <Text
+                  style={{
+                    fontSize: Layout.normalize(16),
+                    color: STYLES.$COLORS.PRIMARY,
                   }}
                 >
-                  <Image
-                    source={require("../../assets/images/plusAdd_icon3x.png")}
-                    style={{
-                      tintColor: "#5046E5",
-                      width: Layout.normalize(15),
-                      height: Layout.normalize(15),
-                      marginRight: Layout.normalize(5), // Add margin to separate Image and Text
-                      ...(plusIconStyle !== undefined ? plusIconStyle : {}),
-                    }}
-                  />
-                  <Text
-                    style={{
-                      fontSize: Layout.normalize(16),
-                      color: "#5046E5",
-                    }}
-                  >
-                    {selectTopicPlaceholder !== undefined
-                      ? selectTopicPlaceholder
-                      : "Select Topics"}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          )
-        )}
+                  {selectTopicPlaceholder !== undefined
+                    ? selectTopicPlaceholder
+                    : "Select Topics"}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        ) : null}
 
         {/* text input field */}
         <LMInputText
@@ -550,7 +556,9 @@ const CreatePostComponent = () => {
           placeholderTextColor={
             customTextInputStyle?.placeholderTextColor
               ? customTextInputStyle?.placeholderTextColor
-              : "#0F1E3D66"
+              : STYLES.$IS_DARK_THEME
+              ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+              : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
           }
           inputTextStyle={[
             styles.textInputView,
@@ -885,6 +893,7 @@ const CreatePostComponent = () => {
                 assetPath: require("../../assets/images/plusAdd_icon3x.png"),
                 height: 20,
                 width: 20,
+                color: STYLES.$COLORS.PRIMARY,
                 ...customAddMoreAttachmentsButton?.icon,
               }}
               text={{
@@ -1078,34 +1087,42 @@ const CreatePostComponent = () => {
           </TouchableOpacity>
 
           {/* poll option */}
-          <TouchableOpacity
-            activeOpacity={0.8}
-            style={[
-              styles.optionItemView,
-              customAttachmentOptionsStyle?.filesAttachmentView,
-            ]}
-            onPress={() => {
-              handlePollProp ? handlePollProp() : handlePoll();
+          {!hidePoll ? (
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={[
+                {
+                  ...styles.optionItemView,
+                  ...(Platform.OS === "ios" && { marginBottom: 10 }),
+                },
+                {
+                  ...customAttachmentOptionsStyle?.filesAttachmentView,
+                  ...(Platform.OS === "ios" && { marginBottom: 10 }),
+                },
+              ]}
+              onPress={() => {
+                handlePollProp ? handlePollProp() : handlePoll();
 
-              // LMFeedAnalytics.track(
-              //   Events.CLICKED_ON_ATTACHMENT,
-              //   new Map<string, string>([[Keys.TYPE, SELECT_FILE]])
-              // );
-            }}
-          >
-            <LMIcon
-              assetPath={require("../../assets/images/poll_icon3x.png")}
-              color={STYLES.$COLORS.PRIMARY}
-              height={15}
-              widht={15}
-              {...customAttachmentOptionsStyle?.pollAttachmentIcon}
-            />
-            <LMText
-              children={<Text>{ADD_POLL}</Text>}
-              textStyle={styles.selectionOptionstext}
-              {...customAttachmentOptionsStyle?.pollAttachmentTextStyle}
-            />
-          </TouchableOpacity>
+                // LMFeedAnalytics.track(
+                //   Events.CLICKED_ON_ATTACHMENT,
+                //   new Map<string, string>([[Keys.TYPE, SELECT_FILE]])
+                // );
+              }}
+            >
+              <LMIcon
+                assetPath={require("../../assets/images/poll_icon3x.png")}
+                color={STYLES.$COLORS.PRIMARY}
+                height={15}
+                widht={15}
+                {...customAttachmentOptionsStyle?.pollAttachmentIcon}
+              />
+              <LMText
+                children={<Text>{ADD_POLL}</Text>}
+                textStyle={styles.selectionOptionstext}
+                {...customAttachmentOptionsStyle?.pollAttachmentTextStyle}
+              />
+            </TouchableOpacity>
+          ) : null}
         </View>
       )}
     </SafeAreaView>

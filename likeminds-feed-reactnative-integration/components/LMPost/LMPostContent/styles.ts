@@ -1,11 +1,14 @@
 import { StyleSheet } from "react-native";
+import STYLES from "../../../constants/Styles";
 
 // default post content style
 export const styles = StyleSheet.create({
   contentText: {
     fontSize: 16,
     fontWeight: "400",
-    color: "#666666",
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     lineHeight: 20,
   },
   linkText: {
@@ -15,6 +18,8 @@ export const styles = StyleSheet.create({
     lineHeight: 20,
   },
   showMoreText: {
-    color: "#9B9B9B",
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
   },
 });

@@ -35,10 +35,11 @@ import { useAppDispatch, useAppSelector } from "../../store/store";
 import { getReportTags, postReport } from "../../store/actions/feed";
 import Toast from "react-native-toast-message";
 import { showToastMessage } from "../../store/actions/toast";
-import { LMLoader } from "../../components";
+import LMLoader from "../../components/LMLoader";
 import { LMCommentUI, LMPostUI } from "../../models";
 import { getPostType, reportAnalytics } from "../../utils/analytics";
 import Layout from "../../constants/Layout";
+import { Client } from "../../client";
 
 // interface for post report api request
 interface ReportRequest {
@@ -131,20 +132,18 @@ const ReportModal = ({
       setSelectedId(-1);
       setSelectedIndex(-1);
       closeModal();
-      const postReportResponse = await dispatch(
-        postReport(
-          PostReportRequest.builder()
-            .setEntityId(payload.entityId)
-            .setEntityType(payload.entityType)
-            .setReason(payload.reason)
-            .setTagId(payload.tagId)
-            .setUuid(payload.uuid)
-            .build(),
-          false
-        )
+      const postReportRequest = PostReportRequest.builder()
+        .setEntityId(payload.entityId)
+        .setEntityType(payload.entityType)
+        .setReason(payload.reason)
+        .setTagId(payload.tagId)
+        .setUuid(payload.uuid)
+        .build();
+      const postReportResponse = await Client.myClient.postReport(
+        postReportRequest
       );
       // toast message action
-      if (postReportResponse !== undefined) {
+      if (postReportResponse?.success == true) {
         let reportReason = reportTags.find((item) => item?.id === selectedId);
         let params = {
           reportType: reportType,

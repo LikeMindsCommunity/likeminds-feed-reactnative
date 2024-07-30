@@ -16,13 +16,17 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   postAuthorName: {
-    color: "#222020",
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
     fontSize: 16.5,
     fontWeight: "500",
     lineHeight: 20,
   },
   postedDetail: {
-    color: "#0F1E3D66",
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
     fontSize: 14,
     fontWeight: "400",
   },
@@ -32,7 +36,7 @@ export const styles = StyleSheet.create({
     fontWeight: "500",
   },
   labelView: {
-    backgroundColor: "#5046E5",
+    backgroundColor: STYLES.$COLORS.PRIMARY,
     marginLeft: 10,
     paddingHorizontal: 10,
     paddingVertical: 2,

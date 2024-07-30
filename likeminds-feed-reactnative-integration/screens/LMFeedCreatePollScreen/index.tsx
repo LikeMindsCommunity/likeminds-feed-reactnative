@@ -13,7 +13,7 @@ import {
   CreatePollContextProvider,
   useCreatePollContext,
 } from "../../context/createPollContextProvider";
-import { LMHeader } from "../../components";
+import LMHeader from "../../components/LMHeader";
 import { LMProfilePicture, LMText } from "../../uiComponents";
 import { nameInitials } from "../../utils";
 import { CreatePostContextValues, useCreatePostContext } from "../../context";
@@ -25,6 +25,7 @@ import {
 } from "../../context/createPollCallbacksContext";
 import { CreatePollContextProps } from "../../components/LMPoll/models/CreatePoll";
 import { useRoute, useNavigation } from "@react-navigation/native";
+import STYLES from "../../constants/Styles";
 
 const CreatePollScreen = ({
   navigation,
@@ -59,7 +60,14 @@ const CreatePollScreenComponent = () => {
   const { onPollCompleteClicked } = useCreatePollCustomisableMethodsContext();
 
   return (
-    <SafeAreaView>
+    <SafeAreaView
+      style={{
+        backgroundColor: STYLES.$IS_DARK_THEME
+          ? STYLES.$BACKGROUND_COLORS.DARK
+          : STYLES.$BACKGROUND_COLORS.LIGHT,
+        flex: 1,
+      }}
+    >
       {/* Screen Header */}
       <LMHeader
         showBackArrow={true}

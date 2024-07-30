@@ -1,92 +1,45 @@
-import React, { useEffect, useState } from "react";
-import {
-  Image,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import React, { ReactNode } from "react";
+import { View } from "react-native";
 import { styles } from "./styles";
-
-import {
-  APP_TITLE,
-  CREATE_POST_PERMISSION,
-  DOCUMENT_ATTACHMENT_TYPE,
-  IMAGE_ATTACHMENT_TYPE,
-  POST_UPLOADING,
-  POST_UPLOAD_INPROGRESS,
-  VIDEO_ATTACHMENT_TYPE,
-} from "../../constants/Strings";
-import {
-  CREATE_POST,
-  TOPIC_FEED,
-  NOTIFICATION_FEED,
-} from "../../constants/screenNames";
-// @ts-ignore the lib do not have TS declarations yet
-import _ from "lodash";
-import { PostsList } from "../postsList";
-import { useLMFeedStyles } from "../../lmFeedProvider";
-import { useAppDispatch, useAppSelector } from "../../store/store";
-import {
-  UniversalFeedContextProvider,
-  UniversalFeedContextValues,
-  UniversalFeedCustomisableMethodsContextProvider,
-  useUniversalFeedContext,
-  useUniversalFeedCustomisableMethodsContext,
-} from "../../context";
-import STYLES from "../../constants/Styles";
-import { showToastMessage } from "../../store/actions/toast";
-import { LMHeader, LMImage, LMLoader, LMVideo } from "../../components";
-import { LMIcon } from "../../uiComponents";
+import { UniversalFeedCustomisableMethodsContextProvider } from "../../context";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { LMMenuItemsUI, RootStackParamList } from "../../models";
-import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
-import { Events } from "../../enums/Events";
-import { Keys } from "../../enums/Keys";
-import { notificationFeedClear } from "../../store/actions/notification";
-import {
-  CLEAR_SELECTED_TOPICS,
-  CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
-  CLEAR_SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
-  SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
-  SET_TOPICS,
-} from "../../store/types/types";
-import { Client } from "../../client";
-import Layout from "../../constants/Layout";
 import { PollCustomisableMethodsContextProvider } from "../../context/pollCustomisableCallback";
 
 interface UniversalFeedProps {
   children: React.ReactNode;
-  navigation: NativeStackNavigationProp<RootStackParamList, "UniversalFeed">;
-  route: {
+  navigation?: NativeStackNavigationProp<RootStackParamList, "UniversalFeed">;
+  route?: {
     key: string;
     name: string;
     params: Array<string>;
     path: undefined;
   };
-  postLikeHandlerProp: (id: string) => void;
-  savePostHandlerProp: (id: string, saved?: boolean) => void;
-  selectPinPostProp: (id: string, pinned?: boolean) => void;
-  selectEditPostProp: (id: string) => void;
-  onSelectCommentCountProp: (id: string) => void;
-  onTapLikeCountProps: (id: string) => void;
-  handleDeletePostProps: (visible: boolean, postId: string) => void;
-  handleReportPostProps: (postId: string) => void;
-  newPostButtonClickProps: () => void;
-  onOverlayMenuClickProp: (
+  postLikeHandlerProp?: (id: string) => void;
+  savePostHandlerProp?: (id: string, saved?: boolean) => void;
+  selectPinPostProp?: (id: string, pinned?: boolean) => void;
+  selectEditPostProp?: (id: string, post: any) => void;
+  onSelectCommentCountProp?: (id: string) => void;
+  onTapLikeCountProps?: (id: string) => void;
+  handleDeletePostProps?: (visible: boolean, postId: string) => void;
+  handleReportPostProps?: (postId: string) => void;
+  newPostButtonClickProps?: () => void;
+  onOverlayMenuClickProp?: (
     event: {
       nativeEvent: { pageX: number; pageY: number };
     },
     menuItems: LMMenuItemsUI[],
     postId: string
   ) => void;
-  onTapNotificationBellProp: () => void;
-  onSharePostClicked: (id: string) => void;
-  onSubmitButtonClicked: any;
-  onAddPollOptionsClicked: any;
-  onPollOptionClicked: any;
+  onTapNotificationBellProp?: () => void;
+  onSharePostClicked?: (id: string) => void;
+  onSubmitButtonClicked?: any;
+  onAddPollOptionsClicked?: any;
+  onPollOptionClicked?: any;
+}
+
+interface UniversalFeedComponentProps {
+  children: ReactNode;
 }
 
 const UniversalFeed = ({
@@ -129,412 +82,14 @@ const UniversalFeed = ({
         onTapNotificationBellProp={onTapNotificationBellProp}
         onSharePostClicked={onSharePostClicked}
       >
-        <UniversalFeedComponent />
+        <UniversalFeedComponent children={children} />
       </UniversalFeedCustomisableMethodsContextProvider>
     </PollCustomisableMethodsContextProvider>
   );
 };
 
-const UniversalFeedComponent = () => {
-  const dispatch = useAppDispatch();
-  const {
-    feedData,
-    showCreatePost,
-    postUploading,
-    navigation,
-    uploadingMediaAttachment,
-    uploadingMediaAttachmentType,
-    newPostButtonClick,
-    onTapNotificationBell,
-  }: UniversalFeedContextValues = useUniversalFeedContext();
-  const myClient = Client.myClient;
-  const [showTopics, setShowTopics] = useState(false);
-  const LMFeedContextStyles = useLMFeedStyles();
-  const { universalFeedStyle, loaderStyle, topicsStyle }: any =
-    LMFeedContextStyles;
-  const { newPostButtonClickProps, onTapNotificationBellProp } =
-    useUniversalFeedCustomisableMethodsContext();
-  const [mappedTopics, setMappedTopics] = useState([] as any);
-  const unreadNotificationCount = useAppSelector(
-    (state) => state.notification.activitiesCount
-  );
-  const [unreadNotifiCount, setUnreadNotifiCount] = useState(0);
-  const selectedTopics = useAppSelector(
-    (state) => state.feed.selectedTopicsForUniversalFeedScreen
-  );
-  const topics = useAppSelector((state) => state.feed.topics);
-  const notificationCount = useAppSelector(
-    (state) => state.feed.notificationCount
-  );
-
-  const allTopicPlaceholder = topicsStyle?.allTopicPlaceholder;
-  const allTopicsStyle = topicsStyle?.allTopic;
-  const filteredTopicsStyle = topicsStyle?.filteredTopicsStyle;
-  const crossIconStyle = topicsStyle?.crossIconStyle;
-  const arrowDownStyle = topicsStyle?.arrowDownStyle;
-
-  useEffect(() => {
-    setUnreadNotifiCount(notificationCount);
-  }, [notificationCount]);
-
-  useEffect(() => {
-    setUnreadNotifiCount(unreadNotificationCount);
-  }, [unreadNotificationCount]);
-
-  useEffect(() => {
-    // Create a new state array named mappedTopics
-    const filteredTopicArray = selectedTopics.map((topicId) => ({
-      id: topicId,
-      name: topics[topicId]?.name || "Unknown", // Use optional chaining and provide a default name if not found
-    }));
-    setMappedTopics(filteredTopicArray);
-  }, [selectedTopics, topics]);
-
-  const handleAllTopicPress = () => {
-    dispatch({
-      type: CLEAR_SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
-    });
-    /* @ts-ignore */
-    return navigation.navigate(TOPIC_FEED);
-  };
-
-  const handleIndividualTopicsPress = () => {
-    const arrayOfIds = mappedTopics.map((obj) => obj.id);
-    dispatch({
-      type: SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
-      body: { topics: arrayOfIds },
-    });
-    /* @ts-ignore */
-    return navigation.navigate(TOPIC_FEED);
-  };
-
-  const removeItem = (index: any) => {
-    const newItems = [...mappedTopics]; // Create a copy of the array
-    newItems.splice(index, 1); // Remove the item at the specified index
-    setMappedTopics(newItems); // Update the state with the new array
-  };
-
-  const getTopics = async () => {
-    const apiRes = await myClient?.getTopics({
-      isEnabled: null,
-      search: "",
-      searchType: "name",
-      page: 1,
-      pageSize: 10,
-    } as any);
-    const topics: any = apiRes?.data?.topics;
-    if (topics && topics?.length > 0) {
-      setShowTopics(true);
-      const topicsObject = {};
-      topics.forEach((topic) => {
-        topicsObject[topic.Id] = {
-          allParentIds: topic.allParentIds,
-          isEnabled: topic.isEnabled,
-          isSearchable: topic.isSearchable,
-          level: topic.level,
-          name: topic.name,
-          numberOfPosts: topic.numberOfPosts,
-          parentId: topic.parentId,
-          parentName: topic.parentName,
-          priority: topic.priority,
-          totalChildCount: topic.totalChildCount,
-          widgetId: topic.widgetId,
-        };
-      });
-      dispatch({
-        type: SET_TOPICS,
-        body: { topics: topicsObject },
-      });
-    }
-  };
-
-  useEffect(() => {
-    getTopics();
-  }, [showTopics]);
-
-  const [isAnyMatchFound, setIsAnyMatchFound] = useState(true);
-
-  useEffect(() => {
-    let isTopicMatched = false; // Initialize as false
-
-    // Loop through the items
-    for (const item of feedData) {
-      // Check if the item's topic matches any name in the topics array
-      if (
-        item?.topics?.some((topicId) =>
-          mappedTopics.some((topic) => topic.id == topicId)
-        )
-      ) {
-        isTopicMatched = true; // Set to true if any match is found
-        break; // Exit loop once a match is found
-      }
-    }
-
-    // If no match is found and topics are present, set the flag to false
-    if (!isTopicMatched && mappedTopics?.length > 0) {
-      setIsAnyMatchFound(false);
-    } else if (mappedTopics?.length === 0) {
-      setIsAnyMatchFound(true);
-    }
-  }, [mappedTopics, feedData]);
-
-  return (
-    <View style={styles.mainContainer}>
-      {/* header */}
-      <LMHeader
-        heading={APP_TITLE}
-        rightComponent={
-          <TouchableOpacity
-            onPress={() => {
-              onTapNotificationBellProp
-                ? onTapNotificationBellProp()
-                : onTapNotificationBell();
-
-              LMFeedAnalytics.track(Events.NOTIFICATION_PAGE_OPENED);
-            }}
-          >
-            <Image
-              source={require("../../assets/images/notification_bell.png")}
-              style={{ width: 24, height: 24, resizeMode: "contain" }}
-            />
-            {unreadNotifiCount > 0 && (
-              <View
-                style={{
-                  backgroundColor: "#FB1609",
-                  borderRadius: 50,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: 18,
-                  height: 18,
-                  position: "absolute",
-                  top: -8,
-                  right: -5,
-                }}
-              >
-                <Text style={{ color: "#fff", fontSize: 12 }}>
-                  {unreadNotifiCount < 100 ? unreadNotifiCount : `99+`}
-                </Text>
-              </View>
-            )}
-          </TouchableOpacity>
-        }
-        {...universalFeedStyle?.screenHeader}
-      />
-      {/* all topics filter */}
-      {mappedTopics.length > 0 && showTopics ? (
-        <View style={{ justifyContent: "space-between", flexDirection: "row" }}>
-          <ScrollView
-            style={{ flexGrow: 0, margin: Layout.normalize(10) }}
-            horizontal={true}
-          >
-            <View style={{ flexDirection: "row" }}>
-              {mappedTopics.map((item, index) => (
-                <View key={index} style={{ margin: Layout.normalize(5) }}>
-                  <TouchableOpacity onPress={handleIndividualTopicsPress}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        padding: Layout.normalize(7),
-                        borderWidth: 1,
-                        borderColor: "#5046E5",
-                        borderRadius: Layout.normalize(5),
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontSize: Layout.normalize(16),
-                          color: "#5046E5",
-                          marginRight: Layout.normalize(8),
-                          fontWeight: "400",
-                          ...(filteredTopicsStyle !== undefined
-                            ? filteredTopicsStyle
-                            : {}),
-                        }}
-                      >
-                        {item?.name}
-                      </Text>
-                      <TouchableOpacity onPress={() => removeItem(index)}>
-                        {/* Your cross icon component */}
-                        <Image
-                          source={require("../../assets/images/close_tag3x.png")}
-                          style={{
-                            tintColor: "#5046E5",
-                            width: Layout.normalize(15),
-                            height: Layout.normalize(15),
-                            ...(crossIconStyle !== undefined
-                              ? crossIconStyle
-                              : {}),
-                          }}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              ))}
-            </View>
-          </ScrollView>
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              marginRight: 10,
-            }}
-          >
-            <TouchableOpacity onPress={() => setMappedTopics([])}>
-              <Text
-                style={{ color: "#5046E5", fontSize: Layout.normalize(17) }}
-              >
-                Clear
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      ) : (
-        showTopics && (
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              backgroundColor: STYLES.$BACKGROUND_COLORS.LIGHT,
-              borderBottomWidth: 1,
-              borderBottomColor: "#D0D8E2",
-              borderTopWidth: 1,
-              borderTopColor: "#D0D8E2",
-              paddingVertical: Layout.normalize(10),
-            }}
-          >
-            <TouchableOpacity onPress={() => handleAllTopicPress()}>
-              <View
-                style={{
-                  marginTop: Layout.normalize(10),
-                  marginLeft: Layout.normalize(20),
-                  borderRadius: Layout.normalize(5),
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginBottom: Layout.normalize(10),
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: Layout.normalize(16),
-                    color: "#666666",
-                    marginRight: Layout.normalize(5),
-                    fontWeight: "400",
-                    ...(allTopicsStyle !== undefined ? allTopicsStyle : {}),
-                  }}
-                >
-                  {allTopicPlaceholder !== undefined
-                    ? allTopicPlaceholder
-                    : "All Topics"}
-                </Text>
-                <Image
-                  source={require("../../assets/images/arrow_down3x.png")}
-                  style={{
-                    tintColor: "#666666",
-                    width: Layout.normalize(15),
-                    height: Layout.normalize(15),
-                    ...(arrowDownStyle !== undefined ? arrowDownStyle : {}),
-                  }}
-                />
-              </View>
-            </TouchableOpacity>
-          </View>
-        )
-      )}
-      {/* post uploading section */}
-      {postUploading && (
-        <View style={styles.postUploadingView}>
-          <View style={styles.uploadingPostContentView}>
-            {/* post uploading media preview */}
-            {/* {uploadingMediaAttachmentType === IMAGE_ATTACHMENT_TYPE && (
-              <LMImage
-                imageUrl={uploadingMediaAttachment}
-                imageStyle={styles.uploadingImageStyle}
-                boxStyle={styles.uploadingImageVideoBox}
-                width={styles.uploadingImageVideoBox.width}
-                height={styles.uploadingImageVideoBox.height}
-              />
-            )}
-            {uploadingMediaAttachmentType === VIDEO_ATTACHMENT_TYPE && (
-              <LMVideo
-                videoUrl={uploadingMediaAttachment}
-                videoStyle={styles.uploadingVideoStyle}
-                boxStyle={styles.uploadingImageVideoBox}
-                width={styles.uploadingImageVideoBox.width}
-                height={styles.uploadingImageVideoBox.height}
-                showControls={false}
-                boxFit="contain"
-                autoPlay={false}
-              />
-            )}
-            {uploadingMediaAttachmentType === DOCUMENT_ATTACHMENT_TYPE && (
-              <LMIcon
-                assetPath={require("../../assets/images/pdf_icon3x.png")}
-                iconStyle={styles.uploadingDocumentStyle}
-                height={styles.uploadingPdfIconSize.height}
-                width={styles.uploadingPdfIconSize.width}
-              />
-            )} */}
-            <Text style={styles.postUploadingText}>{POST_UPLOADING}</Text>
-          </View>
-          {/* progress loader */}
-          <LMLoader
-            size={
-              Platform.OS === "ios"
-                ? STYLES.$LMLoaderSizeiOS
-                : STYLES.$LMLoaderSizeAndroid
-            }
-          />
-        </View>
-      )}
-      {/* posts list section */}
-      {!isAnyMatchFound ? (
-        <View style={[styles.justifyCenter]}>
-          <Text style={styles.title}>No matching post found</Text>
-        </View>
-      ) : (
-        <></>
-      )}
-      <PostsList items={mappedTopics} />
-      {/* create post button section */}
-      <TouchableOpacity
-        activeOpacity={0.8}
-        style={[
-          styles.newPostButtonView,
-          showCreatePost
-            ? styles.newPostButtonEnable
-            : styles.newPostButtonDisable,
-          universalFeedStyle?.newPostButtonStyle,
-        ]}
-        // handles post uploading status and member rights to create post
-        onPress={() => {
-          newPostButtonClickProps
-            ? newPostButtonClickProps()
-            : newPostButtonClick();
-          LMFeedAnalytics.track(Events.POST_CREATION_STARTED);
-          dispatch({
-            type: CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
-          });
-          dispatch({
-            type: CLEAR_SELECTED_TOPICS,
-          });
-        }}
-      >
-        <Image
-          source={require("../../assets/images/add_post_icon3x.png")}
-          resizeMode={"contain"}
-          style={styles.newPostButtonIcon}
-          {...universalFeedStyle?.newPostIcon}
-        />
-        <Text
-          style={[styles.newPostText, universalFeedStyle?.newPostButtonText]}
-        >
-          NEW POST
-        </Text>
-      </TouchableOpacity>
-    </View>
-  );
+const UniversalFeedComponent = ({ children }) => {
+  return <View style={styles.mainContainer}>{children}</View>;
 };
 
 export { UniversalFeed };

@@ -10,6 +10,7 @@ import {
 import { styles } from "../../components/LMPoll/styles";
 import { useUniversalFeedCustomisableMethodsContext } from "../../context";
 import { usePollCustomisableMethodsContext } from "../../context/pollCustomisableCallback";
+import STYLES from "../../constants/Styles";
 
 const AddOptionsModal = ({
   isAddPollOptionModalVisible,
@@ -98,7 +99,11 @@ const AddOptionUI = ({
             value={addOptionInputField}
             onChangeText={setAddOptionInputField}
             placeholder={"Type new option"}
-            placeholderTextColor="#c5c5c5"
+            placeholderTextColor={
+              STYLES.$IS_DARK_THEME
+                ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
+            }
             style={styles.textInput}
           />
         </View>

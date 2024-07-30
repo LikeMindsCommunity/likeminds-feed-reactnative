@@ -15,7 +15,7 @@ import STYLES from "../../constants/Styles";
 import { NO_RESPONSES, POLL_RESULT_TEXT } from "../../constants/Strings";
 import { Client } from "../../client";
 import Layout from "../../constants/Layout";
-import { LMHeader } from "../../components";
+import LMHeader from "../../components/LMHeader";
 
 const PollStack = createMaterialTopTabNavigator();
 
@@ -80,6 +80,11 @@ export const LMFeedPollResult = ({ navigation, route }: any) => {
                     </Text>
                   </View>
                 ),
+                tabBarStyle: {
+                  backgroundColor: STYLES.$IS_DARK_THEME
+                    ? STYLES.$BACKGROUND_COLORS.DARK
+                    : STYLES.$BACKGROUND_COLORS.LIGHT,
+                },
               }}
             />
           );

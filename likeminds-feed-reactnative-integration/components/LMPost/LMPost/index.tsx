@@ -9,6 +9,7 @@ import { styles } from "./styles";
 import { LMPostContextProvider, useLMPostContext } from "../../../context";
 import { useAppSelector } from "../../../store/store";
 import Layout from "../../../constants/Layout";
+import STYLES from "../../../constants/Styles";
 
 const LMPost = ({
   navigation,
@@ -51,11 +52,11 @@ const LMPostComponent = React.memo(() => {
                   <Text
                     style={{
                       fontSize: Layout.normalize(16),
-                      color: "#5046E5",
+                      color: STYLES.$COLORS.PRIMARY,
                       marginLeft: index === 0 ? 15 : 5,
                       marginTop: Layout.normalize(10),
                       paddingVertical: Layout.normalize(5),
-                      backgroundColor: "hsla(244, 75%, 59%, 0.1)",
+                      backgroundColor: `hsla(${STYLES.$HUE}, 75%, 59%, 0.1)`,
                       borderRadius: Layout.normalize(5),
                       paddingHorizontal: Layout.normalize(12),
                     }}

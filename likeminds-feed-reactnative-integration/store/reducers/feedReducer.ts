@@ -34,6 +34,7 @@ import {
   SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
   SET_FLOW_TO_CREATE_POST_SCREEN,
   SET_FLOW_TO_CAROUSEL_SCREEN,
+  MAPPED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
   SET_NOTIFICATION_COUNT,
   SET_FLOW_TO_POST_DETAIL_SCREEN,
 } from "../types/types";
@@ -46,6 +47,7 @@ export interface FeedReducerState {
   reportTags: {};
   autoPlayVideoPostId: "";
   topics: {};
+  mappedTopics: {};
   selectedTopicsForUniversalFeedScreen: [];
   selectedTopicsForCreatePostScreen: [];
   selectedTopicsFromUniversalFeedScreen: [];
@@ -66,6 +68,7 @@ export const initialState: FeedReducerState = {
   reportTags: {},
   autoPlayVideoPostId: "",
   topics: {},
+  mappedTopics: {},
   selectedTopicsForUniversalFeedScreen: [],
   selectedTopicsForCreatePostScreen: [],
   selectedTopicsFromUniversalFeedScreen: [],
@@ -154,6 +157,13 @@ export const feedReducer = (state = initialState, action) => {
     case SET_TOPICS: {
       const { topics = {} } = action.body;
       return { ...state, topics: topics };
+    }
+    case MAPPED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN: {
+      const { topics = {} } = action.body;
+      return {
+        ...state,
+        mappedTopics: topics,
+      };
     }
     case UNIVERSAL_FEED_SUCCESS: {
       const { users = {} } = action.body;

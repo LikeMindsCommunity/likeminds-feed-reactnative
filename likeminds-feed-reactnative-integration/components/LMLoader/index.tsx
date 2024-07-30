@@ -7,7 +7,7 @@ const LMLoader = ({color, size}: LMLoaderProps) => {
   return (
     <ActivityIndicator
       size={size ? size : 'large'}
-      color={color ? color : STYLES.$COLORS.THEME}
+      color={color ? color : STYLES.$COLORS.PRIMARY}
     />
   );
 }

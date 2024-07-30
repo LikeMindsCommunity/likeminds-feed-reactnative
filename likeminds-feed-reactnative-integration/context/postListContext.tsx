@@ -50,7 +50,7 @@ import { showToastMessage } from "../store/actions/toast";
 import { RootStackParamList } from "../models/RootStackParamsList";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { LMPostUI } from "../models";
-import { LMLoader } from "../components";
+import LMLoader from "../components/LMLoader";
 import { clearPostDetail } from "../store/actions/postDetail";
 import { postLikesClear } from "../store/actions/postLikes";
 import { ActivityIndicator, View } from "react-native";

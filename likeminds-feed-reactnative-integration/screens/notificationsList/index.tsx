@@ -1,6 +1,7 @@
 import { View, Text, FlatList, RefreshControl, Image } from "react-native";
 import React, { useEffect, useState } from "react";
-import { LMLoader, LMNotificationFeedItem } from "../../components";
+import LMNotificationFeedItem from "../../components/LMNotificationFeedItem";
+import LMLoader from "../../components/LMLoader";
 import {
   useNotificationFeedContext,
   useNotificationFeedCustomisableMethodsContext,
@@ -8,6 +9,7 @@ import {
 import { styles } from "./styles";
 import { useLMFeedStyles } from "../../lmFeedProvider";
 import Layout from "../../constants/Layout";
+import STYLES from "../../constants/Styles";
 
 const LMFeedNotificationFeedListView = () => {
   const [showLoader, setShowLoader] = useState(true);
@@ -67,6 +69,11 @@ const LMFeedNotificationFeedListView = () => {
             /* @ts-ignore */
             <>{isLoading && <LMLoader {...loaderStyle} />}</>
           }
+          style={{
+            backgroundColor: STYLES.$IS_DARK_THEME
+              ? STYLES.$BACKGROUND_COLORS.DARK
+              : STYLES.$BACKGROUND_COLORS.LIGHT,
+          }}
         />
       ) : !showLoader ? (
         <View
@@ -75,6 +82,9 @@ const LMFeedNotificationFeedListView = () => {
             justifyContent: "center",
             alignItems: "center",
             gap: 10,
+            backgroundColor: STYLES.$IS_DARK_THEME
+              ? STYLES.$BACKGROUND_COLORS.DARK
+              : STYLES.$BACKGROUND_COLORS.LIGHT,
           }}
         >
           {notificationFeedStyle?.noActivityViewImage ? (
@@ -91,7 +101,9 @@ const LMFeedNotificationFeedListView = () => {
           )}
           <Text
             style={{
-              color: "black",
+              color: STYLES.$IS_DARK_THEME
+                ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+                : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
               ...notificationFeedStyle?.noActivityViewTextStyle,
             }}
           >

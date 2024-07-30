@@ -8,7 +8,9 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   previewContainer: {
-    borderColor: STYLES.$COLORS.LIGHT_GREY,
+    borderColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     borderWidth: 0.5,
     borderRadius: 10,
     marginTop: 10,
@@ -22,16 +24,22 @@ export const styles = StyleSheet.create({
   },
   previewTitle: {
     fontWeight: "500",
-    color: STYLES.$COLORS.TEXT_COLOR,
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     fontSize: 16,
   },
   previewDescription: {
-    color: STYLES.$COLORS.TEXT_COLOR,
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     paddingVertical: 2,
     opacity: 0.8,
   },
   previewLink: {
-    color: STYLES.$COLORS.TEXT_COLOR,
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     fontSize: 12,
     opacity: 0.7,
   },
