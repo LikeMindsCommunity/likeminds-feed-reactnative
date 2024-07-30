@@ -88,7 +88,7 @@ export interface UniversalFeedContextValues {
   onRefresh: () => void;
   postAdd: () => void;
   keyExtractor: (val) => string;
-  newPostButtonClick: () => void;
+  newPostButtonClick: (hidePoll?: boolean) => void;
   getNotificationsCount: () => void;
   onTapNotificationBell: () => void;
   addPollOption: any;
@@ -261,7 +261,7 @@ export const UniversalFeedContextProvider = ({
   };
 
   // this handles the functionality of new post button
-  const newPostButtonClick = async () => {
+  const newPostButtonClick = async (hidePoll?: boolean) => {
     dispatch(autoPlayPostVideo(""));
 
     if (showCreatePost) {
@@ -281,7 +281,10 @@ export const UniversalFeedContextProvider = ({
           type: SET_FLOW_TO_CREATE_POST_SCREEN,
           body: { flowToCreatePostScreen: true },
         });
-        navigation.navigate(CREATE_POST);
+
+        navigation.navigate(CREATE_POST, {
+          hidePoll: hidePoll ? hidePoll : false,
+        });
       }
     } else {
       dispatch(

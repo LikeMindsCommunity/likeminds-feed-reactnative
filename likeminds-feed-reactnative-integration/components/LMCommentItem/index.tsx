@@ -13,6 +13,7 @@ import { LMIcon, LMText, LMButton } from "../../uiComponents";
 import {
   MAX_DEFAULT_COMMENT_LINES,
   PARENT_LEVEL_COMMENT,
+  STATE_ADMIN,
   VIEW_MORE_TEXT,
 } from "../../constants/Strings";
 import LMLoader from "../LMLoader";
@@ -22,6 +23,7 @@ import decode from "../../utils/decodeMentions";
 import { timeStamp } from "../../utils";
 import { useAppSelector } from "../../store/store";
 import { MemberRightsEnum } from "../../enums/MemberRightsEnum";
+import STYLES from "../../constants/Styles";
 
 const LMCommentItem = React.memo(
   ({
@@ -41,6 +43,7 @@ const LMCommentItem = React.memo(
     onTapReplies,
     isRepliesVisible,
     onCommentOverflowMenuClick,
+    hideThreeDotsMenu,
   }: LMCommentProps) => {
     const MAX_LINES = commentMaxLines
       ? commentMaxLines
@@ -62,6 +65,8 @@ const LMCommentItem = React.memo(
     const commentingRight = loggedInUserMemberRights.find(
       (item) => item.state === MemberRightsEnum.CommentingRightState
     );
+    const memberData = useAppSelector((state) => state.login.member);
+    const isCM = memberData?.state === STATE_ADMIN;
 
     // this handles the show more functionality
     const onTextLayout = (event) => {
@@ -99,7 +104,11 @@ const LMCommentItem = React.memo(
         : numberOfLines,
       textStyle: commentContentProps?.textStyle
         ? commentContentProps?.textStyle
-        : { color: "#222020" },
+        : {
+            color: STYLES.$IS_DARK_THEME
+              ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+              : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+          },
       selectable: commentContentProps?.selectable
         ? commentContentProps?.selectable
         : true,
@@ -128,7 +137,9 @@ const LMCommentItem = React.memo(
       },
       commentId: string
     ) => {
-      onCommentOverflowMenuClick(event, commentId);
+      onCommentOverflowMenuClick
+        ? onCommentOverflowMenuClick(event, commentId)
+        : null;
       menuIcon && menuIcon?.onTap();
     };
 
@@ -184,7 +195,7 @@ const LMCommentItem = React.memo(
             )}
           </View>
           {/* menu icon */}
-          {comment?.menuItems?.length > 0 && (
+          {comment?.menuItems?.length > 0 && !hideThreeDotsMenu && (
             <LMButton
               onTap={(event) => onOverflowMenuClick(event, comment?.id)}
               icon={{
@@ -215,7 +226,13 @@ const LMCommentItem = React.memo(
                   : require("../../assets/images/heart_icon3x.png"),
                 iconUrl: customLikeIcon?.iconUrl,
                 iconStyle: customLikeIcon?.iconStyle,
-                color: customLikeIcon?.color,
+                color: customLikeIcon?.color
+                  ? customLikeIcon?.color
+                  : !commentIsLiked
+                  ? STYLES.$IS_DARK_THEME
+                    ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                    : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
+                  : undefined,
                 height: customLikeIcon?.height
                   ? likeIconButton?.icon?.height
                   : 20.5,
@@ -241,7 +258,9 @@ const LMCommentItem = React.memo(
                   textStyle: {
                     fontSize: 13,
                     marginLeft: 5,
-                    color: "#0F1E3D66",
+                    color: STYLES.$IS_DARK_THEME
+                      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
                   },
                 }}
                 buttonStyle={styles.likeTextButton}
@@ -250,43 +269,64 @@ const LMCommentItem = React.memo(
             {/* reply section */}
             {comment?.level === PARENT_LEVEL_COMMENT && (
               <>
-                <LMText
-                  children={<Text> | </Text>}
-                  textStyle={styles.replyTextStyle}
-                />
-                {/* this opens the input text to reply */}
-                <LMButton
-                  {...replyTextProps}
-                  text={{
-                    children: replyTextProps
-                      ? replyTextProps.text?.children
-                        ? replyTextProps.text.children
-                        : commentingRight?.isSelected && <Text>Reply</Text>
-                      : commentingRight?.isSelected && <Text>Reply</Text>,
-                    textStyle: StyleSheet.flatten([
-                      { fontSize: 13, color: "#0F1E3D66" },
-                      replyTextProps?.text?.textStyle,
-                    ]),
-                  }}
-                  onTap={() => {
-                    replyTextProps?.onTap();
-                  }}
-                  buttonStyle={StyleSheet.flatten([
-                    styles.replyTextButton,
-                    replyTextProps?.buttonStyle,
-                  ])}
-                />
+                {isCM ||
+                  (commentingRight?.isSelected && (
+                    <>
+                      <LMText
+                        children={<Text> | </Text>}
+                        textStyle={styles.replyTextStyle}
+                      />
+                      {/* this opens the input text to reply */}
+                      <LMButton
+                        {...replyTextProps}
+                        text={{
+                          children: replyTextProps ? (
+                            replyTextProps.text?.children ? (
+                              replyTextProps.text.children
+                            ) : (
+                              <Text>Reply</Text>
+                            )
+                          ) : (
+                            <Text>Reply</Text>
+                          ),
+                          textStyle: StyleSheet.flatten([
+                            {
+                              fontSize: 13,
+                              color: STYLES.$IS_DARK_THEME
+                                ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                                : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
+                            },
+                            replyTextProps?.text?.textStyle,
+                          ]),
+                        }}
+                        onTap={() => {
+                          replyTextProps?.onTap();
+                        }}
+                        buttonStyle={StyleSheet.flatten([
+                          styles.replyTextButton,
+                          replyTextProps?.buttonStyle,
+                        ])}
+                      />
+                    </>
+                  ))}
 
                 {/* this shows all the replies of a comment */}
                 {comment.repliesCount > 0 && (
                   <>
-                    <LMIcon
-                      assetPath={require("../../assets/images/single_dot3x.png")}
-                      width={styles.dotImageSize.width}
-                      height={styles.dotImageSize.height}
-                      iconStyle={styles.dotImageSize}
-                      color="#0F1E3D66"
-                    />
+                    {isCM ||
+                      (commentingRight?.isSelected && (
+                        <LMIcon
+                          assetPath={require("../../assets/images/single_dot3x.png")}
+                          width={styles.dotImageSize.width}
+                          height={styles.dotImageSize.height}
+                          iconStyle={styles.dotImageSize}
+                          color={
+                            STYLES.$IS_DARK_THEME
+                              ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                              : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
+                          }
+                        />
+                      ))}
                     <LMButton
                       onTap={() => {
                         onTapReplies
@@ -300,16 +340,13 @@ const LMCommentItem = React.memo(
                       }}
                       text={{
                         children:
-                          comment.repliesCount > 1 &&
-                          commentingRight?.isSelected ? (
+                          comment.repliesCount > 1 ? (
                             <Text>{comment.repliesCount} Replies</Text>
                           ) : (
-                            commentingRight?.isSelected && (
-                              <Text>{comment.repliesCount} Reply</Text>
-                            )
+                            <Text>{comment.repliesCount} Reply</Text>
                           ),
                         textStyle: StyleSheet.flatten([
-                          { fontSize: 13, color: "#5046E5" },
+                          { fontSize: 13, color: STYLES.$COLORS.PRIMARY },
                           repliesCountTextStyle,
                         ]),
                       }}
@@ -336,7 +373,11 @@ const LMCommentItem = React.memo(
                   width={styles.dotImageSize.width}
                   height={styles.dotImageSize.height}
                   iconStyle={styles.dotImageSize}
-                  color="#0F1E3D66"
+                  color={
+                    STYLES.$IS_DARK_THEME
+                      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
+                  }
                 />
               </>
             )}
@@ -362,7 +403,7 @@ const LMCommentItem = React.memo(
               <FlatList
                 keyboardShouldPersistTaps={"handled"}
                 data={repliesArray}
-                renderItem={({ item }: { item: LMCommentUI }) => {
+                renderItem={({ item }: any) => {
                   return (
                     <>
                       {item && (
@@ -370,15 +411,16 @@ const LMCommentItem = React.memo(
                           comment={item}
                           likeIconButton={{
                             onTap: () => {
-                              likeIconButton?.onTap(item?.id);
+                              likeIconButton?.onTap(item?.Id);
                             },
                           }}
                           likeTextButton={{
-                            onTap: () => likeTextButton?.onTap(item?.id),
+                            onTap: () => likeTextButton?.onTap(item?.Id),
                           }}
                           onCommentOverflowMenuClick={(event) =>
-                            onOverflowMenuClick(event, item?.id)
+                            onOverflowMenuClick(event, item?.Id)
                           }
+                          hideThreeDotsMenu={true}
                         />
                       )}
                     </>
@@ -427,6 +469,7 @@ const LMCommentItem = React.memo(
                     )}
                   </>
                 }
+                keyExtractor={(item, index) => index?.toString()}
               />
             )}
           </View>

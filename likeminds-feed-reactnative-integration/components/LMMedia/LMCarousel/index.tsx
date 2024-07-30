@@ -73,13 +73,17 @@ const LMCarousel = React.memo(
         // handling custom style of active pagination item
         paginationStyleItemActive={StyleSheet.flatten([
           styles.paginationItemStyle,
-          { backgroundColor: STYLES.$COLORS.THEME },
+          { backgroundColor: STYLES.$COLORS.PRIMARY },
           activeIndicatorStyle,
         ])}
         // handling custom style of inactive pagination item
         paginationStyleItemInactive={StyleSheet.flatten([
           styles.paginationItemStyle,
-          { backgroundColor: STYLES.$COLORS.LIGHT_GREY },
+          {
+            backgroundColor: STYLES.$IS_DARK_THEME
+              ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+              : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
+          },
           inactiveIndicatorStyle,
         ])}
         renderItem={({ item, index }) => (

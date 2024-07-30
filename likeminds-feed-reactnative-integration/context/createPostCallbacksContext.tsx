@@ -3,31 +3,31 @@ import React, { createContext, ReactNode, useContext } from "react";
 
 export interface CreatePostCallbacksContextProps {
   children?: ReactNode;
-  handleGalleryProp: (type: string) => void;
-  handleDocumentProp: () => void;
-  handlePollProp: () => void;
-  onPostClickProp: (
+  handleGalleryProp?: (type: string) => void;
+  handleDocumentProp?: () => void;
+  handlePollProp?: () => void;
+  onPostClickProp?: (
     allMedia: Array<LMAttachmentUI>,
     linkData: Array<LMAttachmentUI>,
     content: string,
     topics: string[],
-    poll: any,
+    poll: any
   ) => void;
-  handleScreenBackPressProp: () => void;
+  handleScreenBackPressProp?: () => void;
 }
 
 export interface CreatePostCustomisableMethodsContext {
-  handleGalleryProp: (type: string) => void;
-  handleDocumentProp: () => void;
-  handlePollProp: () => void;
-  onPostClickProp: (
+  handleGalleryProp?: (type: string) => void;
+  handleDocumentProp?: () => void;
+  handlePollProp?: () => void;
+  onPostClickProp?: (
     allMedia: Array<LMAttachmentUI>,
     linkData: Array<LMAttachmentUI>,
     content: string,
     topics: string[],
-    poll: any,
+    poll: any
   ) => void;
-  handleScreenBackPressProp: () => void;
+  handleScreenBackPressProp?: () => void;
 }
 
 const CreatePostCustomisableMethodsContext = createContext<

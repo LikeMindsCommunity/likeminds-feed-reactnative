@@ -7,6 +7,7 @@ import { useLMFeedStyles } from "../../../lmFeedProvider";
 import { LMFeedAnalytics } from "../../../analytics/LMFeedAnalytics";
 import { Events } from "../../../enums/Events";
 import { Keys } from "../../../enums/Keys";
+import STYLES from "../../../constants/Styles";
 
 const LMPostFooter = React.memo(() => {
   const { post, footerProps }: LMPostContextValues = useLMPostContext();
@@ -71,7 +72,13 @@ const LMPostFooter = React.memo(() => {
                 : require("../../../assets/images/heart_icon3x.png"),
               iconUrl: footerStyle?.likeIconButton?.icon?.iconUrl,
               iconStyle: footerStyle?.likeIconButton?.icon?.iconStyle,
-              color: footerStyle?.likeIconButton?.icon?.color,
+              color: footerStyle?.likeIconButton?.icon?.color
+                ? footerStyle?.likeIconButton?.icon?.color
+                : !liked
+                ? STYLES.$IS_DARK_THEME
+                  ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                  : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
+                : undefined,
               height: footerStyle?.likeIconButton?.icon?.height
                 ? footerStyle?.likeIconButton.icon.height
                 : 20.5,
@@ -112,7 +119,9 @@ const LMPostFooter = React.memo(() => {
                 : {
                     fontSize: 14.5,
                     fontWeight: "400",
-                    color: "#504B4B",
+                    color: STYLES.$IS_DARK_THEME
+                      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
                     textAlign: "left",
                     width: 55,
                   },
@@ -147,7 +156,9 @@ const LMPostFooter = React.memo(() => {
                     marginLeft: 8,
                     fontSize: 14.5,
                     fontWeight: "400",
-                    color: "#504B4B",
+                    color: STYLES.$IS_DARK_THEME
+                      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
                   },
             }}
             icon={{
@@ -156,7 +167,11 @@ const LMPostFooter = React.memo(() => {
                 : require("../../../assets/images/comment_icon3x.png"),
               iconUrl: footerStyle?.commentButton?.icon?.iconUrl,
               iconStyle: footerStyle?.commentButton?.icon?.iconStyle,
-              color: footerStyle?.commentButton?.icon?.color,
+              color: footerStyle?.commentButton?.icon?.color
+                ? footerStyle?.commentButton?.icon?.color
+                : STYLES.$IS_DARK_THEME
+                ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
               height: footerStyle?.commentButton?.icon?.height
                 ? footerStyle?.commentButton.icon.height
                 : 20,
@@ -204,7 +219,11 @@ const LMPostFooter = React.memo(() => {
                 : require("../../../assets/images/bookmark_icon3x.png"),
               iconUrl: footerStyle?.saveButton?.icon?.iconUrl,
               iconStyle: footerStyle?.saveButton?.icon?.iconStyle,
-              color: footerStyle?.saveButton?.icon?.color,
+              color: footerStyle?.saveButton?.icon?.color
+                ? footerStyle?.saveButton?.icon?.color
+                : STYLES.$IS_DARK_THEME
+                ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
               height: footerStyle?.saveButton?.icon?.height
                 ? footerStyle?.saveButton.icon.height
                 : 18,
@@ -239,7 +258,11 @@ const LMPostFooter = React.memo(() => {
                 : require("../../../assets/images/share_icon3x.png"),
               iconUrl: footerStyle?.shareButton?.icon?.iconUrl,
               iconStyle: footerStyle?.shareButton?.icon?.iconStyle,
-              color: footerStyle?.shareButton?.icon?.color,
+              color: footerStyle?.shareButton?.icon?.color
+                ? footerStyle?.shareButton?.icon?.color
+                : STYLES.$IS_DARK_THEME
+                ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
               height: footerStyle?.shareButton?.icon?.height
                 ? footerStyle?.shareButton.icon.height
                 : 18,

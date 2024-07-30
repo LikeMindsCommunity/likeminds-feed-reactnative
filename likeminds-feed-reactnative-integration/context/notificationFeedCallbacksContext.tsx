@@ -3,13 +3,13 @@ import React, { createContext, ReactNode, useContext } from "react";
 
 export interface NotificationFeedCallbacksContextProps {
   children?: ReactNode;
-  onNotificationItemClickedProp: (notification: LMActivityUI) => void;
-  handleScreenBackPressProp: () => void;
+  onNotificationItemClickedProp?: (notification: LMActivityUI) => void;
+  handleScreenBackPressProp?: () => void;
 }
 
 export interface NotificationFeedCustomisableMethodsContext {
-  onNotificationItemClickedProp: (notification: LMActivityUI) => void;
-  handleScreenBackPressProp: () => void;
+  onNotificationItemClickedProp?: (notification: LMActivityUI) => void;
+  handleScreenBackPressProp?: () => void;
 }
 
 const NotificationFeedCustomisableMethodsContext = createContext<
@@ -29,11 +29,11 @@ export const useNotificationFeedCustomisableMethodsContext = () => {
 export const NotificationFeedCustomisableMethodsContextProvider = ({
   children,
   onNotificationItemClickedProp,
-  handleScreenBackPressProp
+  handleScreenBackPressProp,
 }: NotificationFeedCallbacksContextProps) => {
   const contextValues: NotificationFeedCustomisableMethodsContext = {
     onNotificationItemClickedProp,
-    handleScreenBackPressProp
+    handleScreenBackPressProp,
   };
 
   return (

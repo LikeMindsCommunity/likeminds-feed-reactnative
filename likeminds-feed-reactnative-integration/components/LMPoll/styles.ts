@@ -29,7 +29,9 @@ export const styles = StyleSheet.create({
     color: "#f4f3f4",
   },
   greyColor: {
-    color: "grey",
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
   },
   justifyCenter: {
     justifyContent: "center",
@@ -44,7 +46,9 @@ export const styles = StyleSheet.create({
     color: STYLES.$COLORS.TERTIARY,
   },
   blackColor: {
-    color: "#000000",
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
   },
   padding20: {
     padding: Layout.normalize(20),
@@ -98,7 +102,9 @@ export const styles = StyleSheet.create({
     height: Layout.normalize(250),
   },
   modalView: {
-    backgroundColor: "#e8ebf0",
+    backgroundColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$BACKGROUND_COLORS.DARK
+      : STYLES.$BACKGROUND_COLORS.LIGHT,
     borderRadius: 8,
     shadowColor: "#000",
     shadowOffset: {
@@ -183,7 +189,9 @@ export const styles = StyleSheet.create({
   },
   pollQuestion: {
     padding: Layout.normalize(15),
-    backgroundColor: STYLES.$COLORS.TERTIARY,
+    backgroundColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$BACKGROUND_COLORS.DARK
+      : STYLES.$BACKGROUND_COLORS.LIGHT,
   },
   question: {
     marginTop: Layout.normalize(10),
@@ -191,12 +199,16 @@ export const styles = StyleSheet.create({
   answerOptions: {
     paddingVertical: Layout.normalize(10),
     paddingHorizontal: 0,
-    backgroundColor: STYLES.$COLORS.TERTIARY,
+    backgroundColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$BACKGROUND_COLORS.DARK
+      : STYLES.$BACKGROUND_COLORS.LIGHT,
     marginTop: Layout.normalize(10),
   },
   advancedOptions: {
     paddingHorizontal: 0,
-    backgroundColor: STYLES.$COLORS.TERTIARY,
+    backgroundColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$BACKGROUND_COLORS.DARK
+      : STYLES.$BACKGROUND_COLORS.LIGHT,
     marginTop: Layout.normalize(15),
     paddingBottom: Layout.normalize(10),
   },
@@ -234,9 +246,14 @@ export const styles = StyleSheet.create({
     height: Layout.normalize(15),
     width: Layout.normalize(15),
     resizeMode: "contain",
+    tintColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
   },
   placeHolder: {
-    color: "#D3D3D3",
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
   },
   postButton: {
     padding: Layout.normalize(10),
@@ -252,7 +269,9 @@ export const styles = StyleSheet.create({
   },
   greyPollButton: {
     borderRadius: Layout.normalize(8),
-    borderColor: "grey",
+    borderColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     borderWidth: Layout.normalize(0.5),
   },
   pollButtonBackground: {
@@ -292,17 +311,27 @@ export const styles = StyleSheet.create({
   textInput: {
     padding: Layout.normalize(12),
     borderRadius: Layout.normalize(8),
-    borderColor: "#c5c5c5",
+    borderColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     borderWidth: Layout.normalize(1),
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
     fontSize: Layout.normalize(14),
-    color: STYLES.$COLORS.BLACK,
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
   },
   borderBottom: {
-    borderBottomColor: "#c5c5c5",
+    borderBottomColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     borderBottomWidth: Layout.normalize(1),
   },
-  greyBorder: { borderColor: "#c5c5c5" },
+  greyBorder: {
+    borderColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
+  },
   messageInfo: {
     color: "green",
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
@@ -310,7 +339,9 @@ export const styles = StyleSheet.create({
     marginBottom: STYLES.$MARGINS.XS,
   },
   messageCustomTitle: {
-    color: STYLES.$COLORS.MSG,
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     fontSize: STYLES.$FONT_SIZES.SMALL,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
   },
@@ -379,17 +410,21 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 15,
     paddingTop: 12,
-    backgroundColor: "white",
+    backgroundColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$BACKGROUND_COLORS.DARK
+      : STYLES.$BACKGROUND_COLORS.LIGHT,
   },
   userNameText: {
     fontSize: 16,
     fontWeight: "500",
-    color: "#222020",
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
     marginLeft: 8,
     textTransform: "capitalize",
   },
   headerRightComponentText: {
-    color: "#5046E5",
+    color: STYLES.$COLORS.FONT_PRIMARY,
     fontSize: 16,
     fontWeight: "500",
   },

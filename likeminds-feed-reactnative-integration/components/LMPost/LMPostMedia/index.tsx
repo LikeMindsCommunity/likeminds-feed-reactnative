@@ -1,12 +1,10 @@
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
-import {
-  LMCarousel,
-  LMDocument,
-  LMImage,
-  LMLinkPreview,
-  LMVideo,
-} from "../../LMMedia";
+import LMCarousel from "../../LMMedia/LMCarousel";
+import LMDocument from "../../LMMedia/LMDocument";
+import LMImage from "../../LMMedia/LMImage";
+import LMLinkPreview from "../../LMMedia/LMLinkPreview";
+import LMVideo from "../../LMMedia/LMVideo";
 import {
   DOCUMENT_ATTACHMENT_TYPE,
   IMAGE_ATTACHMENT_TYPE,

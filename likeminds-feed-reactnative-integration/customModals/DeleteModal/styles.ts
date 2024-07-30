@@ -1,33 +1,41 @@
-import {StyleSheet} from 'react-native';
-import STYLES from '../../constants/Styles';
-import Layout from '../../constants/Layout';
+import { StyleSheet } from "react-native";
+import STYLES from "../../constants/Styles";
+import Layout from "../../constants/Layout";
 
 const styles = StyleSheet.create({
   modal: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   modalContainer: {
-    backgroundColor: STYLES.$BACKGROUND_COLORS.LIGHT,
+    backgroundColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$BACKGROUND_COLORS.DARK
+      : STYLES.$BACKGROUND_COLORS.LIGHT,
     elevation: 8,
     paddingHorizontal: 18,
     paddingVertical: 12,
     marginHorizontal: STYLES.$MARGINS.XL,
   },
   textHeading: {
-    color: STYLES.$COLORS.darkTextColor,
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
     fontSize: STYLES.$FONT_SIZES.LARGE,
     fontWeight: STYLES.$FONT_WEIGHT.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
     marginVertical: STYLES.$MARGINS.SMALL,
   },
   text: {
-    color: STYLES.$COLORS.lightGreyTextColor,
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     fontSize: STYLES.$FONT_SIZES.LARGE,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
   },
   reasonText: {
-    color: '#9b9b9b',
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     fontSize: STYLES.$FONT_SIZES.LARGE,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
   },
@@ -35,30 +43,34 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderRadius: 8,
     marginTop: STYLES.$MARGINS.XL,
-    borderColor: STYLES.$COLORS.darkTextColor,
+    borderColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
     padding: STYLES.$PADDINGS.SMALL,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   dropdownIcon: {
     width: Layout.normalize(30),
     height: Layout.normalize(30),
   },
   buttonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
+    flexDirection: "row",
+    justifyContent: "flex-end",
     marginTop: STYLES.$MARGINS.XL,
     paddingBottom: STYLES.$PADDINGS.XS,
   },
   deleteTextBtn: {
-    color: '#5046e5',
+    color: STYLES.$COLORS.PRIMARY,
     fontWeight: STYLES.$FONT_WEIGHT.MEDIUM,
     fontSize: 15,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
   },
   cancelTextBtn: {
-    color: '#9b9b9b',
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     fontWeight: STYLES.$FONT_WEIGHT.MEDIUM,
     fontSize: 15,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
@@ -71,12 +83,14 @@ const styles = StyleSheet.create({
     paddingLeft: 0,
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
-    color: STYLES.$COLORS.darkTextColor,
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
   },
   modalView: {
     padding: 10,
     borderRadius: 8,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -89,10 +103,12 @@ const styles = StyleSheet.create({
   filterText: {
     fontSize: STYLES.$FONT_SIZES.LARGE,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
-    color: STYLES.$COLORS.whiteTextColor,
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
   },
   asteriskTextStyle: {
-    color: 'red',
+    color: "red",
   },
 });
 

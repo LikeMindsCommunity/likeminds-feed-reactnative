@@ -141,7 +141,14 @@ const LMPostPollUI = ({
                 }
               >
                 <Image
-                  style={[styles.editImage, { tintColor: "black" }]}
+                  style={[
+                    styles.editImage,
+                    {
+                      tintColor: STYLES.$IS_DARK_THEME
+                        ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+                        : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+                    },
+                  ]}
                   source={
                     editPollOptionsIcon
                       ? editPollOptionsIcon
@@ -157,11 +164,20 @@ const LMPostPollUI = ({
                 }
               >
                 <Image
-                  style={styles.editImage}
+                  style={[
+                    styles.editImage,
+                    {
+                      height: 15,
+                      width: 15,
+                      tintColor: STYLES.$IS_DARK_THEME
+                        ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+                        : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+                    },
+                  ]}
                   source={
                     clearPollOptionsIcon
                       ? clearPollOptionsIcon
-                      : require("../../../assets/images/cross_circle_icon3x.png")
+                      : require("../../../assets/images/cross_icon3x.png")
                   }
                 />
               </TouchableOpacity>
@@ -312,13 +328,21 @@ const LMPostPollUI = ({
                                 ? isPollSentByMe
                                   ? pollOptionSelectedColor
                                     ? pollOptionSelectedColor
-                                    : "hsl(240, 64%, 91%)"
+                                    : STYLES.$IS_DARK_THEME
+                                    ? `hsl(${STYLES.$HUE}, 64%, 51%)`
+                                    : `hsl(${STYLES.$HUE}, 64%, 91%)`
                                   : element?.voteCount > 0
                                   ? pollOptionOtherColor
                                     ? pollOptionOtherColor
-                                    : "hsl(213, 23%, 92%)"
-                                  : "white"
-                                : "white",
+                                    : STYLES.$IS_DARK_THEME
+                                    ? `hsl(${STYLES.$HUE}, 13%, 44%)`
+                                    : `hsl(${STYLES.$HUE}, 23%, 92%)`
+                                  : STYLES.$IS_DARK_THEME
+                                  ? STYLES.$BACKGROUND_COLORS.DARK
+                                  : STYLES.$BACKGROUND_COLORS.LIGHT
+                                : STYLES.$IS_DARK_THEME
+                                ? STYLES.$BACKGROUND_COLORS.DARK
+                                : STYLES.$BACKGROUND_COLORS.LIGHT,
                             },
                             styles.pollButtonBackground,
                             styles.pollButtonPadding,
@@ -423,7 +447,6 @@ const LMPostPollUI = ({
                   styles.messageCustomTitle,
                   /* @ts-ignore */
                   memberVotedCountStyles ? memberVotedCountStyles : null,
-                  { color: STYLES.$COLORS.MSG },
                 ]}
               >{` • ${
                 hasPollEnded
@@ -477,7 +500,11 @@ const LMPostPollUI = ({
                   styles.alignRow,
                   !shouldShowSubmitPollButton ? styles.greyBorder : null,
                   !shouldShowSubmitPollButton
-                    ? { backgroundColor: styles.whiteColor.color }
+                    ? {
+                        backgroundColor: STYLES.$IS_DARK_THEME
+                          ? STYLES.$BACKGROUND_COLORS.DARK
+                          : STYLES.$BACKGROUND_COLORS.LIGHT,
+                      }
                     : null,
                   hue ? { backgroundColor: `hsl(${hue}, 47%, 31%)` } : null,
                   /* @ts-ignore */

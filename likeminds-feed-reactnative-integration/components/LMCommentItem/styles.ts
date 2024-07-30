@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import layout from "../../constants/Layout";
+import STYLES from "../../constants/Styles";
 
 // default commentItem style
 export const styles = StyleSheet.create({
@@ -20,20 +21,28 @@ export const styles = StyleSheet.create({
   },
   commentUserName: {
     fontWeight: "500",
-    color: "#222020",
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
     paddingTop: 12,
     paddingBottom: 4,
   },
   defaultTimeStyle: {
-    color: "#0F1E3D66",
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     fontSize: 13,
   },
   parentLevelCommentView: {
     paddingHorizontal: 15,
     width: layout.window.width,
-    backgroundColor: "#fff",
+    backgroundColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$BACKGROUND_COLORS.DARK
+      : STYLES.$BACKGROUND_COLORS.LIGHT,
     borderBottomWidth: 1,
-    borderBottomColor: "#D0D8E266",
+    borderBottomColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
   },
   commentContentView: {
     flexDirection: "row",
@@ -51,7 +60,12 @@ export const styles = StyleSheet.create({
   },
   likeTextButton: { borderWidth: 0, marginRight: 4 },
   likeIconButton: { borderWidth: 0, marginRight: 4 },
-  replyTextStyle: { color: "#0F1E3D66", marginRight: 4 },
+  replyTextStyle: {
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
+    marginRight: 4,
+  },
   replyTextButton: { borderWidth: 0 },
   repliesCountTextButton: { borderWidth: 0 },
   repliesView: { marginLeft: 30 },
@@ -60,7 +74,12 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  commentPageNumberText: { fontSize: 12, color: "#9B9B9B" },
+  commentPageNumberText: {
+    fontSize: 12,
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
+  },
   loaderView: {
     flexDirection: "row",
     alignItems: "center",
@@ -74,6 +93,8 @@ export const styles = StyleSheet.create({
   },
   rowAlignment: { flexDirection: "row", alignItems: "center" },
   showMoreText: {
-    color: "#9B9B9B",
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
   },
 });

@@ -4,6 +4,7 @@ import LMIcon from "../LMIcon";
 import { LMButtonProps } from "./types";
 import LMText from "../LMText";
 import { defaultStyles } from "./styles";
+import STYLES from "../../constants/Styles";
 
 const LMButton = React.memo(
   ({

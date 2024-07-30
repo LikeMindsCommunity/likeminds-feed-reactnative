@@ -1,5 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {
+  LMCreatePostButton,
+  LMFilterTopics,
+  LMPostUploadIndicator,
+  LMUniversalFeedHeader,
+  PostsList,
   UniversalFeed,
   usePostListContext,
   useUniversalFeedContext,
@@ -8,8 +13,11 @@ import {getUniqueId} from 'react-native-device-info';
 import {Alert, Platform, Share} from 'react-native';
 import {validateRegisterDeviceRequest} from '../registerDeviceApi';
 import {pushAPI, token} from '../pushNotification';
+import {useAppSelector} from '@likeminds.community/feed-rn-core/store/store';
+import FilterTopics from '../components/FilterTopics';
+import CreatePostButton from '../components/CreatePostButton';
 
-const Feed = ({route}) => {
+const Feed = () => {
   const {
     postLikeHandler,
     savePostHandler,
@@ -22,13 +30,13 @@ const Feed = ({route}) => {
     onOverlayMenuClick,
   } = usePostListContext();
   const {
-    navigation,
     newPostButtonClick,
     onTapNotificationBell,
     addPollOption,
     setSelectedPollOptions,
     submitPoll,
   } = useUniversalFeedContext();
+  const mappedTopics = useAppSelector(state => state.feed.mappedTopics);
   const [FCMToken, setFCMToken] = useState('');
 
   const customPostLike = postId => {
@@ -146,8 +154,6 @@ const Feed = ({route}) => {
 
   return (
     <UniversalFeed
-      navigation={navigation}
-      route={route}
       postLikeHandlerProp={id => customPostLike(id)}
       savePostHandlerProp={(id, saved) => customPostSave(id, saved)}
       onSelectCommentCountProp={id => customHandleCommentClick(id)}
@@ -166,7 +172,13 @@ const Feed = ({route}) => {
       onSharePostClicked={id => customShareTap(id)}
       onSubmitButtonClicked={customPollSubmitButtonClick}
       onAddPollOptionsClicked={customAddPollOptionsClick}
-      onPollOptionClicked={customPollOptionClicked}></UniversalFeed>
+      onPollOptionClicked={customPollOptionClicked}>
+      <LMUniversalFeedHeader />
+      <FilterTopics />
+      <LMPostUploadIndicator />
+      <PostsList items={mappedTopics} />
+      <CreatePostButton />
+    </UniversalFeed>
   );
 };
 

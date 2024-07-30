@@ -83,7 +83,7 @@ export const LMFeedProvider = ({
       CallBack.setLMFeedInterface(lmFeedInterface);
     }
     // storing myClient followed by community details
-    const callValidateApi = async () => {
+    const callValidateApi = async (accessToken, refreshToken) => {
       const validateResponse = await dispatch(
         validateUser(
           ValidateUserRequest.builder()
@@ -104,7 +104,7 @@ export const LMFeedProvider = ({
     async function callInitiateAPI() {
       const { accessToken, refreshToken } = await myClient?.getTokens();
       if (accessToken && refreshToken) {
-        callValidateApi();
+        callValidateApi(accessToken, refreshToken);
         return;
       }
       const initiateResponse: any = await dispatch(
@@ -128,11 +128,11 @@ export const LMFeedProvider = ({
       }
     }
 
-    if (accessToken && refreshToken) {
-      callValidateApi();
-    } else if (apiKey && userName && userUniqueId) {
+    if (apiKey && userName && userUniqueId) {
       callInitiateAPI();
-    }
+    }else if (accessToken && refreshToken) {
+      callValidateApi(accessToken, refreshToken);
+    } 
   }, [accessToken, refreshToken]);
 
   useEffect(() => {

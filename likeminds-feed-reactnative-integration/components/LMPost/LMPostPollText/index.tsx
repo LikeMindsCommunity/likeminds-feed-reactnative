@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { decode } from "../../../utils";
 import { useLMFeedStyles } from "../../../lmFeedProvider";
 import { styles } from "../LMPostContent/styles";
+import STYLES from "../../../constants/Styles";
 
 interface LMPostPollTextProps {
   truncatedText: string;
@@ -19,7 +20,11 @@ const LMPostPollText = ({ truncatedText, fullText }: LMPostPollTextProps) => {
       /* @ts-ignore */
       style={StyleSheet.flatten([
         styles.contentText,
-        { color: "black" },
+        {
+          color: STYLES.$IS_DARK_THEME
+            ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+            : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+        },
         pollQuestionStyles,
       ])}
     >

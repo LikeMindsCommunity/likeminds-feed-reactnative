@@ -225,6 +225,11 @@ const CreatePollUI = () => {
                 style={[
                   styles.font,
                   formatedDateTime ? styles.blackColor : styles.placeHolder,
+                  {
+                    color: STYLES.$IS_DARK_THEME
+                      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
+                  },
                 ]}
               >
                 {formatedDateTime ? formatedDateTime : DATE_PLACEHOLDER}
@@ -270,6 +275,11 @@ const CreatePollUI = () => {
           styles.alignRow,
           styles.justifyCenter,
           styles.gap,
+          {
+            backgroundColor: STYLES.$IS_DARK_THEME
+              ? STYLES.$BACKGROUND_COLORS.DARK
+              : STYLES.$BACKGROUND_COLORS.LIGHT,
+          },
         ]}
         onPress={() => {
           handleShowAdvanceOption();
@@ -282,6 +292,11 @@ const CreatePollUI = () => {
             styles.textAlignCenter,
             /* @ts-ignore */
             pollAdvancedOptionTextStyle ? pollAdvancedOptionTextStyle : null,
+            {
+              color: STYLES.$IS_DARK_THEME
+                ? STYLES.$COLORS.PRIMARY
+                : STYLES.$COLORS.WHITE,
+            },
           ]}
         >
           ADVANCED
@@ -312,7 +327,17 @@ const CreatePollUI = () => {
               styles.paddingHorizontal15,
             ]}
           >
-            <Text style={[styles.font, styles.blackColor]}>
+            <Text
+              style={[
+                styles.font,
+                styles.blackColor,
+                {
+                  color: STYLES.$IS_DARK_THEME
+                    ? STYLES.$COLORS.PRIMARY
+                    : STYLES.$COLORS.WHITE,
+                },
+              ]}
+            >
               Allow voters to add the option
             </Text>
             <Switch
@@ -343,7 +368,17 @@ const CreatePollUI = () => {
               styles.paddingHorizontal15,
             ]}
           >
-            <Text style={[styles.font, styles.blackColor]}>
+            <Text
+              style={[
+                styles.font,
+                styles.blackColor,
+                {
+                  color: STYLES.$IS_DARK_THEME
+                    ? STYLES.$COLORS.PRIMARY
+                    : STYLES.$COLORS.WHITE,
+                },
+              ]}
+            >
               {ANONYMOUS_POLL_TEXT}
             </Text>
             <Switch
@@ -374,7 +409,17 @@ const CreatePollUI = () => {
               styles.paddingHorizontal15,
             ]}
           >
-            <Text style={[styles.font, styles.blackColor]}>
+            <Text
+              style={[
+                styles.font,
+                styles.blackColor,
+                {
+                  color: STYLES.$IS_DARK_THEME
+                    ? STYLES.$COLORS.PRIMARY
+                    : STYLES.$COLORS.WHITE,
+                },
+              ]}
+            >
               {LIVE_RESULT_TEXT}
             </Text>
             <Switch
@@ -400,7 +445,17 @@ const CreatePollUI = () => {
             <View
               style={[styles.alignRow, styles.justifySpace, styles.marginSpace]}
             >
-              <Text style={[styles.smallText, styles.greyColor]}>
+              <Text
+                style={[
+                  styles.smallText,
+                  styles.greyColor,
+                  {
+                    color: STYLES.$IS_DARK_THEME
+                      ? STYLES.$COLORS.PRIMARY
+                      : STYLES.$COLORS.WHITE,
+                  },
+                ]}
+              >
                 {USER_CAN_VOTE_FOR}
               </Text>
             </View>
@@ -418,7 +473,17 @@ const CreatePollUI = () => {
                   { marginRight: Layout.normalize(30) },
                 ]}
               >
-                <Text style={[styles.text, styles.blackColor]}>
+                <Text
+                  style={[
+                    styles.text,
+                    styles.blackColor,
+                    {
+                      color: STYLES.$IS_DARK_THEME
+                        ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+                        : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+                    },
+                  ]}
+                >
                   {userCanVoteForArr.find((item) => {
                     return (
                       item?.toLowerCase().replace(/_/g, " ") ===
@@ -437,7 +502,17 @@ const CreatePollUI = () => {
                 }}
                 style={[styles.alignRow, styles.justifySpace, { flexGrow: 1 }]}
               >
-                <Text style={[styles.text, styles.blackColor]}>
+                <Text
+                  style={[
+                    styles.text,
+                    styles.blackColor,
+                    {
+                      color: STYLES.$IS_DARK_THEME
+                        ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+                        : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+                    },
+                  ]}
+                >
                   {!voteAllowedPerUser
                     ? SELECT_OPTION
                     : `${

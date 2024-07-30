@@ -43,7 +43,7 @@ export const styles = StyleSheet.create({
     borderWidth: 0,
     alignItems: "center",
     justifyContent: "space-evenly",
-    marginLeft: 8,
+    marginLeft: 0,
   },
   defaultCommentView: {
     borderWidth: 0,

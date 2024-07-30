@@ -382,10 +382,7 @@ export interface TopicsStyle {
 export interface CarouselScreenStyle {
   headerTitle?: TextStyle;
   headerSubtitle?: TextStyle;
-  sliderThumbSize?: {
-    height?: number;
-    width?: number;
-  };
+  sliderThumbImage?: string;
   thumbTintColor?: string;
   minimumTrackTintColor?: string;
   maximumTrackTintColor?: string;

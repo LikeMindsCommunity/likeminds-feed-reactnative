@@ -17,6 +17,7 @@ import {
   CarouselScreen,
   LMFeedCreatePollScreen,
   LMFeedPollResult,
+  initMyClient,
 } from '@likeminds.community/feed-rn-core';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {LMCoreCallbacks} from '@likeminds.community/feed-rn-core/setupFeed';
@@ -27,11 +28,8 @@ import {
   LMFeedCallbacks,
   LMCarouselScreenCallbacks,
   NAVIGATED_FROM_NOTIFICATION,
-  initMyClient,
 } from '@likeminds.community/feed-rn-core';
-import {myClient} from '.';
 import {
-  ActivityIndicator,
   KeyboardAvoidingView,
   Linking,
   PermissionsAndroid,
@@ -236,7 +234,7 @@ const App = () => {
         .setApiKey(apiKey)
         .setUUID(userUniqueID)
         .build();
-      const initiateUserResponse = await myClient.initiateUser(
+      const initiateUserResponse: any = await myClient?.initiateUser(
         initiateUserRequest,
       );
       const accessToken = initiateUserResponse?.accessToken;
