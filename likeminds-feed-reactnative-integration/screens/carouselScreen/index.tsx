@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   BackHandler,
   ActivityIndicator,
+  Platform,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { SwiperFlatList } from "react-native-swiper-flatlist";
@@ -65,7 +66,7 @@ const CarouselScreen = ({ navigation, route }: any) => {
 
   // Format the date as "DD MMM YYYY" (e.g., "09 May 2024") without dashes
   const dateOptions: Intl.DateTimeFormatOptions = {
-    timeZone: "Asia/Kolkata",
+    timeZone: Platform.OS === "ios" ? "Asia/Calcutta" : "Asia/Kolkata",
     day: "2-digit",
     month: "short",
     year: "numeric",
@@ -76,7 +77,7 @@ const CarouselScreen = ({ navigation, route }: any) => {
 
   // Format the time in 24-hour format as "HH:MM" (e.g., "12:30")
   const timeOptions: Intl.DateTimeFormatOptions = {
-    timeZone: "Asia/Kolkata",
+    timeZone: Platform.OS === "ios" ? "Asia/Calcutta" : "Asia/Kolkata",
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,

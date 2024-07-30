@@ -1086,7 +1086,7 @@ const CreatePostComponent = () => {
           </TouchableOpacity>
 
           {/* poll option */}
-          {hidePoll ? (
+          {!hidePoll ? (
             <TouchableOpacity
               activeOpacity={0.8}
               style={[

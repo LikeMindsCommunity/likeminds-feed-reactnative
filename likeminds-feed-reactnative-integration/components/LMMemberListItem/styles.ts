@@ -25,7 +25,7 @@ export const styles = StyleSheet.create({
     marginLeft: 10,
   },
   memberTitleText: {
-    color: STYLES.$COLORS.THEME,
+    color: STYLES.$COLORS.PRIMARY,
     fontWeight: "400",
     fontSize: 14,
   },
