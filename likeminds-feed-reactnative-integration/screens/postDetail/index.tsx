@@ -1055,15 +1055,11 @@ const PostDetailComponent = React.memo(() => {
       {/* menu list modal */}
       {showActionListModal && (
         <LMPostMenu
-          post={() => {
-            console.log(
-              "overlayMenuType === POST_TYPE ==",
-              getCommentDetail(postDetail?.replies)
-            );
-            return overlayMenuType === POST_TYPE
+          post={
+            overlayMenuType === POST_TYPE
               ? postDetail
-              : getCommentDetail(postDetail?.replies)?.commentDetail;
-          }}
+              : getCommentDetail(postDetail?.replies)?.commentDetail
+          }
           onSelected={(postId, itemId, isPinned) => {
             overlayMenuType === POST_TYPE
               ? onMenuItemSelect(postId, itemId, isPinned)
