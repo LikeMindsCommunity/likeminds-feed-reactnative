@@ -42,6 +42,7 @@ const LMCommentItem = React.memo(
     onTapReplies,
     isRepliesVisible,
     onCommentOverflowMenuClick,
+    hideThreeDotsMenu,
   }: LMCommentProps) => {
     const MAX_LINES = commentMaxLines
       ? commentMaxLines
@@ -191,7 +192,7 @@ const LMCommentItem = React.memo(
             )}
           </View>
           {/* menu icon */}
-          {comment?.menuItems?.length > 0 && (
+          {comment?.menuItems?.length > 0 && !hideThreeDotsMenu && (
             <LMButton
               onTap={(event) => onOverflowMenuClick(event, comment?.id)}
               icon={{
@@ -257,48 +258,52 @@ const LMCommentItem = React.memo(
               />
             )}
             {/* reply section */}
-            {comment?.level === PARENT_LEVEL_COMMENT &&
-              commentingRight?.isSelected && (
-                <>
-                  <LMText
-                    children={<Text> | </Text>}
-                    textStyle={styles.replyTextStyle}
-                  />
-                  {/* this opens the input text to reply */}
-                  <LMButton
-                    {...replyTextProps}
-                    text={{
-                      children: replyTextProps ? (
-                        replyTextProps.text?.children ? (
-                          replyTextProps.text.children
+            {comment?.level === PARENT_LEVEL_COMMENT && (
+              <>
+                {commentingRight?.isSelected && (
+                  <>
+                    <LMText
+                      children={<Text> | </Text>}
+                      textStyle={styles.replyTextStyle}
+                    />
+                    {/* this opens the input text to reply */}
+                    <LMButton
+                      {...replyTextProps}
+                      text={{
+                        children: replyTextProps ? (
+                          replyTextProps.text?.children ? (
+                            replyTextProps.text.children
+                          ) : (
+                            <Text>Reply</Text>
+                          )
                         ) : (
                           <Text>Reply</Text>
-                        )
-                      ) : (
-                        <Text>Reply</Text>
-                      ),
-                      textStyle: StyleSheet.flatten([
-                        {
-                          fontSize: 13,
-                          color: STYLES.$IS_DARK_THEME
-                            ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
-                            : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
-                        },
-                        replyTextProps?.text?.textStyle,
-                      ]),
-                    }}
-                    onTap={() => {
-                      replyTextProps?.onTap();
-                    }}
-                    buttonStyle={StyleSheet.flatten([
-                      styles.replyTextButton,
-                      replyTextProps?.buttonStyle,
-                    ])}
-                  />
+                        ),
+                        textStyle: StyleSheet.flatten([
+                          {
+                            fontSize: 13,
+                            color: STYLES.$IS_DARK_THEME
+                              ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                              : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
+                          },
+                          replyTextProps?.text?.textStyle,
+                        ]),
+                      }}
+                      onTap={() => {
+                        replyTextProps?.onTap();
+                      }}
+                      buttonStyle={StyleSheet.flatten([
+                        styles.replyTextButton,
+                        replyTextProps?.buttonStyle,
+                      ])}
+                    />
+                  </>
+                )}
 
-                  {/* this shows all the replies of a comment */}
-                  {comment.repliesCount > 0 && (
-                    <>
+                {/* this shows all the replies of a comment */}
+                {comment.repliesCount > 0 && (
+                  <>
+                    {commentingRight?.isSelected && (
                       <LMIcon
                         assetPath={require("../../assets/images/single_dot3x.png")}
                         width={styles.dotImageSize.width}
@@ -310,35 +315,36 @@ const LMCommentItem = React.memo(
                             : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
                         }
                       />
-                      <LMButton
-                        onTap={() => {
-                          onTapReplies
-                            ? (onTapReplies(
-                                (data: Array<LMCommentUI>) =>
-                                  setRepliesArray(data),
-                                ""
-                              ),
-                              handleReplies())
-                            : handleReplies();
-                        }}
-                        text={{
-                          children:
-                            comment.repliesCount > 1 ? (
-                              <Text>{comment.repliesCount} Replies</Text>
-                            ) : (
-                              <Text>{comment.repliesCount} Reply</Text>
+                    )}
+                    <LMButton
+                      onTap={() => {
+                        onTapReplies
+                          ? (onTapReplies(
+                              (data: Array<LMCommentUI>) =>
+                                setRepliesArray(data),
+                              ""
                             ),
-                          textStyle: StyleSheet.flatten([
-                            { fontSize: 13, color: STYLES.$COLORS.PRIMARY },
-                            repliesCountTextStyle,
-                          ]),
-                        }}
-                        buttonStyle={styles.repliesCountTextButton}
-                      />
-                    </>
-                  )}
-                </>
-              )}
+                            handleReplies())
+                          : handleReplies();
+                      }}
+                      text={{
+                        children:
+                          comment.repliesCount > 1 ? (
+                            <Text>{comment.repliesCount} Replies</Text>
+                          ) : (
+                            <Text>{comment.repliesCount} Reply</Text>
+                          ),
+                        textStyle: StyleSheet.flatten([
+                          { fontSize: 13, color: STYLES.$COLORS.PRIMARY },
+                          repliesCountTextStyle,
+                        ]),
+                      }}
+                      buttonStyle={styles.repliesCountTextButton}
+                    />
+                  </>
+                )}
+              </>
+            )}
           </View>
           <View style={styles.rowAlignment}>
             {comment?.isEdited && (
@@ -386,7 +392,7 @@ const LMCommentItem = React.memo(
               <FlatList
                 keyboardShouldPersistTaps={"handled"}
                 data={repliesArray}
-                renderItem={({ item }: { item: LMCommentUI }) => {
+                renderItem={({ item }: any) => {
                   return (
                     <>
                       {item && (
@@ -394,15 +400,16 @@ const LMCommentItem = React.memo(
                           comment={item}
                           likeIconButton={{
                             onTap: () => {
-                              likeIconButton?.onTap(item?.id);
+                              likeIconButton?.onTap(item?.Id);
                             },
                           }}
                           likeTextButton={{
-                            onTap: () => likeTextButton?.onTap(item?.id),
+                            onTap: () => likeTextButton?.onTap(item?.Id),
                           }}
                           onCommentOverflowMenuClick={(event) =>
-                            onOverflowMenuClick(event, item?.id)
+                            onOverflowMenuClick(event, item?.Id)
                           }
+                          hideThreeDotsMenu={true}
                         />
                       )}
                     </>
@@ -451,6 +458,7 @@ const LMCommentItem = React.memo(
                     )}
                   </>
                 }
+                keyExtractor={(item, index) => index?.toString()}
               />
             )}
           </View>

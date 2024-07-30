@@ -167,6 +167,8 @@ const LMPostPollUI = ({
                   style={[
                     styles.editImage,
                     {
+                      height: 15,
+                      width: 15,
                       tintColor: STYLES.$IS_DARK_THEME
                         ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
                         : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
@@ -175,7 +177,7 @@ const LMPostPollUI = ({
                   source={
                     clearPollOptionsIcon
                       ? clearPollOptionsIcon
-                      : require("../../../assets/images/cross_circle_icon3x.png")
+                      : require("../../../assets/images/cross_icon3x.png")
                   }
                 />
               </TouchableOpacity>
@@ -326,10 +328,14 @@ const LMPostPollUI = ({
                                 ? isPollSentByMe
                                   ? pollOptionSelectedColor
                                     ? pollOptionSelectedColor
+                                    : STYLES.$IS_DARK_THEME
+                                    ? `hsl(${STYLES.$HUE}, 64%, 51%)`
                                     : `hsl(${STYLES.$HUE}, 64%, 91%)`
                                   : element?.voteCount > 0
                                   ? pollOptionOtherColor
                                     ? pollOptionOtherColor
+                                    : STYLES.$IS_DARK_THEME
+                                    ? `hsl(${STYLES.$HUE}, 13%, 44%)`
                                     : `hsl(${STYLES.$HUE}, 23%, 92%)`
                                   : STYLES.$IS_DARK_THEME
                                   ? STYLES.$BACKGROUND_COLORS.DARK

@@ -214,6 +214,7 @@ const CreatePostComponent = () => {
   );
   const route: any = useRoute();
   const post = route?.params?.post;
+  const hidePoll = route?.params?.hidePoll;
 
   let isImage =
     formattedMediaAttachments[0]?.attachmentType === IMAGE_ATTACHMENT_TYPE
@@ -1085,40 +1086,42 @@ const CreatePostComponent = () => {
           </TouchableOpacity>
 
           {/* poll option */}
-          <TouchableOpacity
-            activeOpacity={0.8}
-            style={[
-              {
-                ...styles.optionItemView,
-                ...(Platform.OS === "ios" && { marginBottom: 10 }),
-              },
-              {
-                ...customAttachmentOptionsStyle?.filesAttachmentView,
-                ...(Platform.OS === "ios" && { marginBottom: 10 }),
-              },
-            ]}
-            onPress={() => {
-              handlePollProp ? handlePollProp() : handlePoll();
+          {hidePoll ? (
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={[
+                {
+                  ...styles.optionItemView,
+                  ...(Platform.OS === "ios" && { marginBottom: 10 }),
+                },
+                {
+                  ...customAttachmentOptionsStyle?.filesAttachmentView,
+                  ...(Platform.OS === "ios" && { marginBottom: 10 }),
+                },
+              ]}
+              onPress={() => {
+                handlePollProp ? handlePollProp() : handlePoll();
 
-              // LMFeedAnalytics.track(
-              //   Events.CLICKED_ON_ATTACHMENT,
-              //   new Map<string, string>([[Keys.TYPE, SELECT_FILE]])
-              // );
-            }}
-          >
-            <LMIcon
-              assetPath={require("../../assets/images/poll_icon3x.png")}
-              color={STYLES.$COLORS.PRIMARY}
-              height={15}
-              widht={15}
-              {...customAttachmentOptionsStyle?.pollAttachmentIcon}
-            />
-            <LMText
-              children={<Text>{ADD_POLL}</Text>}
-              textStyle={styles.selectionOptionstext}
-              {...customAttachmentOptionsStyle?.pollAttachmentTextStyle}
-            />
-          </TouchableOpacity>
+                // LMFeedAnalytics.track(
+                //   Events.CLICKED_ON_ATTACHMENT,
+                //   new Map<string, string>([[Keys.TYPE, SELECT_FILE]])
+                // );
+              }}
+            >
+              <LMIcon
+                assetPath={require("../../assets/images/poll_icon3x.png")}
+                color={STYLES.$COLORS.PRIMARY}
+                height={15}
+                widht={15}
+                {...customAttachmentOptionsStyle?.pollAttachmentIcon}
+              />
+              <LMText
+                children={<Text>{ADD_POLL}</Text>}
+                textStyle={styles.selectionOptionstext}
+                {...customAttachmentOptionsStyle?.pollAttachmentTextStyle}
+              />
+            </TouchableOpacity>
+          ) : null}
         </View>
       )}
     </SafeAreaView>

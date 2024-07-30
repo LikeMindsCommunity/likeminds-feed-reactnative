@@ -81,14 +81,18 @@ const styles = StyleSheet.create({
     padding: STYLES.$PADDINGS.MEDIUM,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: STYLES.$COLORS.TERTIARY,
+    backgroundColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$BACKGROUND_COLORS.DARK
+      : STYLES.$BACKGROUND_COLORS.LIGHT,
     flex: 1,
     gap: Layout.normalize(10),
   },
   subTitle: {
     fontSize: STYLES.$FONT_SIZES.SMALL,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
-    color: STYLES.$COLORS.MSG,
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     textAlign: "center",
   },
   gap: { gap: Layout.normalize(5) },

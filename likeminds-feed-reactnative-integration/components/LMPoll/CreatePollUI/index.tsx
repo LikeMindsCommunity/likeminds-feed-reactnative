@@ -479,8 +479,8 @@ const CreatePollUI = () => {
                     styles.blackColor,
                     {
                       color: STYLES.$IS_DARK_THEME
-                        ? "#c5c5c5"
-                        : STYLES.$COLORS.WHITE,
+                        ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+                        : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
                     },
                   ]}
                 >
@@ -508,8 +508,8 @@ const CreatePollUI = () => {
                     styles.blackColor,
                     {
                       color: STYLES.$IS_DARK_THEME
-                        ? "#c5c5c5"
-                        : STYLES.$COLORS.WHITE,
+                        ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+                        : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
                     },
                   ]}
                 >

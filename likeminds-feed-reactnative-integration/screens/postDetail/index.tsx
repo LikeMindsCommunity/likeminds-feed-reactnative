@@ -22,6 +22,7 @@ import {
   POST_LIKES,
   POST_TYPE,
   REPORT_COMMENT_MENU_ITEM,
+  STATE_ADMIN,
   VIEW_MORE_TEXT,
 } from "../../constants/Strings";
 import { DeleteModal, ReportModal } from "../../customModals";
@@ -241,6 +242,8 @@ const PostDetailComponent = React.memo(() => {
   const commentingRight = loggedInUserMemberRights.find(
     (item) => item.state === 10
   );
+  const memberData = useAppSelector((state) => state.login.member);
+  const isCM = memberData?.state === STATE_ADMIN;
 
   // this function returns the id of the item selected from menu list and handles further functionalities accordingly for comment
   const onCommentMenuItemSelect = async (
@@ -820,103 +823,199 @@ const PostDetailComponent = React.memo(() => {
           </View>
         ) : null}
         {/* input field */}
-        {postDetail?.id && commentingRight?.isSelected && !showLoader ? (
-          <LMInputText
-            {...customCommentTextInput}
-            inputText={commentToAdd}
-            onType={handleInputChange}
-            inputTextStyle={[
-              styles.textInputStyle,
-              {
-                bottom: keyboardIsVisible
-                  ? // navigatedFromComments
-                    //   ? Layout.normalize(0)
-                    //   :
-                    Layout.normalize(25)
-                  : 0,
-              },
-              customCommentTextInput?.inputTextStyle,
-            ]}
-            autoFocus={
-              customCommentTextInput?.autoFocus != undefined
-                ? customCommentTextInput?.autoFocus
-                : routeParams
-                ? true
-                : keyboardFocusOnReply
-                ? true
-                : editCommentFocus
-                ? true
-                : commentFocus
-            }
-            placeholderText={
-              customCommentTextInput?.placeholderText
-                ? customCommentTextInput?.placeholderText
-                : "Write a comment"
-            }
-            placeholderTextColor={
-              customCommentTextInput?.placeholderTextColor
-                ? customCommentTextInput?.placeholderTextColor
-                : STYLES.$IS_DARK_THEME
-                ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
-                : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
-            }
-            inputRef={myRef}
-            rightIcon={{
-              ...customCommentTextInput?.rightIcon,
-              onTap: () => {
-                customCommentTextInput?.rightIcon?.onTap();
-                commentToAdd
-                  ? editCommentFocus
-                    ? commentEdit()
-                    : replyOnComment.textInputFocus
-                    ? addNewReplyProp
-                      ? addNewReplyProp(
-                          postDetail?.id,
-                          replyOnComment.commentId
-                        )
-                      : addNewReply(postDetail?.id, replyOnComment.commentId)
-                    : addNewCommentProp
-                    ? addNewCommentProp(postDetail?.id)
-                    : addNewComment(postDetail?.id)
-                  : {};
-                setAllTags([]);
-                setIsUserTagging(false);
-              },
-              icon: {
-                assetPath: require("../../assets/images/send_icon3x.png"),
-                iconStyle: { opacity: commentToAdd ? 1 : 0.7 },
-                ...customCommentTextInput?.rightIcon?.icon,
-              },
-              isClickable: commentToAdd
-                ? customCommentTextInput?.rightIcon?.isClickable != undefined
-                  ? customCommentTextInput?.rightIcon?.isClickable
+        {postDetail?.id && !showLoader ? (
+          isCM ? (
+            <LMInputText
+              {...customCommentTextInput}
+              inputText={commentToAdd}
+              onType={handleInputChange}
+              inputTextStyle={[
+                styles.textInputStyle,
+                {
+                  bottom: keyboardIsVisible
+                    ? // navigatedFromComments
+                      //   ? Layout.normalize(0)
+                      //   :
+                      Layout.normalize(25)
+                    : 0,
+                },
+                customCommentTextInput?.inputTextStyle,
+              ]}
+              autoFocus={
+                customCommentTextInput?.autoFocus != undefined
+                  ? customCommentTextInput?.autoFocus
+                  : routeParams
+                  ? true
+                  : keyboardFocusOnReply
+                  ? true
+                  : editCommentFocus
+                  ? true
+                  : commentFocus
+              }
+              placeholderText={
+                customCommentTextInput?.placeholderText
+                  ? customCommentTextInput?.placeholderText
+                  : "Write a comment"
+              }
+              placeholderTextColor={
+                customCommentTextInput?.placeholderTextColor
+                  ? customCommentTextInput?.placeholderTextColor
+                  : STYLES.$IS_DARK_THEME
+                  ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                  : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
+              }
+              inputRef={myRef}
+              rightIcon={{
+                ...customCommentTextInput?.rightIcon,
+                onTap: () => {
+                  customCommentTextInput?.rightIcon?.onTap();
+                  commentToAdd
+                    ? editCommentFocus
+                      ? commentEdit()
+                      : replyOnComment.textInputFocus
+                      ? addNewReplyProp
+                        ? addNewReplyProp(
+                            postDetail?.id,
+                            replyOnComment.commentId
+                          )
+                        : addNewReply(postDetail?.id, replyOnComment.commentId)
+                      : addNewCommentProp
+                      ? addNewCommentProp(postDetail?.id)
+                      : addNewComment(postDetail?.id)
+                    : {};
+                  setAllTags([]);
+                  setIsUserTagging(false);
+                },
+                icon: {
+                  assetPath: require("../../assets/images/send_icon3x.png"),
+                  iconStyle: {
+                    opacity: commentToAdd ? 1 : 0.7,
+                    tintColor: STYLES.$COLORS.PRIMARY,
+                  },
+                  ...customCommentTextInput?.rightIcon?.icon,
+                },
+                isClickable: commentToAdd
+                  ? customCommentTextInput?.rightIcon?.isClickable != undefined
+                    ? customCommentTextInput?.rightIcon?.isClickable
+                    : true
+                  : false,
+              }}
+              multilineField={
+                customCommentTextInput?.multilineField != undefined
+                  ? customCommentTextInput?.multilineField
                   : true
-                : false,
-            }}
-            multilineField={
-              customCommentTextInput?.multilineField != undefined
-                ? customCommentTextInput?.multilineField
-                : true
-            }
-            partTypes={[
-              {
-                trigger: "@", // Should be a single character like '@' or '#'
-                textStyle: {
-                  color: "blue",
-                  ...customCommentTextInput?.mentionTextStyle,
-                }, // The mention style in the input
-              },
-            ]}
-          />
-        ) : (
-          !showLoader && (
-            <View style={styles.textContainer}>
-              <Text style={styles.disabledText}>
-                You don't have permission to comment
-              </Text>
-            </View>
+              }
+              partTypes={[
+                {
+                  trigger: "@", // Should be a single character like '@' or '#'
+                  textStyle: {
+                    color: "blue",
+                    ...customCommentTextInput?.mentionTextStyle,
+                  }, // The mention style in the input
+                },
+              ]}
+            />
+          ) : commentingRight?.isSelected ? (
+            <LMInputText
+              {...customCommentTextInput}
+              inputText={commentToAdd}
+              onType={handleInputChange}
+              inputTextStyle={[
+                styles.textInputStyle,
+                {
+                  bottom: keyboardIsVisible
+                    ? // navigatedFromComments
+                      //   ? Layout.normalize(0)
+                      //   :
+                      Layout.normalize(25)
+                    : 0,
+                },
+                customCommentTextInput?.inputTextStyle,
+              ]}
+              autoFocus={
+                customCommentTextInput?.autoFocus != undefined
+                  ? customCommentTextInput?.autoFocus
+                  : routeParams
+                  ? true
+                  : keyboardFocusOnReply
+                  ? true
+                  : editCommentFocus
+                  ? true
+                  : commentFocus
+              }
+              placeholderText={
+                customCommentTextInput?.placeholderText
+                  ? customCommentTextInput?.placeholderText
+                  : "Write a comment"
+              }
+              placeholderTextColor={
+                customCommentTextInput?.placeholderTextColor
+                  ? customCommentTextInput?.placeholderTextColor
+                  : STYLES.$IS_DARK_THEME
+                  ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                  : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
+              }
+              inputRef={myRef}
+              rightIcon={{
+                ...customCommentTextInput?.rightIcon,
+                onTap: () => {
+                  customCommentTextInput?.rightIcon?.onTap();
+                  commentToAdd
+                    ? editCommentFocus
+                      ? commentEdit()
+                      : replyOnComment.textInputFocus
+                      ? addNewReplyProp
+                        ? addNewReplyProp(
+                            postDetail?.id,
+                            replyOnComment.commentId
+                          )
+                        : addNewReply(postDetail?.id, replyOnComment.commentId)
+                      : addNewCommentProp
+                      ? addNewCommentProp(postDetail?.id)
+                      : addNewComment(postDetail?.id)
+                    : {};
+                  setAllTags([]);
+                  setIsUserTagging(false);
+                },
+                icon: {
+                  assetPath: require("../../assets/images/send_icon3x.png"),
+                  iconStyle: {
+                    opacity: commentToAdd ? 1 : 0.7,
+                  },
+                  color: STYLES.$COLORS.PRIMARY,
+                  ...customCommentTextInput?.rightIcon?.icon,
+                },
+                isClickable: commentToAdd
+                  ? customCommentTextInput?.rightIcon?.isClickable != undefined
+                    ? customCommentTextInput?.rightIcon?.isClickable
+                    : true
+                  : false,
+              }}
+              multilineField={
+                customCommentTextInput?.multilineField != undefined
+                  ? customCommentTextInput?.multilineField
+                  : true
+              }
+              partTypes={[
+                {
+                  trigger: "@", // Should be a single character like '@' or '#'
+                  textStyle: {
+                    color: "blue",
+                    ...customCommentTextInput?.mentionTextStyle,
+                  }, // The mention style in the input
+                },
+              ]}
+            />
+          ) : (
+            !showLoader && (
+              <View style={styles.textContainer}>
+                <Text style={styles.disabledText}>
+                  You don't have permission to comment
+                </Text>
+              </View>
+            )
           )
-        )}
+        ) : null}
       </KeyboardAvoidingView>
 
       {/* delete post modal */}
@@ -956,11 +1055,15 @@ const PostDetailComponent = React.memo(() => {
       {/* menu list modal */}
       {showActionListModal && (
         <LMPostMenu
-          post={
-            overlayMenuType === POST_TYPE
+          post={() => {
+            console.log(
+              "overlayMenuType === POST_TYPE ==",
+              getCommentDetail(postDetail?.replies)
+            );
+            return overlayMenuType === POST_TYPE
               ? postDetail
-              : getCommentDetail(postDetail?.replies)?.commentDetail
-          }
+              : getCommentDetail(postDetail?.replies)?.commentDetail;
+          }}
           onSelected={(postId, itemId, isPinned) => {
             overlayMenuType === POST_TYPE
               ? onMenuItemSelect(postId, itemId, isPinned)

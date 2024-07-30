@@ -96,7 +96,9 @@ const PostLikesListComponent = React.memo(() => {
                 customTitleProps={{
                   textStyle: postLikesListStyle?.userDesignationTextStyle,
                 }}
-                onTap={(user: any) => onTapUserItemProp(user)}
+                onTap={(user: any) =>
+                  onTapUserItemProp && onTapUserItemProp(user)
+                }
               />
             );
           }}

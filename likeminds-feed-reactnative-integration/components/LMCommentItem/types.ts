@@ -27,4 +27,5 @@ export interface LMCommentProps {
     },
     commentId: string
   ) => void;
+  hideThreeDotsMenu?: boolean;
 }

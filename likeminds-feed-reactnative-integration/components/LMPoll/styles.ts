@@ -246,6 +246,9 @@ export const styles = StyleSheet.create({
     height: Layout.normalize(15),
     width: Layout.normalize(15),
     resizeMode: "contain",
+    tintColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
   },
   placeHolder: {
     color: STYLES.$IS_DARK_THEME
@@ -314,7 +317,9 @@ export const styles = StyleSheet.create({
     borderWidth: Layout.normalize(1),
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
     fontSize: Layout.normalize(14),
-    color: STYLES.$COLORS.BLACK,
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
   },
   borderBottom: {
     borderBottomColor: STYLES.$IS_DARK_THEME
