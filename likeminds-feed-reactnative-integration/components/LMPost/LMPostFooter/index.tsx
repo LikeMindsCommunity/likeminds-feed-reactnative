@@ -72,7 +72,13 @@ const LMPostFooter = React.memo(() => {
                 : require("../../../assets/images/heart_icon3x.png"),
               iconUrl: footerStyle?.likeIconButton?.icon?.iconUrl,
               iconStyle: footerStyle?.likeIconButton?.icon?.iconStyle,
-              color: footerStyle?.likeIconButton?.icon?.color,
+              color: footerStyle?.likeIconButton?.icon?.color
+                ? footerStyle?.likeIconButton?.icon?.color
+                : !liked
+                ? STYLES.$IS_DARK_THEME
+                  ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                  : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
+                : undefined,
               height: footerStyle?.likeIconButton?.icon?.height
                 ? footerStyle?.likeIconButton.icon.height
                 : 20.5,

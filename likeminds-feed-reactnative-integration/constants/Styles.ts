@@ -7,6 +7,10 @@ interface StylesProps {
   secondaryColor?: string;
   lightBackgroundColor?: string;
   isDarkTheme?: boolean;
+  primaryDarkTextColor?: string;
+  secondaryDarkTextColor?: string;
+  primaryLightTextColor?: string;
+  secondaryLightTextColor?: string;
 }
 
 export class STYLES {
@@ -53,7 +57,7 @@ export class STYLES {
     BOLD: "SofiaPro-Bold",
     BLACK: "SofiaPro-Black",
   };
-  
+
   static $BACKGROUND_COLORS = {
     LIGHT: "#ffffff",
     DARK: "#000000",
@@ -114,6 +118,10 @@ export class STYLES {
     secondaryColor,
     lightBackgroundColor,
     isDarkTheme,
+    primaryDarkTextColor,
+    secondaryDarkTextColor,
+    primaryLightTextColor,
+    secondaryLightTextColor,
   }: StylesProps) {
     STYLES.$COLORS = {
       ...STYLES.$COLORS,
@@ -134,8 +142,19 @@ export class STYLES {
     };
     STYLES.$IS_DARK_THEME = isDarkTheme ? isDarkTheme : false;
     STYLES.$HUE = hue ? hue : 244;
+    STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK = primaryDarkTextColor
+      ? primaryDarkTextColor
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK;
+    STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT = primaryLightTextColor
+      ? primaryLightTextColor
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT;
+    STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK = secondaryDarkTextColor
+      ? secondaryDarkTextColor
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK;
+    STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT = secondaryLightTextColor
+      ? secondaryLightTextColor
+      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT;
   }
-
 }
 
 export default STYLES;

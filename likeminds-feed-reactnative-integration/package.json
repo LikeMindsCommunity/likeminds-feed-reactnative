@@ -1,6 +1,6 @@
 {
   "name": "@likeminds.community/feed-rn-core",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "LikeMinds ReactNative Core SDK for feed",
   "scripts": {
     "android": "react-native run-android",
@@ -21,16 +21,7 @@
     "@likeminds.community/feed-rn": "1.0.0",
     "aws-sdk": "2.1548.0",
     "diff": "5.1.0",
-    "lodash": "4.17.21",
-    "react-native-create-thumbnail": "1.6.4",
-    "react-native-dotenv": "3.4.9",
-    "react-native-file-viewer": "2.1.5",
-    "react-native-image-zoom-viewer": "3.0.1",
-    "react-native-screens": "3.29.0",
-    "react-native-slider": "0.11.0",
-    "react-native-swiper-flatlist": "3.2.3",
-    "react-native-video": "5.2.1",
-    "typescript": "5.3.3"
+    "lodash": "4.17.21"
   },
   "peerDependencies": {
     "@notifee/react-native": ">=7.8.2",
@@ -60,7 +51,8 @@
     "react-native-swiper-flatlist": ">=3.2.3",
     "react-native-video": ">=5.2.1",
     "@types/react-native-video": ">=5.0.14",
-    "typescript": ">=5.3.3"
+    "typescript": ">=5.3.3",
+    "@react-native-async-storage/async-storage": ">=1.24.0"
   },
   "devDependencies": {
     "@react-native-community/netinfo": ">=11.3.0",

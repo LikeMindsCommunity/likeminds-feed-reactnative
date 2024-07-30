@@ -4,9 +4,7 @@ export type RootStackParamList = {
   UniversalFeed: undefined;
   PostsList: undefined;
   PostDetail: Array<string> | undefined;
-  CreatePost:
-    | { postId: string; post: LMPostUI; hidePoll?: boolean }
-    | undefined;
+  CreatePost: any;
   PostLikesList: Array<string> | undefined;
   NotificationFeed: undefined;
   NotificationList: undefined;

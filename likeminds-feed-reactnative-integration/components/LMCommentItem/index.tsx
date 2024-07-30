@@ -13,6 +13,7 @@ import { LMIcon, LMText, LMButton } from "../../uiComponents";
 import {
   MAX_DEFAULT_COMMENT_LINES,
   PARENT_LEVEL_COMMENT,
+  STATE_ADMIN,
   VIEW_MORE_TEXT,
 } from "../../constants/Strings";
 import LMLoader from "../LMLoader";
@@ -64,6 +65,8 @@ const LMCommentItem = React.memo(
     const commentingRight = loggedInUserMemberRights.find(
       (item) => item.state === MemberRightsEnum.CommentingRightState
     );
+    const memberData = useAppSelector((state) => state.login.member);
+    const isCM = memberData?.state === STATE_ADMIN;
 
     // this handles the show more functionality
     const onTextLayout = (event) => {
@@ -223,7 +226,13 @@ const LMCommentItem = React.memo(
                   : require("../../assets/images/heart_icon3x.png"),
                 iconUrl: customLikeIcon?.iconUrl,
                 iconStyle: customLikeIcon?.iconStyle,
-                color: customLikeIcon?.color,
+                color: customLikeIcon?.color
+                  ? customLikeIcon?.color
+                  : !commentIsLiked
+                  ? STYLES.$IS_DARK_THEME
+                    ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                    : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
+                  : undefined,
                 height: customLikeIcon?.height
                   ? likeIconButton?.icon?.height
                   : 20.5,
@@ -260,62 +269,64 @@ const LMCommentItem = React.memo(
             {/* reply section */}
             {comment?.level === PARENT_LEVEL_COMMENT && (
               <>
-                {commentingRight?.isSelected && (
-                  <>
-                    <LMText
-                      children={<Text> | </Text>}
-                      textStyle={styles.replyTextStyle}
-                    />
-                    {/* this opens the input text to reply */}
-                    <LMButton
-                      {...replyTextProps}
-                      text={{
-                        children: replyTextProps ? (
-                          replyTextProps.text?.children ? (
-                            replyTextProps.text.children
+                {isCM ||
+                  (commentingRight?.isSelected && (
+                    <>
+                      <LMText
+                        children={<Text> | </Text>}
+                        textStyle={styles.replyTextStyle}
+                      />
+                      {/* this opens the input text to reply */}
+                      <LMButton
+                        {...replyTextProps}
+                        text={{
+                          children: replyTextProps ? (
+                            replyTextProps.text?.children ? (
+                              replyTextProps.text.children
+                            ) : (
+                              <Text>Reply</Text>
+                            )
                           ) : (
                             <Text>Reply</Text>
-                          )
-                        ) : (
-                          <Text>Reply</Text>
-                        ),
-                        textStyle: StyleSheet.flatten([
-                          {
-                            fontSize: 13,
-                            color: STYLES.$IS_DARK_THEME
-                              ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
-                              : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
-                          },
-                          replyTextProps?.text?.textStyle,
-                        ]),
-                      }}
-                      onTap={() => {
-                        replyTextProps?.onTap();
-                      }}
-                      buttonStyle={StyleSheet.flatten([
-                        styles.replyTextButton,
-                        replyTextProps?.buttonStyle,
-                      ])}
-                    />
-                  </>
-                )}
+                          ),
+                          textStyle: StyleSheet.flatten([
+                            {
+                              fontSize: 13,
+                              color: STYLES.$IS_DARK_THEME
+                                ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                                : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
+                            },
+                            replyTextProps?.text?.textStyle,
+                          ]),
+                        }}
+                        onTap={() => {
+                          replyTextProps?.onTap();
+                        }}
+                        buttonStyle={StyleSheet.flatten([
+                          styles.replyTextButton,
+                          replyTextProps?.buttonStyle,
+                        ])}
+                      />
+                    </>
+                  ))}
 
                 {/* this shows all the replies of a comment */}
                 {comment.repliesCount > 0 && (
                   <>
-                    {commentingRight?.isSelected && (
-                      <LMIcon
-                        assetPath={require("../../assets/images/single_dot3x.png")}
-                        width={styles.dotImageSize.width}
-                        height={styles.dotImageSize.height}
-                        iconStyle={styles.dotImageSize}
-                        color={
-                          STYLES.$IS_DARK_THEME
-                            ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
-                            : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
-                        }
-                      />
-                    )}
+                    {isCM ||
+                      (commentingRight?.isSelected && (
+                        <LMIcon
+                          assetPath={require("../../assets/images/single_dot3x.png")}
+                          width={styles.dotImageSize.width}
+                          height={styles.dotImageSize.height}
+                          iconStyle={styles.dotImageSize}
+                          color={
+                            STYLES.$IS_DARK_THEME
+                              ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                              : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
+                          }
+                        />
+                      ))}
                     <LMButton
                       onTap={() => {
                         onTapReplies

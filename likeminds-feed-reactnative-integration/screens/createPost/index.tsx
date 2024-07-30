@@ -893,6 +893,7 @@ const CreatePostComponent = () => {
                 assetPath: require("../../assets/images/plusAdd_icon3x.png"),
                 height: 20,
                 width: 20,
+                color: STYLES.$COLORS.PRIMARY,
                 ...customAddMoreAttachmentsButton?.icon,
               }}
               text={{

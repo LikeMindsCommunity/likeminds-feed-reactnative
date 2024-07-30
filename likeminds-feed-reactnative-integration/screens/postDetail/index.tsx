@@ -890,8 +890,8 @@ const PostDetailComponent = React.memo(() => {
                   assetPath: require("../../assets/images/send_icon3x.png"),
                   iconStyle: {
                     opacity: commentToAdd ? 1 : 0.7,
-                    tintColor: STYLES.$COLORS.PRIMARY,
                   },
+                  color: STYLES.$COLORS.PRIMARY,
                   ...customCommentTextInput?.rightIcon?.icon,
                 },
                 isClickable: commentToAdd
