@@ -277,7 +277,7 @@ export const styles = StyleSheet.create({
   pollButtonBackground: {
     margin: Layout.normalize(2),
     padding: Layout.normalize(13),
-    borderRadius: Layout.normalize(5),
+    borderRadius: 5,
   },
   pollButtonPadding: {
     paddingVertical: Layout.normalize(20),
