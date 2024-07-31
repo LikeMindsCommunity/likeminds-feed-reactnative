@@ -54,6 +54,15 @@ import LMCreatePostButton from "./components/LMCreatePostButton";
 import LMFilterTopics from "./components/LMFilterTopics";
 import LMPostUploadIndicator from "./components/LMPostUploadIndicator";
 import LMUniversalFeedHeader from "./components/LMUniversalFeedHeader";
+import {
+  DetailWrapper,
+  CreatePollScreenWrapper,
+  CreateWrapper,
+  LikesWrapper,
+  NotificationWrapper,
+  FeedWrapper,
+  TopicFeedWrapper,
+} from "./wrappers";
 
 export {
   LMOverlayProvider,
@@ -105,4 +114,11 @@ export {
   NAVIGATED_FROM_NOTIFICATION,
   NAVIGATED_FROM_COMMENT,
   NAVIGATED_FROM_POST,
+  DetailWrapper,
+  CreatePollScreenWrapper,
+  CreateWrapper,
+  LikesWrapper,
+  NotificationWrapper,
+  FeedWrapper,
+  TopicFeedWrapper,
 };

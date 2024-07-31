@@ -1,6 +1,14 @@
 import { Platform } from "react-native";
 import { PollStyles } from "./types";
 
+interface FontTypes {
+  fontFamilyLight?: string;
+  fontFamilyMedium?: string;
+  fontFamilySemiBold?: string;
+  fontFamilyBold?: string;
+  fontFamilyBlack?: string;
+}
+
 interface StylesProps {
   hue?: number;
   fontColor?: string;
@@ -12,6 +20,7 @@ interface StylesProps {
   secondaryDarkTextColor?: string;
   primaryLightTextColor?: string;
   secondaryLightTextColor?: string;
+  fontTypes?: FontTypes;
 }
 
 const isIOS = Platform.OS === "ios" ? true : false;
@@ -122,6 +131,7 @@ export class STYLES {
     secondaryDarkTextColor,
     primaryLightTextColor,
     secondaryLightTextColor,
+    fontTypes,
   }: StylesProps) {
     STYLES.$COLORS = {
       ...STYLES.$COLORS,
@@ -139,6 +149,34 @@ export class STYLES {
       JOINED_BTN: lightBackgroundColor
         ? lightBackgroundColor
         : `hsl(${hue ? hue : 222}, 22%, 93%)`,
+    };
+    STYLES.$FONT_TYPES = {
+      ...STYLES.$FONT_TYPES,
+      LIGHT: fontTypes?.fontFamilyLight
+        ? fontTypes?.fontFamilyLight
+        : isIOS
+        ? "Helvetica"
+        : "Roboto",
+      MEDIUM: fontTypes?.fontFamilyMedium
+        ? fontTypes?.fontFamilyMedium
+        : isIOS
+        ? "Helvetica"
+        : "Roboto",
+      SEMI_BOLD: fontTypes?.fontFamilySemiBold
+        ? fontTypes?.fontFamilySemiBold
+        : isIOS
+        ? "Helvetica"
+        : "Roboto",
+      BOLD: fontTypes?.fontFamilyBold
+        ? fontTypes?.fontFamilyBold
+        : isIOS
+        ? "Helvetica"
+        : "Roboto",
+      BLACK: fontTypes?.fontFamilyBlack
+        ? fontTypes?.fontFamilyBlack
+        : isIOS
+        ? "Helvetica"
+        : "Roboto",
     };
     STYLES.$IS_DARK_THEME = isDarkTheme ? isDarkTheme : false;
     STYLES.$HUE = hue ? hue : 244;
