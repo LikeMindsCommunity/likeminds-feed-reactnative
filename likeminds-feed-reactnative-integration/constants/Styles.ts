@@ -1,3 +1,4 @@
+import { Platform } from "react-native";
 import { PollStyles } from "./types";
 
 interface StylesProps {
@@ -12,6 +13,8 @@ interface StylesProps {
   primaryLightTextColor?: string;
   secondaryLightTextColor?: string;
 }
+
+const isIOS = Platform.OS === "ios" ? true : false;
 
 export class STYLES {
   static $IS_DARK_THEME = false;
@@ -51,26 +54,23 @@ export class STYLES {
     BOLDER: "700" as const,
   };
   static $FONT_TYPES = {
-    LIGHT: "SofiaPro-Light",
-    MEDIUM: "SofiaPro-Medium",
-    SEMI_BOLD: "SofiaPro-SemiBold",
-    BOLD: "SofiaPro-Bold",
-    BLACK: "SofiaPro-Black",
+    LIGHT: isIOS ? "Helvetica" : "Roboto",
+    MEDIUM: isIOS ? "Helvetica" : "Roboto",
+    SEMI_BOLD: isIOS ? "Helvetica" : "Roboto",
+    BOLD: isIOS ? "Helvetica" : "Roboto",
+    BLACK: isIOS ? "Helvetica" : "Roboto",
   };
-
   static $BACKGROUND_COLORS = {
     LIGHT: "#ffffff",
     DARK: "#000000",
     DARKTRANSPARENT: "#00000088",
   };
-
   static $TEXT_COLOR = {
     PRIMARY_TEXT_LIGHT: "#000000",
     SECONDARY_TEXT_LIGHT: "grey",
     PRIMARY_TEXT_DARK: "#ffffff",
     SECONDARY_TEXT_DARK: "grey",
   };
-
   static $SHADOWS = {
     LIGHT: "0 5px 10px rgba(0, 0, 0, 0.1)",
     MEDIUM: "0 8px 30px rgba(0, 0, 0, 0.3)",

@@ -32,7 +32,11 @@ const LMNotificationFeedItem = React.memo(
     const profilePictureStyle = notificationFeedStyle?.userImageStyles;
     const updatedProfilePictureProps = {
       fallbackText: {
-        children: <Text>{nameInitials(activity.activityByUser.name)}</Text>,
+        children: (
+          <Text style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}>
+            {nameInitials(activity.activityByUser.name)}
+          </Text>
+        ),
         textStyle: profilePictureStyle?.fallbackTextStyle,
       },
       size: 50,
@@ -194,6 +198,7 @@ const LMNotificationFeedItem = React.memo(
                           color: STYLES.$IS_DARK_THEME
                             ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
                             : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+                          fontFamily: STYLES.$FONT_TYPES.MEDIUM,
                         }}
                       >
                         {item?.content}
@@ -205,6 +210,7 @@ const LMNotificationFeedItem = React.memo(
                           color: STYLES.$IS_DARK_THEME
                             ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
                             : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+                          fontFamily: STYLES.$FONT_TYPES.MEDIUM,
                         }}
                       >
                         {item?.content}

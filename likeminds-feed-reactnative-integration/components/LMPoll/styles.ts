@@ -427,6 +427,7 @@ export const styles = StyleSheet.create({
     color: STYLES.$COLORS.FONT_PRIMARY,
     fontSize: 16,
     fontWeight: "500",
+    fontFamily: STYLES.$FONT_TYPES.MEDIUM,
   },
   enabledOpacity: { opacity: 1 },
   disabledOpacity: { opacity: 0.5 },

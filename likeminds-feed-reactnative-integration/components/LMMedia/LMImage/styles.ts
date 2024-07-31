@@ -32,6 +32,7 @@ export const defaultStyles = StyleSheet.create({
   },
   errorText: {
     color: STYLES.$COLORS.RED,
+    fontFamily: STYLES.$FONT_TYPES.MEDIUM,
   },
   cancelButtonView: {
     position: "absolute",

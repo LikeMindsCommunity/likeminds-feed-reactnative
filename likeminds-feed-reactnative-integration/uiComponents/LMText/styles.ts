@@ -10,5 +10,6 @@ export const defaultStyles = StyleSheet.create({
     fontSize: 14,
     textAlign: "auto",
     fontStyle: "normal",
+    fontFamily: STYLES.$FONT_TYPES.LIGHT,
   },
 });

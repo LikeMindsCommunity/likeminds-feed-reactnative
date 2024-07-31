@@ -59,6 +59,7 @@ const LMPostComponent = React.memo(() => {
                       backgroundColor: `hsla(${STYLES.$HUE}, 75%, 59%, 0.1)`,
                       borderRadius: Layout.normalize(5),
                       paddingHorizontal: Layout.normalize(12),
+                      fontFamily: STYLES.$FONT_TYPES.LIGHT
                     }}
                   >
                     {topicObject?.name}

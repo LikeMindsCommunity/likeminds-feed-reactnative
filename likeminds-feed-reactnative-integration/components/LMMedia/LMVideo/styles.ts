@@ -34,6 +34,7 @@ export const defaultStyles = StyleSheet.create({
   },
   errorText: {
     color: STYLES.$COLORS.RED,
+    fontFamily: STYLES.$FONT_TYPES.MEDIUM,
   },
   cancelVideoView: { position: "absolute", right: 15, top: 15, zIndex: 7000 },
   cancelButtonStyle: {
