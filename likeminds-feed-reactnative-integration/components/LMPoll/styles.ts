@@ -277,7 +277,7 @@ export const styles = StyleSheet.create({
   pollButtonBackground: {
     margin: Layout.normalize(2),
     padding: Layout.normalize(13),
-    borderRadius: Layout.normalize(5),
+    borderRadius: 5,
   },
   pollButtonPadding: {
     paddingVertical: Layout.normalize(20),
@@ -427,6 +427,7 @@ export const styles = StyleSheet.create({
     color: STYLES.$COLORS.FONT_PRIMARY,
     fontSize: 16,
     fontWeight: "500",
+    fontFamily: STYLES.$FONT_TYPES.MEDIUM,
   },
   enabledOpacity: { opacity: 1 },
   disabledOpacity: { opacity: 0.5 },

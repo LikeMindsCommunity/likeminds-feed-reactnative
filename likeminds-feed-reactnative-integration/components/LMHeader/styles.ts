@@ -30,11 +30,13 @@ export const defaultStyles = StyleSheet.create({
     color: STYLES.$IS_DARK_THEME
       ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
       : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+    fontFamily: STYLES.$FONT_TYPES.MEDIUM,
   },
   subHeadingStyle: {
     fontSize: 12,
     color: STYLES.$IS_DARK_THEME
       ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
       : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
+    fontFamily: STYLES.$FONT_TYPES.MEDIUM,
   },
 });

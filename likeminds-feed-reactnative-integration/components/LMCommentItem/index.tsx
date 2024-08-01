@@ -93,7 +93,11 @@ const LMCommentItem = React.memo(
 
     //creating content props as per customization
     const updatedContentProps = {
-      children: <Text>{decode(comment?.text, true)}</Text>,
+      children: (
+        <Text style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}>
+          {decode(comment?.text, true)}
+        </Text>
+      ),
       onTextLayout: (event: NativeSyntheticEvent<TextLayoutEventData>) => {
         onTextLayout(event);
         commentContentProps?.onTextLayout &&
@@ -251,9 +255,13 @@ const LMCommentItem = React.memo(
                 text={{
                   children:
                     commentLikeCount > 1 ? (
-                      <Text>{commentLikeCount} Likes</Text>
+                      <Text style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}>
+                        {commentLikeCount} Likes
+                      </Text>
                     ) : (
-                      <Text>{commentLikeCount} Like</Text>
+                      <Text style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}>
+                        {commentLikeCount} Like
+                      </Text>
                     ),
                   textStyle: {
                     fontSize: 13,
@@ -284,10 +292,20 @@ const LMCommentItem = React.memo(
                             replyTextProps.text?.children ? (
                               replyTextProps.text.children
                             ) : (
-                              <Text>Reply</Text>
+                              <Text
+                                style={{
+                                  fontFamily: STYLES.$FONT_TYPES.MEDIUM,
+                                }}
+                              >
+                                Reply
+                              </Text>
                             )
                           ) : (
-                            <Text>Reply</Text>
+                            <Text
+                              style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}
+                            >
+                              Reply
+                            </Text>
                           ),
                           textStyle: StyleSheet.flatten([
                             {
@@ -341,9 +359,17 @@ const LMCommentItem = React.memo(
                       text={{
                         children:
                           comment.repliesCount > 1 ? (
-                            <Text>{comment.repliesCount} Replies</Text>
+                            <Text
+                              style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}
+                            >
+                              {comment.repliesCount} Replies
+                            </Text>
                           ) : (
-                            <Text>{comment.repliesCount} Reply</Text>
+                            <Text
+                              style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}
+                            >
+                              {comment.repliesCount} Reply
+                            </Text>
                           ),
                         textStyle: StyleSheet.flatten([
                           { fontSize: 13, color: STYLES.$COLORS.PRIMARY },
@@ -366,7 +392,9 @@ const LMCommentItem = React.memo(
                     timeStampStyle,
                   ])}
                 >
-                  <Text>Edited</Text>
+                  <Text style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}>
+                    Edited
+                  </Text>
                 </LMText>
                 <LMIcon
                   assetPath={require("../../assets/images/single_dot3x.png")}
@@ -389,9 +417,13 @@ const LMCommentItem = React.memo(
               ])}
             >
               {timeStamp(Number(comment?.createdAt)) === undefined ? (
-                <Text>now</Text>
+                <Text style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}>
+                  now
+                </Text>
               ) : (
-                <Text>{timeStamp(Number(comment?.createdAt))}</Text>
+                <Text style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}>
+                  {timeStamp(Number(comment?.createdAt))}
+                </Text>
               )}
             </LMText>
           </View>
@@ -450,7 +482,13 @@ const LMCommentItem = React.memo(
                                 children: viewMoreRepliesProps?.children ? (
                                   viewMoreRepliesProps.children
                                 ) : (
-                                  <Text>{VIEW_MORE_TEXT}</Text>
+                                  <Text
+                                    style={{
+                                      fontFamily: STYLES.$FONT_TYPES.MEDIUM,
+                                    }}
+                                  >
+                                    {VIEW_MORE_TEXT}
+                                  </Text>
                                 ),
                                 textStyle: viewMoreRepliesProps?.textStyle,
                               }}

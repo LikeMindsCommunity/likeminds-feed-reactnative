@@ -33,6 +33,7 @@ export const styles = StyleSheet.create({
       ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
       : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     fontSize: 16,
+    fontFamily: STYLES.$FONT_TYPES.MEDIUM,
     fontWeight: "500",
   },
   docDetail: {
@@ -40,6 +41,7 @@ export const styles = StyleSheet.create({
       ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
       : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     fontSize: 13,
+    fontFamily: STYLES.$FONT_TYPES.MEDIUM,
   },
   dotImageSize: {
     width: layout.normalize(5),

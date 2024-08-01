@@ -161,7 +161,13 @@ function LMVideoPlayer({ url }) {
                 alignItems: "center",
               }}
             >
-              <Text style={{ color: "white", ...startTimeStyle }}>
+              <Text
+                style={{
+                  color: "white",
+                  fontFamily: STYLES.$FONT_TYPES.LIGHT,
+                  ...startTimeStyle,
+                }}
+              >
                 {format(progress.currentTime)}
               </Text>
               <Slider
@@ -183,7 +189,12 @@ function LMVideoPlayer({ url }) {
                 thumbTintColor={thumbTintColor ? thumbTintColor : "green"}
               />
               <Text
-                style={{ color: "white", marginRight: 10, ...endTimeStyle }}
+                style={{
+                  color: "white",
+                  marginRight: 10,
+                  fontFamily: STYLES.$FONT_TYPES.LIGHT,
+                  ...endTimeStyle,
+                }}
               >
                 {format(progress.seekableDuration)}
               </Text>

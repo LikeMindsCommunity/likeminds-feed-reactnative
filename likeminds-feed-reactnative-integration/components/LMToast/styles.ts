@@ -18,5 +18,6 @@ export const styles = StyleSheet.create({
   filterText: {
     fontSize: STYLES.$FONT_SIZES.LARGE,
     color: STYLES.$COLORS.whiteTextColor,
+    fontFamily: STYLES.$FONT_TYPES.LIGHT,
   },
 });

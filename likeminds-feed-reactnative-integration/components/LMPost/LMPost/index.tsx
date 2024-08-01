@@ -10,6 +10,7 @@ import { LMPostContextProvider, useLMPostContext } from "../../../context";
 import { useAppSelector } from "../../../store/store";
 import Layout from "../../../constants/Layout";
 import STYLES from "../../../constants/Styles";
+import { useLMFeedStyles } from "../../../lmFeedProvider";
 
 const LMPost = ({
   navigation,
@@ -36,6 +37,8 @@ const LMPost = ({
 const LMPostComponent = React.memo(() => {
   const { post } = useLMPostContext();
   const allTopics = useAppSelector((state) => state.feed.topics);
+  const LMFeedContextStyles = useLMFeedStyles();
+  const { postListStyle }: any = LMFeedContextStyles;
 
   return (
     <View style={styles.mainContainer}>
@@ -48,18 +51,28 @@ const LMPostComponent = React.memo(() => {
             const topicObject = allTopics[item];
             return (
               <View key={index}>
-                <View>
-                  <Text
-                    style={{
-                      fontSize: Layout.normalize(16),
-                      color: STYLES.$COLORS.PRIMARY,
+                <View
+                  style={[
+                    {
+                      backgroundColor: `hsla(${STYLES.$HUE}, 75%, 59%, 0.1)`,
                       marginLeft: index === 0 ? 15 : 5,
                       marginTop: Layout.normalize(10),
-                      paddingVertical: Layout.normalize(5),
-                      backgroundColor: `hsla(${STYLES.$HUE}, 75%, 59%, 0.1)`,
-                      borderRadius: Layout.normalize(5),
-                      paddingHorizontal: Layout.normalize(12),
-                    }}
+                    },
+                    postListStyle?.postContent?.postTopicStyle?.box,
+                  ]}
+                >
+                  <Text
+                    style={[
+                      {
+                        fontSize: Layout.normalize(16),
+                        color: STYLES.$COLORS.PRIMARY,
+                        paddingVertical: Layout.normalize(5),
+                        borderRadius: Layout.normalize(5),
+                        paddingHorizontal: Layout.normalize(12),
+                        fontFamily: STYLES.$FONT_TYPES.LIGHT,
+                      },
+                      postListStyle?.postContent?.postTopicStyle?.text,
+                    ]}
                   >
                     {topicObject?.name}
                   </Text>

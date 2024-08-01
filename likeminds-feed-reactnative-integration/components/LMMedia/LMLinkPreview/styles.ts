@@ -23,6 +23,7 @@ export const styles = StyleSheet.create({
     borderTopRightRadius: 7,
   },
   previewTitle: {
+    fontFamily: STYLES.$FONT_TYPES.MEDIUM,
     fontWeight: "500",
     color: STYLES.$IS_DARK_THEME
       ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
@@ -35,6 +36,7 @@ export const styles = StyleSheet.create({
       : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     paddingVertical: 2,
     opacity: 0.8,
+    fontFamily: STYLES.$FONT_TYPES.MEDIUM,
   },
   previewLink: {
     color: STYLES.$IS_DARK_THEME
@@ -42,6 +44,7 @@ export const styles = StyleSheet.create({
       : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     fontSize: 12,
     opacity: 0.7,
+    fontFamily: STYLES.$FONT_TYPES.MEDIUM,
   },
   previewDetailView: {
     paddingHorizontal: 10,

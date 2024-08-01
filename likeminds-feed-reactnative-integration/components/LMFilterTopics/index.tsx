@@ -189,6 +189,7 @@ const LMFilterTopics = () => {
                           color: STYLES.$COLORS.PRIMARY,
                           marginRight: Layout.normalize(8),
                           fontWeight: "400",
+                          fontFamily: STYLES.$FONT_TYPES.MEDIUM,
                           ...(filteredTopicsStyle !== undefined
                             ? filteredTopicsStyle
                             : {}),
@@ -232,7 +233,11 @@ const LMFilterTopics = () => {
               }}
             >
               <Text
-                style={{ color: STYLES.$COLORS.PRIMARY, fontSize: Layout.normalize(17) }}
+                style={{
+                  color: STYLES.$COLORS.PRIMARY,
+                  fontSize: Layout.normalize(17),
+                  fontFamily: STYLES.$FONT_TYPES.MEDIUM,
+                }}
               >
                 Clear
               </Text>
@@ -274,6 +279,7 @@ const LMFilterTopics = () => {
                     color: STYLES.$IS_DARK_THEME
                       ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
                       : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
+                    fontFamily: STYLES.$FONT_TYPES.MEDIUM,
                     ...(allTopicsStyle !== undefined ? allTopicsStyle : {}),
                   }}
                 >

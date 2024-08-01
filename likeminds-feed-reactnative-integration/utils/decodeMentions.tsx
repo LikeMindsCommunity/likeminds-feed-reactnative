@@ -1,5 +1,6 @@
 import React from "react";
 import { Linking, StyleSheet, Text } from "react-native";
+import STYLES from "../constants/Styles";
 
 const REGEX_USER_SPLITTING = /(<<.+?\|route:\/\/[^>]+>>)/gu;
 const REGEX_USER_TAGGING =
@@ -13,12 +14,16 @@ function detectLinks(message: string, isLongPress?: boolean) {
   const parts = message.split(regex);
   if (parts?.length > 0) {
     return (
-      <Text>
+      <Text style={{ fontFamily: STYLES.$FONT_TYPES.LIGHT }}>
         {parts?.map((val: string, index: number) => (
-          <Text key={val + index}>
+          <Text
+            style={{ fontFamily: STYLES.$FONT_TYPES.LIGHT }}
+            key={val + index}
+          >
             {/* key should be unique so we are passing `val(abc) + index(number) = abc2` to make it unique */}
             {regex.test(val) ? (
               <Text
+                style={{ fontFamily: STYLES.$FONT_TYPES.LIGHT }}
                 onPress={async () => {
                   if (!isLongPress) {
                     const urlRegex = /(https?:\/\/[^\s]+)/gi;
@@ -40,7 +45,9 @@ function detectLinks(message: string, isLongPress?: boolean) {
                 <Text style={styles.mentionStyle}>{val}</Text>
               </Text>
             ) : (
-              <Text>{val}</Text>
+              <Text style={{ fontFamily: STYLES.$FONT_TYPES.LIGHT }}>
+                {val}
+              </Text>
             )}
           </Text>
         ))}
@@ -79,9 +86,12 @@ const decode = (
     }
 
     return enableClick ? (
-      <Text>
+      <Text style={{ fontFamily: STYLES.$FONT_TYPES.LIGHT }}>
         {arr.map((val, index) => (
-          <Text key={val.key + index}>
+          <Text
+            style={{ fontFamily: STYLES.$FONT_TYPES.LIGHT }}
+            key={val.key + index}
+          >
             {/* key should be unique so we are passing `val(abc) + index(number) = abc2` to make it unique */}
 
             {val.route ? (
@@ -102,9 +112,12 @@ const decode = (
         ))}
       </Text>
     ) : (
-      <Text>
+      <Text style={{ fontFamily: STYLES.$FONT_TYPES.LIGHT }}>
         {arr.map((val, index) => (
-          <Text key={val.key + index}>
+          <Text
+            style={{ fontFamily: STYLES.$FONT_TYPES.LIGHT }}
+            key={val.key + index}
+          >
             {val.route ? (
               <Text style={styles.mentionStyle}>{val.key}</Text>
             ) : (
@@ -145,6 +158,7 @@ export const userTaggingDecoder = (text) => {
 const styles = StyleSheet.create({
   mentionStyle: {
     color: "#007AFF",
+    fontFamily: STYLES.$FONT_TYPES.LIGHT,
   },
 });
 export default decode;

@@ -79,6 +79,7 @@ export const styles = StyleSheet.create({
     color: STYLES.$IS_DARK_THEME
       ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
       : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
+    fontFamily: STYLES.$FONT_TYPES.MEDIUM,
   },
   loaderView: {
     flexDirection: "row",
@@ -96,5 +97,6 @@ export const styles = StyleSheet.create({
     color: STYLES.$IS_DARK_THEME
       ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
       : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
+    fontFamily: STYLES.$FONT_TYPES.MEDIUM,
   },
 });

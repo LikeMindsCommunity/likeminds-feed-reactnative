@@ -98,13 +98,21 @@ const CreatePollScreenComponent = () => {
           <LMProfilePicture
             {...postHeaderStyle?.profilePicture}
             fallbackText={{
-              children: <Text>{nameInitials(memberData.name)}</Text>,
+              children: (
+                <Text style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}>
+                  {nameInitials(memberData.name)}
+                </Text>
+              ),
             }}
             imageUrl={memberData.imageUrl}
           />
           {/* user name */}
           <LMText
-            children={<Text>{memberData.name}</Text>}
+            children={
+              <Text style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}>
+                {memberData.name}
+              </Text>
+            }
             textStyle={styles.userNameText}
           />
         </View>

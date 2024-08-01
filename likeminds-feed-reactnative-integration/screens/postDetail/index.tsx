@@ -515,7 +515,13 @@ const PostDetailComponent = React.memo(() => {
                                     customCommentItemStyle?.viewMoreRepliesProps
                                       ?.children
                                   ) : (
-                                    <Text>{VIEW_MORE_TEXT}</Text>
+                                    <Text
+                                      style={{
+                                        fontFamily: STYLES.$FONT_TYPES.MEDIUM,
+                                      }}
+                                    >
+                                      {VIEW_MORE_TEXT}
+                                    </Text>
                                   ),
                                   textStyle: customCommentItemStyle
                                     ?.viewMoreRepliesProps?.textStyle
@@ -756,7 +762,13 @@ const PostDetailComponent = React.memo(() => {
                               postHeaderStyle?.profilePicture?.fallbackText
                                 ?.children
                             ) : (
-                              <Text>{nameInitials(item?.name)}</Text>
+                              <Text
+                                style={{
+                                  fontFamily: STYLES.$FONT_TYPES.MEDIUM,
+                                }}
+                              >
+                                {nameInitials(item?.name)}
+                              </Text>
                             ),
                           }}
                           fallbackTextBoxStyle={[
@@ -816,6 +828,7 @@ const PostDetailComponent = React.memo(() => {
                 color: STYLES.$IS_DARK_THEME
                   ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
                   : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+                fontFamily: STYLES.$FONT_TYPES.LIGHT,
               }}
             >
               Deleted Post
