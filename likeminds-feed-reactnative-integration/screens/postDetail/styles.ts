@@ -17,6 +17,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingTop: 20,
     paddingBottom: 5,
+    fontFamily: STYLES.$FONT_TYPES.MEDIUM,
     fontWeight: "500",
     color: STYLES.$IS_DARK_THEME
       ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
@@ -40,6 +41,7 @@ export const styles = StyleSheet.create({
     color: STYLES.$IS_DARK_THEME
       ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
       : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
+    fontFamily: STYLES.$FONT_TYPES.BOLD,
     fontWeight: "bold",
     fontSize: 14,
   },
@@ -60,6 +62,7 @@ export const styles = StyleSheet.create({
       ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
       : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
     fontSize: 16,
+    fontFamily: STYLES.$FONT_TYPES.MEDIUM,
     fontWeight: "500",
   },
   loaderView: {
@@ -113,6 +116,7 @@ export const styles = StyleSheet.create({
     color: STYLES.$IS_DARK_THEME
       ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
       : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+    fontFamily: STYLES.$FONT_TYPES.LIGHT,
   },
   taggingListView: {
     borderTopRightRadius: 10,
@@ -153,6 +157,7 @@ export const styles = StyleSheet.create({
     color: STYLES.$IS_DARK_THEME
       ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
       : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+    fontFamily: STYLES.$FONT_TYPES.MEDIUM,
   },
   taggingLoaderView: { paddingVertical: 20 },
 });

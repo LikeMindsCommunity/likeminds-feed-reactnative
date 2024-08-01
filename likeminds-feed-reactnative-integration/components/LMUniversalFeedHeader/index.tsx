@@ -68,7 +68,13 @@ const LMUniversalFeedHeader = () => {
                   right: -5,
                 }}
               >
-                <Text style={{ color: "#fff", fontSize: 12 }}>
+                <Text
+                  style={{
+                    color: "#fff",
+                    fontSize: 12,
+                    fontFamily: STYLES.$FONT_TYPES.LIGHT,
+                  }}
+                >
                   {unreadNotificationCount < 100
                     ? unreadNotificationCount
                     : `99+`}

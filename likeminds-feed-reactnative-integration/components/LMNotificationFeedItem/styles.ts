@@ -31,6 +31,7 @@ export const styles = StyleSheet.create({
     color: "black",
     textAlign: "auto",
     fontStyle: "normal",
+    fontFamily: STYLES.$FONT_TYPES.MEDIUM
   },
   notificationTimeStamp: {
     color: "#9b9b9b",

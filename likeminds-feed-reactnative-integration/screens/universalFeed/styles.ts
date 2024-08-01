@@ -24,6 +24,7 @@ export const styles = StyleSheet.create({
       ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
       : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
     marginLeft: 10,
+    fontFamily: STYLES.$FONT_TYPES.MEDIUM,
   },
   newPostButtonView: {
     backgroundColor: STYLES.$COLORS.PRIMARY,

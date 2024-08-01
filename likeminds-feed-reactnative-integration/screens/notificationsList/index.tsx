@@ -104,6 +104,7 @@ const LMFeedNotificationFeedListView = () => {
               color: STYLES.$IS_DARK_THEME
                 ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
                 : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+              fontFamily: STYLES.$FONT_TYPES.LIGHT,
               ...notificationFeedStyle?.noActivityViewTextStyle,
             }}
           >

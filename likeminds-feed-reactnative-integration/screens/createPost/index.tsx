@@ -430,13 +430,21 @@ const CreatePostComponent = () => {
           <LMProfilePicture
             {...postHeaderStyle?.profilePicture}
             fallbackText={{
-              children: <Text>{nameInitials(memberData.name)}</Text>,
+              children: (
+                <Text style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}>
+                  {nameInitials(memberData.name)}
+                </Text>
+              ),
             }}
             imageUrl={memberData.imageUrl}
           />
           {/* user name */}
           <LMText
-            children={<Text>{memberData.name}</Text>}
+            children={
+              <Text style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}>
+                {memberData.name}
+              </Text>
+            }
             textStyle={
               createPostStyle?.userNameTextStyle
                 ? createPostStyle?.userNameTextStyle
@@ -471,6 +479,7 @@ const CreatePostComponent = () => {
                       borderRadius: Layout.normalize(5),
                       paddingHorizontal: Layout.normalize(12),
                       margin: Layout.normalize(5),
+                      fontFamily: STYLES.$FONT_TYPES.MEDIUM,
                       ...(selectedTopicsStyle !== undefined
                         ? selectedTopicsStyle
                         : {}),
@@ -534,6 +543,7 @@ const CreatePostComponent = () => {
                   style={{
                     fontSize: Layout.normalize(16),
                     color: STYLES.$COLORS.PRIMARY,
+                    fontFamily: STYLES.$FONT_TYPES.MEDIUM,
                   }}
                 >
                   {selectTopicPlaceholder !== undefined
@@ -650,7 +660,11 @@ const CreatePostComponent = () => {
                           postHeaderStyle?.profilePicture?.fallbackText
                             ?.children
                         ) : (
-                          <Text>{nameInitials(item?.name)}</Text>
+                          <Text
+                            style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}
+                          >
+                            {nameInitials(item?.name)}
+                          </Text>
                         ),
                       }}
                       fallbackTextBoxStyle={[
@@ -665,7 +679,13 @@ const CreatePostComponent = () => {
                     />
                     <View style={styles.taggingListItemTextView}>
                       <LMText
-                        children={<Text>{item?.name}</Text>}
+                        children={
+                          <Text
+                            style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}
+                          >
+                            {item?.name}
+                          </Text>
+                        }
                         maxLines={1}
                         textStyle={
                           [
@@ -897,7 +917,11 @@ const CreatePostComponent = () => {
                 ...customAddMoreAttachmentsButton?.icon,
               }}
               text={{
-                children: <Text>{ADD_MORE_MEDIA}</Text>,
+                children: (
+                  <Text style={{ fontFamily: STYLES.$FONT_TYPES.LIGHT }}>
+                    {ADD_MORE_MEDIA}
+                  </Text>
+                ),
                 textStyle: styles.addMoreButtonText,
                 ...customAddMoreAttachmentsButton?.text,
               }}
@@ -1016,7 +1040,11 @@ const CreatePostComponent = () => {
               {...customAttachmentOptionsStyle?.photoAttachmentIcon}
             />
             <LMText
-              children={<Text>{ADD_IMAGES}</Text>}
+              children={
+                <Text style={{ fontFamily: STYLES.$FONT_TYPES.LIGHT }}>
+                  {ADD_IMAGES}
+                </Text>
+              }
               textStyle={styles.selectionOptionstext}
               {...customAttachmentOptionsStyle?.photoAttachmentTextStyle}
             />
@@ -1054,7 +1082,11 @@ const CreatePostComponent = () => {
               {...customAttachmentOptionsStyle?.videoAttachmentIcon}
             />
             <LMText
-              children={<Text>{ADD_VIDEOS}</Text>}
+              children={
+                <Text style={{ fontFamily: STYLES.$FONT_TYPES.LIGHT }}>
+                  {ADD_VIDEOS}
+                </Text>
+              }
               textStyle={styles.selectionOptionstext}
               {...customAttachmentOptionsStyle?.videoAttachmentTextStyle}
             />
@@ -1080,7 +1112,11 @@ const CreatePostComponent = () => {
               {...customAttachmentOptionsStyle?.filesAttachmentIcon}
             />
             <LMText
-              children={<Text>{ADD_FILES}</Text>}
+              children={
+                <Text style={{ fontFamily: STYLES.$FONT_TYPES.LIGHT }}>
+                  {ADD_FILES}
+                </Text>
+              }
               textStyle={styles.selectionOptionstext}
               {...customAttachmentOptionsStyle?.filesAttachmentTextStyle}
             />
@@ -1117,7 +1153,11 @@ const CreatePostComponent = () => {
                 {...customAttachmentOptionsStyle?.pollAttachmentIcon}
               />
               <LMText
-                children={<Text>{ADD_POLL}</Text>}
+                children={
+                  <Text style={{ fontFamily: STYLES.$FONT_TYPES.LIGHT }}>
+                    {ADD_POLL}
+                  </Text>
+                }
                 textStyle={styles.selectionOptionstext}
                 {...customAttachmentOptionsStyle?.pollAttachmentTextStyle}
               />

@@ -43,7 +43,7 @@ export const styles = StyleSheet.create({
   },
   selectionOptionsView: {
     position: "absolute",
-    bottom: Platform.OS === "ios" ? 100 : 0,
+    bottom: 0,
     width: layout.window.width,
     backgroundColor: STYLES.$IS_DARK_THEME
       ? STYLES.$BACKGROUND_COLORS.DARK
@@ -121,6 +121,7 @@ export const styles = StyleSheet.create({
     color: STYLES.$COLORS.PRIMARY,
     fontSize: 16,
     fontWeight: "500",
+    fontFamily: STYLES.$FONT_TYPES.MEDIUM,
   },
   enabledOpacity: { opacity: 1 },
   disabledOpacity: { opacity: 0.5 },

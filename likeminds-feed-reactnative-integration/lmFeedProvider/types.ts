@@ -108,6 +108,10 @@ export interface PostListStyleProps {
     visibleLines?: number;
     showMoreText?: LMTextProps;
     postContentViewStyle?: ViewStyle;
+    postTopicStyle?: {
+      text: TextStyle;
+      box: ViewStyle;
+    };
   };
   media?: {
     postMediaStyle?: ViewStyle;
