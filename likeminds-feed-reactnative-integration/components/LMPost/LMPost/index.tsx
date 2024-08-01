@@ -58,7 +58,7 @@ const LMPostComponent = React.memo(() => {
                       marginLeft: index === 0 ? 15 : 5,
                       marginTop: Layout.normalize(10),
                     },
-                    postListStyle.postContent.postTopicStyle.box,
+                    postListStyle?.postContent?.postTopicStyle?.box,
                   ]}
                 >
                   <Text
@@ -71,7 +71,7 @@ const LMPostComponent = React.memo(() => {
                         paddingHorizontal: Layout.normalize(12),
                         fontFamily: STYLES.$FONT_TYPES.LIGHT,
                       },
-                      postListStyle.postContent.postTopicStyle.text,
+                      postListStyle?.postContent?.postTopicStyle?.text,
                     ]}
                   >
                     {topicObject?.name}
