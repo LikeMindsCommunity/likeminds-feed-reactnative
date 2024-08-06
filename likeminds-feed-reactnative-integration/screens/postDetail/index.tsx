@@ -215,6 +215,8 @@ const PostDetailComponent = React.memo(() => {
     showLoader,
     setShowLoader,
     setShowRepliesOfCommentId,
+    setCommentOnFocus,
+    commentOnFocus
   }: PostDetailContextValues = usePostDetailContext();
 
   const LMFeedContextStyles = useLMFeedStyles();
@@ -532,6 +534,7 @@ const PostDetailComponent = React.memo(() => {
                                 menuIcon={{
                                   ...postHeaderStyle?.menuIcon,
                                   onTap: () => {
+                                    setCommentOnFocus(item);
                                     setReplyOnComment({
                                       textInputFocus: false,
                                       commentId: "",
@@ -1071,7 +1074,7 @@ const PostDetailComponent = React.memo(() => {
           post={
             overlayMenuType === POST_TYPE
               ? postDetail
-              : getCommentDetail(postDetail?.replies)?.commentDetail
+              : commentOnFocus
           }
           onSelected={(postId, itemId, isPinned) => {
             overlayMenuType === POST_TYPE
