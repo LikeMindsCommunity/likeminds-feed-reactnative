@@ -534,7 +534,6 @@ const PostDetailComponent = React.memo(() => {
                                 menuIcon={{
                                   ...postHeaderStyle?.menuIcon,
                                   onTap: () => {
-                                    setCommentOnFocus(item);
                                     setReplyOnComment({
                                       textInputFocus: false,
                                       commentId: "",

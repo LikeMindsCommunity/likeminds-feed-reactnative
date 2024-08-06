@@ -24,6 +24,7 @@ import { timeStamp } from "../../utils";
 import { useAppSelector } from "../../store/store";
 import { MemberRightsEnum } from "../../enums/MemberRightsEnum";
 import STYLES from "../../constants/Styles";
+import { usePostDetailContext } from "../../context";
 
 const LMCommentItem = React.memo(
   ({
@@ -75,6 +76,8 @@ const LMCommentItem = React.memo(
         setNumberOfLines(MAX_LINES);
       }
     };
+
+    const {setCommentOnFocus} = usePostDetailContext()
 
     useEffect(() => {
       if (isRepliesVisible) {
@@ -144,6 +147,7 @@ const LMCommentItem = React.memo(
       onCommentOverflowMenuClick
         ? onCommentOverflowMenuClick(event, commentId)
         : null;
+      setCommentOnFocus(comment)
       menuIcon && menuIcon?.onTap();
     };
 
