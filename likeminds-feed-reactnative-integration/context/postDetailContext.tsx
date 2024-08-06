@@ -231,6 +231,8 @@ export interface PostDetailContextValues {
   ) => void;
   handlePostLoadMore: () => void;
   renderLoader: () => JSX.Element | null;
+  commentOnFocus: LMCommentUI | undefined;
+  setCommentOnFocus: Dispatch<SetStateAction<LMCommentUI | undefined>>;
 }
 
 const PostDetailContext = createContext<PostDetailContextValues | undefined>(
@@ -309,7 +311,7 @@ export const PostDetailContextProvider = ({
   const [overlayMenuType, setOverlayMenuType] = useState("");
   const [isPaginationStopped, setIsPaginationStopped] = useState(false);
   const [showLoader, setShowLoader] = useState(true);
-
+  const [commentOnFocus,setCommentOnFocus] = useState<LMCommentUI>();
   const LMFeedContextStyles = useLMFeedStyles();
   const { postListStyle, loaderStyle } = LMFeedContextStyles;
 
@@ -1009,6 +1011,8 @@ export const PostDetailContextProvider = ({
     renderLoader,
     showLoader,
     setShowLoader,
+    setCommentOnFocus,
+    commentOnFocus
   };
 
   return (
