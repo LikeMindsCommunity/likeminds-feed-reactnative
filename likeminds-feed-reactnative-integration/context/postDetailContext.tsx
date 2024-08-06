@@ -540,7 +540,7 @@ export const PostDetailContextProvider = ({
         }
       }
     }
-    return undefined; // Reply not found
+    return { commentDetail: commentOnFocus }; // Reply not found so returning the message on focus/tapped on
   };
 
   // this function calls the getPost api
