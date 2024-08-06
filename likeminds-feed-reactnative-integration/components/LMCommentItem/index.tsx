@@ -452,7 +452,7 @@ const LMCommentItem = React.memo(
                           onCommentOverflowMenuClick={(event) =>
                             onOverflowMenuClick(event, item?.Id)
                           }
-                          hideThreeDotsMenu={true}
+                          hideThreeDotsMenu={hideThreeDotsMenu}
                         />
                       )}
                     </>
