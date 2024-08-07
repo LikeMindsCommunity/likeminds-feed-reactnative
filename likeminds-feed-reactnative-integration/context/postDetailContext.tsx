@@ -233,6 +233,8 @@ export interface PostDetailContextValues {
   renderLoader: () => JSX.Element | null;
   commentOnFocus: LMCommentUI | undefined;
   setCommentOnFocus: Dispatch<SetStateAction<LMCommentUI | undefined>>;
+  repliesArrayUnderComments:any;
+  setRepliesArrayUnderComments:() => void;
 }
 
 const PostDetailContext = createContext<PostDetailContextValues | undefined>(
@@ -314,6 +316,7 @@ export const PostDetailContextProvider = ({
   const [commentOnFocus,setCommentOnFocus] = useState<LMCommentUI>();
   const LMFeedContextStyles = useLMFeedStyles();
   const { postListStyle, loaderStyle } = LMFeedContextStyles;
+  const [repliesArrayUnderComments,setRepliesArrayUnderComments] = useState<any>()
 
   // this function is executed on pull to refresh
   const onRefresh = async () => {
@@ -540,7 +543,8 @@ export const PostDetailContextProvider = ({
         }
       }
     }
-    return { commentDetail: commentOnFocus }; // Reply not found so returning the message on focus/tapped on
+    
+    return { commentDetail: commentOnFocus } // Reply not found, returning comment that was focused on
   };
 
   // this function calls the getPost api
@@ -577,12 +581,12 @@ export const PostDetailContextProvider = ({
         false
       )
     );
-
     // sets the api response in the callback function
     repliesResponseCallback(
       postDetail?.replies &&
       commentResponseModelConvertor(commentsRepliesResponse)?.replies
     );
+    setRepliesArrayUnderComments(commentsRepliesResponse)
     return commentsRepliesResponse;
   };
 
@@ -752,20 +756,23 @@ export const PostDetailContextProvider = ({
     }
   }, [isKeyboardVisible]);
 
+
   // this function calls the edit comment api
   const commentEdit = async () => {
     // convert the mentions to route
     const convertedEditedComment = mentionToRouteConverter(commentToAdd);
     const payload = {
-      commentId: selectedMenuItemCommentId,
+      commentId: commentOnFocus?.Id ? commentOnFocus.Id : commentOnFocus.id , // Id exists for replies and id for comments
       commentText: convertedEditedComment.trim(),
+      repliesArray: repliesArrayUnderComments,
+      setRepliesArray: setRepliesArrayUnderComments
     };
     await dispatch(editCommentStateHandler(payload));
     // call edit comment api
     const editCommentResponse = await dispatch(
       editComment(
         EditCommentRequest.builder()
-          .setcommentId(selectedMenuItemCommentId)
+          .setcommentId(payload.commentId)
           .setpostId(postDetail?.id)
           .settext(payload.commentText)
           .build(),
@@ -1012,7 +1019,9 @@ export const PostDetailContextProvider = ({
     showLoader,
     setShowLoader,
     setCommentOnFocus,
-    commentOnFocus
+    commentOnFocus,
+    repliesArrayUnderComments,
+    setRepliesArrayUnderComments
   };
 
   return (
