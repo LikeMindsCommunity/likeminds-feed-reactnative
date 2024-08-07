@@ -233,8 +233,8 @@ export interface PostDetailContextValues {
   renderLoader: () => JSX.Element | null;
   commentOnFocus: LMCommentUI | undefined;
   setCommentOnFocus: Dispatch<SetStateAction<LMCommentUI | undefined>>;
-  repliesArrayUnderComments:any;
-  setRepliesArrayUnderComments:() => void;
+  repliesArrayUnderComments: any;
+  setRepliesArrayUnderComments: Dispatch<SetStateAction<any>>;
 }
 
 const PostDetailContext = createContext<PostDetailContextValues | undefined>(
