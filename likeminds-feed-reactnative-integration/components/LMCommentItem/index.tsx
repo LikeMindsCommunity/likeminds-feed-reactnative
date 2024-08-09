@@ -444,7 +444,7 @@ const LMCommentItem = React.memo(
                     <>
                       {item && (
                         <LMCommentItem
-                          comment={item}
+                          comment={{...item, parentId: comment?.id }}
                           likeIconButton={{
                             onTap: () => {
                               likeIconButton?.onTap(item?.Id);
