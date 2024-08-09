@@ -43,6 +43,7 @@ import { Keys } from "../../enums/Keys";
 import { getPostType } from "../../utils/analytics";
 import { UNIVERSAL_FEED } from "../../constants/screenNames";
 import { Client } from "../../client";
+import { usePostDetailContext } from "../../context";
 
 // delete modal's props
 interface DeleteModalProps {
@@ -74,6 +75,7 @@ const DeleteModal = ({
   const [deletionReason, setDeletionReason] = useState("");
   const [otherReason, setOtherReason] = useState("");
   const [showReasons, setShowReasons] = useState(false);
+  const {repliesArrayUnderComments} = usePostDetailContext()
 
   // this function calls the delete post api
   const postDelete = async () => {
@@ -146,10 +148,12 @@ const DeleteModal = ({
     ) {
       showToast();
     } else {
+      let replyObject = repliesArrayUnderComments?.find(item => item?.comment?.id == commentDetail?.parentId)
       const payload = {
         deleteReason: otherReason ? otherReason : deletionReason,
-        commentId: commentDetail?.id ? commentDetail.id : "",
+        commentId: commentDetail?.id ? commentDetail.id : commentDetail?.Id ?? "",
         postId: commentDetail?.postId ? commentDetail.postId : "",
+        replyObject
       };
 
       displayModal(false);
