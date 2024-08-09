@@ -293,8 +293,15 @@ export const postDetailReducer = (state = initialState, action) => {
     }
     case EDIT_COMMENT_STATE: {
       const updatedPostDetail: any = state.postDetail;
-      const { commentId, commentText } = action.body;
-
+      const { commentId, commentText, replyObject } = action.body;
+      let parentCommentId = replyObject?.comment?.id
+      if(updatedPostDetail?.replies?.length > 0){
+        updatedPostDetail?.replies?.forEach(item => {
+          if(item?.id == parentCommentId){
+            item.replies = replyObject?.comment?.replies
+          }
+        })
+      }
       const editCommentIndex =
         updatedPostDetail?.replies &&
         updatedPostDetail.replies.findIndex(
@@ -314,7 +321,7 @@ export const postDetailReducer = (state = initialState, action) => {
           for (let i = 0; i <= updatedPostDetail?.replies?.length - 1; i++) {
             const editCommentIndexChild = updatedPostDetail.replies[
               i
-            ]?.replies.findIndex((item: LMCommentUI) => item?.id === commentId);
+            ]?.replies.findIndex((item: LMCommentUI) => item?.Id === commentId);
             // removes that child comment from the data
             if (
               updatedPostDetail?.replies[i]?.replies &&
@@ -335,6 +342,15 @@ export const postDetailReducer = (state = initialState, action) => {
     case DELETE_COMMENT_STATE: {
       const updatedPostDetail: any = state.postDetail;
       // this gets the index of the comment that is deleted
+      const { replyObject } = action.body
+      let parentCommentId = replyObject?.comment?.id
+      if(updatedPostDetail?.replies?.length > 0){
+        updatedPostDetail?.replies?.forEach(item => {
+          if(item?.id == parentCommentId){
+            item.replies = replyObject?.comment?.replies
+          }
+        })
+      }
       const deletedCommentIndex =
         updatedPostDetail?.replies &&
         updatedPostDetail.replies.findIndex(
@@ -355,7 +371,7 @@ export const postDetailReducer = (state = initialState, action) => {
             const deletedCommentIndexChild = updatedPostDetail.replies[
               i
             ].replies.findIndex(
-              (item: any) => item?.id === action.body.commentId
+              (item: any) => item?.Id === action.body.commentId
             );
             // removes that child comment from the data
             if (

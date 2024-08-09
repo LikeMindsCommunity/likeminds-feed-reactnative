@@ -40,6 +40,7 @@ import { LMCommentUI, LMPostUI } from "../../models";
 import { getPostType, reportAnalytics } from "../../utils/analytics";
 import Layout from "../../constants/Layout";
 import { Client } from "../../client";
+import { usePostDetailContext } from "../../context";
 
 // interface for post report api request
 interface ReportRequest {
@@ -72,6 +73,7 @@ const ReportModal = ({
   const [otherReason, setOtherReason] = useState("");
   const [selectedId, setSelectedId] = useState(-1);
   const [keyboardVisible, setKeyboardVisible] = useState(false);
+  const {repliesArrayUnderComments,commentOnFocus} = usePostDetailContext()
 
   const _keyboardDidShow = () => {
     setKeyboardVisible(true);
@@ -154,9 +156,9 @@ const ReportModal = ({
               ? reportReason?.name
               : otherReason,
           postType: getPostType(postDetail?.attachments),
-          commentId: commentDetail ? commentDetail?.id : undefined,
+          commentId: commentDetail ? commentDetail?.id ? commentDetail.id : commentDetail?.parentId ?? undefined : undefined,
           commentReplyId:
-            reportType === REPLY_TYPE ? commentDetail?.id : undefined,
+            reportType === REPLY_TYPE ? commentDetail?.Id : undefined,
         };
         reportAnalytics(params);
 
@@ -328,12 +330,13 @@ const ReportModal = ({
               onPress={
                 selectedId !== -1 || otherReason
                   ? () => {
+
                       reportPost({
                         entityId:
                           reportType === POST_TYPE
                             ? postDetail?.id
                             : commentDetail
-                            ? commentDetail?.id
+                            ? commentDetail?.id ? commentDetail?.id  : commentDetail?.Id ?? ""
                             : "",
                         entityType:
                           reportType === POST_TYPE
