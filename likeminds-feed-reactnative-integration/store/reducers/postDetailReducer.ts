@@ -293,12 +293,12 @@ export const postDetailReducer = (state = initialState, action) => {
     }
     case EDIT_COMMENT_STATE: {
       const updatedPostDetail: any = state.postDetail;
-      const { commentId, commentText, repliesArray } = action.body;
-      let parentCommentId = repliesArray?.comment?.id
+      const { commentId, commentText, replyObject } = action.body;
+      let parentCommentId = replyObject?.comment?.id
       if(updatedPostDetail?.replies?.length > 0){
         updatedPostDetail?.replies?.forEach(item => {
           if(item?.id == parentCommentId){
-            item.replies = repliesArray?.comment?.replies
+            item.replies = replyObject?.comment?.replies
           }
         })
       }
@@ -342,6 +342,15 @@ export const postDetailReducer = (state = initialState, action) => {
     case DELETE_COMMENT_STATE: {
       const updatedPostDetail: any = state.postDetail;
       // this gets the index of the comment that is deleted
+      const { replyObject } = action.body
+      let parentCommentId = replyObject?.comment?.id
+      if(updatedPostDetail?.replies?.length > 0){
+        updatedPostDetail?.replies?.forEach(item => {
+          if(item?.id == parentCommentId){
+            item.replies = replyObject?.comment?.replies
+          }
+        })
+      }
       const deletedCommentIndex =
         updatedPostDetail?.replies &&
         updatedPostDetail.replies.findIndex(
@@ -362,7 +371,7 @@ export const postDetailReducer = (state = initialState, action) => {
             const deletedCommentIndexChild = updatedPostDetail.replies[
               i
             ].replies.findIndex(
-              (item: any) => item?.id === action.body.commentId
+              (item: any) => item?.Id === action.body.commentId
             );
             // removes that child comment from the data
             if (
