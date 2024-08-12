@@ -21,6 +21,7 @@ import {
   EDIT_COMMENT_MENU_ITEM,
   POST_LIKES,
   POST_TYPE,
+  REPLY_TYPE,
   REPORT_COMMENT_MENU_ITEM,
   STATE_ADMIN,
   VIEW_MORE_TEXT,
@@ -246,6 +247,8 @@ const PostDetailComponent = React.memo(() => {
   );
   const memberData = useAppSelector((state) => state.login.member);
   const isCM = memberData?.state === STATE_ADMIN;
+  const {repliesArrayUnderComments} = usePostDetailContext()
+
 
   // this function returns the id of the item selected from menu list and handles further functionalities accordingly for comment
   const onCommentMenuItemSelect = async (
@@ -1049,6 +1052,7 @@ const PostDetailComponent = React.memo(() => {
             getCommentDetail(postDetail?.replies)?.parentCommentId
           }
           navigation={navigation}
+          repliesArrayUnderComments={repliesArrayUnderComments}
         />
       )}
       {/* report post modal */}
@@ -1062,7 +1066,7 @@ const PostDetailComponent = React.memo(() => {
             });
             setShowReportModal(false);
           }}
-          reportType={selectedMenuItemPostId ? POST_TYPE : COMMENT_TYPE}
+          reportType={selectedMenuItemPostId ? POST_TYPE : commentOnFocus?.level > 0 ? REPLY_TYPE : COMMENT_TYPE}
           postDetail={postDetail}
           commentDetail={getCommentDetail(postDetail?.replies)?.commentDetail}
         />
