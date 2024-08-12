@@ -73,7 +73,6 @@ const ReportModal = ({
   const [otherReason, setOtherReason] = useState("");
   const [selectedId, setSelectedId] = useState(-1);
   const [keyboardVisible, setKeyboardVisible] = useState(false);
-  const {repliesArrayUnderComments,commentOnFocus} = usePostDetailContext()
 
   const _keyboardDidShow = () => {
     setKeyboardVisible(true);
