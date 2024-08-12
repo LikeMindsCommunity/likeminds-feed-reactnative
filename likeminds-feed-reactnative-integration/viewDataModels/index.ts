@@ -60,7 +60,7 @@ export function convertToLMPostUI(
   widgets: any
 ): LMPostUI {
   const postData: LMPostUI = {
-    id: post.Id,
+    id: post.id,
     attachments: post.attachments
       ? convertToLMAttachmentsUI(post.attachments, widgets)
       : [],
@@ -74,7 +74,7 @@ export function convertToLMPostUI(
     likesCount: post.likesCount,
     menuItems: convertToLMMenuItemsUI(post.menuItems),
     replies: post?.replies
-      ? convertToLMCommentUI(post.Id, post.replies, user)
+      ? convertToLMCommentUI(post.id, post.replies, user)
       : [],
     text: post.text,
     updatedAt: post.updatedAt,
@@ -403,7 +403,7 @@ export function convertToLMCommentUI(
 ): any[] {
   return data?.map((item: IComment) => {
     return {
-      id: item.Id,
+      id: item.id,
       postId: postId,
       repliesCount: item.commentsCount,
       level: item.level,
@@ -444,7 +444,7 @@ export function convertToLMActivityUI(
   users: { [key: string]: LMUserUI }
 ): LMActivityUI {
   const notificationData: LMActivityUI = {
-    id: activity.Id,
+    id: activity.id,
     isRead: activity.isRead,
     actionOn: activity.actionOn,
     actionBy: activity.actionBy,
@@ -473,7 +473,7 @@ export function convertToLMActivityUI(
  */
 export function convertToLMActivityEntityUI(data): LMActivityEntityUI {
   const activityEntityData: LMActivityEntityUI = {
-    id: data?.Id,
+    id: data?.id,
     text: data?.text,
     deleteReason: data?.deleteReason,
     deletedBy: data?.deletedBy,

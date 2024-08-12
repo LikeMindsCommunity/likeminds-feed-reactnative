@@ -447,14 +447,14 @@ const LMCommentItem = React.memo(
                           comment={{...item, parentId: comment?.id }}
                           likeIconButton={{
                             onTap: () => {
-                              likeIconButton?.onTap(item?.Id);
+                              likeIconButton?.onTap(item?.id);
                             },
                           }}
                           likeTextButton={{
-                            onTap: () => likeTextButton?.onTap(item?.Id),
+                            onTap: () => likeTextButton?.onTap(item?.id),
                           }}
                           onCommentOverflowMenuClick={(event) =>
-                            onOverflowMenuClick(event, item?.Id)
+                            onOverflowMenuClick(event, item?.id)
                           }
                           hideThreeDotsMenu={hideThreeDotsMenu}
                         />

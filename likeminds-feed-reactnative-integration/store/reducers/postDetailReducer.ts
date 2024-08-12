@@ -101,7 +101,7 @@ export const postDetailReducer = (state = initialState, action) => {
       const updatedDetail = state.postDetail;
       updatedDetail?.replies &&
         updatedDetail.replies.find((item) => {
-          if (item.id === comment?.Id) {
+          if (item.id === comment?.id) {
             const commentData = convertToLMCommentUI(
               comment?.postId,
               comment.replies,
@@ -260,7 +260,7 @@ export const postDetailReducer = (state = initialState, action) => {
       const updatedPostDetail = state.postDetail;
       // finds the parent comment
       updatedPostDetail.replies?.find((item) => {
-        if (item.id === comment?.parentComment?.Id) {
+        if (item.id === comment?.parentComment?.id) {
           // converts the response to LMCommentUI model
           const commentData = convertToLMCommentUI(
             comment.postId,
@@ -321,7 +321,7 @@ export const postDetailReducer = (state = initialState, action) => {
           for (let i = 0; i <= updatedPostDetail?.replies?.length - 1; i++) {
             const editCommentIndexChild = updatedPostDetail.replies[
               i
-            ]?.replies.findIndex((item: LMCommentUI) => item?.Id === commentId);
+            ]?.replies.findIndex((item: LMCommentUI) => item?.id === commentId);
             // removes that child comment from the data
             if (
               updatedPostDetail?.replies[i]?.replies &&
@@ -371,7 +371,7 @@ export const postDetailReducer = (state = initialState, action) => {
             const deletedCommentIndexChild = updatedPostDetail.replies[
               i
             ].replies.findIndex(
-              (item: any) => item?.Id === action.body.commentId
+              (item: any) => item?.id === action.body.commentId
             );
             // removes that child comment from the data
             if (
