@@ -58,6 +58,7 @@ interface DeleteModalProps {
     RootStackParamList,
     "PostDetail" | "UniversalFeed" | "PostsList"
   >;
+  repliesArrayUnderComments?: any
 }
 
 const DeleteModal = ({
@@ -69,13 +70,13 @@ const DeleteModal = ({
   commentDetail,
   parentCommentId,
   navigation,
+  repliesArrayUnderComments
 }: DeleteModalProps) => {
   const dispatch = useAppDispatch();
   const loggedInUser = useAppSelector((state) => state.login.member);
   const [deletionReason, setDeletionReason] = useState("");
   const [otherReason, setOtherReason] = useState("");
   const [showReasons, setShowReasons] = useState(false);
-  const {repliesArrayUnderComments} = usePostDetailContext()
 
   // this function calls the delete post api
   const postDelete = async () => {
@@ -151,7 +152,7 @@ const DeleteModal = ({
       let replyObject = repliesArrayUnderComments?.find(item => item?.comment?.id == commentDetail?.parentId)
       const payload = {
         deleteReason: otherReason ? otherReason : deletionReason,
-        commentId: commentDetail?.id ? commentDetail.id : commentDetail?.Id ?? "",
+        commentId: commentDetail?.id ? commentDetail.id : "",
         postId: commentDetail?.postId ? commentDetail.postId : "",
         replyObject
       };
