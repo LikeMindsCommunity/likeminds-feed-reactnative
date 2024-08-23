@@ -57,8 +57,8 @@ const LMPostMenu = React.memo(
             ])}
           >
             {/* Menu List Items */}
-            {post.menuItems &&
-              post.menuItems?.map((item, index) => {
+            {post?.menuItems &&
+              post?.menuItems?.map((item, index) => {
                 return (
                   <TouchableOpacity
                     activeOpacity={0.8}

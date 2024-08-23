@@ -231,6 +231,10 @@ export interface PostDetailContextValues {
   ) => void;
   handlePostLoadMore: () => void;
   renderLoader: () => JSX.Element | null;
+  commentOnFocus: LMCommentUI | undefined;
+  setCommentOnFocus: Dispatch<SetStateAction<LMCommentUI | undefined>>;
+  repliesArrayUnderComments: any;
+  setRepliesArrayUnderComments: Dispatch<SetStateAction<any>>;
 }
 
 const PostDetailContext = createContext<PostDetailContextValues | undefined>(
@@ -309,9 +313,10 @@ export const PostDetailContextProvider = ({
   const [overlayMenuType, setOverlayMenuType] = useState("");
   const [isPaginationStopped, setIsPaginationStopped] = useState(false);
   const [showLoader, setShowLoader] = useState(true);
-
+  const [commentOnFocus,setCommentOnFocus] = useState<LMCommentUI>();
   const LMFeedContextStyles = useLMFeedStyles();
   const { postListStyle, loaderStyle } = LMFeedContextStyles;
+  const [repliesArrayUnderComments,setRepliesArrayUnderComments] = useState<any>([])
 
   // this function is executed on pull to refresh
   const onRefresh = async () => {
@@ -519,6 +524,7 @@ export const PostDetailContextProvider = ({
   // this function gets the detail of comment whose menu item is clicked
   const getCommentDetail = (comments?: LMCommentUI[], id?: string) => {
     const commentId = id ? id : selectedMenuItemCommentId;
+    let replyObject = repliesArrayUnderComments?.find(item => item?.comment?.id == commentOnFocus?.parentId)
     let commentDetail;
     if (comments) {
       for (const reply of comments) {
@@ -538,7 +544,7 @@ export const PostDetailContextProvider = ({
         }
       }
     }
-    return undefined; // Reply not found
+    return { commentDetail: commentOnFocus, repliesDetail: replyObject, parentCommentId: commentOnFocus?.parentId } // Reply not found, returning comment that was focused on, could be either a reply or a comment
   };
 
   // this function calls the getPost api
@@ -575,12 +581,12 @@ export const PostDetailContextProvider = ({
         false
       )
     );
-
     // sets the api response in the callback function
     repliesResponseCallback(
       postDetail?.replies &&
       commentResponseModelConvertor(commentsRepliesResponse)?.replies
     );
+    setRepliesArrayUnderComments((previousResponse) => [commentsRepliesResponse,...previousResponse])
     return commentsRepliesResponse;
   };
 
@@ -635,7 +641,7 @@ export const PostDetailContextProvider = ({
       Events.COMMENT_POSTED,
       new Map<string, string>([
         [Keys.POST_ID, postDetail?.id],
-        [Keys.COMMENT_ID, commentAddResponse?.comment?.Id],
+        [Keys.COMMENT_ID, commentAddResponse?.comment?.id],
       ])
     );
     return commentAddResponse;
@@ -680,7 +686,7 @@ export const PostDetailContextProvider = ({
         [Keys.UUID, replyOnComment?.userId],
         [Keys.POST_ID, postDetail?.id],
         [Keys.COMMENT_ID, replyOnComment?.commentId],
-        [Keys.COMMENT_REPLY_ID, replyAddResponse?.comment?.Id],
+        [Keys.COMMENT_REPLY_ID, replyAddResponse?.comment?.id],
       ])
     );
     return replyAddResponse;
@@ -750,20 +756,24 @@ export const PostDetailContextProvider = ({
     }
   }, [isKeyboardVisible]);
 
+
   // this function calls the edit comment api
   const commentEdit = async () => {
     // convert the mentions to route
     const convertedEditedComment = mentionToRouteConverter(commentToAdd);
+    let replyObject = repliesArrayUnderComments?.find(item => item?.comment?.id == commentOnFocus?.parentId)
     const payload = {
-      commentId: selectedMenuItemCommentId,
+      commentId: commentOnFocus?.id ?? "",
       commentText: convertedEditedComment.trim(),
+      replyObject,
+      setRepliesArray: setRepliesArrayUnderComments
     };
     await dispatch(editCommentStateHandler(payload));
     // call edit comment api
     const editCommentResponse = await dispatch(
       editComment(
         EditCommentRequest.builder()
-          .setcommentId(selectedMenuItemCommentId)
+          .setcommentId(payload?.commentId)
           .setpostId(postDetail?.id)
           .settext(payload.commentText)
           .build(),
@@ -1009,6 +1019,10 @@ export const PostDetailContextProvider = ({
     renderLoader,
     showLoader,
     setShowLoader,
+    setCommentOnFocus,
+    commentOnFocus,
+    repliesArrayUnderComments,
+    setRepliesArrayUnderComments
   };
 
   return (

@@ -423,26 +423,28 @@ export const CreatePostContextProvider = ({
 
   // function handles the permission for image/video selection
   const handleGallery = async (type: string) => {
-    if (Platform.OS === "ios") {
-      setSelectedImageVideo(type);
-    } else {
-      const res = await requestStoragePermission();
-      if (res === true) {
-        setSelectedImageVideo(type);
-      }
-    }
+    setSelectedImageVideo(type);
+    // if (Platform.OS === "ios") {
+    //   setSelectedImageVideo(type);
+    // } else {
+    //   const res = await requestStoragePermission();
+    //   if (res === true) {
+    //     setSelectedImageVideo(type);
+    //   }
+    // }
   };
 
   // function handles the permission for selection of documents
   const handleDocument = async () => {
-    if (Platform.OS === "ios") {
-      setSelectedDocuments();
-    } else {
-      const res = await requestStoragePermission();
-      if (res === true) {
-        setSelectedDocuments();
-      }
-    }
+    setSelectedDocuments();
+    // if (Platform.OS === "ios") {
+    //   setSelectedDocuments();
+    // } else {
+    //   const res = await requestStoragePermission();
+    //   if (res === true) {
+    //     setSelectedDocuments();
+    //   }
+    // }
   };
 
   // function handles the navigation to create poll screen

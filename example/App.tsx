@@ -58,6 +58,7 @@ import {carouselScreenStyle, createPollStyle, pollStyle} from './styles';
 import CreatePollScreenWrapper from './feedScreen/createPollScreenWrapper';
 import {LMFeedClient, InitiateUserRequest} from '@likeminds.community/feed-rn';
 import {LoginSchemaRO} from './login/loginSchemaRO';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 class CustomCallbacks implements LMFeedCallbacks, LMCarouselScreenCallbacks {
   onEventTriggered(eventName: string, eventProperties?: Map<string, string>) {
@@ -88,17 +89,8 @@ const App = () => {
   const [myClient, setMyClient] = useState<LMFeedClient>();
   const [isTrue, setIsTrue] = useState(true);
 
-  const loginSchemaArray: any = useQuery(LoginSchemaRO);
-
-  useEffect(() => {
-    async function generateClient() {
-      const res: any = initMyClient();
-      setMyClient(res);
-    }
-
-    generateClient();
-  }, []);
-
+  // realm setup
+  const loginSchemaArray: any = useQuery(LoginSchemaRO); 
   useEffect(() => {
     const userSchema = async () => {
       const loginSchema = loginSchemaArray[0];
@@ -113,6 +105,15 @@ const App = () => {
     };
     userSchema();
   }, [isTrue]);
+
+  useEffect(() => {
+    async function generateClient() {
+      const res: any = initMyClient();
+      setMyClient(res);
+    }
+
+    generateClient();
+  }, []);
 
   useEffect(() => {
     setUserName(
@@ -248,54 +249,56 @@ const App = () => {
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{flex: 1}}>
-      {userName && userUniqueID && apiKey && myClient ? (
-        <LMOverlayProvider
-          myClient={myClient}
-          apiKey={apiKey}
-          userName={userName}
-          userUniqueId={userUniqueID}
-          lmFeedInterface={lmFeedInterface}
-          callbackClass={callbackClass}>
-          <NavigationContainer ref={navigationRef} independent={true}>
-            <Stack.Navigator screenOptions={{headerShown: false}}>
-              <Stack.Screen name={UNIVERSAL_FEED} component={FeedWrapper} />
-              <Stack.Screen name={POST_DETAIL} component={DetailWrapper} />
-              <Stack.Screen name={CREATE_POST} component={CreateWrapper} />
-              <Stack.Screen name={POST_LIKES_LIST} component={LikesWrapper} />
-              <Stack.Screen
-                name={TOPIC_FEED}
-                component={TopicFeedWrapper}
-                options={{headerShown: true}}
-              />
-              <Stack.Screen
-                name={NOTIFICATION_FEED}
-                component={NotificationWrapper}
-              />
-              <Stack.Screen
-                options={{gestureEnabled: false}}
-                name={CAROUSEL_SCREEN}
-                component={CarouselScreen}
-              />
-              <Stack.Screen
-                name={POLL_RESULT}
-                component={LMFeedPollResult}
-                options={{
-                  gestureEnabled: false,
-                }}
-              />
-              <Stack.Screen
-                name={CREATE_POLL_SCREEN}
-                component={CreatePollScreenWrapper}
-              />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </LMOverlayProvider>
-      ) : !userName && !userUniqueID && !apiKey ? (
-        <FetchKeyInputScreen isTrue={isTrue} setIsTrue={setIsTrue} />
-      ) : null}
-    </KeyboardAvoidingView>
+    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    style={{flex: 1}}>
+      <GestureHandlerRootView style={{flex: 1}}>
+        {userName && userUniqueID && apiKey && myClient ? (
+          <LMOverlayProvider
+            myClient={myClient}
+            apiKey={apiKey}
+            userName={userName}
+            userUniqueId={userUniqueID}
+            lmFeedInterface={lmFeedInterface}
+            callbackClass={callbackClass}>
+            <NavigationContainer ref={navigationRef} independent={true}>
+              <Stack.Navigator screenOptions={{headerShown: false}}>
+                <Stack.Screen name={UNIVERSAL_FEED} component={FeedWrapper} />
+                <Stack.Screen name={POST_DETAIL} component={DetailWrapper} />
+                <Stack.Screen name={CREATE_POST} component={CreateWrapper} />
+                <Stack.Screen name={POST_LIKES_LIST} component={LikesWrapper} />
+                <Stack.Screen
+                  name={TOPIC_FEED}
+                  component={TopicFeedWrapper}
+                  options={{headerShown: true}}
+                />
+                <Stack.Screen
+                  name={NOTIFICATION_FEED}
+                  component={NotificationWrapper}
+                />
+                <Stack.Screen
+                  options={{gestureEnabled: false}}
+                  name={CAROUSEL_SCREEN}
+                  component={CarouselScreen}
+                />
+                <Stack.Screen
+                  name={POLL_RESULT}
+                  component={LMFeedPollResult}
+                  options={{
+                    gestureEnabled: false,
+                  }}
+                />
+                <Stack.Screen
+                  name={CREATE_POLL_SCREEN}
+                  component={CreatePollScreenWrapper}
+                />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </LMOverlayProvider>
+        ) : !userName && !userUniqueID && !apiKey ? (
+          <FetchKeyInputScreen isTrue={isTrue} setIsTrue={setIsTrue} />
+        ) : null}
+      </GestureHandlerRootView>
+      </KeyboardAvoidingView>
   );
 };
 
