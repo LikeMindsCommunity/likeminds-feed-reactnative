@@ -40,6 +40,7 @@ import { LMCommentUI, LMPostUI } from "../../models";
 import { getPostType, reportAnalytics } from "../../utils/analytics";
 import Layout from "../../constants/Layout";
 import { Client } from "../../client";
+import { usePostDetailContext } from "../../context";
 
 // interface for post report api request
 interface ReportRequest {
@@ -154,7 +155,7 @@ const ReportModal = ({
               ? reportReason?.name
               : otherReason,
           postType: getPostType(postDetail?.attachments),
-          commentId: commentDetail ? commentDetail?.id : undefined,
+          commentId: commentDetail ? commentDetail?.parentId ? commentDetail.parentId : commentDetail.id : undefined,
           commentReplyId:
             reportType === REPLY_TYPE ? commentDetail?.id : undefined,
         };
@@ -328,12 +329,13 @@ const ReportModal = ({
               onPress={
                 selectedId !== -1 || otherReason
                   ? () => {
+
                       reportPost({
                         entityId:
                           reportType === POST_TYPE
                             ? postDetail?.id
                             : commentDetail
-                            ? commentDetail?.id
+                            ? commentDetail?.id 
                             : "",
                         entityType:
                           reportType === POST_TYPE

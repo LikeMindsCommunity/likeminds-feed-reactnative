@@ -4,6 +4,7 @@ import {LMUserUI} from './LMUserUI';
 // data model for comment
 export interface LMCommentUI {
   id: string;
+  Id?: string;
   postId: string;
   isEdited: boolean;
   isLiked: boolean;

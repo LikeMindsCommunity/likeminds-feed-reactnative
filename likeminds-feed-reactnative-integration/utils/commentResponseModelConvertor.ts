@@ -3,8 +3,8 @@ export const commentResponseModelConvertor = (response) => {
   const { comment, users } = response;
 
   // Overwrite Id with id
-  comment.id = comment.Id;
-  delete comment.Id;
+  //comment.id = comment.Id;
+  //delete comment.Id;
 
   // Uplift user data from users object to comment
   comment.user = users[comment.uuid];

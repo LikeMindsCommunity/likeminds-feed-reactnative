@@ -101,7 +101,7 @@ export const postDetailReducer = (state = initialState, action) => {
       const updatedDetail = state.postDetail;
       updatedDetail?.replies &&
         updatedDetail.replies.find((item) => {
-          if (item.id === comment?.Id) {
+          if (item.id === comment?.id) {
             const commentData = convertToLMCommentUI(
               comment?.postId,
               comment.replies,
@@ -260,7 +260,7 @@ export const postDetailReducer = (state = initialState, action) => {
       const updatedPostDetail = state.postDetail;
       // finds the parent comment
       updatedPostDetail.replies?.find((item) => {
-        if (item.id === comment?.parentComment?.Id) {
+        if (item.id === comment?.parentComment?.id) {
           // converts the response to LMCommentUI model
           const commentData = convertToLMCommentUI(
             comment.postId,
@@ -293,8 +293,15 @@ export const postDetailReducer = (state = initialState, action) => {
     }
     case EDIT_COMMENT_STATE: {
       const updatedPostDetail: any = state.postDetail;
-      const { commentId, commentText } = action.body;
-
+      const { commentId, commentText, replyObject } = action.body;
+      let parentCommentId = replyObject?.comment?.id
+      if(updatedPostDetail?.replies?.length > 0){
+        updatedPostDetail?.replies?.forEach(item => {
+          if(item?.id == parentCommentId){
+            item.replies = replyObject?.comment?.replies
+          }
+        })
+      }
       const editCommentIndex =
         updatedPostDetail?.replies &&
         updatedPostDetail.replies.findIndex(
@@ -335,6 +342,15 @@ export const postDetailReducer = (state = initialState, action) => {
     case DELETE_COMMENT_STATE: {
       const updatedPostDetail: any = state.postDetail;
       // this gets the index of the comment that is deleted
+      const { replyObject } = action.body
+      let parentCommentId = replyObject?.comment?.id
+      if(updatedPostDetail?.replies?.length > 0){
+        updatedPostDetail?.replies?.forEach(item => {
+          if(item?.id == parentCommentId){
+            item.replies = replyObject?.comment?.replies
+          }
+        })
+      }
       const deletedCommentIndex =
         updatedPostDetail?.replies &&
         updatedPostDetail.replies.findIndex(

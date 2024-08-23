@@ -43,6 +43,7 @@ import { Keys } from "../../enums/Keys";
 import { getPostType } from "../../utils/analytics";
 import { UNIVERSAL_FEED } from "../../constants/screenNames";
 import { Client } from "../../client";
+import { usePostDetailContext } from "../../context";
 
 // delete modal's props
 interface DeleteModalProps {
@@ -57,6 +58,7 @@ interface DeleteModalProps {
     RootStackParamList,
     "PostDetail" | "UniversalFeed" | "PostsList"
   >;
+  repliesArrayUnderComments?: any
 }
 
 const DeleteModal = ({
@@ -68,6 +70,7 @@ const DeleteModal = ({
   commentDetail,
   parentCommentId,
   navigation,
+  repliesArrayUnderComments
 }: DeleteModalProps) => {
   const dispatch = useAppDispatch();
   const loggedInUser = useAppSelector((state) => state.login.member);
@@ -146,10 +149,12 @@ const DeleteModal = ({
     ) {
       showToast();
     } else {
+      let replyObject = repliesArrayUnderComments?.find(item => item?.comment?.id == commentDetail?.parentId)
       const payload = {
         deleteReason: otherReason ? otherReason : deletionReason,
         commentId: commentDetail?.id ? commentDetail.id : "",
         postId: commentDetail?.postId ? commentDetail.postId : "",
+        replyObject
       };
 
       displayModal(false);

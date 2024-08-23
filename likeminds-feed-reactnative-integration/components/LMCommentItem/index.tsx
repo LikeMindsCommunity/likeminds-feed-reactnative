@@ -24,6 +24,7 @@ import { timeStamp } from "../../utils";
 import { useAppSelector } from "../../store/store";
 import { MemberRightsEnum } from "../../enums/MemberRightsEnum";
 import STYLES from "../../constants/Styles";
+import { usePostDetailContext } from "../../context";
 
 const LMCommentItem = React.memo(
   ({
@@ -75,6 +76,8 @@ const LMCommentItem = React.memo(
         setNumberOfLines(MAX_LINES);
       }
     };
+
+    const {setCommentOnFocus} = usePostDetailContext()
 
     useEffect(() => {
       if (isRepliesVisible) {
@@ -144,6 +147,7 @@ const LMCommentItem = React.memo(
       onCommentOverflowMenuClick
         ? onCommentOverflowMenuClick(event, commentId)
         : null;
+      setCommentOnFocus(comment)
       menuIcon && menuIcon?.onTap();
     };
 
@@ -440,19 +444,19 @@ const LMCommentItem = React.memo(
                     <>
                       {item && (
                         <LMCommentItem
-                          comment={item}
+                          comment={{...item, parentId: comment?.id }}
                           likeIconButton={{
                             onTap: () => {
-                              likeIconButton?.onTap(item?.Id);
+                              likeIconButton?.onTap(item?.id);
                             },
                           }}
                           likeTextButton={{
-                            onTap: () => likeTextButton?.onTap(item?.Id),
+                            onTap: () => likeTextButton?.onTap(item?.id),
                           }}
                           onCommentOverflowMenuClick={(event) =>
-                            onOverflowMenuClick(event, item?.Id)
+                            onOverflowMenuClick(event, item?.id)
                           }
-                          hideThreeDotsMenu={true}
+                          hideThreeDotsMenu={hideThreeDotsMenu}
                         />
                       )}
                     </>
