@@ -641,7 +641,7 @@ export const PostDetailContextProvider = ({
       Events.COMMENT_POSTED,
       new Map<string, string>([
         [Keys.POST_ID, postDetail?.id],
-        [Keys.COMMENT_ID, commentAddResponse?.comment?.Id],
+        [Keys.COMMENT_ID, commentAddResponse?.comment?.id],
       ])
     );
     return commentAddResponse;
@@ -686,7 +686,7 @@ export const PostDetailContextProvider = ({
         [Keys.UUID, replyOnComment?.userId],
         [Keys.POST_ID, postDetail?.id],
         [Keys.COMMENT_ID, replyOnComment?.commentId],
-        [Keys.COMMENT_REPLY_ID, replyAddResponse?.comment?.Id],
+        [Keys.COMMENT_REPLY_ID, replyAddResponse?.comment?.id],
       ])
     );
     return replyAddResponse;
@@ -763,7 +763,7 @@ export const PostDetailContextProvider = ({
     const convertedEditedComment = mentionToRouteConverter(commentToAdd);
     let replyObject = repliesArrayUnderComments?.find(item => item?.comment?.id == commentOnFocus?.parentId)
     const payload = {
-      commentId: commentOnFocus?.Id ? commentOnFocus.Id : commentOnFocus.id , // Id exists for replies and id for comments
+      commentId: commentOnFocus?.id ?? "",
       commentText: convertedEditedComment.trim(),
       replyObject,
       setRepliesArray: setRepliesArrayUnderComments
@@ -773,7 +773,7 @@ export const PostDetailContextProvider = ({
     const editCommentResponse = await dispatch(
       editComment(
         EditCommentRequest.builder()
-          .setcommentId(payload.commentId)
+          .setcommentId(payload?.commentId)
           .setpostId(postDetail?.id)
           .settext(payload.commentText)
           .build(),

@@ -155,9 +155,9 @@ const ReportModal = ({
               ? reportReason?.name
               : otherReason,
           postType: getPostType(postDetail?.attachments),
-          commentId: commentDetail ? commentDetail?.id ? commentDetail.id : commentDetail?.parentId ?? undefined : undefined,
+          commentId: commentDetail ? commentDetail?.parentId ? commentDetail.parentId : commentDetail.id : undefined,
           commentReplyId:
-            reportType === REPLY_TYPE ? commentDetail?.Id : undefined,
+            reportType === REPLY_TYPE ? commentDetail?.id : undefined,
         };
         reportAnalytics(params);
 
@@ -335,7 +335,7 @@ const ReportModal = ({
                           reportType === POST_TYPE
                             ? postDetail?.id
                             : commentDetail
-                            ? commentDetail?.id ? commentDetail?.id  : commentDetail?.Id ?? ""
+                            ? commentDetail?.id 
                             : "",
                         entityType:
                           reportType === POST_TYPE
