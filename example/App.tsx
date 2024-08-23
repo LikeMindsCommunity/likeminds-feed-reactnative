@@ -89,17 +89,8 @@ const App = () => {
   const [myClient, setMyClient] = useState<LMFeedClient>();
   const [isTrue, setIsTrue] = useState(true);
 
-  const loginSchemaArray: any = useQuery(LoginSchemaRO);
-
-  useEffect(() => {
-    async function generateClient() {
-      const res: any = initMyClient();
-      setMyClient(res);
-    }
-
-    generateClient();
-  }, []);
-
+  // realm setup
+  const loginSchemaArray: any = useQuery(LoginSchemaRO); 
   useEffect(() => {
     const userSchema = async () => {
       const loginSchema = loginSchemaArray[0];
@@ -114,6 +105,15 @@ const App = () => {
     };
     userSchema();
   }, [isTrue]);
+
+  useEffect(() => {
+    async function generateClient() {
+      const res: any = initMyClient();
+      setMyClient(res);
+    }
+
+    generateClient();
+  }, []);
 
   useEffect(() => {
     setUserName(
