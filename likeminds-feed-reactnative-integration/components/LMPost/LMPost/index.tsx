@@ -64,11 +64,11 @@ const LMPostComponent = React.memo(() => {
                   <Text
                     style={[
                       {
-                        fontSize: Layout.normalize(16),
+                        fontSize: Layout.normalize(14),
                         color: STYLES.$COLORS.PRIMARY,
-                        paddingVertical: Layout.normalize(5),
-                        borderRadius: Layout.normalize(5),
-                        paddingHorizontal: Layout.normalize(12),
+                        paddingVertical: Layout.normalize(2),
+                        borderRadius: Layout.normalize(4),
+                        paddingHorizontal: Layout.normalize(8),
                         fontFamily: STYLES.$FONT_TYPES.LIGHT,
                       },
                       postListStyle?.postContent?.postTopicStyle?.text,
