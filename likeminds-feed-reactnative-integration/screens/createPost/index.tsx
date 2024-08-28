@@ -775,6 +775,10 @@ const CreatePostComponent = () => {
               <LMCarousel
                 {...postMediaStyle?.carousel}
                 attachments={formattedMediaAttachments}
+                post={{ 
+                  attachments: formattedMediaAttachments,
+                  user: memberData 
+                }}
                 showCancel={
                   postMediaStyle?.carousel?.showCancel != undefined
                     ? postMediaStyle?.carousel?.showCancel
@@ -900,8 +904,8 @@ const CreatePostComponent = () => {
               onTap={() => {
                 formattedMediaAttachments.length > 0
                   ? handleGalleryProp
-                    ? handleGalleryProp(isImage ? SELECT_IMAGE : SELECT_VIDEO)
-                    : handleGallery(isImage ? SELECT_IMAGE : SELECT_VIDEO)
+                    ? handleGalleryProp(SELECT_BOTH)
+                    : handleGallery(SELECT_BOTH)
                   : formattedDocumentAttachments.length > 0
                   ? handleDocumentProp
                     ? handleDocumentProp()

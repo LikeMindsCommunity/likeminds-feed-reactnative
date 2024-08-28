@@ -35,7 +35,7 @@ const CarouselScreen = ({ navigation, route }: any) => {
   const { index, dataObject } = route.params;
   const data = dataObject?.attachments;
 
-  const attachmentsUrls = data.map((item) => ({
+  const attachmentsUrls = data?.map((item) => ({
     ["url"]: item.attachmentMeta.url,
   }));
 
@@ -60,7 +60,7 @@ const CarouselScreen = ({ navigation, route }: any) => {
     }
   }
   const userName = dataObject?.user?.name;
-  const date: Date = new Date(dataObject?.createdAt);
+  const date: Date = new Date(dataObject?.createdAt ?? Date.now());
   // Convert UTC to IST
   date.setMinutes(date.getMinutes() + 330); // 5 hours and 30 minutes offset
 
