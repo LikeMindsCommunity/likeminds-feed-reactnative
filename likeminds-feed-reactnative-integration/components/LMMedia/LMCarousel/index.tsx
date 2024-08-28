@@ -87,7 +87,7 @@ const LMCarousel = React.memo(
           inactiveIndicatorStyle,
         ])}
         renderItem={({ item, index }) => (
-          <View onStartShouldSetResponder={() => true}>
+          <View style={styles.swiperListMediaContainer} onStartShouldSetResponder={() => true}>
             {/* this section render image */}
             {item?.attachmentType === IMAGE_ATTACHMENT_TYPE && (
               <TouchableOpacity
