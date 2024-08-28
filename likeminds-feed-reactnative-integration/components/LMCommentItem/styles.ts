@@ -40,6 +40,7 @@ export const styles = StyleSheet.create({
       ? STYLES.$BACKGROUND_COLORS.DARK
       : STYLES.$BACKGROUND_COLORS.LIGHT,
     borderBottomWidth: 1,
+    marginVertical: 1,
     borderBottomColor: STYLES.$IS_DARK_THEME
       ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
       : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
