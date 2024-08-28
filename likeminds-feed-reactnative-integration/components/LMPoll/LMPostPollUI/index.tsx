@@ -207,7 +207,7 @@ const LMPostPollUI = ({
           const voteCount = element?.voteCount;
           const isPollSentByMe = element?.isSelected;
           return (
-            <View key={element?.Id} style={styles.gap}>
+            <View key={element?.id} style={styles.gap}>
               <Pressable
                 disabled={disabled}
                 onPress={() => {

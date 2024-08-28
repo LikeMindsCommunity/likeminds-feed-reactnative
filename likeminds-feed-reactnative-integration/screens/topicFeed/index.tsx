@@ -96,7 +96,7 @@ const TopicFeed = () => {
       let newTopics = newArr.map((topicId) => {
         const topic = allTopics[topicId];
         return {
-          Id: topicId,
+          id: topicId,
           allParentIds: topic.allParentIds,
           isEnabled: topic.isEnabled,
           isSearchable: topic.isSearchable,
@@ -128,7 +128,7 @@ const TopicFeed = () => {
       let newTopics = newArr.map((topicId) => {
         const topic = allTopics[topicId];
         return {
-          Id: topicId,
+          id: topicId,
           allParentIds: topic.allParentIds,
           isEnabled: topic.isEnabled,
           isSearchable: topic.isSearchable,
@@ -301,8 +301,8 @@ const TopicFeed = () => {
       const updatedTopics = search
         ? [...res?.topics]
         : sortedTopicsFromUniversalFeed?.length > 0
-        ? [{ Id: "0", name: "All Topics" }, ...sortedTopicsFromUniversalFeed]
-        : [{ Id: "0", name: "All Topics" }, ...res?.topics];
+        ? [{ id: "0", name: "All Topics" }, ...sortedTopicsFromUniversalFeed]
+        : [{ id: "0", name: "All Topics" }, ...res?.topics];
       setTopics(updatedTopics);
     } else {
       if (sortedTopics?.length > 0) {
@@ -440,27 +440,27 @@ const TopicFeed = () => {
             <>
               <TouchableOpacity
                 onPress={() => {
-                  if (item?.Id === "0") {
-                    setNewTopics([item?.Id]);
+                  if (item?.id === "0") {
+                    setNewTopics([item?.id]);
                   } else {
                     if (newTopics.includes("0")) {
                       const filteredArr = newTopics.filter(
                         (val: any) => val !== "0"
                       );
-                      setNewTopics([...filteredArr, item?.Id]);
+                      setNewTopics([...filteredArr, item?.id]);
                     } else {
-                      if (!newTopics.includes(item?.Id)) {
-                        setNewTopics([...newTopics, item?.Id]);
+                      if (!newTopics.includes(item?.id)) {
+                        setNewTopics([...newTopics, item?.id]);
                       } else {
                         const filteredArr = newTopics.filter(
-                          (val: any) => val !== item?.Id
+                          (val: any) => val !== item?.id
                         );
                         setNewTopics([...filteredArr]);
                       }
                     }
                   }
                 }}
-                key={item?.Id}
+                key={item?.id}
                 style={styles.participants}
               >
                 <View style={styles.infoContainer}>
@@ -477,7 +477,7 @@ const TopicFeed = () => {
                   </Text>
                 </View>
                 <View>
-                  {newTopics.includes(item?.Id) ? (
+                  {newTopics.includes(item?.id) ? (
                     <View style={styles.selected}>
                       <Image
                         source={require("../../assets/images/white_tick3x.png")}
@@ -504,7 +504,7 @@ const TopicFeed = () => {
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.1}
         ListFooterComponent={renderFooter}
-        keyExtractor={(item: any) => item?.Id?.toString()}
+        keyExtractor={(item: any) => item?.id?.toString()}
       />
       {isSearch && searchedTopics?.length === 0 && search && (
         <View style={[styles.justifyCenter]}>
