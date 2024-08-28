@@ -50,7 +50,7 @@ export const LMFeedPollResult = ({ navigation, route }: any) => {
             <PollStack.Screen
               name={val?.text}
               children={(props: any) => (
-                <TabScreenUI pollID={pollId} votes={val?.Id} {...props} />
+                <TabScreenUI pollID={pollId} votes={val?.id} {...props} />
               )}
               options={{
                 tabBarLabel: ({ focused }) => (
