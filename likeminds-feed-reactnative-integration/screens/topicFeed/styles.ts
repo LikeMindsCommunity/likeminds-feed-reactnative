@@ -38,7 +38,9 @@ export const styles = StyleSheet.create({
   title: {
     fontSize: STYLES.$FONT_SIZES.LARGE,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
-    color: STYLES.$COLORS.FONT_PRIMARY,
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
     lineHeight: 20,
     fontWeight: "500",
     gap: 8,
@@ -69,7 +71,7 @@ export const styles = StyleSheet.create({
     width: Layout.normalize(20),
     resizeMode: "contain",
   },
-  chatRoomInfo: { gap: Layout.normalize(5) },
+  chatRoomInfo: { gap: Layout.normalize(0) },
   participants: {
     display: "flex",
     flexDirection: "row",
