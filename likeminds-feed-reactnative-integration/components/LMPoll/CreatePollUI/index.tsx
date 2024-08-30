@@ -262,6 +262,7 @@ const CreatePollUI = () => {
                 onChange={onChange}
                 minimumDate={mode === "date" ? new Date() : undefined}
                 accentColor={STYLES.$COLORS.PRIMARY}
+                themeVariant={STYLES.$IS_DARK_THEME ? "dark" : "light"}
               />
             )}
           </TouchableOpacity>
@@ -294,8 +295,8 @@ const CreatePollUI = () => {
             pollAdvancedOptionTextStyle ? pollAdvancedOptionTextStyle : null,
             {
               color: STYLES.$IS_DARK_THEME
-                ? STYLES.$COLORS.PRIMARY
-                : STYLES.$COLORS.WHITE,
+                ? STYLES.$COLORS.WHITE
+                : STYLES.$COLORS.PRIMARY,
             },
           ]}
         >
@@ -333,8 +334,8 @@ const CreatePollUI = () => {
                 styles.blackColor,
                 {
                   color: STYLES.$IS_DARK_THEME
-                    ? STYLES.$COLORS.PRIMARY
-                    : STYLES.$COLORS.WHITE,
+                    ? STYLES.$COLORS.WHITE
+                    : STYLES.$COLORS.PRIMARY,
                 },
               ]}
             >
@@ -374,8 +375,8 @@ const CreatePollUI = () => {
                 styles.blackColor,
                 {
                   color: STYLES.$IS_DARK_THEME
-                    ? STYLES.$COLORS.PRIMARY
-                    : STYLES.$COLORS.WHITE,
+                    ? STYLES.$COLORS.WHITE
+                    : STYLES.$COLORS.PRIMARY,
                 },
               ]}
             >
@@ -415,8 +416,8 @@ const CreatePollUI = () => {
                 styles.blackColor,
                 {
                   color: STYLES.$IS_DARK_THEME
-                    ? STYLES.$COLORS.PRIMARY
-                    : STYLES.$COLORS.WHITE,
+                    ? STYLES.$COLORS.WHITE
+                    : STYLES.$COLORS.PRIMARY,
                 },
               ]}
             >
