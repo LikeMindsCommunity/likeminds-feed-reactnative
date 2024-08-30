@@ -57,6 +57,7 @@ const LMPostComponent = React.memo(() => {
                       backgroundColor: `hsla(${STYLES.$HUE}, 75%, 59%, 0.1)`,
                       marginLeft: index === 0 ? 15 : 5,
                       marginTop: Layout.normalize(10),
+                      borderRadius: Layout.normalize(5)
                     },
                     postListStyle?.postContent?.postTopicStyle?.box,
                   ]}
@@ -67,7 +68,6 @@ const LMPostComponent = React.memo(() => {
                         fontSize: Layout.normalize(14),
                         color: STYLES.$COLORS.PRIMARY,
                         paddingVertical: Layout.normalize(2),
-                        borderRadius: Layout.normalize(4),
                         paddingHorizontal: Layout.normalize(8),
                         fontFamily: STYLES.$FONT_TYPES.LIGHT,
                       },
