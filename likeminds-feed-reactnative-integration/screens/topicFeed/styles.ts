@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     padding: STYLES.$PADDINGS.MEDIUM,
     justifyContent: "center",
-    backgroundColor: STYLES.$COLORS.TERTIARY,
+    backgroundColor: STYLES.$IS_DARK_THEME ? STYLES.$BACKGROUND_COLORS.DARK : STYLES.$COLORS.TERTIARY,
     flex: 1,
   },
   avatar: {
@@ -63,7 +63,7 @@ export const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   border: {
-    borderBottomColor: "#D0D8E2",
+    borderBottomColor: STYLES.$IS_DARK_THEME ? "#121212" : "#D0D8E2",
     borderBottomWidth: 1,
   },
   search: {

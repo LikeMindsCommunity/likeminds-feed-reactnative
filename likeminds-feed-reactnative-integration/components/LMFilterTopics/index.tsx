@@ -251,9 +251,9 @@ const LMFilterTopics = () => {
               flexDirection: "row",
               alignItems: "center",
               borderBottomWidth: 1,
-              borderBottomColor: "#D0D8E2",
+              borderBottomColor: STYLES.$IS_DARK_THEME ? "#121212" : "#D0D8E2",
               borderTopWidth: 1,
-              borderTopColor: "#D0D8E2",
+              borderTopColor: STYLES.$IS_DARK_THEME ? "#121212" : "#D0D8E2",
               paddingVertical: Layout.normalize(10),
               backgroundColor: STYLES.$IS_DARK_THEME
                 ? STYLES.$BACKGROUND_COLORS.DARK
