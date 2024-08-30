@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity, Image, SafeAreaView } from "react-native";
 import React, { useState } from "react";
 import LMHeader from "../LMHeader";
 import { useLMFeedStyles } from "../../lmFeedProvider";
@@ -23,7 +23,7 @@ const LMUniversalFeedHeader = () => {
     useUniversalFeedCustomisableMethodsContext();
 
   return (
-    <View
+    <SafeAreaView
       style={{
         backgroundColor: STYLES.$IS_DARK_THEME
           ? STYLES.$BACKGROUND_COLORS.DARK
@@ -85,7 +85,7 @@ const LMUniversalFeedHeader = () => {
         }
         {...universalFeedStyle?.screenHeader}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
