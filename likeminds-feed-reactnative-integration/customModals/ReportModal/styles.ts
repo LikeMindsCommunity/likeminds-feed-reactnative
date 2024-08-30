@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   selectedReasonText: {
     color: STYLES.$IS_DARK_THEME
       ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
-      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK,
   },
   defaultReasonText: {
     color: STYLES.$IS_DARK_THEME
