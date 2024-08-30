@@ -24,9 +24,7 @@ export const styles = StyleSheet.create({
     lineHeight: 20,
   },
   postedDetail: {
-    color: STYLES.$IS_DARK_THEME
-      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
-      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+    color: STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK,
     fontSize: 14,
     fontWeight: "400",
   },
