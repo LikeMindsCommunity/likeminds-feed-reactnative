@@ -53,8 +53,8 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     borderBottomColor: STYLES.$IS_DARK_THEME
-      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
-      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
+      ? "#121212"
+      : "#D0D8E2",
     borderBottomWidth: 1,
     paddingHorizontal: 15,
     paddingVertical: 7,
