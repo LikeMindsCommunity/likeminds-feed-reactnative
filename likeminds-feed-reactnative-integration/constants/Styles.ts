@@ -45,6 +45,7 @@ export class STYLES {
     darkTextColor: "#000000",
     lightGreyTextColor: "#00000077",
     darkGreyTextColor: "#00000099",
+    reportRed: "#FB1609"
   };
   static $FONT_SIZES = {
     XS: 10,

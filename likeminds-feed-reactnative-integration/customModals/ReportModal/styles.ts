@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   reportBtn: {
-    backgroundColor: STYLES.$COLORS.RED,
+    backgroundColor: STYLES.$COLORS.reportRed,
     borderRadius: 25,
     paddingHorizontal: 50,
     paddingVertical: STYLES.$PADDINGS.MEDIUM,
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   reportBtnText: {
     color: STYLES.$IS_DARK_THEME
       ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
-      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK,
     fontSize: STYLES.$FONT_SIZES.LARGE,
     fontWeight: STYLES.$FONT_WEIGHT.BOLD,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   titleText: {
-    color: STYLES.$COLORS.RED,
+    color: STYLES.$COLORS.reportRed,
     fontSize: STYLES.$FONT_SIZES.XXL,
     fontWeight: STYLES.$FONT_WEIGHT.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
