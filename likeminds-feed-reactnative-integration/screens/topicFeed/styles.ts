@@ -4,7 +4,7 @@ import Layout from "../../constants/Layout";
 
 export const styles = StyleSheet.create({
   page: {
-    backgroundColor: STYLES.$BACKGROUND_COLORS.LIGHT,
+    backgroundColor: STYLES.$IS_DARK_THEME ? STYLES.$BACKGROUND_COLORS.DARK : STYLES.$BACKGROUND_COLORS.LIGHT,
     flex: 1,
   },
   itemContainer: {
