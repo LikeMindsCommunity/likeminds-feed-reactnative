@@ -96,8 +96,8 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   editIcon: {
-    height: Layout.normalize(34),
-    width: Layout.normalize(25),
+    height: Layout.normalize(23),
+    width: Layout.normalize(34),
     resizeMode: "contain",
     tintColor: STYLES.$COLORS.PRIMARY,
   },

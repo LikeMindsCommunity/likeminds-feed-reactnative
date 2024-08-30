@@ -472,12 +472,12 @@ const CreatePostComponent = () => {
                 <View>
                   <Text
                     style={{
-                      fontSize: Layout.normalize(17),
+                      fontSize: Layout.normalize(14),
                       color: STYLES.$COLORS.PRIMARY,
-                      paddingVertical: Layout.normalize(5),
+                      paddingVertical: Layout.normalize(4),
                       backgroundColor: `hsla(${STYLES.$HUE}, 75%, 59%, 0.1)`,
                       borderRadius: Layout.normalize(5),
-                      paddingHorizontal: Layout.normalize(12),
+                      paddingHorizontal: Layout.normalize(8),
                       margin: Layout.normalize(5),
                       fontFamily: STYLES.$FONT_TYPES.MEDIUM,
                       ...(selectedTopicsStyle !== undefined
@@ -495,7 +495,8 @@ const CreatePostComponent = () => {
                       style={{
                         backgroundColor: `hsla(${STYLES.$HUE}, 75%, 59%, 0.1)`,
                         borderRadius: 5,
-                        paddingHorizontal: 15,
+                        paddingHorizontal: Layout.normalize(4),
+                        paddingVertical: Layout.normalize(2),
                         marginLeft: 5,
                       }}
                     >
