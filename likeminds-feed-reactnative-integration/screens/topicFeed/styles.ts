@@ -83,7 +83,7 @@ export const styles = StyleSheet.create({
   input: {
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
-    color: STYLES.$COLORS.SECONDARY,
+    color: STYLES.$IS_DARK_THEME ? STYLES.$COLORS.SECONDARY: STYLES.$COLORS.BLACK,
     paddingVertical: Layout.normalize(10),
     marginBottom: Layout.normalize(2),
     width: Layout.window.width - Layout.normalize(150),
