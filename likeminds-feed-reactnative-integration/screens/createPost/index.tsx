@@ -469,16 +469,17 @@ const CreatePostComponent = () => {
                 key={index}
                 style={{ flexDirection: "row", alignItems: "center" }}
               >
-                <View>
+                <View style={{
+                  paddingVertical: Layout.normalize(4),
+                  backgroundColor: `hsla(${STYLES.$HUE}, 75%, 59%, 0.1)`,
+                  borderRadius: 5,
+                  paddingHorizontal: Layout.normalize(8),
+                  margin: Layout.normalize(5),
+                }}>
                   <Text
                     style={{
-                      fontSize: Layout.normalize(14),
+                      fontSize: Layout.normalize(15),
                       color: STYLES.$COLORS.PRIMARY,
-                      paddingVertical: Layout.normalize(4),
-                      backgroundColor: `hsla(${STYLES.$HUE}, 75%, 59%, 0.1)`,
-                      borderRadius: Layout.normalize(5),
-                      paddingHorizontal: Layout.normalize(8),
-                      margin: Layout.normalize(5),
                       fontFamily: STYLES.$FONT_TYPES.MEDIUM,
                       ...(selectedTopicsStyle !== undefined
                         ? selectedTopicsStyle
@@ -522,27 +523,27 @@ const CreatePostComponent = () => {
             <TouchableOpacity onPress={() => handleAllTopicPress()}>
               <View
                 style={{
-                  paddingVertical: Layout.normalize(7),
+                  paddingVertical: Layout.normalize(4),
                   backgroundColor: `hsla(${STYLES.$HUE}, 75%, 59%, 0.1)`,
                   borderRadius: Layout.normalize(5),
                   flexDirection: "row",
                   alignItems: "center",
-                  paddingHorizontal: Layout.normalize(12),
+                  paddingHorizontal: Layout.normalize(8),
                 }}
               >
                 <Image
                   source={require("../../assets/images/plusAdd_icon3x.png")}
                   style={{
                     tintColor: STYLES.$COLORS.PRIMARY,
-                    width: Layout.normalize(15),
-                    height: Layout.normalize(15),
+                    width: Layout.normalize(12),
+                    height: Layout.normalize(12),
                     marginRight: Layout.normalize(5), // Add margin to separate Image and Text
                     ...(plusIconStyle !== undefined ? plusIconStyle : {}),
                   }}
                 />
                 <Text
                   style={{
-                    fontSize: Layout.normalize(16),
+                    fontSize: Layout.normalize(15),
                     color: STYLES.$COLORS.PRIMARY,
                     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
                   }}
