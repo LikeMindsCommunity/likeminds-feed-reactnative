@@ -191,7 +191,7 @@ const TopicFeed = () => {
             <View style={styles.chatRoomInfo}>
               <Text
                 style={{
-                  color: STYLES.$COLORS.FONT_PRIMARY,
+                  color: STYLES.$IS_DARK_THEME ? STYLES.$COLORS.FONT_PRIMARY : STYLES.$COLORS.BLACK,
                   fontSize: STYLES.$FONT_SIZES.XXL,
                   fontFamily: STYLES.$FONT_TYPES.BOLD,
                   ...(selectTopicHeaderStyle !== undefined
