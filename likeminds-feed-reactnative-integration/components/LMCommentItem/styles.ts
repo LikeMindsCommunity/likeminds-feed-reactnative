@@ -42,7 +42,7 @@ export const styles = StyleSheet.create({
     borderBottomWidth: 1,
     marginVertical: 1,
     borderBottomColor: STYLES.$IS_DARK_THEME
-      ? "#D0D8E2"
+      ? "#121212"
       : "#D0D8E2",
   },
   commentContentView: {
