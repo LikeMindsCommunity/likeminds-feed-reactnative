@@ -70,7 +70,7 @@ const FilterTopics = () => {
       setShowTopics(true);
       const topicsObject = {};
       topics.forEach(topic => {
-        topicsObject[topic.Id] = {
+        topicsObject[topic.id] = {
           allParentIds: topic.allParentIds,
           isEnabled: topic.isEnabled,
           isSearchable: topic.isSearchable,

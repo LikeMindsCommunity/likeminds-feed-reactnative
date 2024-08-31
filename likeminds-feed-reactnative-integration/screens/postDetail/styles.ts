@@ -74,7 +74,7 @@ export const styles = StyleSheet.create({
     position: "absolute",
     backgroundColor: STYLES.$IS_DARK_THEME
       ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
-      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
+      : "#EFEFEF",
     paddingHorizontal: 15,
     width: Layout.window.width,
     paddingVertical: 8,
@@ -115,7 +115,7 @@ export const styles = StyleSheet.create({
   lightGreyColorText: {
     color: STYLES.$IS_DARK_THEME
       ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
-      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+      : "#9B9B9B",
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
   },
   taggingListView: {

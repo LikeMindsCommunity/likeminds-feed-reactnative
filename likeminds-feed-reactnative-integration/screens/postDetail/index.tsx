@@ -435,6 +435,14 @@ const PostDetailComponent = React.memo(() => {
                         // this renders the post section
                         <>
                           {renderPostDetail()}
+
+                          {/* Divider */}
+
+                          {!STYLES.$SHOULD_HIDE_SEPARATOR ? <View style={{
+                            height: 11,
+                            backgroundColor: STYLES.$IS_DARK_THEME ? "#121212" : "#D0D8E2"
+                          }} /> : null}
+                          
                           {postDetail?.commentsCount > 0 && (
                             <Text
                               style={[

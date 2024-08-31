@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View, Pressable } from "react-native";
 import React, { useState } from "react";
 import SwiperFlatList from "react-native-swiper-flatlist";
 import { LMCarouselProps } from "./types";
@@ -87,10 +87,10 @@ const LMCarousel = React.memo(
           inactiveIndicatorStyle,
         ])}
         renderItem={({ item, index }) => (
-          <View onStartShouldSetResponder={() => true}>
+          <View style={styles.swiperListMediaContainer} onStartShouldSetResponder={() => true}>
             {/* this section render image */}
             {item?.attachmentType === IMAGE_ATTACHMENT_TYPE && (
-              <TouchableOpacity
+              <Pressable
                 onPress={() => {
                   navigation.navigate(CAROUSEL_SCREEN, {
                     dataObject: post,
@@ -128,11 +128,11 @@ const LMCarousel = React.memo(
                   }
                   cancelButton={cancelButton}
                 />
-              </TouchableOpacity>
+              </Pressable>
             )}
             {/* this section render video */}
             {item?.attachmentType === VIDEO_ATTACHMENT_TYPE && (
-              <TouchableOpacity
+              <Pressable
                 onPress={() => {
                   navigation.navigate(CAROUSEL_SCREEN, {
                     dataObject: post,
@@ -188,7 +188,7 @@ const LMCarousel = React.memo(
                   postId={videoItem?.postId}
                   showMuteUnmute={true}
                 />
-              </TouchableOpacity>
+              </Pressable>
             )}
           </View>
         )}

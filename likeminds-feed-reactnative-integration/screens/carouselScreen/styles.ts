@@ -5,10 +5,10 @@ import Layout from "../../constants/Layout";
 const styles = StyleSheet.create({
   header: {
     display: "flex",
-    flex: 0,
-    top: Platform.OS === "ios" ? 50 : 20,
+    flex: Platform.OS === "ios" ? 0.1 : 0,
+    top: Platform.OS === "ios" ? 55 : 20,
     justifyContent: "center",
-    position: "absolute",
+    position: Platform.OS === "ios" ? "relative" : "absolute",
     left: 0,
     right: 0,
     zIndex: 1,

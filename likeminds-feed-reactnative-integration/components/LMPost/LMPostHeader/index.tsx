@@ -205,7 +205,7 @@ const LMPostHeader = React.memo(() => {
                     ? customPostHeaderStyle?.menuIcon?.color
                     : STYLES.$IS_DARK_THEME
                     ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
-                    : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT
+                    : STYLES.$COLORS.TEXT_COLOR
                 }
                 width={
                   customPostHeaderStyle?.menuIcon?.width

@@ -22,4 +22,9 @@ export const styles = StyleSheet.create({
     height: 8,
     marginHorizontal: 4,
   },
+  swiperListMediaContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  }
 });

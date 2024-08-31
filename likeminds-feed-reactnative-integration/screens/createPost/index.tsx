@@ -469,16 +469,17 @@ const CreatePostComponent = () => {
                 key={index}
                 style={{ flexDirection: "row", alignItems: "center" }}
               >
-                <View>
+                <View style={{
+                  paddingVertical: Layout.normalize(4),
+                  backgroundColor: `hsla(${STYLES.$HUE}, 75%, 59%, 0.1)`,
+                  borderRadius: 5,
+                  paddingHorizontal: Layout.normalize(8),
+                  margin: Layout.normalize(5),
+                }}>
                   <Text
                     style={{
-                      fontSize: Layout.normalize(17),
+                      fontSize: Layout.normalize(15),
                       color: STYLES.$COLORS.PRIMARY,
-                      paddingVertical: Layout.normalize(5),
-                      backgroundColor: `hsla(${STYLES.$HUE}, 75%, 59%, 0.1)`,
-                      borderRadius: Layout.normalize(5),
-                      paddingHorizontal: Layout.normalize(12),
-                      margin: Layout.normalize(5),
                       fontFamily: STYLES.$FONT_TYPES.MEDIUM,
                       ...(selectedTopicsStyle !== undefined
                         ? selectedTopicsStyle
@@ -495,7 +496,8 @@ const CreatePostComponent = () => {
                       style={{
                         backgroundColor: `hsla(${STYLES.$HUE}, 75%, 59%, 0.1)`,
                         borderRadius: 5,
-                        paddingHorizontal: 15,
+                        paddingHorizontal: Layout.normalize(4),
+                        paddingVertical: Layout.normalize(2),
                         marginLeft: 5,
                       }}
                     >
@@ -521,27 +523,27 @@ const CreatePostComponent = () => {
             <TouchableOpacity onPress={() => handleAllTopicPress()}>
               <View
                 style={{
-                  paddingVertical: Layout.normalize(7),
+                  paddingVertical: Layout.normalize(4),
                   backgroundColor: `hsla(${STYLES.$HUE}, 75%, 59%, 0.1)`,
                   borderRadius: Layout.normalize(5),
                   flexDirection: "row",
                   alignItems: "center",
-                  paddingHorizontal: Layout.normalize(12),
+                  paddingHorizontal: Layout.normalize(8),
                 }}
               >
                 <Image
                   source={require("../../assets/images/plusAdd_icon3x.png")}
                   style={{
                     tintColor: STYLES.$COLORS.PRIMARY,
-                    width: Layout.normalize(15),
-                    height: Layout.normalize(15),
+                    width: Layout.normalize(12),
+                    height: Layout.normalize(12),
                     marginRight: Layout.normalize(5), // Add margin to separate Image and Text
                     ...(plusIconStyle !== undefined ? plusIconStyle : {}),
                   }}
                 />
                 <Text
                   style={{
-                    fontSize: Layout.normalize(16),
+                    fontSize: Layout.normalize(15),
                     color: STYLES.$COLORS.PRIMARY,
                     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
                   }}
@@ -775,6 +777,10 @@ const CreatePostComponent = () => {
               <LMCarousel
                 {...postMediaStyle?.carousel}
                 attachments={formattedMediaAttachments}
+                post={{ 
+                  attachments: formattedMediaAttachments,
+                  user: memberData 
+                }}
                 showCancel={
                   postMediaStyle?.carousel?.showCancel != undefined
                     ? postMediaStyle?.carousel?.showCancel
@@ -900,8 +906,8 @@ const CreatePostComponent = () => {
               onTap={() => {
                 formattedMediaAttachments.length > 0
                   ? handleGalleryProp
-                    ? handleGalleryProp(isImage ? SELECT_IMAGE : SELECT_VIDEO)
-                    : handleGallery(isImage ? SELECT_IMAGE : SELECT_VIDEO)
+                    ? handleGalleryProp(SELECT_BOTH)
+                    : handleGallery(SELECT_BOTH)
                   : formattedDocumentAttachments.length > 0
                   ? handleDocumentProp
                     ? handleDocumentProp()

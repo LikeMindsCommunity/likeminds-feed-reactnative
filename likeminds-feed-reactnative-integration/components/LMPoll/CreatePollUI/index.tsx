@@ -115,6 +115,13 @@ const CreatePollUI = () => {
         </View>
       </View>
 
+      {/* Divider */}
+
+      { !STYLES.$SHOULD_HIDE_SEPARATOR ? <View style={{
+        height: 11,
+        backgroundColor: STYLES.$IS_DARK_THEME ? "#121212" : "#D0D8E2"
+      }} /> : null }
+
       {/* Answers options */}
       <View style={styles.answerOptions}>
         <View style={styles.paddingHorizontal15}>
@@ -193,6 +200,13 @@ const CreatePollUI = () => {
         </TouchableOpacity>
       </View>
 
+      {/* Divider */}
+
+      { !STYLES.$SHOULD_HIDE_SEPARATOR ? <View style={{
+        height: 11,
+        backgroundColor: STYLES.$IS_DARK_THEME ? "#121212" : "#D0D8E2"
+      }} /> : null }
+
       {/* Poll expire Time and Date selection */}
       <View style={[styles.answerOptions, styles.paddingHorizontal15]}>
         <View>
@@ -262,6 +276,7 @@ const CreatePollUI = () => {
                 onChange={onChange}
                 minimumDate={mode === "date" ? new Date() : undefined}
                 accentColor={STYLES.$COLORS.PRIMARY}
+                themeVariant={STYLES.$IS_DARK_THEME ? "dark" : "light"}
               />
             )}
           </TouchableOpacity>
@@ -294,8 +309,8 @@ const CreatePollUI = () => {
             pollAdvancedOptionTextStyle ? pollAdvancedOptionTextStyle : null,
             {
               color: STYLES.$IS_DARK_THEME
-                ? STYLES.$COLORS.PRIMARY
-                : STYLES.$COLORS.WHITE,
+                ? STYLES.$COLORS.WHITE
+                : STYLES.$COLORS.PRIMARY,
             },
           ]}
         >
@@ -333,8 +348,8 @@ const CreatePollUI = () => {
                 styles.blackColor,
                 {
                   color: STYLES.$IS_DARK_THEME
-                    ? STYLES.$COLORS.PRIMARY
-                    : STYLES.$COLORS.WHITE,
+                    ? STYLES.$COLORS.WHITE
+                    : STYLES.$COLORS.PRIMARY,
                 },
               ]}
             >
@@ -374,8 +389,8 @@ const CreatePollUI = () => {
                 styles.blackColor,
                 {
                   color: STYLES.$IS_DARK_THEME
-                    ? STYLES.$COLORS.PRIMARY
-                    : STYLES.$COLORS.WHITE,
+                    ? STYLES.$COLORS.WHITE
+                    : STYLES.$COLORS.PRIMARY,
                 },
               ]}
             >
@@ -415,8 +430,8 @@ const CreatePollUI = () => {
                 styles.blackColor,
                 {
                   color: STYLES.$IS_DARK_THEME
-                    ? STYLES.$COLORS.PRIMARY
-                    : STYLES.$COLORS.WHITE,
+                    ? STYLES.$COLORS.WHITE
+                    : STYLES.$COLORS.PRIMARY,
                 },
               ]}
             >
