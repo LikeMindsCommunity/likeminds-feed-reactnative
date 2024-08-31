@@ -14,6 +14,6 @@ export const defaultStyles = StyleSheet.create({
     nameInitialText: {
       color: STYLES.$COLORS.WHITE,
       fontWeight: STYLES.$FONT_WEIGHT.MEDIUM,
-      fontSize: 16,
+      fontSize: 20,
     },
   });

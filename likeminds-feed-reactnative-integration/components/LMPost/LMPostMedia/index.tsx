@@ -1,4 +1,4 @@
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Pressable } from "react-native";
 import React from "react";
 import LMCarousel from "../../LMMedia/LMCarousel";
 import LMDocument from "../../LMMedia/LMDocument";
@@ -43,7 +43,7 @@ const LMPostMedia = React.memo(() => {
     switch (post?.attachments && post?.attachments[0]?.attachmentType) {
       case IMAGE_ATTACHMENT_TYPE: {
         return (
-          <TouchableOpacity
+          <Pressable
             onPress={() => {
               navigation.navigate(CAROUSEL_SCREEN, {
                 dataObject: post,
@@ -69,12 +69,12 @@ const LMPostMedia = React.memo(() => {
               }
               {...customPostMediaStyle?.image}
             />
-          </TouchableOpacity>
+          </Pressable>
         );
       }
       case VIDEO_ATTACHMENT_TYPE: {
         return (
-          <TouchableOpacity
+          <Pressable
             onPress={() => {
               navigation.navigate(CAROUSEL_SCREEN, {
                 dataObject: post,
@@ -112,7 +112,7 @@ const LMPostMedia = React.memo(() => {
               videoInCarousel={false}
               showMuteUnmute={true}
             />
-          </TouchableOpacity>
+          </Pressable>
         );
       }
       case DOCUMENT_ATTACHMENT_TYPE: {

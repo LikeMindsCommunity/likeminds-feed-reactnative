@@ -286,6 +286,17 @@ const PostsListComponent = ({ topics }: any) => {
               }
             }}
             viewabilityConfig={{ viewAreaCoveragePercentThreshold: 60 }}
+            ItemSeparatorComponent={() => {
+              return (
+                <>
+                  {!STYLES.$SHOULD_HIDE_SEPARATOR ? <View style={{
+                    height: 11,
+                    backgroundColor: STYLES.$IS_DARK_THEME ? "#121212" : "#D0D8E2"
+                  }} /> : null}
+                </>
+              )
+            }}
+            
           />
         ) : (
           <View style={[styles.noDataView, postListStyle?.noPostView]}>

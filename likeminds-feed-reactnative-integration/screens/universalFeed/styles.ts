@@ -62,7 +62,8 @@ export const styles = StyleSheet.create({
     backgroundColor: STYLES.$IS_DARK_THEME
       ? STYLES.$BACKGROUND_COLORS.DARK
       : STYLES.$BACKGROUND_COLORS.LIGHT,
-    marginBottom: 10,
+    borderBottomWidth: 11,
+    borderBottomColor: STYLES.$IS_DARK_THEME ? "#121212" : "#D0D8E2",
     height: 50,
   },
   justifyCenter: {

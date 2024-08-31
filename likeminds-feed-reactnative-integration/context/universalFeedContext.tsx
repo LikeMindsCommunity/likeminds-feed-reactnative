@@ -451,7 +451,7 @@ export const UniversalFeedContextProvider = ({
         if (item?.pollType === PollType.DEFERRED) {
           const pollSubmissionCall = await myClient.submitPollVote({
             pollId: item?.id,
-            votes: [item?.options[pollIndex]?.Id],
+            votes: [item?.options[pollIndex]?.id],
           });
           await reloadPost();
           dispatch({
@@ -465,7 +465,7 @@ export const UniversalFeedContextProvider = ({
           if (!isSelected) {
             const pollSubmissionCall = await myClient.submitPollVote({
               pollId: item?.id,
-              votes: [item?.options[pollIndex]?.Id],
+              votes: [item?.options[pollIndex]?.id],
             });
             await reloadPost();
             dispatch({
@@ -525,7 +525,7 @@ export const UniversalFeedContextProvider = ({
     if (shouldShowSubmitPollButton) {
       try {
         const votes = selectedPolls?.map((itemIndex: any) => {
-          return item?.options[itemIndex]?.Id;
+          return item?.options[itemIndex]?.id;
         });
         const pollSubmissionCall = await myClient.submitPollVote({
           pollId: item?.id,

@@ -14,7 +14,7 @@ import { SET_MUTED_STATE } from "../../store/types/types";
 import Slider from "@react-native-community/slider";
 import { useLMFeedStyles } from "../../lmFeedProvider";
 
-function LMVideoPlayer({ url }) {
+function LMVideoPlayer({ url, setDisableGesture }) {
   const ref = useRef<any>();
   const [clicked, setClicked] = useState(false);
   const [puased, setPaused] = useState(false);
@@ -33,6 +33,7 @@ function LMVideoPlayer({ url }) {
 
   const resetClicked = () => {
     setTimeout(() => {
+      setDisableGesture(false)
       setClicked(false);
     }, 3000);
   };
@@ -73,6 +74,7 @@ function LMVideoPlayer({ url }) {
         style={styles.video}
         onPress={() => {
           if (progress !== null) {
+            setDisableGesture(true);
             setClicked(true);
             resetClicked(); // Reset clicked after 3 seconds
           }

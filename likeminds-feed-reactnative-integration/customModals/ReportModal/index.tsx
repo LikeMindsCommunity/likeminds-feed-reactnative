@@ -356,7 +356,7 @@ const ReportModal = ({
                   : () => null
               }
             >
-              <Text style={styles.reportBtnText}>REPORT</Text>
+              <Text style={styles.reportBtnText}>{reportType == POST_TYPE ? "REPORT POST" : "REPORT"}</Text>
             </TouchableOpacity>
           </View>
         </TouchableOpacity>

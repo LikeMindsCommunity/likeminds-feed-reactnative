@@ -33,9 +33,10 @@ import { CallBack } from "../../callBacks/callBackClass";
 const CarouselScreen = ({ navigation, route }: any) => {
   const dispatch = useAppDispatch();
   const { index, dataObject } = route.params;
+  const [disableGesture, setDisableGesture] = useState(false)
   const data = dataObject?.attachments;
 
-  const attachmentsUrls = data.map((item) => ({
+  const attachmentsUrls = data?.map((item) => ({
     ["url"]: item.attachmentMeta.url,
   }));
 
@@ -59,8 +60,8 @@ const CarouselScreen = ({ navigation, route }: any) => {
       imageCount++;
     }
   }
-  const userName = dataObject?.user?.name;
-  const date: Date = new Date(dataObject?.createdAt);
+  const userName = dataObject?.user?.name ?? "";
+  const date: Date = new Date(dataObject?.createdAt ?? Date.now());
   // Convert UTC to IST
   date.setMinutes(date.getMinutes() + 330); // 5 hours and 30 minutes offset
 
@@ -215,6 +216,7 @@ const CarouselScreen = ({ navigation, route }: any) => {
       </View>
       <SwiperFlatList
         data={data}
+        disableGesture={disableGesture}
         index={index}
         renderItem={({ item, index }) => {
           return (
@@ -245,7 +247,7 @@ const CarouselScreen = ({ navigation, route }: any) => {
                 />
               ) : item?.attachmentType === VIDEO_ATTACHMENT_TYPE &&
                 index === currentIndex ? (
-                <LMVideoPlayer url={item?.attachmentMeta?.url} />
+                <LMVideoPlayer url={item?.attachmentMeta?.url} setDisableGesture={setDisableGesture} />
               ) : item?.attachmentType === VIDEO_ATTACHMENT_TYPE &&
                 index !== currentIndex ? (
                 <Image

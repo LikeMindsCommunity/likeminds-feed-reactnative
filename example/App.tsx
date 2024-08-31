@@ -34,6 +34,7 @@ import {
   Linking,
   PermissionsAndroid,
   Platform,
+  SafeAreaView,
   ViewStyle,
 } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
@@ -59,6 +60,7 @@ import CreatePollScreenWrapper from './feedScreen/createPollScreenWrapper';
 import {LMFeedClient, InitiateUserRequest} from '@likeminds.community/feed-rn';
 import {LoginSchemaRO} from './login/loginSchemaRO';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import STYLES from '@likeminds.community/feed-rn-core/constants/Styles';
 
 class CustomCallbacks implements LMFeedCallbacks, LMCarouselScreenCallbacks {
   onEventTriggered(eventName: string, eventProperties?: Map<string, string>) {
@@ -246,6 +248,7 @@ const App = () => {
       };
     },
   );
+
 
   return (
     <KeyboardAvoidingView

@@ -4,7 +4,7 @@ import Layout from "../../constants/Layout";
 
 export const styles = StyleSheet.create({
   page: {
-    backgroundColor: STYLES.$BACKGROUND_COLORS.LIGHT,
+    backgroundColor: STYLES.$IS_DARK_THEME ? STYLES.$BACKGROUND_COLORS.DARK : STYLES.$BACKGROUND_COLORS.LIGHT,
     flex: 1,
   },
   itemContainer: {
@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     padding: STYLES.$PADDINGS.MEDIUM,
     justifyContent: "center",
-    backgroundColor: STYLES.$COLORS.TERTIARY,
+    backgroundColor: STYLES.$IS_DARK_THEME ? STYLES.$BACKGROUND_COLORS.DARK : STYLES.$COLORS.TERTIARY,
     flex: 1,
   },
   avatar: {
@@ -38,7 +38,9 @@ export const styles = StyleSheet.create({
   title: {
     fontSize: STYLES.$FONT_SIZES.LARGE,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
-    color: STYLES.$COLORS.FONT_PRIMARY,
+    color: STYLES.$IS_DARK_THEME
+      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
     lineHeight: 20,
     fontWeight: "500",
     gap: 8,
@@ -61,7 +63,7 @@ export const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   border: {
-    borderBottomColor: "#D0D8E2",
+    borderBottomColor: STYLES.$IS_DARK_THEME ? "#121212" : "#D0D8E2",
     borderBottomWidth: 1,
   },
   search: {
@@ -69,7 +71,7 @@ export const styles = StyleSheet.create({
     width: Layout.normalize(20),
     resizeMode: "contain",
   },
-  chatRoomInfo: { gap: Layout.normalize(5) },
+  chatRoomInfo: { gap: Layout.normalize(0) },
   participants: {
     display: "flex",
     flexDirection: "row",
@@ -81,7 +83,7 @@ export const styles = StyleSheet.create({
   input: {
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
-    color: STYLES.$COLORS.SECONDARY,
+    color: STYLES.$IS_DARK_THEME ? STYLES.$COLORS.SECONDARY: STYLES.$COLORS.BLACK,
     paddingVertical: Layout.normalize(10),
     marginBottom: Layout.normalize(2),
     width: Layout.window.width - Layout.normalize(150),
