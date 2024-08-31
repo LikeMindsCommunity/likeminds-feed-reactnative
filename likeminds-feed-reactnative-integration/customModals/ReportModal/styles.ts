@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   reportBtn: {
-    backgroundColor: STYLES.$COLORS.reportRed,
+    backgroundColor: STYLES.$COLORS.REPORT_RED,
     borderRadius: 25,
     paddingHorizontal: 50,
     paddingVertical: STYLES.$PADDINGS.MEDIUM,
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   titleText: {
-    color: STYLES.$COLORS.reportRed,
+    color: STYLES.$COLORS.REPORT_RED,
     fontSize: STYLES.$FONT_SIZES.XXL,
     fontWeight: STYLES.$FONT_WEIGHT.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,

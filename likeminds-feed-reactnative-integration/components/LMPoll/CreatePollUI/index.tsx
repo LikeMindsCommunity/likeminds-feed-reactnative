@@ -117,10 +117,10 @@ const CreatePollUI = () => {
 
       {/* Divider */}
 
-      <View style={{
+      { !STYLES.$SHOULD_HIDE_SEPARATOR ? <View style={{
         height: 11,
         backgroundColor: STYLES.$IS_DARK_THEME ? "#121212" : "#D0D8E2"
-      }} />
+      }} /> : null }
 
       {/* Answers options */}
       <View style={styles.answerOptions}>
@@ -202,10 +202,10 @@ const CreatePollUI = () => {
 
       {/* Divider */}
 
-      <View style={{
+      { !STYLES.$SHOULD_HIDE_SEPARATOR ? <View style={{
         height: 11,
         backgroundColor: STYLES.$IS_DARK_THEME ? "#121212" : "#D0D8E2"
-      }} />
+      }} /> : null }
 
       {/* Poll expire Time and Date selection */}
       <View style={[styles.answerOptions, styles.paddingHorizontal15]}>

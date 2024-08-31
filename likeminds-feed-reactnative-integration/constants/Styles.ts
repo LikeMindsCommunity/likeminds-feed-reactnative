@@ -21,12 +21,14 @@ interface StylesProps {
   primaryLightTextColor?: string;
   secondaryLightTextColor?: string;
   fontTypes?: FontTypes;
+  shouldHideSeparator?: boolean;
 }
 
 const isIOS = Platform.OS === "ios" ? true : false;
 
 export class STYLES {
   static $IS_DARK_THEME = false;
+  static $SHOULD_HIDE_SEPARATOR = false;
   static $HUE = 244;
   static $COLORS = {
     PRIMARY: "hsl(244, 75%, 59%)",
@@ -41,11 +43,11 @@ export class STYLES {
     TEXT_COLOR: "#484F67",
     LIGHT_GREY: "#e0e0e0",
     RED: "#ff0000",
+    REPORT_RED: "#FB1609",
     whiteTextColor: "#ffffff",
     darkTextColor: "#000000",
     lightGreyTextColor: "#00000077",
     darkGreyTextColor: "#00000099",
-    reportRed: "#FB1609"
   };
   static $FONT_SIZES = {
     XS: 10,
@@ -133,23 +135,25 @@ export class STYLES {
     primaryLightTextColor,
     secondaryLightTextColor,
     fontTypes,
+    shouldHideSeparator
   }: StylesProps) {
+    STYLES.$SHOULD_HIDE_SEPARATOR = shouldHideSeparator ? shouldHideSeparator : false
     STYLES.$COLORS = {
       ...STYLES.$COLORS,
       PRIMARY: primaryColor
         ? primaryColor
-        : `hsl( ${hue ? hue : 222}, 53%, 15%)`,
+        : `hsl( ${hue ? hue : 244}, 75%, 59%)`,
       SECONDARY: secondaryColor
         ? secondaryColor
-        : `hsl(${hue ? hue : 222}, 47%, 31%)`,
+        : `hsl(${hue ? hue : 244}, 64%, 91%)`, 
       FONT_PRIMARY: fontColor
-        ? fontColor
+        ? fontColor      
         : primaryColor
         ? primaryColor
-        : `hsl(${hue ? hue : 222}, 53%, 15%)`,
+        : `hsl(${hue ? hue : 244}, 75%, 59%)`,
       JOINED_BTN: lightBackgroundColor
         ? lightBackgroundColor
-        : `hsl(${hue ? hue : 222}, 22%, 93%)`,
+        : `hsl(${hue ? hue : 244}, 22%, 93%)`,
     };
     STYLES.$FONT_TYPES = {
       ...STYLES.$FONT_TYPES,
