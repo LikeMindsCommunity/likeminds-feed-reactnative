@@ -249,11 +249,6 @@ const App = () => {
     },
   );
 
-  useEffect(() => {
-    STYLES.setTheme({
-      shouldHideSeparator: true
-    });
-  },[]);
 
   return (
     <KeyboardAvoidingView
