@@ -21,7 +21,6 @@ import LMPostPollText from "../../LMPost/LMPostPollText";
 import { decode } from "../../../utils";
 import { LMText } from "../../../uiComponents";
 import { PollType } from "../../../enums/Poll";
-import { useLMFeedStyles } from "../../../lmFeedProvider";
 import { useUniversalFeedCustomisableMethodsContext } from "../../../context";
 import { usePollCustomisableMethodsContext } from "../../../context/pollCustomisableCallback";
 
@@ -76,8 +75,7 @@ const LMPostPollUI = ({
   } = usePollCustomisableMethodsContext();
 
   //styling props
-  const LMFeedContextStyles = useLMFeedStyles();
-  const { pollStyle }: any = LMFeedContextStyles;
+  const pollStyle = STYLES.$POLL_STYLE;
   const pollQuestionStyles = pollStyle?.pollQuestionStyles;
   const pollOptionSelectedColor = pollStyle?.pollOptionSelectedColor;
   const pollOptionSelectedTextStyles = pollStyle?.pollOptionSelectedTextStyles;

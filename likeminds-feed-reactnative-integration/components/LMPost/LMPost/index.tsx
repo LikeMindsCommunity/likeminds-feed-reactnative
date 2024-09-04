@@ -10,7 +10,6 @@ import { LMPostContextProvider, useLMPostContext } from "../../../context";
 import { useAppSelector } from "../../../store/store";
 import Layout from "../../../constants/Layout";
 import STYLES from "../../../constants/Styles";
-import { useLMFeedStyles } from "../../../lmFeedProvider";
 
 const LMPost = ({
   navigation,
@@ -37,8 +36,7 @@ const LMPost = ({
 const LMPostComponent = React.memo(() => {
   const { post } = useLMPostContext();
   const allTopics = useAppSelector((state) => state.feed.topics);
-  const LMFeedContextStyles = useLMFeedStyles();
-  const { postListStyle }: any = LMFeedContextStyles;
+  const postListStyle = STYLES.$POST_LIST_STYLE;
 
   return (
     <View style={styles.mainContainer}>
@@ -57,7 +55,7 @@ const LMPostComponent = React.memo(() => {
                       backgroundColor: `hsla(${STYLES.$HUE}, 75%, 59%, 0.1)`,
                       marginLeft: index === 0 ? 15 : 5,
                       marginTop: Layout.normalize(10),
-                      borderRadius: Layout.normalize(5)
+                      borderRadius: Layout.normalize(5),
                     },
                     postListStyle?.postContent?.postTopicStyle?.box,
                   ]}

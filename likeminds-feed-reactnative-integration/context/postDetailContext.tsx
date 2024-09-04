@@ -31,7 +31,6 @@ import {
   UNPIN_POST_MENU_ITEM,
 } from "../constants/Strings";
 import { Keyboard, Platform, TextInput, View } from "react-native";
-import { useLMFeedStyles } from "../lmFeedProvider";
 import {
   addComment,
   addCommentStateHandler,
@@ -89,6 +88,7 @@ import {
   SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
 } from "../store/types/types";
 import { commentResponseModelConvertor } from "../utils/commentResponseModelConvertor";
+import STYLES from "../constants/Styles";
 
 interface PostDetailContextProps {
   children: ReactNode;
@@ -314,8 +314,7 @@ export const PostDetailContextProvider = ({
   const [isPaginationStopped, setIsPaginationStopped] = useState(false);
   const [showLoader, setShowLoader] = useState(true);
   const [commentOnFocus,setCommentOnFocus] = useState<LMCommentUI>();
-  const LMFeedContextStyles = useLMFeedStyles();
-  const { postListStyle, loaderStyle } = LMFeedContextStyles;
+  const loaderStyle = STYLES.$LOADER_STYLE
   const [repliesArrayUnderComments,setRepliesArrayUnderComments] = useState<any>([])
 
   // this function is executed on pull to refresh

@@ -5,7 +5,7 @@ import { LMAttachmentUI, LMPostUI } from "../../../models";
 import { LMButtonProps } from "../../../uiComponents";
 
 export interface LMCarouselProps {
-  post: LMPostUI;
+  post: any;
   attachments: Array<LMAttachmentUI>; // this represents the array of image & video attachments to be displayed
   carouselStyle?: ViewStyle; // this represents the style of the carousel container
   paginationBoxStyle?: ViewStyle; // this represents the style of the pagination container which contains the indicators

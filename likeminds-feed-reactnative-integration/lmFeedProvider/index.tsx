@@ -25,11 +25,6 @@ import { CallBack } from "../callBacks/callBackClass";
 import { Client } from "../client";
 import { CommunityConfigs } from "../communityConfigs";
 
-// Create the theme context
-export const LMFeedStylesContext = createContext<ThemeContextProps | undefined>(
-  undefined
-);
-
 // Create a context for LMFeedProvider
 const LMFeedContext = createContext<LMFeedClient | undefined>(undefined);
 
@@ -38,14 +33,6 @@ export const useLMFeed = () => {
   const context = useContext(LMFeedContext);
   if (!context) {
     throw new Error("useLMFeed must be used within an LMFeedProvider");
-  }
-  return context;
-};
-
-export const useLMFeedStyles = () => {
-  const context = useContext(LMFeedStylesContext);
-  if (!context) {
-    throw new Error("useLMFeedStyles must be used within an LMFeedProvider");
   }
   return context;
 };
@@ -59,18 +46,6 @@ export const LMFeedProvider = ({
   accessToken,
   refreshToken,
   lmFeedInterface,
-  themeStyles,
-  universalFeedStyle,
-  postListStyle,
-  loaderStyle,
-  postDetailStyle,
-  postLikesListStyle,
-  createPostStyle,
-  notificationFeedStyle,
-  topicsStyle,
-  carouselScreenStyle,
-  pollStyle,
-  createPollStyle,
 }: LMFeedProviderProps): React.JSX.Element => {
   const [isInitiated, setIsInitiated] = useState(false);
   const dispatch = useAppDispatch();
@@ -110,9 +85,9 @@ export const LMFeedProvider = ({
       const initiateResponse: any = await dispatch(
         initiateUser(
           InitiateUserRequest.builder()
-            .setUserName(userName)
-            .setApiKey(apiKey)
-            .setUUID(userUniqueId)
+            .setUserName(userName ? userName : "")
+            .setApiKey(apiKey ? apiKey : "")
+            .setUUID(userUniqueId ? userUniqueId : "")
             .build(),
           true
         )
@@ -130,9 +105,9 @@ export const LMFeedProvider = ({
 
     if (apiKey && userName && userUniqueId) {
       callInitiateAPI();
-    }else if (accessToken && refreshToken) {
+    } else if (accessToken && refreshToken) {
       callValidateApi(accessToken, refreshToken);
-    } 
+    }
   }, [accessToken, refreshToken]);
 
   useEffect(() => {
@@ -146,32 +121,10 @@ export const LMFeedProvider = ({
     if (isInitiated) callGetCommunityConfigurations();
   }, [isInitiated]);
 
-  useMemo(() => {
-    if (themeStyles) {
-      STYLES.setTheme(themeStyles);
-    }
-  }, []);
-
   return isInitiated ? (
     <LMFeedContext.Provider value={myClient}>
-      <LMFeedStylesContext.Provider
-        value={{
-          universalFeedStyle,
-          postListStyle,
-          loaderStyle,
-          postDetailStyle,
-          postLikesListStyle,
-          createPostStyle,
-          notificationFeedStyle,
-          topicsStyle,
-          carouselScreenStyle,
-          pollStyle,
-          createPollStyle,
-        }}
-      >
-        <View style={styles.flexStyling}>{children}</View>
-        {showToast && <LMToast />}
-      </LMFeedStylesContext.Provider>
+      <View style={styles.flexStyling}>{children}</View>
+      {showToast && <LMToast />}
     </LMFeedContext.Provider>
   ) : (
     <></>

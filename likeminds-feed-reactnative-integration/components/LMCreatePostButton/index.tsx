@@ -12,15 +12,14 @@ import {
   useUniversalFeedContext,
   useUniversalFeedCustomisableMethodsContext,
 } from "../../context";
-import { useLMFeedStyles } from "../../lmFeedProvider";
 import { useAppDispatch } from "../../store/store";
+import STYLES from "../../constants/Styles";
 
 const LMCreatePostButton = () => {
   const dispatch = useAppDispatch();
   const { showCreatePost, newPostButtonClick }: UniversalFeedContextValues =
     useUniversalFeedContext();
-  const LMFeedContextStyles = useLMFeedStyles();
-  const { universalFeedStyle }: any = LMFeedContextStyles;
+    const universalFeedStyle = STYLES.$UNIVERSAL_FEED_STYLE;
   const { newPostButtonClickProps } =
     useUniversalFeedCustomisableMethodsContext();
   return (

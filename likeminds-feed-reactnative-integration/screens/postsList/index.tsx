@@ -24,7 +24,6 @@ import { POST_LIKES_LIST, POST_DETAIL } from "../../constants/screenNames";
 // @ts-ignore the lib do not have TS declarations yet
 import _ from "lodash";
 import { DeleteModal, ReportModal } from "../../customModals";
-import { useLMFeedStyles } from "../../lmFeedProvider";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { clearPostDetail } from "../../store/actions/postDetail";
 import {
@@ -90,8 +89,8 @@ const PostsListComponent = ({ topics }: any) => {
     onOverlayMenuClick,
     setPostInViewport,
   }: PostListContextValues = usePostListContext();
-  const LMFeedContextStyles = useLMFeedStyles();
-  const { postListStyle, loaderStyle } = LMFeedContextStyles;
+  const postListStyle = STYLES.$POST_LIST_STYLE;
+  const loaderStyle = STYLES.$LOADER_STYLE;
   const {
     postLikeHandlerProp,
     savePostHandlerProp,
@@ -289,14 +288,19 @@ const PostsListComponent = ({ topics }: any) => {
             ItemSeparatorComponent={() => {
               return (
                 <>
-                  {!STYLES.$SHOULD_HIDE_SEPARATOR ? <View style={{
-                    height: 11,
-                    backgroundColor: STYLES.$IS_DARK_THEME ? "#121212" : "#D0D8E2"
-                  }} /> : null}
+                  {!STYLES.$SHOULD_HIDE_SEPARATOR ? (
+                    <View
+                      style={{
+                        height: 11,
+                        backgroundColor: STYLES.$IS_DARK_THEME
+                          ? "#121212"
+                          : "#D0D8E2",
+                      }}
+                    />
+                  ) : null}
                 </>
-              )
+              );
             }}
-            
           />
         ) : (
           <View style={[styles.noDataView, postListStyle?.noPostView]}>

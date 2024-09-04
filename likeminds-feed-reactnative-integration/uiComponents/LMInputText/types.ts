@@ -114,7 +114,7 @@ type LMInputTextProps = Omit<TextInputProps, 'onChange'> & {
   inputRef?: Ref<TextInput>;
 
   containerStyle?: StyleProp<ViewStyle>;
-  inputTextStyle?: TextStyle; // this represents the style of the input text style
+  inputTextStyle?: any; // this represents the style of the input text style
   placeholderText?: string; // this represents the text to be displayed before any text is entered
   placeholderTextColor?: string; // this represents the color of the placeholder text
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters'; // this represents the auto capitalization behaviour of the input text

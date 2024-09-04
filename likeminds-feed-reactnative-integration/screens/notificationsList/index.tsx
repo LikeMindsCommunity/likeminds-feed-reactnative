@@ -7,7 +7,6 @@ import {
   useNotificationFeedCustomisableMethodsContext,
 } from "../../context";
 import { styles } from "./styles";
-import { useLMFeedStyles } from "../../lmFeedProvider";
 import Layout from "../../constants/Layout";
 import STYLES from "../../constants/Styles";
 
@@ -25,8 +24,8 @@ const LMFeedNotificationFeedListView = () => {
   } = useNotificationFeedContext();
   const { onNotificationItemClickedProp } =
     useNotificationFeedCustomisableMethodsContext();
-  const LMFeedContextStyles = useLMFeedStyles();
-  const { loaderStyle, notificationFeedStyle } = LMFeedContextStyles;
+  const loaderStyle = STYLES.$LOADER_STYLE;
+  const notificationFeedStyle = STYLES.$NOTIFICATION_FEED_STYLE;
 
   useEffect(() => {
     setTimeout(() => {

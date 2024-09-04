@@ -16,12 +16,10 @@ import {
 } from "../../constants/Strings";
 import { styles } from "./styles";
 import { nameInitials, timeStamp } from "../../utils";
-import { useLMFeedStyles } from "../../lmFeedProvider";
 
 const LMNotificationFeedItem = React.memo(
   ({ activity, onTap }: LMNotificationFeedItemProps) => {
-    const LMFeedContextStyles = useLMFeedStyles();
-    const { notificationFeedStyle } = LMFeedContextStyles;
+    const notificationFeedStyle = STYLES.$NOTIFICATION_FEED_STYLE;
     // storing the attachments if present
     const activityAttachments = activity.activityEntityData?.attachments;
     // storing the value of attachment type of the attachment if present

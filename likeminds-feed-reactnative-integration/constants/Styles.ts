@@ -1,5 +1,18 @@
 import { Platform } from "react-native";
 import { PollStyles } from "./types";
+import {
+  CarouselScreenStyle,
+  CreatePollStyle,
+  CreatePostStyleProps,
+  LoaderStyleProps,
+  NotificationFeedStyleProps,
+  PollStyle,
+  PostDetailStyleProps,
+  PostLikesListStyleProps,
+  PostListStyleProps,
+  TopicsStyle,
+  UniversalFeedStyleProps,
+} from "../lmFeedProvider/types";
 
 interface FontTypes {
   fontFamilyLight?: string;
@@ -70,8 +83,22 @@ export class LMFeedStyles {
     lightGreyTextColor: string;
     darkGreyTextColor: string;
   };
-  public $FONT_SIZES: Record<string, number>;
-  public $FONT_WEIGHT: Record<string, string>;
+  public $FONT_SIZES: {
+    XS?: number;
+    SMALL?: number;
+    REGULAR?: number;
+    MEDIUM?: number;
+    LARGE?: number;
+    XL?: number;
+    XXL?: number;
+  };
+  public $FONT_WEIGHT: {
+    LIGHT?: "100" | "200" | "300" | "light" | "ultralight";
+    REGULAR?: "400" | "normal";
+    MEDIUM?: "500" | "medium";
+    BOLD?: "600" | "700" | "bold";
+    BOLDER?: "800" | "900" | "bolder";
+  };
   public $FONT_TYPES: {
     LIGHT?: string;
     MEDIUM?: string;
@@ -79,18 +106,68 @@ export class LMFeedStyles {
     BOLD?: string;
     BLACK?: string;
   };
-  public $BACKGROUND_COLORS: Record<string, string>;
-  public $TEXT_COLOR: Record<string, string>;
-  public $SHADOWS: Record<string, string>;
-  public $MARGINS: Record<string, number>;
-  public $PADDINGS: Record<string, number>;
-  public $AVATAR: { WIDTH: number; HEIGHT: number; BORDER_RADIUS: number };
-  public $ALIGN_ROW: Record<string, any>;
-  public $TEXTVIEW_WIDTH: Record<string, number>;
-  public $STATUS_BAR_STYLE: Record<string, string>;
+  public $BACKGROUND_COLORS: {
+    LIGHT?: string;
+    DARK?: string;
+    DARKTRANSPARENT?: string;
+  };
+  public $TEXT_COLOR: {
+    PRIMARY_TEXT_LIGHT?: string;
+    SECONDARY_TEXT_LIGHT?: string;
+    PRIMARY_TEXT_DARK?: string;
+    SECONDARY_TEXT_DARK?: string;
+  };
+  public $SHADOWS: {
+    LIGHT?: string;
+    MEDIUM?: string;
+    HEAVY?: string;
+  };
+  public $MARGINS: {
+    XS?: number;
+    SMALL?: number;
+    MEDIUM?: number;
+    LARGE?: number;
+    XL?: number;
+  };
+  public $PADDINGS: {
+    XS?: number;
+    SMALL?: number;
+    MEDIUM?: number;
+    LARGE?: number;
+    XL?: number;
+  };
+  public $AVATAR: {
+    WIDTH: number;
+    HEIGHT: number;
+    BORDER_RADIUS: number;
+  };
+  public $ALIGN_ROW: {
+    display?: string;
+    flexDirection?: string;
+    alignItems?: string;
+  };
+  public $TEXTVIEW_WIDTH: {
+    REGULAR?: number;
+  };
+  public $STATUS_BAR_STYLE: {
+    default?: string;
+    "dark-content"?: string;
+    "light-content"?: string;
+  };
   public $LMLoaderSizeiOS: number;
   public $LMLoaderSizeAndroid: number;
-  public $POLL_STYLES: PollStyles;
+
+  public $POLL_STYLE: PollStyle;
+  public $UNIVERSAL_FEED_STYLE: UniversalFeedStyleProps;
+  public $POST_LIST_STYLE: PostListStyleProps;
+  public $LOADER_STYLE: LoaderStyleProps;
+  public $POST_DETAIL_STYLE: PostDetailStyleProps;
+  public $CREATE_POST_STYLE: CreatePostStyleProps;
+  public $POST_LIKES_LIST_STYLE: PostLikesListStyleProps;
+  public $NOTIFICATION_FEED_STYLE: NotificationFeedStyleProps;
+  public $TOPICS_STYLE: TopicsStyle;
+  public $CAROUSEL_SCREEN_STYLE: CarouselScreenStyle;
+  public $CREATE_POLL_STYLE: CreatePollStyle;
 
   constructor({
     hue = 244,
@@ -148,7 +225,7 @@ export class LMFeedStyles {
       REGULAR: "400",
       MEDIUM: "500",
       BOLD: "600",
-      BOLDER: "700",
+      BOLDER: "800",
     };
     this.$FONT_TYPES = fontTypes;
     this.$BACKGROUND_COLORS = {
@@ -201,7 +278,17 @@ export class LMFeedStyles {
     };
     this.$LMLoaderSizeiOS = 10;
     this.$LMLoaderSizeAndroid = 25;
-    this.$POLL_STYLES = {};
+    this.$POLL_STYLE = {};
+    this.$UNIVERSAL_FEED_STYLE = {};
+    this.$POST_LIST_STYLE = {};
+    this.$LOADER_STYLE = {};
+    this.$POST_DETAIL_STYLE = {};
+    this.$CREATE_POST_STYLE = {};
+    this.$POST_LIKES_LIST_STYLE = {};
+    this.$NOTIFICATION_FEED_STYLE = {};
+    this.$TOPICS_STYLE = {};
+    this.$CAROUSEL_SCREEN_STYLE = {};
+    this.$CREATE_POLL_STYLE = {};
   }
 
   public setTheme(themeProps: StylesProps) {
@@ -236,9 +323,71 @@ export class LMFeedStyles {
       this.$TEXT_COLOR.SECONDARY_TEXT_LIGHT;
   }
 
-  public setPollStyles(pollStyles: PollStyles) {
-    this.$POLL_STYLES = {
+  public setPollStyle(pollStyles: PollStyle) {
+    this.$POLL_STYLE = {
       ...pollStyles,
+    };
+  }
+
+  public setUniversalFeedStyles(universalFeedStyles: UniversalFeedStyleProps) {
+    this.$UNIVERSAL_FEED_STYLE = {
+      ...universalFeedStyles,
+    };
+  }
+
+  public setPostListStyles(postListStyles: PostListStyleProps) {
+    this.$POST_LIST_STYLE = {
+      ...postListStyles,
+    };
+  }
+
+  public setLoaderStyles(loaderStyles: LoaderStyleProps) {
+    this.$LOADER_STYLE = {
+      ...loaderStyles,
+    };
+  }
+
+  public setPostDetailStyles(postDetailStyles: PostDetailStyleProps) {
+    this.$POST_DETAIL_STYLE = {
+      ...postDetailStyles,
+    };
+  }
+
+  public setCreatePostStyles(createPostStyles: CreatePostStyleProps) {
+    this.$CREATE_POST_STYLE = {
+      ...createPostStyles,
+    };
+  }
+
+  public setPostLikesListStyles(postLikesListStyles: PostLikesListStyleProps) {
+    this.$POST_LIKES_LIST_STYLE = {
+      ...postLikesListStyles,
+    };
+  }
+
+  public setNotificationFeedStyles(
+    notificationFeedStyles: NotificationFeedStyleProps
+  ) {
+    this.$NOTIFICATION_FEED_STYLE = {
+      ...notificationFeedStyles,
+    };
+  }
+
+  public setTopicsStyles(topicsStyles: TopicsStyle) {
+    this.$TOPICS_STYLE = {
+      ...topicsStyles,
+    };
+  }
+
+  public setCarouselScreenStyles(carouselScreenStyles: CarouselScreenStyle) {
+    this.$CAROUSEL_SCREEN_STYLE = {
+      ...carouselScreenStyles,
+    };
+  }
+
+  public setCreatePollStyles(createPollStyles: CreatePollStyle) {
+    this.$CREATE_POLL_STYLE = {
+      ...createPollStyles,
     };
   }
 }

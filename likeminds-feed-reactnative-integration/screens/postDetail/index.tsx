@@ -36,7 +36,6 @@ import {
   routeToMentionConverter,
 } from "../../utils";
 import { autoPlayPostVideo } from "../../store/actions/feed";
-import { useLMFeedStyles } from "../../lmFeedProvider";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { clearComments, clearPostDetail } from "../../store/actions/postDetail";
 import {
@@ -217,11 +216,10 @@ const PostDetailComponent = React.memo(() => {
     setShowLoader,
     setShowRepliesOfCommentId,
     setCommentOnFocus,
-    commentOnFocus
+    commentOnFocus,
   }: PostDetailContextValues = usePostDetailContext();
-
-  const LMFeedContextStyles = useLMFeedStyles();
-  const { postDetailStyle, postListStyle }: any = LMFeedContextStyles;
+  const postListStyle = STYLES.$POST_LIST_STYLE;
+  const postDetailStyle = STYLES.$POST_DETAIL_STYLE;
   const {
     getCommentsRepliesProp,
     commentLikeHandlerProp,
@@ -247,8 +245,7 @@ const PostDetailComponent = React.memo(() => {
   );
   const memberData = useAppSelector((state) => state.login.member);
   const isCM = memberData?.state === STATE_ADMIN;
-  const {repliesArrayUnderComments} = usePostDetailContext()
-
+  const { repliesArrayUnderComments } = usePostDetailContext();
 
   // this function returns the id of the item selected from menu list and handles further functionalities accordingly for comment
   const onCommentMenuItemSelect = async (
@@ -438,11 +435,17 @@ const PostDetailComponent = React.memo(() => {
 
                           {/* Divider */}
 
-                          {!STYLES.$SHOULD_HIDE_SEPARATOR ? <View style={{
-                            height: 11,
-                            backgroundColor: STYLES.$IS_DARK_THEME ? "#121212" : "#D0D8E2"
-                          }} /> : null}
-                          
+                          {!STYLES.$SHOULD_HIDE_SEPARATOR ? (
+                            <View
+                              style={{
+                                height: 11,
+                                backgroundColor: STYLES.$IS_DARK_THEME
+                                  ? "#121212"
+                                  : "#D0D8E2",
+                              }}
+                            />
+                          ) : null}
+
                           {postDetail?.commentsCount > 0 && (
                             <Text
                               style={[
@@ -559,7 +562,7 @@ const PostDetailComponent = React.memo(() => {
                                     commentLikeHandlerProp
                                       ? commentLikeHandlerProp(item?.postId, id)
                                       : commentLikeHandler(item?.postId, id);
-                                    postListStyle?.footer?.likeIconButton?.onTap();
+                                    postListStyle?.footer?.likeIconButton?.onTap()
                                   },
                                 }}
                                 // this executes on click of like text of comment
@@ -1074,7 +1077,13 @@ const PostDetailComponent = React.memo(() => {
             });
             setShowReportModal(false);
           }}
-          reportType={selectedMenuItemPostId ? POST_TYPE : commentOnFocus?.level > 0 ? REPLY_TYPE : COMMENT_TYPE}
+          reportType={
+            selectedMenuItemPostId
+              ? POST_TYPE
+              : commentOnFocus?.level > 0
+              ? REPLY_TYPE
+              : COMMENT_TYPE
+          }
           postDetail={postDetail}
           commentDetail={getCommentDetail(postDetail?.replies)?.commentDetail}
         />
@@ -1082,11 +1091,7 @@ const PostDetailComponent = React.memo(() => {
       {/* menu list modal */}
       {showActionListModal && (
         <LMPostMenu
-          post={
-            overlayMenuType === POST_TYPE
-              ? postDetail
-              : commentOnFocus
-          }
+          post={overlayMenuType === POST_TYPE ? postDetail : commentOnFocus}
           onSelected={(postId, itemId, isPinned) => {
             overlayMenuType === POST_TYPE
               ? onMenuItemSelect(postId, itemId, isPinned)
