@@ -60,7 +60,7 @@ interface LMFeedStylesProps {
 
 const isIOS = Platform.OS === "ios";
 
-export class LMFeedStyles {
+export class LMFeedTheme {
   public $IS_DARK_THEME: boolean;
   public $SHOULD_HIDE_SEPARATOR: boolean;
   public $HUE: number;
@@ -392,6 +392,6 @@ export class LMFeedStyles {
   }
 }
 
-export const STYLES = new LMFeedStyles();
+export const STYLES = new LMFeedTheme();
 
 export default STYLES;
