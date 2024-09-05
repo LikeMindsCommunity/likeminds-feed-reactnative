@@ -12,7 +12,7 @@ pipeline {
 
         stage('check'){
             steps{
-                echo "ls"
+                sh "ls"
             }
         }
 
