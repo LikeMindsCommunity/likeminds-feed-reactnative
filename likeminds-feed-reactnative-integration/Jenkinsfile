@@ -5,24 +5,31 @@ pipeline {
     options {
         buildDiscarder logRotator(daysToKeepStr: '3', numToKeepStr: '1')
     }
-    // parameters {
-    //     stashedFile 'FILE'
-    // }
+    parameters {
+        stashedFile 'FILE'
+        stashedFile 'FILE_SECOND'
+    }
     stages {
 
         stage('check'){
             steps{
-                sh "ls"
+                dir('likeminds-feed-reactnative-integration'){
+                    sh "ls"
+                }
             }
         }
 
-        // stage('file upload'){
-        //     steps{
-        //         unstash 'FILE'
-        //         sh 'mv FILE $FILE_FILENAME'
-        //         sh 'ls'
-        //     }
-        // }
+        stage('file upload'){
+            steps{
+                dir('likeminds-feed-reactnative-integration'){
+                    unstash 'FILE'
+                    unstash 'FILE_SECOND'
+                    sh 'mv FILE $FILE_FILENAME'
+                    sh 'mv FILE_SECOND $FILE_SECOND_FILENAME'
+                    sh 'ls'
+                }
+            }
+        }
         
         
         // stage('Install Dependencies') {
