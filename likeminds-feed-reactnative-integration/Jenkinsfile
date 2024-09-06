@@ -31,19 +31,25 @@ pipeline {
         
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                dir('likeminds-feed-reactnative-integration'){
+                    sh 'npm install'
+                }
             }
         }
 
         stage('Build') {
             steps {
-                sh 'npm run build'
+                dir('likeminds-feed-reactnative-integration'){
+                    sh 'npm run build'
+                }
             }
         }
 
         stage('Package') {
             steps {
-                sh 'npm pack'
+                dir('likeminds-feed-reactnative-integration'){
+                    sh 'npm pack'
+                }
             }
         }
 
