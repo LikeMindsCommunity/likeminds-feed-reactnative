@@ -1,13 +1,12 @@
 pipeline {
-    agent {label 'localMachine'}
+    agent any
     tools {nodejs "nodejs"}
 
     options {
-        buildDiscarder logRotator(daysToKeepStr: '3', numToKeepStr: '1')
+        buildDiscarder logRotator(daysToKeepStr: '7', numToKeepStr: '1')
     }
     parameters {
-        stashedFile 'FILE'
-        stashedFile 'FILE_SECOND'
+        stashedFile 'feed_rn_package'
     }
     stages {
 
@@ -22,39 +21,45 @@ pipeline {
         stage('file upload'){
             steps{
                 dir('likeminds-feed-reactnative-integration'){
-                    unstash 'FILE'
-                    unstash 'FILE_SECOND'
-                    sh 'mv FILE $FILE_FILENAME'
-                    sh 'mv FILE_SECOND $FILE_SECOND_FILENAME'
+                    unstash 'feed_rn_package'
+                    sh 'mv feed_rn_package $feed_rn_package_FILENAME'
                     sh 'ls'
                 }
             }
         }
         
         
-        // stage('Install Dependencies') {
-        //     steps {
-        //         sh 'npm install'
-        //     }
-        // }
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
 
-        // stage('Build') {
-        //     steps {
-        //         sh 'npm run build'
-        //     }
-        // }
+        stage('Build') {
+            steps {
+                sh 'npm run build'
+            }
+        }
 
-        // stage('Package') {
-        //     steps {
-        //         sh 'npm pack'
-        //     }
-        // }
+        stage('Package') {
+            steps {
+                sh 'npm pack'
+            }
+        }
 
-        // stage('Archive Package') {
-        //     steps {
-        //         archiveArtifacts artifacts: '*.tgz', fingerprint: true
-        //     }
-        // }
+        stage('Archive Package') {
+            steps {
+                dir('likeminds-feed-reactnative-integration'){
+                    archiveArtifacts artifacts: '*.tgz', fingerprint: true
+                }
+            }
+        }
+    }
+    
+    post{
+        always{
+            cleanWs()
+        }
     }
 
 }
