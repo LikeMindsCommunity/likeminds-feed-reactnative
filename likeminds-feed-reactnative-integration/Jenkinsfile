@@ -8,6 +8,9 @@ pipeline {
     parameters {
         stashedFile 'feed_rn_package'
     }
+    environment {
+        NODE_OPTIONS = "--max-old-space-size=8192"  // Setting the memory limit for Node.js
+    }
     stages {
 
         stage('check'){
@@ -40,8 +43,7 @@ pipeline {
         stage('Build') {
             steps {
                 dir('likeminds-feed-reactnative-integration'){
-                    sh 'export NODE_OPTIONS=--max-old-space-size=8192'
-                    sh 'npm run build'
+                    sh 'export NODE_OPTIONS="--max-old-space-size=8192" && npm run build'
                 }
             }
         }
