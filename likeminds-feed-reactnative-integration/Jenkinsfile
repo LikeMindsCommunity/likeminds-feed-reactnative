@@ -40,7 +40,7 @@ pipeline {
         stage('Build') {
             steps {
                 dir('likeminds-feed-reactnative-integration'){
-                    sh 'export NODE_OPTIONS=--max-old-space-size=4096'
+                    sh 'export NODE_OPTIONS=--max-old-space-size=8192'
                     sh 'npm run build'
                 }
             }
