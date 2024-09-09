@@ -27,13 +27,15 @@ interface StylesProps {
   fontColor?: string;
   primaryColor?: string;
   secondaryColor?: string;
-  lightBackgroundColor?: string;
   isDarkTheme?: boolean;
   primaryDarkTextColor?: string;
   secondaryDarkTextColor?: string;
   primaryLightTextColor?: string;
   secondaryLightTextColor?: string;
   fontTypes?: FontTypes;
+  lightThemeBackgroundColor?: string;
+  darkThemeBackgroundColor?: string;
+  darkTransparentBackgroundColor?: string;
   shouldHideSeparator?: boolean;
 }
 
@@ -42,7 +44,6 @@ interface LMFeedStylesProps {
   fontColor?: string;
   primaryColor?: string;
   secondaryColor?: string;
-  lightBackgroundColor?: string;
   isDarkTheme?: boolean;
   primaryDarkTextColor?: string;
   secondaryDarkTextColor?: string;
@@ -55,6 +56,8 @@ interface LMFeedStylesProps {
     BOLD?: string;
     BLACK?: string;
   };
+  lightThemeBackgroundColor?: string;
+  darkThemeBackgroundColor?: string;
   shouldHideSeparator?: boolean;
 }
 
@@ -109,7 +112,7 @@ export class LMFeedTheme {
   public $BACKGROUND_COLORS: {
     LIGHT?: string;
     DARK?: string;
-    DARKTRANSPARENT?: string;
+    DARK_TRANSPARENT?: string;
   };
   public $TEXT_COLOR: {
     PRIMARY_TEXT_LIGHT?: string;
@@ -174,7 +177,6 @@ export class LMFeedTheme {
     fontColor = "hsl(244, 75%, 59%)",
     primaryColor = "hsl(244, 75%, 59%)",
     secondaryColor = "hsl(240, 64%, 91%)",
-    lightBackgroundColor = "#ffffff",
     isDarkTheme = false,
     primaryDarkTextColor = "#ffffff",
     secondaryDarkTextColor = "grey",
@@ -187,6 +189,8 @@ export class LMFeedTheme {
       BOLD: isIOS ? "Helvetica" : "Roboto",
       BLACK: isIOS ? "Helvetica" : "Roboto",
     },
+    lightThemeBackgroundColor = "#ffffff",
+    darkThemeBackgroundColor = "#000000",
     shouldHideSeparator = false,
   }: LMFeedStylesProps = {}) {
     this.$IS_DARK_THEME = isDarkTheme;
@@ -198,7 +202,7 @@ export class LMFeedTheme {
       TERTIARY: "#ffffff",
       MSG: "#777e8e",
       FONT_PRIMARY: fontColor,
-      JOINED_BTN: lightBackgroundColor,
+      JOINED_BTN: `hsl(${this.$HUE}, 22%, 93%)`,
       WHITE: "#ffffff",
       BLACK: "#000000",
       THEME: "#5046E5",
@@ -229,9 +233,9 @@ export class LMFeedTheme {
     };
     this.$FONT_TYPES = fontTypes;
     this.$BACKGROUND_COLORS = {
-      LIGHT: "#ffffff",
-      DARK: "#000000",
-      DARKTRANSPARENT: "#00000088",
+      LIGHT: lightThemeBackgroundColor,
+      DARK: darkThemeBackgroundColor,
+      DARK_TRANSPARENT: "#00000088",
     };
     this.$TEXT_COLOR = {
       PRIMARY_TEXT_LIGHT: primaryLightTextColor,
@@ -299,7 +303,6 @@ export class LMFeedTheme {
       PRIMARY: themeProps.primaryColor ?? this.$COLORS.PRIMARY,
       SECONDARY: themeProps.secondaryColor ?? this.$COLORS.SECONDARY,
       FONT_PRIMARY: themeProps.fontColor ?? this.$COLORS.FONT_PRIMARY,
-      JOINED_BTN: themeProps.lightBackgroundColor ?? this.$COLORS.JOINED_BTN,
     };
     this.$FONT_TYPES = {
       ...this.$FONT_TYPES,
@@ -321,6 +324,13 @@ export class LMFeedTheme {
     this.$TEXT_COLOR.SECONDARY_TEXT_LIGHT =
       themeProps.secondaryLightTextColor ??
       this.$TEXT_COLOR.SECONDARY_TEXT_LIGHT;
+    this.$BACKGROUND_COLORS.LIGHT =
+      themeProps.lightThemeBackgroundColor ?? this.$BACKGROUND_COLORS.LIGHT;
+    this.$BACKGROUND_COLORS.DARK =
+      themeProps.darkThemeBackgroundColor ?? this.$BACKGROUND_COLORS.DARK;
+    this.$BACKGROUND_COLORS.DARK_TRANSPARENT =
+      themeProps?.darkTransparentBackgroundColor ??
+      this.$BACKGROUND_COLORS.DARK_TRANSPARENT;
   }
 
   public setPollStyle(pollStyles: PollStyle) {
