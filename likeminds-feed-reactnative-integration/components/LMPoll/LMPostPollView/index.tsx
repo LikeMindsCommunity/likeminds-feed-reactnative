@@ -57,10 +57,7 @@ const LMPostPollView = ({
   const { member } = useAppSelector((item) => item.login);
 
   const dispatch = useAppDispatch();
-  const pollStyles: any = STYLES.$POLL_STYLES;
-  const MAX_LINES = pollStyles?.visibleLines
-    ? pollStyles?.visibleLines
-    : MAX_DEFAULT_POST_CONTENT_LINES;
+  const MAX_LINES = MAX_DEFAULT_POST_CONTENT_LINES;
 
   // resets local selected polls state
   useEffect(() => {

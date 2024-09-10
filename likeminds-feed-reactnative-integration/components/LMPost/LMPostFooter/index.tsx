@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { LMButton } from "../../../uiComponents";
 import { styles } from "./styles";
 import { LMPostContextValues, useLMPostContext } from "../../../context";
-import { useLMFeedStyles } from "../../../lmFeedProvider";
 import { LMFeedAnalytics } from "../../../analytics/LMFeedAnalytics";
 import { Events } from "../../../enums/Events";
 import { Keys } from "../../../enums/Keys";
@@ -11,9 +10,8 @@ import STYLES from "../../../constants/Styles";
 
 const LMPostFooter = React.memo(() => {
   const { post, footerProps }: LMPostContextValues = useLMPostContext();
-  const LMFeedContextStyles = useLMFeedStyles();
-  const { postListStyle } = LMFeedContextStyles;
-  const footerStyle = postListStyle?.footer;
+  const postListStyle = STYLES.$POST_LIST_STYLE;
+  const footerStyle: any = postListStyle?.footer;
 
   const [liked, setLiked] = useState(post?.isLiked);
   const [likeCount, setLikeCount] = useState(post?.likesCount);

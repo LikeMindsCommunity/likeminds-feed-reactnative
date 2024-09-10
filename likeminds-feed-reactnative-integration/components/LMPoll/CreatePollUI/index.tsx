@@ -26,7 +26,6 @@ import { CreatePollProps } from "../models";
 import STYLES from "../../../constants/Styles";
 import Layout from "../../../constants/Layout";
 import { useCreatePollContext } from "../../../context/createPollContextProvider";
-import { useLMFeedStyles } from "../../../lmFeedProvider";
 import { useCreatePollCustomisableMethodsContext } from "../../../context/createPollCallbacksContext";
 
 const CreatePollUI = () => {
@@ -71,8 +70,7 @@ const CreatePollUI = () => {
   const { onPollExpiryTimeClicked, onAddOptionClicked, onPollOptionCleared } =
     useCreatePollCustomisableMethodsContext();
 
-  const LMFeedContextStyles = useLMFeedStyles();
-  const { createPollStyle }: any = LMFeedContextStyles;
+  const createPollStyle = STYLES.$CREATE_POLL_STYLE;
 
   const pollQuestionsStyle = createPollStyle?.pollQuestionsStyle;
   const pollOptionsStyle = createPollStyle?.pollOptionsStyle;
@@ -117,7 +115,7 @@ const CreatePollUI = () => {
 
       {/* Divider */}
 
-      { !STYLES.$SHOULD_HIDE_SEPARATOR ? <View style={{
+      { !createPollStyle.shouldHideSeparator  ? <View style={{
         height: 11,
         backgroundColor: STYLES.$IS_DARK_THEME ? "#121212" : "#D0D8E2"
       }} /> : null }
@@ -202,7 +200,7 @@ const CreatePollUI = () => {
 
       {/* Divider */}
 
-      { !STYLES.$SHOULD_HIDE_SEPARATOR ? <View style={{
+      { !createPollStyle.shouldHideSeparator ? <View style={{
         height: 11,
         backgroundColor: STYLES.$IS_DARK_THEME ? "#121212" : "#D0D8E2"
       }} /> : null }

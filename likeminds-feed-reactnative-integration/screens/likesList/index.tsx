@@ -8,12 +8,12 @@ import {
   usePostLikesCustomisableMethodsContext,
   usePostLikesListContext,
 } from "../../context";
-import { useLMFeedStyles } from "../../lmFeedProvider";
 import { LMMemberListItem } from "../../components";
 import LMHeader from "../../components/LMHeader";
 import LMLoader from "../../components/LMLoader";
 import { LMLikeUI, LMUserUI, RootStackParamList } from "../../models";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import STYLES from "../../constants/Styles";
 
 interface PostLikesProps {
   children?: React.ReactNode;
@@ -52,10 +52,10 @@ const PostLikesListComponent = React.memo(() => {
     navigation,
     handleScreenBackPress,
   }: PostLikesListContextValues = usePostLikesListContext();
-  const LMFeedContextStyles = useLMFeedStyles();
   const { onTapUserItemProp, handleScreenBackPressProp } =
     usePostLikesCustomisableMethodsContext();
-  const { postListStyle, postLikesListStyle }: any = LMFeedContextStyles;
+  const postListStyle: any = STYLES.$POST_LIST_STYLE;
+  const postLikesListStyle = STYLES.$POST_LIKES_LIST_STYLE;
   const customScreenHeader = postLikesListStyle?.screenHeader;
   return (
     <SafeAreaView style={styles.mainContainer}>

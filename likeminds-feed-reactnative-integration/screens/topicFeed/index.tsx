@@ -23,15 +23,13 @@ import {
   SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
 } from "../../store/types/types";
 import { useCreatePostContext } from "../../context";
-import { useLMFeedStyles } from "../../lmFeedProvider";
 
 const TopicFeed = () => {
   const navigation = useNavigation<StackNavigationProp<any>>();
   let routes = navigation.getState()?.routes;
   let previousRoute = routes[routes?.length - 2];
 
-  const LMFeedContextStyles = useLMFeedStyles();
-  const { topicsStyle }: any = LMFeedContextStyles;
+  const topicsStyle: any = STYLES.$TOPICS_STYLE;
 
   const searchTextStyle = topicsStyle?.searchTextStyle;
   const searchTextPlaceholder = topicsStyle?.searchTextPlaceholder;
@@ -191,7 +189,9 @@ const TopicFeed = () => {
             <View style={styles.chatRoomInfo}>
               <Text
                 style={{
-                  color: STYLES.$IS_DARK_THEME ? STYLES.$COLORS.FONT_PRIMARY : STYLES.$COLORS.BLACK,
+                  color: STYLES.$IS_DARK_THEME
+                    ? STYLES.$COLORS.FONT_PRIMARY
+                    : STYLES.$COLORS.BLACK,
                   fontSize: STYLES.$FONT_SIZES.XXL,
                   fontFamily: STYLES.$FONT_TYPES.BOLD,
                   ...(selectTopicHeaderStyle !== undefined
@@ -236,8 +236,10 @@ const TopicFeed = () => {
         </TouchableOpacity>
       ),
       headerStyle: {
-        backgroundColor: STYLES.$IS_DARK_THEME ? STYLES.$BACKGROUND_COLORS.DARK : STYLES.$BACKGROUND_COLORS.LIGHT
-      }
+        backgroundColor: STYLES.$IS_DARK_THEME
+          ? STYLES.$BACKGROUND_COLORS.DARK
+          : STYLES.$BACKGROUND_COLORS.LIGHT,
+      },
     });
   };
 

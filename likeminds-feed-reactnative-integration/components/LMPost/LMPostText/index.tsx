@@ -1,8 +1,8 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { decode } from "../../../utils";
-import { useLMFeedStyles } from "../../../lmFeedProvider";
 import { styles } from "../LMPostContent/styles";
+import STYLES from "../../../constants/Styles";
 
 interface MoreLessComponentProps {
   truncatedText: string;
@@ -14,8 +14,7 @@ const MoreLessComponent = ({
   fullText,
 }: MoreLessComponentProps) => {
   const [showMore, setShowMore] = React.useState(false);
-  const LMFeedContextStyles = useLMFeedStyles();
-  const { postListStyle } = LMFeedContextStyles;
+  const postListStyle = STYLES.$POST_LIST_STYLE;
   const postContentStyle = postListStyle?.postContent;
   return (
     <Text

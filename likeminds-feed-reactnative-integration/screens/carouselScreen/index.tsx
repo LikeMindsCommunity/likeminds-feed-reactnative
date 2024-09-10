@@ -26,7 +26,6 @@ import {
 } from "../../store/types/types";
 import { useAppDispatch } from "../../store/store";
 import LMVideoPlayer from "../../components/LMVideoPlayer";
-import { useLMFeedStyles } from "../../lmFeedProvider";
 import ImageViewer from "react-native-image-zoom-viewer";
 import { CallBack } from "../../callBacks/callBackClass";
 
@@ -85,8 +84,7 @@ const CarouselScreen = ({ navigation, route }: any) => {
   };
   const formattedTime: string = date.toLocaleTimeString("en-IN", timeOptions);
 
-  const LMFeedContextStyles = useLMFeedStyles();
-  const { carouselScreenStyle }: any = LMFeedContextStyles;
+  const carouselScreenStyle = STYLES.$CAROUSEL_SCREEN_STYLE
 
   const headerTitle = carouselScreenStyle?.headerTitle;
   const headerSubtitle = carouselScreenStyle?.headerSubtitle;

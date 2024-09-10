@@ -14,18 +14,7 @@ export const LMOverlayProvider: any = ({
   accessToken,
   refreshToken,
   lmFeedInterface,
-  universalFeedStyle,
-  postListStyle,
-  loaderStyle,
-  postDetailStyle,
-  postLikesListStyle,
-  createPostStyle,
-  notificationFeedStyle,
-  topicsStyle,
-  pollStyle,
-  createPollStyle,
   callbackClass,
-  carouselScreenStyle,
 }: // Create a prop for passing LMCoreCallbacks
 LMOverlayProviderProps) => {
   useEffect(() => {
@@ -42,17 +31,6 @@ LMOverlayProviderProps) => {
         userUniqueId={userUniqueId}
         accessToken={accessToken}
         refreshToken={refreshToken}
-        universalFeedStyle={universalFeedStyle}
-        postDetailStyle={postDetailStyle}
-        postListStyle={postListStyle}
-        postLikesListStyle={postLikesListStyle}
-        loaderStyle={loaderStyle}
-        createPostStyle={createPostStyle}
-        notificationFeedStyle={notificationFeedStyle}
-        topicsStyle={topicsStyle}
-        pollStyle={pollStyle}
-        createPollStyle={createPollStyle}
-        carouselScreenStyle={carouselScreenStyle}
         lmFeedInterface={lmFeedInterface}
         // add a prop for adding lmcorecallbacks
       >

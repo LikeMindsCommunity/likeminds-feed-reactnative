@@ -63,6 +63,7 @@ import {
   FeedWrapper,
   TopicFeedWrapper,
 } from "./wrappers";
+import LMFeedTheme from "./constants/Styles";
 
 export {
   LMOverlayProvider,
@@ -121,4 +122,5 @@ export {
   NotificationWrapper,
   FeedWrapper,
   TopicFeedWrapper,
+  LMFeedTheme,
 };

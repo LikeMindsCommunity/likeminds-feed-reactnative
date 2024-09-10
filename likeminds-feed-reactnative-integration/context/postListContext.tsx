@@ -45,7 +45,6 @@ import {
   POST_DETAIL,
   POST_LIKES_LIST,
 } from "../constants/screenNames";
-import { useLMFeedStyles } from "../lmFeedProvider";
 import { showToastMessage } from "../store/actions/toast";
 import { RootStackParamList } from "../models/RootStackParamsList";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -152,8 +151,7 @@ export const PostListContextProvider = ({
   const [feedFetching, setFeedFetching] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isPaginationStopped, setIsPaginationStopped] = useState(false);
-  const LMFeedContextStyles = useLMFeedStyles();
-  const { loaderStyle } = LMFeedContextStyles;
+  const loaderStyle = STYLES.$LOADER_STYLE
   const { localRefresh } = useUniversalFeedContext();
 
   const PAGE_SIZE = 20;

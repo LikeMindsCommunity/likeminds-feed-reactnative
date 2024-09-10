@@ -40,6 +40,7 @@ export interface PostListStyleProps {
       onTap?: () => void;
       fallbackTextBoxStyle?: ViewStyle;
       profilePictureStyle?: ImageStyle;
+      fallbackText?: any;
     };
     titleText?: TextStyle;
     createdAt?: TextStyle;
@@ -88,7 +89,7 @@ export interface PostListStyleProps {
       isClickable?: boolean;
     };
     likeTextButton?: {
-      text?: TextStyle;
+      text?: LMTextProps;
       onTap?: (value?: any) => void;
       buttonStyle?: ViewStyle;
       isClickable?: boolean;
@@ -116,8 +117,8 @@ export interface PostListStyleProps {
   media?: {
     postMediaStyle?: ViewStyle;
     image?: {
-      height?: number;
-      width?: number;
+      height: number;
+      width: number;
       imageStyle?: ImageStyle;
       boxFit?: "center" | "contain" | "cover" | "repeat" | "stretch";
       boxStyle?: ViewStyle;
@@ -167,14 +168,7 @@ export interface PostListStyleProps {
       inactiveIndicatorStyle?: ViewStyle;
       showCancel?: boolean;
       onCancel?: () => void;
-      cancelButton?: {
-        text?: LMTextProps;
-        icon?: LMIconProps;
-        onTap?: (value?: any) => void;
-        placement?: "start" | "end";
-        buttonStyle?: ViewStyle;
-        isClickable?: boolean;
-      };
+      cancelButton?: LMButtonProps;
     };
     document?: {
       documentIcon?: LMIconProps;
@@ -225,6 +219,7 @@ export interface PostListStyleProps {
   noPostView?: ViewStyle;
   noPostText?: TextStyle;
   listStyle?: ViewStyle;
+  shouldHideSeparator?: boolean;
 }
 
 // custom style interface for loader
@@ -235,6 +230,7 @@ export interface LoaderStyleProps {
 // custom style interface for post detail screen
 export interface PostDetailStyleProps {
   screenHeader?: LMHeaderProps;
+  shouldHideSeparator?: boolean;
   commentItemStyle?: {
     onTapViewMore?: () => void;
     commentUserNameStyle?: TextStyle;
@@ -297,7 +293,7 @@ export interface CreatePostStyleProps {
     headingTextStyle?: TextStyle;
     headingViewStyle?: ViewStyle;
   };
-  attachmentOptionsStyle: {
+  attachmentOptionsStyle?: {
     attachmentOptionsView?: ViewStyle;
     photoAttachmentView?: ViewStyle;
     photoAttachmentIcon?: LMIconProps;
@@ -310,17 +306,10 @@ export interface CreatePostStyleProps {
     filesAttachmentTextStyle?: LMTextProps;
   };
   createPostTextInputStyle?: {
-    inputTextStyle?: TextStyle;
+    inputTextStyle?: any;
     placeholderText?: string;
     placeholderTextColor?: string;
-    rightIcon?: {
-      text?: LMTextProps;
-      icon?: LMIconProps;
-      onTap?: (value?: any) => void;
-      placement?: "start" | "end";
-      buttonStyle?: ViewStyle;
-      isClickable?: boolean;
-    };
+    rightIcon?: LMButtonProps;
     textValueStyle?: TextStyle;
     mentionTextStyle?: TextStyle;
     multilineField?: boolean;
@@ -444,6 +433,7 @@ export interface CreatePollStyle {
   pollAdvancedOptionMinimiseIcon?: string;
   pollAdvanceOptionsSwitchThumbColor?: string;
   pollAdvanceOptionsSwitchTrackColor?: string;
+  shouldHideSeparator?: boolean;
 }
 
 export interface ThemeContextProps {
@@ -470,16 +460,4 @@ export interface LMFeedProviderProps {
   accessToken?: string;
   refreshToken?: string;
   lmFeedInterface?: any;
-  themeStyles?: ThemeStyles;
-  universalFeedStyle?: UniversalFeedStyleProps;
-  postListStyle?: any;
-  loaderStyle?: LoaderStyleProps;
-  postDetailStyle?: PostDetailStyleProps;
-  createPostStyle?: CreatePostStyleProps;
-  postLikesListStyle?: PostLikesListStyleProps;
-  notificationFeedStyle?: NotificationFeedStyleProps;
-  topicsStyle?: TopicsStyle;
-  carouselScreenStyle?: CarouselScreenStyle;
-  pollStyle?: PollStyle;
-  createPollStyle?: CreatePollStyle;
 }

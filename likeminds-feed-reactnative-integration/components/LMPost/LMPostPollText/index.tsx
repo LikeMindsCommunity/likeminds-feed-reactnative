@@ -1,7 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { decode } from "../../../utils";
-import { useLMFeedStyles } from "../../../lmFeedProvider";
 import { styles } from "../LMPostContent/styles";
 import STYLES from "../../../constants/Styles";
 
@@ -12,8 +11,7 @@ interface LMPostPollTextProps {
 
 const LMPostPollText = ({ truncatedText, fullText }: LMPostPollTextProps) => {
   const [showMore, setShowMore] = React.useState(false);
-  const LMFeedContextStyles = useLMFeedStyles();
-  const { pollStyle } = LMFeedContextStyles;
+  const pollStyle = STYLES.$POLL_STYLE;
   const pollQuestionStyles: any = pollStyle?.pollQuestionStyles;
   return (
     <Text

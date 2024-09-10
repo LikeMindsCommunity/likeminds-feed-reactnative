@@ -17,7 +17,6 @@ import LMHeader from "../../components/LMHeader";
 import { LMProfilePicture, LMText } from "../../uiComponents";
 import { nameInitials } from "../../utils";
 import { CreatePostContextValues, useCreatePostContext } from "../../context";
-import { useLMFeedStyles } from "../../lmFeedProvider";
 import Layout from "../../constants/Layout";
 import {
   CreatePollCustomisableMethodsContextProvider,
@@ -53,8 +52,7 @@ const CreatePollScreenComponent = () => {
   const navigation = useNavigation<any>();
 
   const { memberData }: any = route?.params;
-  const LMFeedContextStyles = useLMFeedStyles();
-  const { postListStyle }: any = LMFeedContextStyles;
+  const postListStyle = STYLES.$POST_LIST_STYLE;
   const postHeaderStyle = postListStyle?.header;
 
   const { onPollCompleteClicked } = useCreatePollCustomisableMethodsContext();

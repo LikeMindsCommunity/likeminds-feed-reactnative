@@ -11,7 +11,7 @@ import LMHeader from "../../components/LMHeader";
 import { LMActivityUI, RootStackParamList } from "../../models";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { styles } from "./styles";
-import { useLMFeedStyles } from "../../lmFeedProvider";
+import STYLES from "../../constants/Styles";
 
 interface NotificationFeedProps {
   children?: React.ReactNode;
@@ -46,8 +46,7 @@ const NotificationFeed = () => {
   const { handleScreenBackPress } = useNotificationFeedContext();
   const { handleScreenBackPressProp } =
     useNotificationFeedCustomisableMethodsContext();
-  const LMFeedContextStyles = useLMFeedStyles();
-  const { notificationFeedStyle } = LMFeedContextStyles;
+  const notificationFeedStyle = STYLES.$NOTIFICATION_FEED_STYLE;
   const customScreenHeader = notificationFeedStyle?.screenHeader;
   return (
     <SafeAreaView style={styles.mainContainer}>
