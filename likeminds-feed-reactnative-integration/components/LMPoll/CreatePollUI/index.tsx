@@ -115,7 +115,7 @@ const CreatePollUI = () => {
 
       {/* Divider */}
 
-      { !STYLES.$SHOULD_HIDE_SEPARATOR ? <View style={{
+      { !createPollStyle.shouldHideSeparator  ? <View style={{
         height: 11,
         backgroundColor: STYLES.$IS_DARK_THEME ? "#121212" : "#D0D8E2"
       }} /> : null }
@@ -200,7 +200,7 @@ const CreatePollUI = () => {
 
       {/* Divider */}
 
-      { !STYLES.$SHOULD_HIDE_SEPARATOR ? <View style={{
+      { !createPollStyle.shouldHideSeparator ? <View style={{
         height: 11,
         backgroundColor: STYLES.$IS_DARK_THEME ? "#121212" : "#D0D8E2"
       }} /> : null }

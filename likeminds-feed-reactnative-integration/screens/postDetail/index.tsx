@@ -435,7 +435,7 @@ const PostDetailComponent = React.memo(() => {
 
                           {/* Divider */}
 
-                          {!STYLES.$SHOULD_HIDE_SEPARATOR ? (
+                          {!postDetailStyle.shouldHideSeparator ? (
                             <View
                               style={{
                                 height: 11,

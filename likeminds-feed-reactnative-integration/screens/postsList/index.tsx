@@ -288,7 +288,7 @@ const PostsListComponent = ({ topics }: any) => {
             ItemSeparatorComponent={() => {
               return (
                 <>
-                  {!STYLES.$SHOULD_HIDE_SEPARATOR ? (
+                  {!postListStyle.shouldHideSeparator ? (
                     <View
                       style={{
                         height: 11,

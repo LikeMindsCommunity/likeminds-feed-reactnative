@@ -36,7 +36,6 @@ interface StylesProps {
   lightThemeBackgroundColor?: string;
   darkThemeBackgroundColor?: string;
   darkTransparentBackgroundColor?: string;
-  shouldHideSeparator?: boolean;
 }
 
 interface LMFeedStylesProps {
@@ -58,14 +57,12 @@ interface LMFeedStylesProps {
   };
   lightThemeBackgroundColor?: string;
   darkThemeBackgroundColor?: string;
-  shouldHideSeparator?: boolean;
 }
 
 const isIOS = Platform.OS === "ios";
 
 export class LMFeedTheme {
   public $IS_DARK_THEME: boolean;
-  public $SHOULD_HIDE_SEPARATOR: boolean;
   public $HUE: number;
   public $COLORS: {
     PRIMARY: string;
@@ -191,10 +188,8 @@ export class LMFeedTheme {
     },
     lightThemeBackgroundColor = "#ffffff",
     darkThemeBackgroundColor = "#000000",
-    shouldHideSeparator = false,
   }: LMFeedStylesProps = {}) {
     this.$IS_DARK_THEME = isDarkTheme;
-    this.$SHOULD_HIDE_SEPARATOR = shouldHideSeparator;
     this.$HUE = hue;
     this.$COLORS = {
       PRIMARY: primaryColor,
@@ -296,8 +291,6 @@ export class LMFeedTheme {
   }
 
   public setTheme(themeProps: StylesProps) {
-    this.$SHOULD_HIDE_SEPARATOR =
-      themeProps.shouldHideSeparator ?? this.$SHOULD_HIDE_SEPARATOR;
     this.$COLORS = {
       ...this.$COLORS,
       PRIMARY: themeProps.primaryColor ?? this.$COLORS.PRIMARY,

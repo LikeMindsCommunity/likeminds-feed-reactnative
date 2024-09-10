@@ -219,6 +219,7 @@ export interface PostListStyleProps {
   noPostView?: ViewStyle;
   noPostText?: TextStyle;
   listStyle?: ViewStyle;
+  shouldHideSeparator?: boolean;
 }
 
 // custom style interface for loader
@@ -229,6 +230,7 @@ export interface LoaderStyleProps {
 // custom style interface for post detail screen
 export interface PostDetailStyleProps {
   screenHeader?: LMHeaderProps;
+  shouldHideSeparator?: boolean;
   commentItemStyle?: {
     onTapViewMore?: () => void;
     commentUserNameStyle?: TextStyle;
@@ -431,6 +433,7 @@ export interface CreatePollStyle {
   pollAdvancedOptionMinimiseIcon?: string;
   pollAdvanceOptionsSwitchThumbColor?: string;
   pollAdvanceOptionsSwitchTrackColor?: string;
+  shouldHideSeparator?: boolean;
 }
 
 export interface ThemeContextProps {
