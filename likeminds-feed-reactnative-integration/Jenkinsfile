@@ -36,8 +36,8 @@ pipeline {
             steps {
                 dir('likeminds-feed-reactnative-integration'){
                     sh 'npm install'
-                    // sh 'npm uninstall @likeminds.community/feed-rn' 
-                    // sh 'npm install $feed_rn_package_FILENAME'
+                    sh 'npm uninstall @likeminds.community/feed-rn' 
+                    sh 'npm install $feed_rn_package_FILENAME'
                 }
             }
         }
@@ -67,10 +67,10 @@ pipeline {
         }
     }
     
-    post{
-        always{
-            cleanWs()
-        }
-    }
+    // post{
+    //     always{
+    //         cleanWs()
+    //     }
+    // }
 
 }
