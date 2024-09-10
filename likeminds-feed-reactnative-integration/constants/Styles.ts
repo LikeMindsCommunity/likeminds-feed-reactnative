@@ -70,18 +70,13 @@ export class LMFeedTheme {
     TERTIARY: string;
     MSG: string;
     FONT_PRIMARY: string;
-    JOINED_BTN: string;
     WHITE: string;
     BLACK: string;
-    THEME: string;
     TEXT_COLOR: string;
     LIGHT_GREY: string;
     RED: string;
     REPORT_RED: string;
-    whiteTextColor: string;
-    darkTextColor: string;
-    lightGreyTextColor: string;
-    darkGreyTextColor: string;
+    WHITE_TEXT_COLOR: string;
   };
   public $FONT_SIZES: {
     XS?: number;
@@ -197,18 +192,13 @@ export class LMFeedTheme {
       TERTIARY: "#ffffff",
       MSG: "#777e8e",
       FONT_PRIMARY: fontColor,
-      JOINED_BTN: `hsl(${this.$HUE}, 22%, 93%)`,
       WHITE: "#ffffff",
       BLACK: "#000000",
-      THEME: "#5046E5",
       TEXT_COLOR: "#484F67",
       LIGHT_GREY: "#e0e0e0",
       RED: "#ff0000",
       REPORT_RED: "#FB1609",
-      whiteTextColor: "#ffffff",
-      darkTextColor: "#000000",
-      lightGreyTextColor: "#00000077",
-      darkGreyTextColor: "#00000099",
+      WHITE_TEXT_COLOR: "#ffffff",
     };
     this.$FONT_SIZES = {
       XS: 10,

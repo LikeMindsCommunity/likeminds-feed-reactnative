@@ -100,7 +100,7 @@ const FetchKeyInputScreen: React.FC<ChildProps> = ({isTrue, setIsTrue}) => {
           backgroundColor:
             userUniqueID && userName && apiKey
               ? STYLES.$COLORS.SECONDARY
-              : STYLES.$COLORS.JOINED_BTN,
+              : 'grey',
           padding: 10,
           borderRadius: 10,
         }}
