@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
   },
   filterText: {
     fontSize: STYLES.$FONT_SIZES.LARGE,
-    color: STYLES.$COLORS.whiteTextColor,
+    color: STYLES.$COLORS.WHITE_TEXT_COLOR,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
   },
 });

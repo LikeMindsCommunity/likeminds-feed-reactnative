@@ -13,7 +13,6 @@ import {
   VIDEO_ATTACHMENT_TYPE,
 } from "../../../constants/Strings";
 import { LMPostContextValues, useLMPostContext } from "../../../context";
-import { useLMFeedStyles } from "../../../lmFeedProvider";
 import { useAppDispatch } from "../../../store/store";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -30,8 +29,7 @@ import LMPostPollView from "../../LMPoll/LMPostPollView";
 
 const LMPostMedia = React.memo(() => {
   const { post, mediaProps }: LMPostContextValues = useLMPostContext();
-  const LMFeedContextStyles = useLMFeedStyles();
-  const { postListStyle } = LMFeedContextStyles;
+  const postListStyle = STYLES.$POST_LIST_STYLE;
   const customPostMediaStyle: any = postListStyle?.media;
 
   const navigation = useNavigation<StackNavigationProp<any>>();

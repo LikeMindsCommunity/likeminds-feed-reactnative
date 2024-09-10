@@ -269,7 +269,7 @@ const DeleteModal = ({
                   {
                     backgroundColor: modalBackdropColor
                       ? modalBackdropColor
-                      : STYLES.$BACKGROUND_COLORS.DARKTRANSPARENT,
+                      : STYLES.$BACKGROUND_COLORS.DARK_TRANSPARENT,
                   },
                 ]}
                 onPress={() => displayModal(false)}

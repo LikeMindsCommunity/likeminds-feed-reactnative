@@ -10,13 +10,12 @@ import { LMText } from "../../../uiComponents";
 import { styles } from "./styles";
 import decode from "../../../utils/decodeMentions";
 import { LMPostContextValues, useLMPostContext } from "../../../context";
-import { useLMFeedStyles } from "../../../lmFeedProvider";
 import MoreLessComponent from "../LMPostText";
+import STYLES from "../../../constants/Styles";
 
 const LMPostContent = React.memo(() => {
   const { post }: LMPostContextValues = useLMPostContext();
-  const LMFeedContextStyles = useLMFeedStyles();
-  const { postListStyle } = LMFeedContextStyles;
+  const postListStyle = STYLES.$POST_LIST_STYLE;
   const postContentStyle = postListStyle?.postContent;
 
   const MAX_LINES = postContentStyle?.visibleLines

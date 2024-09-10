@@ -1,7 +1,6 @@
 import { View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Client } from "../../client";
-import { useLMFeedStyles } from "../../lmFeedProvider";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import {
   UniversalFeedContextValues,
@@ -27,8 +26,7 @@ const LMFilterTopics = () => {
   }: UniversalFeedContextValues = useUniversalFeedContext();
   const myClient = Client.myClient;
   const [showTopics, setShowTopics] = useState(false);
-  const LMFeedContextStyles = useLMFeedStyles();
-  const { topicsStyle }: any = LMFeedContextStyles;
+  const topicsStyle = STYLES.$TOPICS_STYLE;
 
   const selectedTopics = useAppSelector(
     (state) => state.feed.selectedTopicsForUniversalFeedScreen

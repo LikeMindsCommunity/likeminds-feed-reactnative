@@ -1,7 +1,6 @@
 import { View, Text, TouchableOpacity, Image, SafeAreaView } from "react-native";
 import React, { useState } from "react";
 import LMHeader from "../LMHeader";
-import { useLMFeedStyles } from "../../lmFeedProvider";
 import {
   UniversalFeedContextValues,
   useUniversalFeedContext,
@@ -17,8 +16,7 @@ const LMUniversalFeedHeader = () => {
     unreadNotificationCount,
     onTapNotificationBell,
   }: UniversalFeedContextValues = useUniversalFeedContext();
-  const LMFeedContextStyles = useLMFeedStyles();
-  const { universalFeedStyle }: any = LMFeedContextStyles;
+  const universalFeedStyle = STYLES.$UNIVERSAL_FEED_STYLE;
   const { onTapNotificationBellProp } =
     useUniversalFeedCustomisableMethodsContext();
 

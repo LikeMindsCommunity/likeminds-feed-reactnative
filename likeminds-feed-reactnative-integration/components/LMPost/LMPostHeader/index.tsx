@@ -5,14 +5,12 @@ import { LMIcon, LMText, LMProfilePicture } from "../../../uiComponents";
 import { nameInitials } from "../../../utils";
 import { styles } from "./styles";
 import { LMPostContextValues, useLMPostContext } from "../../../context";
-import { useLMFeedStyles } from "../../../lmFeedProvider";
 import { useAppSelector } from "../../../store/store";
 import STYLES from "../../../constants/Styles";
 
 const LMPostHeader = React.memo(() => {
   const { post, headerProps }: any = useLMPostContext();
-  const LMFeedContextStyles = useLMFeedStyles();
-  const { postListStyle } = LMFeedContextStyles;
+  const postListStyle = STYLES.$POST_LIST_STYLE;
   const customPostHeaderStyle: any = postListStyle?.header;
   const memberData = useAppSelector((state) => state.login.member);
 

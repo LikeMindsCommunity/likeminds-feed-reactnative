@@ -41,7 +41,6 @@ import {
   useCreatePostContext,
   useCreatePostCustomisableMethodsContext,
 } from "../../context";
-import { useLMFeedStyles } from "../../lmFeedProvider";
 import {
   LMButton,
   LMIcon,
@@ -133,19 +132,20 @@ const CreatePost = ({
 
 const CreatePostComponent = () => {
   const dispatch = useAppDispatch();
-  const LMFeedContextStyles = useLMFeedStyles();
   const predefinedTopics = useAppSelector(
     (state) => state.createPost.predefinedTopics
   );
-  const { postListStyle, createPostStyle, postDetailStyle, topicsStyle }: any =
-    LMFeedContextStyles;
+  const postListStyle = STYLES.$POST_LIST_STYLE;
+  const createPostStyle = STYLES.$CREATE_POST_STYLE;
+  const postDetailStyle = STYLES.$POST_DETAIL_STYLE;
+  const topicsStyle = STYLES.$TOPICS_STYLE;
   const customTextInputStyle = createPostStyle?.createPostTextInputStyle;
   const customAddMoreAttachmentsButton =
     createPostStyle?.addMoreAttachmentsButton;
   const customCreatePostScreenHeader = createPostStyle?.createPostScreenHeader;
-  const customAttachmentOptionsStyle = createPostStyle?.attachmentOptionsStyle;
+  const customAttachmentOptionsStyle: any = createPostStyle?.attachmentOptionsStyle;
   const postHeaderStyle = postListStyle?.header;
-  const postMediaStyle = postListStyle?.media;
+  const postMediaStyle: any = postListStyle?.media;
   const selectTopicPlaceholder = topicsStyle?.selectTopicPlaceholder;
   const selectedTopicsStyle = topicsStyle?.selectedTopicsStyle;
   const plusIconStyle = topicsStyle?.plusIconStyle;
@@ -469,13 +469,15 @@ const CreatePostComponent = () => {
                 key={index}
                 style={{ flexDirection: "row", alignItems: "center" }}
               >
-                <View style={{
-                  paddingVertical: Layout.normalize(4),
-                  backgroundColor: `hsla(${STYLES.$HUE}, 75%, 59%, 0.1)`,
-                  borderRadius: 5,
-                  paddingHorizontal: Layout.normalize(8),
-                  margin: Layout.normalize(5),
-                }}>
+                <View
+                  style={{
+                    paddingVertical: Layout.normalize(4),
+                    backgroundColor: `hsla(${STYLES.$HUE}, 75%, 59%, 0.1)`,
+                    borderRadius: 5,
+                    paddingHorizontal: Layout.normalize(8),
+                    margin: Layout.normalize(5),
+                  }}
+                >
                   <Text
                     style={{
                       fontSize: Layout.normalize(15),
@@ -777,9 +779,9 @@ const CreatePostComponent = () => {
               <LMCarousel
                 {...postMediaStyle?.carousel}
                 attachments={formattedMediaAttachments}
-                post={{ 
+                post={{
                   attachments: formattedMediaAttachments,
-                  user: memberData 
+                  user: memberData,
                 }}
                 showCancel={
                   postMediaStyle?.carousel?.showCancel != undefined
