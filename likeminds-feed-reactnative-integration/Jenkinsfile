@@ -25,7 +25,9 @@ pipeline {
             steps{
                 dir('likeminds-feed-reactnative-integration'){
                     unstash 'feed_rn_package'
+                    unstash 'feed_js_package'
                     sh 'mv feed_rn_package $feed_rn_package_FILENAME'
+                    sh 'mv feed_js_package $feed_js_package_FILENAME'
                     sh 'ls'
                 }
             }
