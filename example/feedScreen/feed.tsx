@@ -174,10 +174,10 @@ const Feed = () => {
       onAddPollOptionsClicked={customAddPollOptionsClick}
       onPollOptionClicked={customPollOptionClicked}>
       <LMUniversalFeedHeader />
-      <FilterTopics />
+      <LMFilterTopics />
       <LMPostUploadIndicator />
       <PostsList items={mappedTopics} />
-      <CreatePostButton />
+      <LMCreatePostButton />
     </UniversalFeed>
   );
 };
