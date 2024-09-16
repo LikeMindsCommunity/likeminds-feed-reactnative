@@ -1,6 +1,6 @@
 {
   "name": "@likeminds.community/feed-rn-core-beta",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "LikeMinds ReactNative Core SDK for feed",
   "scripts": {
     "android": "react-native run-android",
