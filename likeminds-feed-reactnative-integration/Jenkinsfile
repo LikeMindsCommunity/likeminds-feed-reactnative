@@ -5,9 +5,11 @@ pipeline {
     options {
         buildDiscarder logRotator(daysToKeepStr: '7', numToKeepStr: '1')
     }
+    
     parameters {
         stashedFile 'feed_rn_package'
     }
+    
     environment {
         NODE_OPTIONS = "--max-old-space-size=8192"  // Setting the memory limit for Node.js
     }
