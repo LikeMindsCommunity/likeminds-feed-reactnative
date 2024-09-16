@@ -11,6 +11,7 @@ pipeline {
     environment {
         NODE_OPTIONS = "--max-old-space-size=8192"  // Setting the memory limit for Node.js
     }
+    
     stages {
 
         stage('check'){
