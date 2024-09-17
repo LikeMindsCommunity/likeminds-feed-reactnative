@@ -1,4 +1,3 @@
-import { Theme } from "../enums/Themes";
 import { LMAttachmentViewData } from "../models";
 import React, { createContext, ReactNode, useContext } from "react";
 
@@ -15,7 +14,7 @@ export interface CreatePostCallbacksContextProps {
     poll: any
   ) => void;
   handleScreenBackPressProp?: () => void;
-  theme: Theme.QA | Theme.SOCIAL;
+  isHeadingEnabled: boolean;
 }
 
 export interface CreatePostCustomisableMethodsContext {
@@ -30,7 +29,7 @@ export interface CreatePostCustomisableMethodsContext {
     poll: any
   ) => void;
   handleScreenBackPressProp?: () => void;
-  theme: Theme.QA | Theme.SOCIAL;
+  isHeadingEnabled: boolean;
 }
 
 const CreatePostCustomisableMethodsContext = createContext<
@@ -54,7 +53,7 @@ export const CreatePostCustomisableMethodsContextProvider = ({
   handlePollProp,
   onPostClickProp,
   handleScreenBackPressProp,
-  theme,
+  isHeadingEnabled,
 }: CreatePostCallbacksContextProps) => {
   const contextValues: CreatePostCustomisableMethodsContext = {
     handleGalleryProp,
@@ -62,7 +61,7 @@ export const CreatePostCustomisableMethodsContextProvider = ({
     handlePollProp,
     onPostClickProp,
     handleScreenBackPressProp,
-    theme,
+    isHeadingEnabled,
   };
 
   return (

@@ -33,6 +33,7 @@ import {
   SELECT_VIDEO,
   VIDEO_ATTACHMENT_TYPE,
   QA_FEED_CREATE_POST_PLACEHOLDER_TEXT,
+  QA_FEED_CREATE_POST_HEADING_PLACEHOLDER_TEXT,
 } from "../../constants/Strings";
 import { setUploadAttachments } from "../../store/actions/createPost";
 import { styles } from "./styles";
@@ -81,7 +82,6 @@ import { LMPostPollView } from "../../components/LMPoll";
 import { useRoute } from "@react-navigation/native";
 import STYLES from "../../constants/Styles";
 import { PollCustomisableMethodsContextProvider } from "../../context/pollCustomisableCallback";
-import { Theme } from "../../enums/Themes";
 
 interface CreatePostProps {
   children?: React.ReactNode;
@@ -105,7 +105,7 @@ interface CreatePostProps {
   handleScreenBackPressProp?: () => void;
   onPollEditClicked: any;
   onPollClearClicked: any;
-  theme: Theme.QA | Theme.SOCIAL;
+  isHeadingEnabled: boolean;
 }
 
 const CreatePost = ({
@@ -116,7 +116,7 @@ const CreatePost = ({
   handleScreenBackPressProp,
   onPollEditClicked,
   onPollClearClicked,
-  theme = Theme.SOCIAL,
+  isHeadingEnabled = false,
 }: CreatePostProps) => {
   return (
     <PollCustomisableMethodsContextProvider
@@ -124,7 +124,7 @@ const CreatePost = ({
       onPollClearClicked={onPollClearClicked}
     >
       <CreatePostCustomisableMethodsContextProvider
-        theme={theme}
+        isHeadingEnabled={isHeadingEnabled}
         handleDocumentProp={handleDocumentProp}
         handlePollProp={handlePollProp}
         handleGalleryProp={handleGalleryProp}
@@ -420,7 +420,7 @@ const CreatePostComponent = () => {
     handleGalleryProp,
     onPostClickProp,
     handleScreenBackPressProp,
-    theme,
+    isHeadingEnabled,
   } = useCreatePostCustomisableMethodsContext();
 
   // this renders the post detail UI
@@ -570,24 +570,32 @@ const CreatePostComponent = () => {
           </View>
         ) : null}
 
-        {theme === Theme.QA ? (
+        {isHeadingEnabled ? (
           <View
             style={{
               paddingVertical: 10,
               margin: 15,
               marginBottom: 0,
+              flexDirection: "row",
+              alignItems: "center",
             }}
           >
             <TextInput
               value={heading}
               onChangeText={handleHeadingInputChange}
-              placeholder={"Add your question here"}
-              style={{}}
+              placeholder={QA_FEED_CREATE_POST_HEADING_PLACEHOLDER_TEXT}
+              placeholderTextColor={"grey"}
+              style={{ fontSize: 16, color: "black", fontWeight: "600" }}
             />
+            {!heading ? (
+              <Text style={{ color: "red", fontSize: 18, marginLeft: 5 }}>
+                *
+              </Text>
+            ) : null}
           </View>
         ) : null}
 
-        {theme === Theme.QA ? (
+        {isHeadingEnabled ? (
           <View
             style={{
               borderColor: STYLES.$IS_DARK_THEME ? "#121212" : "#D0D8E2",
@@ -604,7 +612,7 @@ const CreatePostComponent = () => {
           placeholderText={
             customTextInputStyle?.placeholderText
               ? customTextInputStyle?.placeholderText
-              : theme === Theme.QA
+              : isHeadingEnabled
               ? QA_FEED_CREATE_POST_PLACEHOLDER_TEXT
               : SOCIAL_FEED_CREATE_POST_PLACEHOLDER_TEXT
           }
@@ -1018,7 +1026,7 @@ const CreatePostComponent = () => {
             disabled={
               postToEdit
                 ? false
-                : theme === Theme.QA
+                : isHeadingEnabled
                 ? heading?.trim() !== ""
                   ? false
                   : true
@@ -1032,7 +1040,7 @@ const CreatePostComponent = () => {
             style={
               postToEdit
                 ? styles.enabledOpacity
-                : theme === Theme.QA
+                : isHeadingEnabled
                 ? heading?.trim() !== ""
                   ? styles.enabledOpacity
                   : styles.disabledOpacity
