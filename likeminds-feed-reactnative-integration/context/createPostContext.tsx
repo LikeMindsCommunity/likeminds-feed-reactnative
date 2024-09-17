@@ -58,7 +58,12 @@ import { getPost, getTaggingList } from "../store/actions/postDetail";
 import { showToastMessage } from "../store/actions/toast";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../models/RootStackParamsList";
-import { LMAttachmentViewData, LMOGTagsViewData, LMPostViewData, LMUserViewData } from "../models";
+import {
+  LMAttachmentViewData,
+  LMOGTagsViewData,
+  LMPostViewData,
+  LMUserViewData,
+} from "../models";
 import {
   ADD_SELECTED_TOPICS,
   CLEAR_POLL,
@@ -111,6 +116,7 @@ export interface CreatePostContextValues {
   allTags: Array<LMUserViewData>;
   isUserTagging: boolean;
   isLoading: boolean;
+  heading: string;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   setIsUserTagging: Dispatch<SetStateAction<boolean>>;
   setAllTags: Dispatch<SetStateAction<Array<LMUserViewData>>>;
@@ -124,12 +130,18 @@ export interface CreatePostContextValues {
   setShowOptions: Dispatch<SetStateAction<boolean>>;
   setClosedOnce: Dispatch<SetStateAction<boolean>>;
   setShowLinkPreview: Dispatch<SetStateAction<boolean>>;
-  setFormattedLinkAttachments: Dispatch<SetStateAction<Array<LMAttachmentViewData>>>;
-  setFormattedMediaAttachments: Dispatch<SetStateAction<Array<LMAttachmentViewData>>>;
+  setFormattedLinkAttachments: Dispatch<
+    SetStateAction<Array<LMAttachmentViewData>>
+  >;
+  setFormattedMediaAttachments: Dispatch<
+    SetStateAction<Array<LMAttachmentViewData>>
+  >;
   setFormattedDocumentAttachments: Dispatch<
     SetStateAction<Array<LMAttachmentViewData>>
   >;
-  setFormattedPollAttachments: Dispatch<SetStateAction<Array<LMAttachmentViewData>>>;
+  setFormattedPollAttachments: Dispatch<
+    SetStateAction<Array<LMAttachmentViewData>>
+  >;
   setSelectedImageVideo: (type: string) => void;
   setSelectedDocuments: () => void;
   handleGallery: (type: string) => void;
@@ -154,6 +166,7 @@ export interface CreatePostContextValues {
     poll: any
   ) => void;
   handleScreenBackPress: () => void;
+  handleHeadingInputChange: (event: string) => void;
 }
 
 const CreatePostContext = createContext<CreatePostContextValues | undefined>(
@@ -196,6 +209,7 @@ export const CreatePostContextProvider = ({
   const postToEdit = route?.params?.postId;
   const [postDetail, setPostDetail] = useState({} as LMPostViewData);
   const [postContentText, setPostContentText] = useState("");
+  const [heading, setHeading] = useState("");
   const myRef = useRef<TextInput>(null);
   const [taggedUserName, setTaggedUserName] = useState("");
   const [debounceTimeout, setDebounceTimeout] = useState<NodeJS.Timeout | null>(
@@ -360,6 +374,7 @@ export const CreatePostContextProvider = ({
               mediaAttachmentData: allMedia,
               linkAttachmentData: linkData,
               postContentData: content.trim(),
+              heading: heading,
               topics: topics,
               poll: poll,
             })
@@ -646,7 +661,7 @@ export const CreatePostContextProvider = ({
 
     // call edit post api
 
-    if(formattedPollAttachments[0]?.attachmentMeta){
+    if (formattedPollAttachments[0]?.attachmentMeta) {
       const editPostResponse = dispatch(
         editPost(
           EditPostRequest.builder()
@@ -664,15 +679,12 @@ export const CreatePostContextProvider = ({
         )
       );
       return editPostResponse;
-    }else{
+    } else {
       const editPostResponse = dispatch(
         editPost(
           EditPostRequest.builder()
             .setHeading("")
-            .setattachments([
-              ...allAttachment,
-              ...linkAttachments,
-            ])
+            .setattachments([...allAttachment, ...linkAttachments])
             .setpostId(postDetail?.id)
             .settext(contentText)
             .setTopicIds(topics)
@@ -682,9 +694,6 @@ export const CreatePostContextProvider = ({
       );
       return editPostResponse;
     }
-
-
-   
   };
 
   // this function is called on change text of inputText
@@ -739,6 +748,11 @@ export const CreatePostContextProvider = ({
         setIsUserTagging(false);
       }
     }
+  };
+
+  // this function is called on change text of heading inputText
+  const handleHeadingInputChange = (event: string) => {
+    setHeading(event);
   };
 
   // this calls the tagging list api for different page number
@@ -811,6 +825,7 @@ export const CreatePostContextProvider = ({
     allTags,
     isUserTagging,
     isLoading,
+    heading,
     setIsLoading,
     setIsUserTagging,
     setAllTags,
@@ -842,6 +857,7 @@ export const CreatePostContextProvider = ({
     getPostData,
     postEdit,
     handleInputChange,
+    handleHeadingInputChange,
     loadData,
     handleLoadMore,
     onPostClick,

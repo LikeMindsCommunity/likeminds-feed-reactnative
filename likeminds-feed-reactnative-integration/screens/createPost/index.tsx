@@ -11,6 +11,7 @@ import {
   ScrollView,
   Alert,
   Platform,
+  TextInput,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { NetworkUtil, nameInitials, replaceLastMention } from "../../utils";
@@ -22,7 +23,7 @@ import {
   ADD_POLL,
   ADD_POST_TEXT,
   ADD_VIDEOS,
-  CREATE_POST_PLACEHOLDER_TEXT,
+  SOCIAL_FEED_CREATE_POST_PLACEHOLDER_TEXT,
   DOCUMENT_ATTACHMENT_TYPE,
   IMAGE_ATTACHMENT_TYPE,
   SAVE_POST_TEXT,
@@ -31,6 +32,7 @@ import {
   SELECT_IMAGE,
   SELECT_VIDEO,
   VIDEO_ATTACHMENT_TYPE,
+  QA_FEED_CREATE_POST_PLACEHOLDER_TEXT,
 } from "../../constants/Strings";
 import { setUploadAttachments } from "../../store/actions/createPost";
 import { styles } from "./styles";
@@ -48,7 +50,11 @@ import {
   LMProfilePicture,
   LMText,
 } from "../../uiComponents";
-import { LMAttachmentViewData, LMUserViewData, RootStackParamList } from "../../models";
+import {
+  LMAttachmentViewData,
+  LMUserViewData,
+  RootStackParamList,
+} from "../../models";
 import LMCarousel from "../../components/LMMedia/LMCarousel";
 import LMDocument from "../../components/LMMedia/LMDocument";
 import LMImage from "../../components/LMMedia/LMImage";
@@ -75,6 +81,7 @@ import { LMPostPollView } from "../../components/LMPoll";
 import { useRoute } from "@react-navigation/native";
 import STYLES from "../../constants/Styles";
 import { PollCustomisableMethodsContextProvider } from "../../context/pollCustomisableCallback";
+import { Theme } from "../../enums/Themes";
 
 interface CreatePostProps {
   children?: React.ReactNode;
@@ -98,12 +105,10 @@ interface CreatePostProps {
   handleScreenBackPressProp?: () => void;
   onPollEditClicked: any;
   onPollClearClicked: any;
+  theme: Theme.QA | Theme.SOCIAL;
 }
 
 const CreatePost = ({
-  navigation,
-  route,
-  children,
   handleDocumentProp,
   handlePollProp,
   handleGalleryProp,
@@ -111,6 +116,7 @@ const CreatePost = ({
   handleScreenBackPressProp,
   onPollEditClicked,
   onPollClearClicked,
+  theme = Theme.SOCIAL,
 }: CreatePostProps) => {
   return (
     <PollCustomisableMethodsContextProvider
@@ -118,6 +124,7 @@ const CreatePost = ({
       onPollClearClicked={onPollClearClicked}
     >
       <CreatePostCustomisableMethodsContextProvider
+        theme={theme}
         handleDocumentProp={handleDocumentProp}
         handlePollProp={handlePollProp}
         handleGalleryProp={handleGalleryProp}
@@ -143,7 +150,8 @@ const CreatePostComponent = () => {
   const customAddMoreAttachmentsButton =
     createPostStyle?.addMoreAttachmentsButton;
   const customCreatePostScreenHeader = createPostStyle?.createPostScreenHeader;
-  const customAttachmentOptionsStyle: any = createPostStyle?.attachmentOptionsStyle;
+  const customAttachmentOptionsStyle: any =
+    createPostStyle?.attachmentOptionsStyle;
   const postHeaderStyle = postListStyle?.header;
   const postMediaStyle: any = postListStyle?.media;
   const selectTopicPlaceholder = topicsStyle?.selectTopicPlaceholder;
@@ -156,7 +164,9 @@ const CreatePostComponent = () => {
     memberData,
     myRef,
     postContentText,
+    heading,
     handleInputChange,
+    handleHeadingInputChange,
     handleDocument,
     handlePoll,
     handleGallery,
@@ -410,6 +420,7 @@ const CreatePostComponent = () => {
     handleGalleryProp,
     onPostClickProp,
     handleScreenBackPressProp,
+    theme,
   } = useCreatePostCustomisableMethodsContext();
 
   // this renders the post detail UI
@@ -559,13 +570,43 @@ const CreatePostComponent = () => {
           </View>
         ) : null}
 
+        {theme === Theme.QA ? (
+          <View
+            style={{
+              paddingVertical: 10,
+              margin: 15,
+              marginBottom: 0,
+            }}
+          >
+            <TextInput
+              value={heading}
+              onChangeText={handleHeadingInputChange}
+              placeholder={"Add your question here"}
+              style={{}}
+            />
+          </View>
+        ) : null}
+
+        {theme === Theme.QA ? (
+          <View
+            style={{
+              borderColor: STYLES.$IS_DARK_THEME ? "#121212" : "#D0D8E2",
+              borderWidth: 1,
+              marginHorizontal: 15,
+              marginTop: 10,
+            }}
+          />
+        ) : null}
+
         {/* text input field */}
         <LMInputText
           {...customTextInputStyle}
           placeholderText={
             customTextInputStyle?.placeholderText
               ? customTextInputStyle?.placeholderText
-              : CREATE_POST_PLACEHOLDER_TEXT
+              : theme === Theme.QA
+              ? QA_FEED_CREATE_POST_PLACEHOLDER_TEXT
+              : SOCIAL_FEED_CREATE_POST_PLACEHOLDER_TEXT
           }
           placeholderTextColor={
             customTextInputStyle?.placeholderTextColor
@@ -977,6 +1018,10 @@ const CreatePostComponent = () => {
             disabled={
               postToEdit
                 ? false
+                : theme === Theme.QA
+                ? heading?.trim() !== ""
+                  ? false
+                  : true
                 : allAttachment?.length > 0 ||
                   formattedLinkAttachments?.length > 0 ||
                   postContentText.trim() !== "" ||
@@ -987,6 +1032,10 @@ const CreatePostComponent = () => {
             style={
               postToEdit
                 ? styles.enabledOpacity
+                : theme === Theme.QA
+                ? heading?.trim() !== ""
+                  ? styles.enabledOpacity
+                  : styles.disabledOpacity
                 : allAttachment?.length > 0 ||
                   formattedLinkAttachments?.length > 0 ||
                   postContentText.trim() !== "" ||

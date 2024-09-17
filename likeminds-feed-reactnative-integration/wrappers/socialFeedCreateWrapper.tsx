@@ -5,7 +5,7 @@ import {
 } from "../context";
 import { CreatePost } from "../screens/createPost";
 
-const CreateWrapper = ({ navigation, route }) => {
+const SocialFeedCreateWrapper = ({ navigation, route }) => {
   return (
     <UniversalFeedContextProvider navigation={navigation} route={route}>
       <CreatePostContextProvider navigation={navigation} route={route}>
@@ -16,4 +16,4 @@ const CreateWrapper = ({ navigation, route }) => {
   );
 };
 
-export default CreateWrapper;
+export default SocialFeedCreateWrapper;

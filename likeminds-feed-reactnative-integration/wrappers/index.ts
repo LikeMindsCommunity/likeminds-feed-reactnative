@@ -1,6 +1,7 @@
 import DetailWrapper from "./detailScreenWrapper";
 import CreatePollScreenWrapper from "./createPollScreenWrapper";
-import CreateWrapper from "./createScreenWrapper";
+import SocialFeedCreateWrapper from "./socialFeedCreateWrapper";
+import QAFeedCreateWrapper from "./qaFeedCreateWrapper";
 import LikesWrapper from "./likesWrapper";
 import NotificationWrapper from "./notificationWrapper";
 import FeedWrapper from "./universalFeedScreenWrapper";
@@ -9,7 +10,8 @@ import TopicFeedWrapper from "./topicFeedScreenWrapper";
 export {
   DetailWrapper,
   CreatePollScreenWrapper,
-  CreateWrapper,
+  SocialFeedCreateWrapper,
+  QAFeedCreateWrapper,
   LikesWrapper,
   NotificationWrapper,
   FeedWrapper,

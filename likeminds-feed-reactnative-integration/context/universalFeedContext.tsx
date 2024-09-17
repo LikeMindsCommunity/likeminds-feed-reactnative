@@ -121,7 +121,7 @@ export const UniversalFeedContextProvider = ({
   const memberRight = useAppSelector((state) => state.login.memberRights);
   const [postUploading, setPostUploading] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(true);
-  const { mediaAttachmemnts, linkAttachments, postContent, topics } =
+  const { mediaAttachmemnts, linkAttachments, postContent, heading, topics } =
     useAppSelector((state) => state.createPost);
   const poll = useAppSelector((state) => state.createPost.poll);
   const unreadNotificationCount = useAppSelector(
@@ -178,6 +178,7 @@ export const UniversalFeedContextProvider = ({
   const postAdd = async () => {
     // replace the mentions with route
     const postContentText = mentionToRouteConverter(postContent);
+    const headingText = heading;
     // upload media to aws
     const uploadPromises = mediaAttachmemnts?.map(
       async (item: LMAttachmentViewData) => {
@@ -233,6 +234,7 @@ export const UniversalFeedContextProvider = ({
             ...pollAttachment,
           ])
           .setText(postContentText)
+          .setHeading(headingText)
           .setTopicIds(topics)
           .build(),
         false
@@ -311,7 +313,7 @@ export const UniversalFeedContextProvider = ({
       setPostUploading(true);
       postAdd();
     }
-  }, [mediaAttachmemnts, linkAttachments, postContent, topics, poll]);
+  }, [mediaAttachmemnts, linkAttachments, postContent, heading, topics, poll]);
 
   // keyExtractor of feed list
   const keyExtractor = (item: LMPostViewData) => {
