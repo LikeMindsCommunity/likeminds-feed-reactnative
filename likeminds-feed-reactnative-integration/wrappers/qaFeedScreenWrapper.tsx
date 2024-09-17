@@ -28,7 +28,7 @@ const Feed = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "black" }}>
-      <UniversalFeed>
+      <UniversalFeed isHeadingEnabled={true} topResponse={true}>
         <LMUniversalFeedHeader />
         <LMFilterTopics />
         <LMPostUploadIndicator />
@@ -39,7 +39,7 @@ const Feed = () => {
   );
 };
 
-const FeedWrapper = ({ navigation, route }) => {
+const QAFeedWrapper = ({ navigation, route }) => {
   return (
     <UniversalFeedContextProvider navigation={navigation} route={route}>
       <PostListContextProvider navigation={navigation} route={route}>
@@ -49,4 +49,4 @@ const FeedWrapper = ({ navigation, route }) => {
   );
 };
 
-export default FeedWrapper;
+export default QAFeedWrapper;

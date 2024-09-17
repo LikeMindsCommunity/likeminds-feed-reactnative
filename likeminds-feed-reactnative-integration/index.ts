@@ -61,7 +61,8 @@ import {
   QAFeedCreateWrapper,
   LikesWrapper,
   NotificationWrapper,
-  FeedWrapper,
+  SocialFeedWrapper,
+  QAFeedWrapper,
   TopicFeedWrapper,
 } from "./wrappers";
 import LMFeedTheme from "./constants/Styles";
@@ -122,7 +123,8 @@ export {
   QAFeedCreateWrapper,
   LikesWrapper,
   NotificationWrapper,
-  FeedWrapper,
+  SocialFeedWrapper,
+  QAFeedWrapper,
   TopicFeedWrapper,
   LMFeedTheme,
 };

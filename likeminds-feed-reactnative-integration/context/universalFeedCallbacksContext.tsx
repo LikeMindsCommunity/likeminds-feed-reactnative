@@ -3,6 +3,8 @@ import React, { createContext, ReactNode, useContext } from "react";
 
 export interface UniversalFeedCallbacksContextProps {
   children?: ReactNode;
+  isHeadingEnabled: boolean;
+  topResponse: boolean;
   postLikeHandlerProp?: (id: string) => void;
   savePostHandlerProp?: (id: string, saved?: boolean) => void;
   selectPinPostProp?: (id: string, pinned?: boolean) => void;
@@ -24,6 +26,8 @@ export interface UniversalFeedCallbacksContextProps {
 }
 
 export interface UniversalFeedCustomisableMethodsContext {
+  isHeadingEnabled: boolean;
+  topResponse: boolean;
   postLikeHandlerProp?: (id: string) => void;
   savePostHandlerProp?: (id: string, saved?: boolean) => void;
   selectPinPostProp?: (id: string, pinned?: boolean) => void;
@@ -72,6 +76,8 @@ export const UniversalFeedCustomisableMethodsContextProvider = ({
   onOverlayMenuClickProp,
   onTapNotificationBellProp,
   onSharePostClicked,
+  isHeadingEnabled = false,
+  topResponse = false,
 }: UniversalFeedCallbacksContextProps) => {
   const contextValues: UniversalFeedCustomisableMethodsContext = {
     postLikeHandlerProp,
@@ -86,6 +92,8 @@ export const UniversalFeedCustomisableMethodsContextProvider = ({
     onOverlayMenuClickProp,
     onTapNotificationBellProp,
     onSharePostClicked,
+    isHeadingEnabled,
+    topResponse
   };
 
   return (

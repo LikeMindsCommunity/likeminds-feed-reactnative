@@ -15,6 +15,8 @@ interface UniversalFeedProps {
     params: Array<string>;
     path: undefined;
   };
+  isHeadingEnabled?: boolean;
+  topResponse?: boolean;
   postLikeHandlerProp?: (id: string) => void;
   savePostHandlerProp?: (id: string, saved?: boolean) => void;
   selectPinPostProp?: (id: string, pinned?: boolean) => void;
@@ -61,6 +63,8 @@ const UniversalFeed = ({
   onSubmitButtonClicked,
   onAddPollOptionsClicked,
   onPollOptionClicked,
+  isHeadingEnabled = false,
+  topResponse = false,
 }: UniversalFeedProps) => {
   return (
     <PollCustomisableMethodsContextProvider
@@ -81,6 +85,8 @@ const UniversalFeed = ({
         onOverlayMenuClickProp={onOverlayMenuClickProp}
         onTapNotificationBellProp={onTapNotificationBellProp}
         onSharePostClicked={onSharePostClicked}
+        isHeadingEnabled={isHeadingEnabled}
+        topResponse={topResponse}
       >
         <UniversalFeedComponent children={children} />
       </UniversalFeedCustomisableMethodsContextProvider>

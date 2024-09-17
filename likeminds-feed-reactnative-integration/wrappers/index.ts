@@ -4,7 +4,8 @@ import SocialFeedCreateWrapper from "./socialFeedCreateWrapper";
 import QAFeedCreateWrapper from "./qaFeedCreateWrapper";
 import LikesWrapper from "./likesWrapper";
 import NotificationWrapper from "./notificationWrapper";
-import FeedWrapper from "./universalFeedScreenWrapper";
+import SocialFeedWrapper from "./socialFeedScreenWrapper";
+import QAFeedWrapper from "./qaFeedScreenWrapper";
 import TopicFeedWrapper from "./topicFeedScreenWrapper";
 
 export {
@@ -14,6 +15,7 @@ export {
   QAFeedCreateWrapper,
   LikesWrapper,
   NotificationWrapper,
-  FeedWrapper,
+  SocialFeedWrapper,
+  QAFeedWrapper,
   TopicFeedWrapper,
 };
