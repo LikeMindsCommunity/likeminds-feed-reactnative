@@ -1,5 +1,5 @@
 import {
-  convertToLMPostUI,
+  convertToLMPostViewData,
   convertUniversalFeedPosts,
 } from "../../viewDataModels";
 import {
@@ -38,11 +38,11 @@ import {
   SET_NOTIFICATION_COUNT,
   SET_FLOW_TO_POST_DETAIL_SCREEN,
 } from "../types/types";
-import { LMPostUI } from "../../models";
+import { LMPostViewData } from "../../models";
 import Styles from "../../constants/Styles";
 
 export interface FeedReducerState {
-  feed: LMPostUI[];
+  feed: LMPostViewData[];
   users: {};
   reportTags: {};
   autoPlayVideoPostId: "";
@@ -191,7 +191,7 @@ export const feedReducer = (state = initialState, action) => {
       const updatedFeed = state.feed;
       // this gets the index of the post that is deleted
       const deletedPostIndex = updatedFeed.findIndex(
-        (item: LMPostUI) => item?.id === action.body
+        (item: LMPostViewData) => item?.id === action.body
       );
       // removes that post from the data
       if (deletedPostIndex != -1) {
@@ -242,7 +242,7 @@ export const feedReducer = (state = initialState, action) => {
       const updatedFeed = state.feed;
       // this gets the index of post that is liked
       const likedPostIndex = updatedFeed.findIndex(
-        (item: LMPostUI) => item?.id === action.body
+        (item: LMPostViewData) => item?.id === action.body
       );
       // this updates the isLiked value
       if (likedPostIndex != -1) {
@@ -277,7 +277,7 @@ export const feedReducer = (state = initialState, action) => {
     case EDIT_POST_SUCCESS: {
       const { post = {}, users = {}, widgets = {} } = action.body;
       const updatedFeed = [...state.feed];
-      const postData = convertToLMPostUI(post, users, widgets);
+      const postData = convertToLMPostViewData(post, users, widgets);
       const index = updatedFeed.findIndex((item) => item.id === postData.id);
       if (index !== -1) {
         updatedFeed[index] = postData;
@@ -288,7 +288,7 @@ export const feedReducer = (state = initialState, action) => {
       const { comment } = action.body;
       const updatedFeed = state.feed;
       // finds the post in which new comment is added in post detail and manage its comment count
-      updatedFeed.find((item: LMPostUI) => {
+      updatedFeed.find((item: LMPostViewData) => {
         if (item.id === comment.postId) {
           item.commentsCount = item?.commentsCount + 1;
         }
@@ -298,7 +298,7 @@ export const feedReducer = (state = initialState, action) => {
     case DELETE_COMMENT_STATE: {
       const updatedFeed = state.feed;
       // finds the post whose comment is deleted in post detail and manage its comment count
-      updatedFeed.find((item: LMPostUI) => {
+      updatedFeed.find((item: LMPostViewData) => {
         if (item.id === action.body.postId) {
           item.commentsCount = item?.commentsCount - 1;
         }
@@ -311,7 +311,7 @@ export const feedReducer = (state = initialState, action) => {
     case POST_DATA_SUCCESS: {
       const updatedFeed = state.feed;
       const { post = {}, users = {}, widgets = {} } = action.body;
-      const converterPostData = convertToLMPostUI(post, users, widgets);
+      const converterPostData = convertToLMPostViewData(post, users, widgets);
       const index = updatedFeed.findIndex(
         (item) => item.id === converterPostData.id
       );

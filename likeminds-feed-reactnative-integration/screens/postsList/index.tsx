@@ -36,7 +36,7 @@ import {
 } from "../../context";
 import { postLikesClear } from "../../store/actions/postLikes";
 import LMPost from "../../components/LMPost/LMPost";
-import { LMPostUI } from "../../models";
+import { LMPostViewData } from "../../models";
 import LMLoader from "../../components/LMLoader";
 import { autoPlayPostVideo } from "../../store/actions/feed";
 import LMPostMenu from "../../customModals/LMPostMenu";
@@ -108,7 +108,7 @@ const PostsListComponent = ({ topics }: any) => {
     postId: string,
     itemId?: number,
     pinnedValue?: boolean,
-    postDetail?: LMPostUI
+    postDetail?: LMPostViewData
   ) => {
     setSelectedMenuItemPostId(postId);
     if (itemId === PIN_POST_MENU_ITEM || itemId === UNPIN_POST_MENU_ITEM) {
@@ -171,7 +171,7 @@ const PostsListComponent = ({ topics }: any) => {
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
             data={feedData}
-            renderItem={({ item }: { item: LMPostUI }) => {
+            renderItem={({ item }: { item: LMPostViewData }) => {
               // Log the item before rendering
 
               // Check if the item's topic matches any name in the topics array

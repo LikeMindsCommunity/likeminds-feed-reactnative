@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { styles } from "./styles";
 import { UniversalFeedCustomisableMethodsContextProvider } from "../../context";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { LMMenuItemsUI, RootStackParamList } from "../../models";
+import { LMMenuItemsViewData, RootStackParamList } from "../../models";
 import { PollCustomisableMethodsContextProvider } from "../../context/pollCustomisableCallback";
 
 interface UniversalFeedProps {
@@ -28,7 +28,7 @@ interface UniversalFeedProps {
     event: {
       nativeEvent: { pageX: number; pageY: number };
     },
-    menuItems: LMMenuItemsUI[],
+    menuItems: LMMenuItemsViewData[],
     postId: string
   ) => void;
   onTapNotificationBellProp?: () => void;

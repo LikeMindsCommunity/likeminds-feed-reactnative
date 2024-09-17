@@ -50,7 +50,7 @@ import LMHeader from "../../components/LMHeader";
 import LMLoader from "../../components/LMLoader";
 import LMCommentItem from "../../components/LMCommentItem";
 import LMPost from "../../components/LMPost/LMPost";
-import { LMMenuItemsUI, LMUserUI, RootStackParamList } from "../../models";
+import { LMMenuItemsViewData, LMUserViewData, RootStackParamList } from "../../models";
 import {
   LMIcon,
   LMInputText,
@@ -95,7 +95,7 @@ interface PostDetailProps {
     event: {
       nativeEvent: { pageX: number; pageY: number };
     },
-    menuItems: LMMenuItemsUI[],
+    menuItems: LMMenuItemsViewData[],
     commentId: string
   ) => void;
   onSharePostClicked?: (id: string) => void;
@@ -748,7 +748,7 @@ const PostDetailComponent = React.memo(() => {
               >
                 <FlatList
                   data={[...allTags]}
-                  renderItem={({ item }: { item: LMUserUI }) => {
+                  renderItem={({ item }: { item: LMUserViewData }) => {
                     return (
                       <Pressable
                         onPress={() => {

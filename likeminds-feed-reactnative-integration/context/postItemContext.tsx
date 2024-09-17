@@ -1,5 +1,5 @@
 import React, { createContext, ReactNode, useContext } from "react";
-import { LMPostUI } from "../models";
+import { LMPostViewData } from "../models";
 import { LMPostHeaderProps } from "../components/LMPost/LMPostHeader/types";
 import { LMPostFooterProps } from "../components/LMPost/LMPostFooter/types";
 import { LMPostContentProps } from "../components/LMPost/LMPostContent/types";
@@ -8,7 +8,7 @@ import { LMPostMediaProps } from "../components/LMPost/LMPostMedia/types";
 interface LMPostContextProps {
   children?: ReactNode;
   navigation: any;
-  post: LMPostUI;
+  post: LMPostViewData;
   headerProps?: LMPostHeaderProps;
   footerProps?: LMPostFooterProps;
   contentProps?: LMPostContentProps;
@@ -18,7 +18,7 @@ interface LMPostContextProps {
 export interface LMPostContextValues {
   navigation: any;
   children: ReactNode;
-  post: LMPostUI;
+  post: LMPostViewData;
   headerProps?: LMPostHeaderProps;
   footerProps?: LMPostFooterProps;
   contentProps?: LMPostContentProps;

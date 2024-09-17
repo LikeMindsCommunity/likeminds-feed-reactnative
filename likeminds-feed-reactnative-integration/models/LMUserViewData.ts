@@ -1,12 +1,12 @@
-import {LMSDKClientInfoUI} from './LMSDKClientInfoUI';
+import { LMSDKClientInfoViewData } from "./LMSDKClientInfoViewData";
 
 // data model for user object
-export interface LMUserUI {
+export interface LMUserViewData {
   id: number;
   name: string;
   imageUrl: string;
   userUniqueId: string;
-  sdkClientInfo: LMSDKClientInfoUI;
+  sdkClientInfo: LMSDKClientInfoViewData;
   uuid: string;
   isGuest: boolean;
   updatedAt: number;

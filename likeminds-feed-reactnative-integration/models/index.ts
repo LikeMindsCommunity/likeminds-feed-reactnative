@@ -1,30 +1,30 @@
-import {LMActivityEntityUI} from './LMActivityEntityUI';
-import {LMActivityUI} from './LMActivityUI';
-import {LMAttachmentMetaUI} from './LMAttachmentMetaUI';
-import {LMAttachmentUI} from './LMAttachmentUI';
-import {LMCommentUI} from './LMCommentUI';
-import {LMLikeItemUI} from './LMLikeItemUI';
-import {LMLikeUI} from './LMLikeUI';
-import {LMMenuItemsUI} from './LMMenuItemsUI';
-import {LMOGTagsUI} from './LMOGTagsUI';
-import {LMPostUI} from './LMPostUI';
-import {LMSDKClientInfoUI} from './LMSDKClientInfoUI';
-import {LMUserUI} from './LMUserUI';
+import {LMActivityEntityViewData} from './LMActivityEntityViewData';
+import {LMActivityViewData} from './LMActivityViewData';
+import {LMAttachmentMetaViewData} from './LMAttachmentMetaViewData';
+import {LMAttachmentViewData} from './LMAttachmentViewData';
+import {LMCommentViewData} from './LMCommentViewData';
+import {LMLikeItemViewData} from './LMLikeItemViewData';
+import {LMLikeViewData} from './LMLikeViewData';
+import {LMMenuItemsViewData} from './LMMenuItemsViewData';
+import {LMOGTagsViewData} from './LMOGTagsViewData';
+import {LMPostViewData} from './LMPostViewData';
+import {LMSDKClientInfoViewData} from './LMSDKClientInfoViewData';
+import {LMUserViewData} from './LMUserViewData';
 import {ImageVideoMetaData, DocumentMetaData} from './addPostMetaData';
 import { RootStackParamList } from './RootStackParamsList';
 export type {
-  LMActivityEntityUI,
-  LMActivityUI,
-  LMAttachmentMetaUI,
-  LMAttachmentUI,
-  LMCommentUI,
-  LMLikeItemUI,
-  LMLikeUI,
-  LMMenuItemsUI,
-  LMOGTagsUI,
-  LMPostUI,
-  LMSDKClientInfoUI,
-  LMUserUI,
+  LMActivityEntityViewData,
+  LMActivityViewData,
+  LMAttachmentMetaViewData,
+  LMAttachmentViewData,
+  LMCommentViewData,
+  LMLikeItemViewData,
+  LMLikeViewData,
+  LMMenuItemsViewData,
+  LMOGTagsViewData,
+  LMPostViewData,
+  LMSDKClientInfoViewData,
+  LMUserViewData,
   RootStackParamList,
   ImageVideoMetaData,
   DocumentMetaData

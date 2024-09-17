@@ -48,7 +48,7 @@ import {
   LMProfilePicture,
   LMText,
 } from "../../uiComponents";
-import { LMAttachmentUI, LMUserUI, RootStackParamList } from "../../models";
+import { LMAttachmentViewData, LMUserViewData, RootStackParamList } from "../../models";
 import LMCarousel from "../../components/LMMedia/LMCarousel";
 import LMDocument from "../../components/LMMedia/LMDocument";
 import LMImage from "../../components/LMMedia/LMImage";
@@ -89,8 +89,8 @@ interface CreatePostProps {
   handleDocumentProp?: () => void;
   handlePollProp?: () => void;
   onPostClickProp?: (
-    allMedia: Array<LMAttachmentUI>,
-    linkData: Array<LMAttachmentUI>,
+    allMedia: Array<LMAttachmentViewData>,
+    linkData: Array<LMAttachmentViewData>,
     content: string,
     topics: string[],
     poll: any
@@ -617,7 +617,7 @@ const CreatePostComponent = () => {
           >
             <FlatList
               data={[...allTags]}
-              renderItem={({ item }: { item: LMUserUI }) => {
+              renderItem={({ item }: { item: LMUserViewData }) => {
                 return (
                   <Pressable
                     onPress={() => {

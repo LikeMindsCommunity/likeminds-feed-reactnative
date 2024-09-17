@@ -12,7 +12,7 @@ import React, {
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../models/RootStackParamsList";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { LMActivityUI } from "../models";
+import { LMActivityViewData } from "../models";
 import {
   getNotificationFeed,
   markReadNotification,
@@ -54,7 +54,7 @@ export interface NotificationFeedContextValues {
   };
   notificationFeedPageNumber: number;
   setNotificationFeedPageNumber: Dispatch<SetStateAction<number>>;
-  notifications: LMActivityUI[];
+  notifications: LMActivityViewData[];
   refreshing: boolean;
   setRefreshing: Dispatch<SetStateAction<boolean>>;
   isLoading: boolean;
@@ -62,7 +62,7 @@ export interface NotificationFeedContextValues {
   fetchNotificationFeed: (page: number) => void;
   readNotification: (id: string) => void;
   handleScreenBackPress: () => void;
-  handleActivityOnTap: (activity: LMActivityUI) => void;
+  handleActivityOnTap: (activity: LMActivityViewData) => void;
   onRefresh: () => void;
   handleLoadMore: () => void;
 }

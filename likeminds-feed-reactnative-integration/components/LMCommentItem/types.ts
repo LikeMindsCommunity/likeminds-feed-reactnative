@@ -1,14 +1,14 @@
 import { TextStyle } from "react-native";
-import { LMCommentUI } from "../../models";
+import { LMCommentViewData } from "../../models";
 import { LMTextProps, LMButtonProps } from "../../uiComponents";
 
 export interface LMCommentProps {
-  comment: LMCommentUI; // comment data
+  comment: LMCommentViewData; // comment data
   likeIconButton?: LMButtonProps; // custom like icon button
   likeTextButton?: LMButtonProps; // custom like text button
   onTapViewMore?: (
     page: number,
-    data: (repliesArray: Array<LMCommentUI>) => void
+    data: (repliesArray: Array<LMCommentViewData>) => void
   ) => void; // callback function to be executed on click of view more replies
   commentMaxLines?: number; // maximun lines of comment to be shown
   menuIcon?: LMButtonProps; // custom menu icon button
@@ -19,7 +19,7 @@ export interface LMCommentProps {
   repliesCountTextStyle?: TextStyle; // props for comment count text
   timeStampStyle?: TextStyle; // props for time stamp text
   viewMoreRepliesProps?: LMTextProps; // props for view more text
-  onTapReplies?: (data: (repliesArray: Array<LMCommentUI>) => void, commentIdOfReplies: string) => void; // callback function to be executed on click of replies
+  onTapReplies?: (data: (repliesArray: Array<LMCommentViewData>) => void, commentIdOfReplies: string) => void; // callback function to be executed on click of replies
   isRepliesVisible?: boolean;
   onCommentOverflowMenuClick?: (
     event: {

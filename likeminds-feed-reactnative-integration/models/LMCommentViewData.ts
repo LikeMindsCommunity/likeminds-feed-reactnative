@@ -1,8 +1,8 @@
-import {LMMenuItemsUI} from './LMMenuItemsUI';
-import {LMUserUI} from './LMUserUI';
+import {LMMenuItemsViewData} from './LMMenuItemsViewData';
+import {LMUserViewData} from './LMUserViewData';
 
 // data model for comment
-export interface LMCommentUI {
+export interface LMCommentViewData {
   id: string;
   Id?: string;
   postId: string;
@@ -13,12 +13,12 @@ export interface LMCommentUI {
   level: number;
   likesCount: number;
   repliesCount: number;
-  user: LMUserUI;
+  user: LMUserViewData;
   updatedAt: number;
   createdAt: number;
-  menuItems: Array<LMMenuItemsUI>;
-  replies?: Array<LMCommentUI>;
-  parentComment?: LMCommentUI;
+  menuItems: Array<LMMenuItemsViewData>;
+  replies?: Array<LMCommentViewData>;
+  parentComment?: LMCommentViewData;
   parentId?: string;
   alreadySeenFullContent?: boolean;
   uuid: string;

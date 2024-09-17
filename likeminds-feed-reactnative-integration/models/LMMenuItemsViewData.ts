@@ -1,5 +1,5 @@
 // data model for menu items of post
-export interface LMMenuItemsUI {
+export interface LMMenuItemsViewData {
   id: number;
   title: string;
 }

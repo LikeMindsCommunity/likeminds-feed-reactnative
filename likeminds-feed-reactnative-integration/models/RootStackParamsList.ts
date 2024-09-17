@@ -1,5 +1,3 @@
-import { LMPostUI } from "./LMPostUI";
-
 export type RootStackParamList = {
   UniversalFeed: undefined;
   PostsList: undefined;

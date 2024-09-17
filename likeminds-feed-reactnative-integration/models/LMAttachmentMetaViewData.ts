@@ -1,8 +1,8 @@
-import { LMOGTagsUI } from "./LMOGTagsUI";
+import { LMOGTagsViewData } from "./LMOGTagsViewData";
 import { PollMultiSelectState, PollType } from "../enums/Poll";
 
 // data model for attachmentMeta object inside attachments
-export interface LMAttachmentMetaUI {
+export interface LMAttachmentMetaViewData {
   entityId?: string;
   name?: string;
   format?: string;
@@ -11,7 +11,7 @@ export interface LMAttachmentMetaUI {
   pageCount?: number;
   url: string;
   thumbnailUrl?: string;
-  ogTags: LMOGTagsUI;
+  ogTags: LMOGTagsViewData;
   coverImageUrl?: string;
   title?: string;
   body?: string;

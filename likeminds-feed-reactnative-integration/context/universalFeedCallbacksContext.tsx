@@ -1,4 +1,4 @@
-import { LMMenuItemsUI, LMPostUI } from "../models";
+import { LMMenuItemsViewData, LMPostViewData } from "../models";
 import React, { createContext, ReactNode, useContext } from "react";
 
 export interface UniversalFeedCallbacksContextProps {
@@ -6,7 +6,7 @@ export interface UniversalFeedCallbacksContextProps {
   postLikeHandlerProp?: (id: string) => void;
   savePostHandlerProp?: (id: string, saved?: boolean) => void;
   selectPinPostProp?: (id: string, pinned?: boolean) => void;
-  selectEditPostProp?: (id: string, post: LMPostUI | undefined) => void;
+  selectEditPostProp?: (id: string, post: LMPostViewData | undefined) => void;
   onSelectCommentCountProp?: (id: string) => void;
   onTapLikeCountProps?: (id: string) => void;
   handleDeletePostProps?: (visible: boolean, postId: string) => void;
@@ -16,7 +16,7 @@ export interface UniversalFeedCallbacksContextProps {
     event: {
       nativeEvent: { pageX: number; pageY: number };
     },
-    menuItems: LMMenuItemsUI[],
+    menuItems: LMMenuItemsViewData[],
     postId: string
   ) => void;
   onTapNotificationBellProp?: () => void;
@@ -27,7 +27,7 @@ export interface UniversalFeedCustomisableMethodsContext {
   postLikeHandlerProp?: (id: string) => void;
   savePostHandlerProp?: (id: string, saved?: boolean) => void;
   selectPinPostProp?: (id: string, pinned?: boolean) => void;
-  selectEditPostProp?: (id: string, post: LMPostUI | undefined) => void;
+  selectEditPostProp?: (id: string, post: LMPostViewData | undefined) => void;
   onSelectCommentCountProp?: (id: string) => void;
   onTapLikeCountProps?: (id: string) => void;
   handleDeletePostProps?: (visible: boolean, postId: string) => void;
@@ -37,7 +37,7 @@ export interface UniversalFeedCustomisableMethodsContext {
     event: {
       nativeEvent: { pageX: number; pageY: number };
     },
-    menuItems: LMMenuItemsUI[],
+    menuItems: LMMenuItemsViewData[],
     postId: string
   ) => void;
   onTapNotificationBellProp?: () => void;

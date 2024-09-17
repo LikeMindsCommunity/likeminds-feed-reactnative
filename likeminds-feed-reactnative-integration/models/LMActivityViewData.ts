@@ -1,7 +1,7 @@
-import {LMActivityEntityUI} from './LMActivityEntityUI';
-import {LMUserUI} from './LMUserUI';
+import {LMActivityEntityViewData} from './LMActivityEntityViewData';
+import {LMUserViewData} from './LMUserViewData';
 
-export interface LMActivityUI {
+export interface LMActivityViewData {
   id: string;
   isRead: boolean;
   actionOn: string;
@@ -12,8 +12,8 @@ export interface LMActivityUI {
   action: number;
   cta: string;
   activityText: string;
-  activityEntityData?: LMActivityEntityUI;
-  activityByUser: LMUserUI;
+  activityEntityData?: LMActivityEntityViewData;
+  activityByUser: LMUserViewData;
   createdAt: number;
   updatedAt: number;
   uuid: string;

@@ -1,5 +1,5 @@
 // data model for ogTags object in attachmentMeta
-export interface LMOGTagsUI {
+export interface LMOGTagsViewData {
   description?: string;
   title?: string;
   url?: string;

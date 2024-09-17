@@ -1,4 +1,3 @@
-import { LMMenuItemsUI, LMPostUI } from "../models";
 import React, { createContext, ReactNode, useContext } from "react";
 
 export interface PollCallbacksContextProps {

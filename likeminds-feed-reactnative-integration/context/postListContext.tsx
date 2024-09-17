@@ -48,7 +48,7 @@ import {
 import { showToastMessage } from "../store/actions/toast";
 import { RootStackParamList } from "../models/RootStackParamsList";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { LMPostUI } from "../models";
+import { LMPostViewData } from "../models";
 import LMLoader from "../components/LMLoader";
 import { clearPostDetail } from "../store/actions/postDetail";
 import { postLikesClear } from "../store/actions/postLikes";
@@ -78,7 +78,7 @@ export interface PostListContextValues {
     RootStackParamList,
     "PostsList" | "UniversalFeed"
   >;
-  feedData: Array<LMPostUI>;
+  feedData: Array<LMPostViewData>;
   accessToken: string;
   showLoader: number;
   feedPageNumber: number;
@@ -98,9 +98,9 @@ export interface PostListContextValues {
   setShowActionListModal: Dispatch<SetStateAction<boolean>>;
   setFeedPageNumber: Dispatch<SetStateAction<number>>;
   renderLoader: () => JSX.Element | null;
-  getPostDetail: () => LMPostUI;
+  getPostDetail: () => LMPostViewData;
   handleDeletePost: (visible: boolean) => void;
-  handleEditPost: (id: string, post: LMPostUI | undefined) => void;
+  handleEditPost: (id: string, post: LMPostViewData | undefined) => void;
   fetchFeed: (page: number) => Promise<any>;
   handleLoadMore: () => void;
   postLikeHandler: (id: string) => void;
@@ -370,7 +370,7 @@ export const PostListContextProvider = ({
   // this function gets the detail pf post whose menu item is clicked
   const getPostDetail = () => {
     const postDetail = feedData.find(
-      (item: LMPostUI) => item.id === selectedMenuItemPostId
+      (item: LMPostViewData) => item.id === selectedMenuItemPostId
     );
     return postDetail;
   };

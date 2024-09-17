@@ -1,4 +1,4 @@
-import { LMMenuItemsUI } from "../models";
+import { LMMenuItemsViewData } from "../models";
 import React, { createContext, ReactNode, useContext } from "react";
 
 export interface PostDetailCallbacksContextProps {
@@ -20,7 +20,7 @@ export interface PostDetailCallbacksContextProps {
     event: {
       nativeEvent: { pageX: number; pageY: number };
     },
-    menuItems: LMMenuItemsUI[],
+    menuItems: LMMenuItemsViewData[],
     commentId: string
   ) => void;
   onSharePostClicked?: (id: string) => void;
@@ -44,7 +44,7 @@ export interface PostDetailCustomisableMethodsContext {
     event: {
       nativeEvent: { pageX: number; pageY: number };
     },
-    menuItems: LMMenuItemsUI[],
+    menuItems: LMMenuItemsViewData[],
     commentId: string
   ) => void;
   onSharePostClicked?: (id: string) => void;
