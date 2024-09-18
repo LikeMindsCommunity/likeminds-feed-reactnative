@@ -58,7 +58,7 @@ const LMPostContent = React.memo(() => {
         />
       ) : (
         <LMText
-          maxLines={MAX_LINES}
+          maxLines={MAX_LINES + 1}
           textStyle={StyleSheet.flatten([
             styles.contentText,
             postContentStyle?.textStyle,

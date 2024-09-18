@@ -18,10 +18,12 @@ export interface LMPostViewData {
   menuItems: Array<LMMenuItemsViewData>;
   replies?: Array<LMCommentViewData>;
   text: string;
+  heading: string;
   updatedAt: number;
   userId: string;
   uuid: string;
   user: LMUserViewData;
   topics: string[];
   users: { [key: string]: LMUserViewData };
+  filteredComments: any;
 }

@@ -13,6 +13,8 @@ interface LMPostContextProps {
   footerProps?: LMPostFooterProps;
   contentProps?: LMPostContentProps;
   mediaProps?: LMPostMediaProps;
+  isHeadingEnabled: boolean;
+  isTopResponse: boolean;
 }
 
 export interface LMPostContextValues {
@@ -23,6 +25,8 @@ export interface LMPostContextValues {
   footerProps?: LMPostFooterProps;
   contentProps?: LMPostContentProps;
   mediaProps?: LMPostMediaProps;
+  isHeadingEnabled: boolean;
+  isTopResponse: boolean;
 }
 
 const LMPostContext = createContext<LMPostContextValues | undefined>(undefined);
@@ -45,6 +49,8 @@ export const LMPostContextProvider = ({
   footerProps,
   contentProps,
   mediaProps,
+  isHeadingEnabled = false,
+  isTopResponse = false,
 }: LMPostContextProps) => {
   const contextValues: LMPostContextValues = {
     navigation,
@@ -54,6 +60,8 @@ export const LMPostContextProvider = ({
     contentProps,
     footerProps,
     mediaProps,
+    isHeadingEnabled,
+    isTopResponse,
   };
 
   return (

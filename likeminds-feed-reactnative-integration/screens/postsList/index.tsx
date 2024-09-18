@@ -102,6 +102,8 @@ const PostsListComponent = ({ topics }: any) => {
     handleReportPostProps,
     onOverlayMenuClickProp,
     onSharePostClicked,
+    isHeadingEnabled,
+    isTopResponse,
   } = useUniversalFeedCustomisableMethodsContext();
   // this function returns the id of the item selected from menu list and handles further functionalities accordingly
   const onMenuItemSelect = (
@@ -205,6 +207,8 @@ const PostsListComponent = ({ topics }: any) => {
                     key={item?.id}
                   >
                     <LMPost
+                      isHeadingEnabled={isHeadingEnabled}
+                      isTopResponse={isTopResponse}
                       post={item}
                       // header props
                       headerProps={{

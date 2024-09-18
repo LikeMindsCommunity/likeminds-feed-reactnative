@@ -28,7 +28,7 @@ const Feed = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "black" }}>
-      <UniversalFeed isHeadingEnabled={true} topResponse={true}>
+      <UniversalFeed isHeadingEnabled={true} isTopResponse={true}>
         <LMUniversalFeedHeader />
         <LMFilterTopics />
         <LMPostUploadIndicator />

@@ -8,6 +8,11 @@ import {
   IOgTag,
   IPost,
   IUser,
+  Activity,
+  OgTag,
+  Post,
+  User,
+  Reply,
   Like,
   GetPostLikesResponse,
 } from "@likeminds.community/feed-rn";
@@ -41,23 +46,30 @@ import {
  * @returns list of [LMPostViewData]
  */
 export function convertUniversalFeedPosts(data: any): LMPostViewData[] {
-  const postData = data.posts;
+  const postData = data.posts ? data.posts : [];
   const userData = data.users;
   const widgetData = data.widgets;
-  return postData?.map((item: IPost) => {
-    return convertToLMPostViewData(item, userData, widgetData);
+  const filteredComments = data.filteredComments;
+  return postData?.map((item: Post) => {
+    return convertToLMPostViewData(
+      item,
+      userData,
+      widgetData,
+      filteredComments
+    );
   });
 }
 
 /**
- * @param post: [IPost]
+ * @param post: [Post]
  * @param user: [Map] of String to User
  * @returns LMPostViewData
  */
 export function convertToLMPostViewData(
-  post: IPost,
+  post: Post,
   user: { [key: string]: LMUserViewData },
-  widgets: any
+  widgets: any,
+  filteredComments: any
 ): LMPostViewData {
   const postData: LMPostViewData = {
     id: post.id,
@@ -77,12 +89,16 @@ export function convertToLMPostViewData(
       ? convertToLMCommentViewData(post.id, post.replies, user)
       : [],
     text: post.text,
+    heading: post.heading,
     updatedAt: post.updatedAt,
     userId: user?.id?.toString(),
     uuid: post.uuid,
     user: convertToLMUserViewData(user[post.uuid]),
     topics: post.topics,
     users: user,
+    filteredComments: Object.hasOwnProperty(post?.id)
+      ? filteredComments[post?.id]
+      : {},
   };
   return postData;
 }
@@ -97,7 +113,10 @@ export function convertToLMAttachmentsViewData(
 ): LMAttachmentViewData[] {
   return data?.map((item: Attachment) => {
     return {
-      attachmentMeta: convertToLMAttachmentMetaViewData(item.attachmentMeta, widgets),
+      attachmentMeta: convertToLMAttachmentMetaViewData(
+        item.attachmentMeta,
+        widgets
+      ),
       attachmentType: item.attachmentType,
     };
   });
@@ -120,7 +139,7 @@ export function convertToLMAttachmentMetaViewData(
     size: data.size,
     url: data.url,
     thumbnailUrl: data.thumbnailUrl,
-    ...convertToLMPollViewData(data?.entityId, widgets),
+    ...convertToLMPollViewData(data?.entityId ? data?.entityId : "", widgets),
   };
   return attachmentMetaData;
 }
@@ -178,7 +197,9 @@ export function convertToLMOgTagsViewData(data: IOgTag): LMOGTagsViewData {
  * @param data: [IMenuItem]
  * @returns [LMMenuItemsViewData]
  */
-export function convertToLMMenuItemsViewData(data: IMenuItem[]): LMMenuItemsViewData[] {
+export function convertToLMMenuItemsViewData(
+  data: IMenuItem[]
+): LMMenuItemsViewData[] {
   return data?.map((item) => {
     return {
       title: item.title,
@@ -211,7 +232,9 @@ export function convertToLMUserViewData(data: IUser): LMUserViewData {
  * @param data: IUser
  * @returns LMSDKClientInfoViewData
  */
-export function convertToLMSDKClientInfoViewData(data: IUser): LMSDKClientInfoViewData {
+export function convertToLMSDKClientInfoViewData(
+  data: IUser
+): LMSDKClientInfoViewData {
   const sdkClientInfo = data?.sdkClientInfo;
   const sdkClientInfoConverter: LMSDKClientInfoViewData = {
     community: sdkClientInfo?.community,
@@ -226,7 +249,9 @@ export function convertToLMSDKClientInfoViewData(data: IUser): LMSDKClientInfoVi
  * @param data: [GetPostLikesResponse]
  * @returns list of [LMLikeViewData]
  */
-export function convertToLMLikesList(data: GetPostLikesResponse): LMLikeViewData[] {
+export function convertToLMLikesList(
+  data: GetPostLikesResponse
+): LMLikeViewData[] {
   const likesListData = data?.likes;
   const userData = data?.users;
   return likesListData?.map((item: Like) => {
@@ -320,7 +345,9 @@ export function convertDocumentMetaData(
  * @param data: [LMOGTagsViewData]
  * @returns list of [LMAttachmentViewData]
  */
-export function convertLinkMetaData(data: LMOGTagsViewData[]): LMAttachmentViewData[] {
+export function convertLinkMetaData(
+  data: LMOGTagsViewData[]
+): LMAttachmentViewData[] {
   const convertedLinkMetaData = data?.map((item) => {
     return {
       attachmentMeta: {
@@ -392,16 +419,16 @@ export function convertPollMetaData(item: any): LMAttachmentViewData {
 
 /**
  * @param postId: string
- * @param data: [IComment]
+ * @param data: [Reply]
  * @param user: [Map] of String to User
  * @returns list of [LMCommentViewData]
  */
 export function convertToLMCommentViewData(
   postId: string,
-  data: IComment[],
+  data: Reply[],
   user: { [key: string]: LMUserViewData }
 ): any[] {
-  return data?.map((item: IComment) => {
+  return data?.map((item: Reply) => {
     return {
       id: item.id,
       postId: postId,
@@ -426,7 +453,9 @@ export function convertToLMCommentViewData(
  * @param data: [IActivities]
  * @returns list of [LMActivityViewData]
  */
-export function convertNotificationsFeed(data: IActivities): LMActivityViewData[] {
+export function convertNotificationsFeed(
+  data: IActivities
+): LMActivityViewData[] {
   const notificationData = data.activities;
   const userData = data.users;
   return notificationData?.map((item) => {
@@ -471,7 +500,9 @@ export function convertToLMActivityViewData(
  * @param data
  * @returns LMActivityEntityViewData
  */
-export function convertToLMActivityEntityViewData(data): LMActivityEntityViewData {
+export function convertToLMActivityEntityViewData(
+  data
+): LMActivityEntityViewData {
   const activityEntityData: LMActivityEntityViewData = {
     id: data?.id,
     text: data?.text,

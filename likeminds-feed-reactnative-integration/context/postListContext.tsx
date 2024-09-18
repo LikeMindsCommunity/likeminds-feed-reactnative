@@ -195,10 +195,10 @@ export const PostListContextProvider = ({
     setTimeout(async () => {
       const res: any = await fetchFeed(newPage);
       if (res) {
-        if (res?.posts?.length === 0) {
+        if (res?.posts?.length === 0 || !res?.posts) {
           setIsPaginationStopped(true);
+          setIsLoading(false);
         }
-        setIsLoading(false);
       }
     }, 200);
   };
