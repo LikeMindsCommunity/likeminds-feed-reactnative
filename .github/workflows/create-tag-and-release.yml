@@ -13,7 +13,7 @@ jobs:
     create_tag:
         name: Create Git Tag
         runs-on: ubuntu-latest
-        if: github.ref == 'refs/heads/master'  # Only run for master branch
+        if: github.ref == 'refs/heads/main'  # Only run for master branch
         steps:
         - name: Checkout code
           uses: actions/checkout@v3
@@ -43,7 +43,7 @@ jobs:
     create-github-release:
         name: Create GitHub Release
         runs-on: ubuntu-latest
-        if: github.ref == 'refs/heads/master'  # Only run for master branch
+        if: github.ref == 'refs/heads/main'  # Only run for master branch
         needs: create_tag
         permissions:
             contents: write
