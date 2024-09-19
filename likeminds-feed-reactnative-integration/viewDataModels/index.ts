@@ -96,8 +96,10 @@ export function convertToLMPostViewData(
     user: convertToLMUserViewData(user[post.uuid]),
     topics: post.topics,
     users: user,
-    filteredComments: Object.hasOwnProperty(post?.id)
-      ? filteredComments[post?.id]
+    filteredComments: post?.commentIds
+      ? filteredComments.hasOwnProperty(post?.commentIds[0])
+        ? filteredComments[post?.commentIds[0]]
+        : {}
       : {},
   };
   return postData;

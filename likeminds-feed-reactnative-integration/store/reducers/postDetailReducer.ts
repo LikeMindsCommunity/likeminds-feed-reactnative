@@ -66,14 +66,25 @@ export const initialState: PostDetailReducerState = {
     },
     users: {},
     topics: [],
+    filteredComments: {},
   },
 };
 export const postDetailReducer = (state = initialState, action) => {
   switch (action.type) {
     case POST_DATA_SUCCESS: {
-      const { post = {}, users = {}, widgets = {} } = action.body;
+      const {
+        post = {},
+        users = {},
+        widgets = {},
+        filteredComments = {},
+      } = action.body;
       const updatedPostDetail = state.postDetail;
-      const converterPostData = convertToLMPostViewData(post, users, widgets);
+      const converterPostData = convertToLMPostViewData(
+        post,
+        users,
+        widgets,
+        filteredComments
+      );
       let newReplies = converterPostData.replies || [];
       // filter out the replies already present in postDetail
       newReplies = newReplies.filter(
@@ -95,9 +106,19 @@ export const postDetailReducer = (state = initialState, action) => {
       };
     }
     case POST_DATA_REFRESH_SUCCESS: {
-      const { post = {}, users = {}, widgets = {} } = action.body;
+      const {
+        post = {},
+        users = {},
+        widgets = {},
+        filteredComments = {},
+      } = action.body;
       // model converter function
-      const converterPostData = convertToLMPostViewData(post, users, widgets);
+      const converterPostData = convertToLMPostViewData(
+        post,
+        users,
+        widgets,
+        filteredComments
+      );
       return { ...state, postDetail: converterPostData };
     }
     case POST_COMMENTS_SUCCESS: {
@@ -401,8 +422,18 @@ export const postDetailReducer = (state = initialState, action) => {
       return { ...state, postDetail: { ...updatedPostDetail } };
     }
     case EDIT_POST_SUCCESS: {
-      const { post = {}, users = {}, widgets = {} } = action.body;
-      const converterPostData = convertToLMPostViewData(post, users, widgets);
+      const {
+        post = {},
+        users = {},
+        widgets = {},
+        filteredComments = {},
+      } = action.body;
+      const converterPostData = convertToLMPostViewData(
+        post,
+        users,
+        widgets,
+        filteredComments
+      );
       return { ...state, postDetail: converterPostData };
     }
     case LIKE_POST_STATE: {

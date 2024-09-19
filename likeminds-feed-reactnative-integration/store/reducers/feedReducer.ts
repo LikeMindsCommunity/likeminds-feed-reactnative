@@ -72,7 +72,9 @@ export const initialState: FeedReducerState = {
   selectedTopicsForUniversalFeedScreen: [],
   selectedTopicsForCreatePostScreen: [],
   selectedTopicsFromUniversalFeedScreen: [],
-  statusBarStyle: Styles.$STATUS_BAR_STYLE.default,
+  statusBarStyle: Styles.$STATUS_BAR_STYLE.default
+    ? Styles.$STATUS_BAR_STYLE.default
+    : "",
   muteStatus: false,
   pauseStatus: false,
   currentIdOfVideo: "",
@@ -275,9 +277,19 @@ export const feedReducer = (state = initialState, action) => {
       return { ...state, feed: updatedFeed };
     }
     case EDIT_POST_SUCCESS: {
-      const { post = {}, users = {}, widgets = {} } = action.body;
+      const {
+        post = {},
+        users = {},
+        widgets = {},
+        filteredComments = {},
+      } = action.body;
       const updatedFeed = [...state.feed];
-      const postData = convertToLMPostViewData(post, users, widgets);
+      const postData = convertToLMPostViewData(
+        post,
+        users,
+        widgets,
+        filteredComments
+      );
       const index = updatedFeed.findIndex((item) => item.id === postData.id);
       if (index !== -1) {
         updatedFeed[index] = postData;
@@ -310,8 +322,18 @@ export const feedReducer = (state = initialState, action) => {
     }
     case POST_DATA_SUCCESS: {
       const updatedFeed = state.feed;
-      const { post = {}, users = {}, widgets = {} } = action.body;
-      const converterPostData = convertToLMPostViewData(post, users, widgets);
+      const {
+        post = {},
+        users = {},
+        widgets = {},
+        filteredComments = {},
+      } = action.body;
+      const converterPostData = convertToLMPostViewData(
+        post,
+        users,
+        widgets,
+        filteredComments
+      );
       const index = updatedFeed.findIndex(
         (item) => item.id === converterPostData.id
       );

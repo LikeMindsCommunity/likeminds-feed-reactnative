@@ -600,7 +600,8 @@ export const CreatePostContextProvider = ({
       convertToLMPostViewData(
         getPostResponse?.post,
         getPostResponse?.users,
-        getPostResponse?.widgets
+        getPostResponse?.widgets,
+        getPostResponse?.filteredComments
       )
     );
     return getPostResponse;
