@@ -15,6 +15,7 @@ interface LMPostContextProps {
   mediaProps?: LMPostMediaProps;
   isHeadingEnabled: boolean;
   isTopResponse: boolean;
+  customFooter?: ReactNode;
 }
 
 export interface LMPostContextValues {
@@ -27,6 +28,7 @@ export interface LMPostContextValues {
   mediaProps?: LMPostMediaProps;
   isHeadingEnabled: boolean;
   isTopResponse: boolean;
+  customFooter?: ReactNode;
 }
 
 const LMPostContext = createContext<LMPostContextValues | undefined>(undefined);
@@ -51,6 +53,7 @@ export const LMPostContextProvider = ({
   mediaProps,
   isHeadingEnabled = false,
   isTopResponse = false,
+  customFooter,
 }: LMPostContextProps) => {
   const contextValues: LMPostContextValues = {
     navigation,
@@ -62,6 +65,7 @@ export const LMPostContextProvider = ({
     mediaProps,
     isHeadingEnabled,
     isTopResponse,
+    customFooter,
   };
 
   return (

@@ -23,6 +23,7 @@ const LMPost = ({
   footerProps,
   isHeadingEnabled,
   isTopResponse,
+  customFooter,
 }: any) => {
   return (
     <LMPostContextProvider
@@ -34,13 +35,15 @@ const LMPost = ({
       mediaProps={mediaProps}
       isHeadingEnabled={isHeadingEnabled}
       isTopResponse={isTopResponse}
+      customFooter={customFooter}
     >
       <LMPostComponent />
     </LMPostContextProvider>
   );
 };
 const LMPostComponent = React.memo(() => {
-  const { post, isHeadingEnabled, isTopResponse } = useLMPostContext();
+  const { post, isHeadingEnabled, isTopResponse, customFooter } =
+    useLMPostContext();
   const allTopics = useAppSelector((state) => state.feed.topics);
   const postListStyle = STYLES.$POST_LIST_STYLE;
 
@@ -103,9 +106,9 @@ const LMPostComponent = React.memo(() => {
 
       {/* post top response */}
       {isTopResponse ? <LMPostTopResponse /> : null}
-      
+
       {/* post footer */}
-      <LMPostFooter />
+      {customFooter ? customFooter : <LMPostFooter />}
     </View>
   );
 });

@@ -24,6 +24,9 @@ export interface PostDetailCallbacksContextProps {
     commentId: string
   ) => void;
   onSharePostClicked?: (id: string) => void;
+  isHeadingEnabled?: boolean;
+  isTopResponse?: boolean;
+  lmPostCustomFooter?: ReactNode;
 }
 
 export interface PostDetailCustomisableMethodsContext {
@@ -48,6 +51,9 @@ export interface PostDetailCustomisableMethodsContext {
     commentId: string
   ) => void;
   onSharePostClicked?: (id: string) => void;
+  isHeadingEnabled?: boolean;
+  isTopResponse?: boolean;
+  lmPostCustomFooter?: ReactNode;
 }
 
 const PostDetailCustomisableMethodsContext = createContext<
@@ -76,6 +82,9 @@ export const PostDetailCustomisableMethodsContextProvider = ({
   handleScreenBackPressProp,
   onCommentOverflowMenuClickProp,
   onSharePostClicked,
+  isHeadingEnabled,
+  isTopResponse,
+  lmPostCustomFooter,
 }: PostDetailCallbacksContextProps) => {
   const contextValues: PostDetailCustomisableMethodsContext = {
     getCommentsRepliesProp,
@@ -88,6 +97,9 @@ export const PostDetailCustomisableMethodsContextProvider = ({
     handleScreenBackPressProp,
     onCommentOverflowMenuClickProp,
     onSharePostClicked,
+    isHeadingEnabled,
+    isTopResponse,
+    lmPostCustomFooter,
   };
 
   return (

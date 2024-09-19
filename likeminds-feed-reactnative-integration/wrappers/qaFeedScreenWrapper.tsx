@@ -12,7 +12,7 @@ import LMFilterTopics from "../components/LMFilterTopics";
 import LMPostUploadIndicator from "../components/LMPostUploadIndicator";
 import { PostsList } from "../screens/postsList";
 import LMCreatePostButton from "../components/LMCreatePostButton";
-
+import LMPostQAFeedFooter from "../components/LMPost/LMPostQAFeedFooter";
 const Feed = () => {
   const mappedTopics = useAppSelector((state: any) => state.feed.mappedTopics);
   const [FCMToken, setFCMToken] = useState("");
@@ -32,7 +32,7 @@ const Feed = () => {
         <LMUniversalFeedHeader />
         <LMFilterTopics />
         <LMPostUploadIndicator />
-        <PostsList items={mappedTopics} />
+        <PostsList items={mappedTopics} lmPostCustomFooter={<LMPostQAFeedFooter />}  />
         <LMCreatePostButton />
       </UniversalFeed>
     </View>
