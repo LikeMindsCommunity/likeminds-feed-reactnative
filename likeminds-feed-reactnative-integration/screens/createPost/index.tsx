@@ -598,7 +598,7 @@ const CreatePostComponent = () => {
         {isHeadingEnabled ? (
           <View
             style={{
-              borderColor: STYLES.$IS_DARK_THEME ? "#121212" : "#D0D8E2",
+              borderColor: STYLES.$IS_DARK_THEME ? STYLES.$SEPARATOR_COLORS.DARK : STYLES.$SEPARATOR_COLORS.LIGHT,
               borderWidth: 1,
               marginHorizontal: 15,
               marginTop: 10,

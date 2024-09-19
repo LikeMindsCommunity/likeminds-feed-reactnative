@@ -117,7 +117,7 @@ const CreatePollUI = () => {
 
       { !createPollStyle.shouldHideSeparator  ? <View style={{
         height: 11,
-        backgroundColor: STYLES.$IS_DARK_THEME ? "#121212" : "#D0D8E2"
+        backgroundColor: STYLES.$IS_DARK_THEME ? STYLES.$SEPARATOR_COLORS.DARK : STYLES.$SEPARATOR_COLORS.LIGHT
       }} /> : null }
 
       {/* Answers options */}
@@ -202,7 +202,7 @@ const CreatePollUI = () => {
 
       { !createPollStyle.shouldHideSeparator ? <View style={{
         height: 11,
-        backgroundColor: STYLES.$IS_DARK_THEME ? "#121212" : "#D0D8E2"
+        backgroundColor: STYLES.$IS_DARK_THEME ? STYLES.$SEPARATOR_COLORS.DARK : STYLES.$SEPARATOR_COLORS.LIGHT
       }} /> : null }
 
       {/* Poll expire Time and Date selection */}

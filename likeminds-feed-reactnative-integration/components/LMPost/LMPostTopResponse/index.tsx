@@ -32,7 +32,7 @@ const LMPostTopResponse = () => {
             <View
               style={{
                 padding: 10,
-                backgroundColor: STYLES.$IS_DARK_THEME ? "#121212" : "#D0D8E2",
+                backgroundColor: STYLES.$IS_DARK_THEME ? STYLES.$SEPARATOR_COLORS.DARK : STYLES.$SEPARATOR_COLORS.LIGHT,
                 borderRadius: 10,
                 flex: 1,
               }}

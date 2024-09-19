@@ -42,8 +42,8 @@ export const styles = StyleSheet.create({
     borderBottomWidth: 1,
     marginVertical: 1,
     borderBottomColor: STYLES.$IS_DARK_THEME
-      ? "#121212"
-      : "#D0D8E2",
+      ? STYLES.$SEPARATOR_COLORS.DARK
+      : STYLES.$SEPARATOR_COLORS.LIGHT,
   },
   commentContentView: {
     flexDirection: "row",

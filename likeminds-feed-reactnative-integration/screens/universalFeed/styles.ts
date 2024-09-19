@@ -63,7 +63,7 @@ export const styles = StyleSheet.create({
       ? STYLES.$BACKGROUND_COLORS.DARK
       : STYLES.$BACKGROUND_COLORS.LIGHT,
     borderBottomWidth: 11,
-    borderBottomColor: STYLES.$IS_DARK_THEME ? "#121212" : "#D0D8E2",
+    borderBottomColor: STYLES.$IS_DARK_THEME ? STYLES.$SEPARATOR_COLORS.DARK : STYLES.$SEPARATOR_COLORS.LIGHT,
     height: 50,
   },
   justifyCenter: {

@@ -297,8 +297,8 @@ const PostsListComponent = ({ topics }: any) => {
                       style={{
                         height: 11,
                         backgroundColor: STYLES.$IS_DARK_THEME
-                          ? "#121212"
-                          : "#D0D8E2",
+                          ? STYLES.$SEPARATOR_COLORS.DARK
+                          : STYLES.$SEPARATOR_COLORS.LIGHT,
                       }}
                     />
                   ) : null}
