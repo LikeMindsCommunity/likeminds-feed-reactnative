@@ -1,0 +1,72 @@
+pipeline {
+    agent any
+    tools {nodejs "nodejs"}
+    options {
+        buildDiscarder logRotator(daysToKeepStr: '7', numToKeepStr: '1')
+    }
+    parameters {
+        stashedFile 'feed_rn_package'
+        stashedFile 'feed_js_package'
+    }
+    environment {
+        NODE_OPTIONS = "--max-old-space-size=8192"  // Setting the memory limit for Node.js
+    }
+    stages {
+        stage('check'){
+            steps{
+                dir('likeminds-feed-reactnative-integration'){
+                    sh "ls"
+                }
+            }
+        }
+        stage('file upload'){
+            steps{
+                dir('likeminds-feed-reactnative-integration'){
+                    unstash 'feed_rn_package'
+                    unstash 'feed_js_package'
+                    sh 'mv feed_rn_package $feed_rn_package_FILENAME'
+                    sh 'mv feed_js_package $feed_js_package_FILENAME'
+                    sh 'ls'
+                }
+            }
+        }
+        
+        
+        stage('Install Dependencies') {
+            steps {
+                dir('likeminds-feed-reactnative-integration'){
+                    sh 'npm install'
+                    sh 'npm uninstall @likeminds.community/feed-rn' 
+                    sh 'npm install $feed_rn_package_FILENAME'
+                }
+            }
+        }
+        stage('Build') {
+            steps {
+                dir('likeminds-feed-reactnative-integration'){
+                    sh 'export NODE_OPTIONS="--max-old-space-size=8192" && npm run build'
+                }
+            }
+        }
+        stage('Package') {
+            steps {
+                dir('likeminds-feed-reactnative-integration'){
+                    sh 'npm pack'
+                }
+            }
+        }
+        stage('Archive Package') {
+            steps {
+                dir('likeminds-feed-reactnative-integration'){
+                    archiveArtifacts artifacts: '*.tgz', fingerprint: true
+                }
+            }
+        }
+    }
+    
+    // post{
+    //     always{
+    //         cleanWs()
+    //     }
+    // }
+}
