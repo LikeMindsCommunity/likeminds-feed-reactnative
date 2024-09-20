@@ -51,7 +51,6 @@ jobs:
     create-github-release:
         name: Create GitHub Release
         runs-on: ubuntu-latest
-        if: github.ref == 'refs/heads/main'  # Only run for main branch
         needs: create_tag
         permissions:
             contents: write
