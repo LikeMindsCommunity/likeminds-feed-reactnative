@@ -2,16 +2,12 @@ import {
   Attachment,
   AttachmentMeta,
   GetFeedResponse,
-  IActivities,
-  IActivity,
-  IMenuItem,
-  IOgTag,
-  IPost,
-  IUser,
+  GetNotification,
   Activity,
+  MenuItem,
   OgTag,
-  Post,
   User,
+  Post,
   Reply,
   Like,
   GetPostLikesResponse,
@@ -182,10 +178,10 @@ export function convertToLMPollViewData(id: string, widgets: any) {
 }
 
 /**
- * @param data: IOgTag
+ * @param data: OgTag
  * @returns LMOGTagsViewData
  */
-export function convertToLMOgTagsViewData(data: IOgTag): LMOGTagsViewData {
+export function convertToLMOgTagsViewData(data: OgTag): LMOGTagsViewData {
   const ogTagsData: LMOGTagsViewData = {
     title: data.title,
     description: data.description,
@@ -196,11 +192,11 @@ export function convertToLMOgTagsViewData(data: IOgTag): LMOGTagsViewData {
 }
 
 /**
- * @param data: [IMenuItem]
+ * @param data: [MenuItem]
  * @returns [LMMenuItemsViewData]
  */
 export function convertToLMMenuItemsViewData(
-  data: IMenuItem[]
+  data: MenuItem[]
 ): LMMenuItemsViewData[] {
   return data?.map((item) => {
     return {
@@ -211,10 +207,10 @@ export function convertToLMMenuItemsViewData(
 }
 
 /**
- * @param data: IUser
+ * @param data: User
  * @returns LMUserViewData
  */
-export function convertToLMUserViewData(data: IUser): LMUserViewData {
+export function convertToLMUserViewData(data: User): LMUserViewData {
   const userData: LMUserViewData = {
     customTitle: data?.customTitle,
     id: data?.id,
@@ -231,11 +227,11 @@ export function convertToLMUserViewData(data: IUser): LMUserViewData {
 }
 
 /**
- * @param data: IUser
+ * @param data: User
  * @returns LMSDKClientInfoViewData
  */
 export function convertToLMSDKClientInfoViewData(
-  data: IUser
+  data: User
 ): LMSDKClientInfoViewData {
   const sdkClientInfo = data?.sdkClientInfo;
   const sdkClientInfoConverter: LMSDKClientInfoViewData = {
@@ -452,11 +448,11 @@ export function convertToLMCommentViewData(
 }
 
 /**
- * @param data: [IActivities]
+ * @param data: [GetNotification]
  * @returns list of [LMActivityViewData]
  */
 export function convertNotificationsFeed(
-  data: IActivities
+  data: GetNotification
 ): LMActivityViewData[] {
   const notificationData = data.activities;
   const userData = data.users;
@@ -466,12 +462,12 @@ export function convertNotificationsFeed(
 }
 
 /**
- * @param post: [IActivity]
+ * @param post: [Activity]
  * @param user: [Map] of String to User
  * @returns LMActivityViewData
  */
 export function convertToLMActivityViewData(
-  activity: IActivity,
+  activity: Activity,
   users: { [key: string]: LMUserViewData }
 ): LMActivityViewData {
   const notificationData: LMActivityViewData = {

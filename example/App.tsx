@@ -18,6 +18,8 @@ import {
   LMFeedCreatePollScreen,
   LMFeedPollResult,
   initMyClient,
+  QAFeedCreateWrapper,
+  QAFeedWrapper,
 } from '@likeminds.community/feed-rn-core';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {LMCoreCallbacks} from '@likeminds.community/feed-rn-core/setupFeed';
@@ -61,6 +63,7 @@ import {LMFeedClient, InitiateUserRequest} from '@likeminds.community/feed-rn';
 import {LoginSchemaRO} from './login/loginSchemaRO';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import STYLES from '@likeminds.community/feed-rn-core/constants/Styles';
+import QAFeedPostDetailWrapper from '@likeminds.community/feed-rn-core/wrappers/qaFeedPostDetailWrapper';
 
 class CustomCallbacks implements LMFeedCallbacks, LMCarouselScreenCallbacks {
   onEventTriggered(eventName: string, eventProperties?: Map<string, string>) {
@@ -265,9 +268,9 @@ const App = () => {
             callbackClass={callbackClass}>
             <NavigationContainer ref={navigationRef} independent={true}>
               <Stack.Navigator screenOptions={{headerShown: false}}>
-                <Stack.Screen name={UNIVERSAL_FEED} component={FeedWrapper} />
-                <Stack.Screen name={POST_DETAIL} component={DetailWrapper} />
-                <Stack.Screen name={CREATE_POST} component={CreateWrapper} />
+                <Stack.Screen name={UNIVERSAL_FEED} component={QAFeedWrapper} />
+                <Stack.Screen name={POST_DETAIL} component={QAFeedPostDetailWrapper} />
+                <Stack.Screen name={CREATE_POST} component={QAFeedCreateWrapper} />
                 <Stack.Screen name={POST_LIKES_LIST} component={LikesWrapper} />
                 <Stack.Screen
                   name={TOPIC_FEED}
