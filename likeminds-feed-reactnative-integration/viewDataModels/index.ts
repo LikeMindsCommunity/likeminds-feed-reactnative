@@ -1,7 +1,6 @@
 import {
   Attachment,
   AttachmentMeta,
-  GetFeedResponse,
   GetNotification,
   Activity,
   MenuItem,
@@ -10,7 +9,7 @@ import {
   Post,
   Reply,
   Like,
-  GetPostLikesResponse,
+  GetPostLikes,
 } from "@likeminds.community/feed-rn";
 import {
   DocumentMetaData,
@@ -23,7 +22,6 @@ import {
   POLL_ATTACHMENT_TYPE,
   VIDEO_ATTACHMENT_TYPE,
 } from "../constants/Strings";
-import { IComment } from "@likeminds.community/feed-rn";
 import {
   LMActivityEntityViewData,
   LMActivityViewData,
@@ -132,7 +130,7 @@ export function convertToLMAttachmentMetaViewData(
     duration: data.duration,
     format: data.format,
     name: data.name,
-    ogTags: convertToLMOgTagsViewData(data.ogTags),
+    ogTags: data.ogTags ? convertToLMOgTagsViewData(data.ogTags) : undefined,
     pageCount: data.pageCount,
     size: data.size,
     url: data.url,
@@ -239,17 +237,16 @@ export function convertToLMSDKClientInfoViewData(
     user: sdkClientInfo?.user,
     uuid: sdkClientInfo?.uuid,
     userUniqueId: sdkClientInfo?.userUniqueId,
+    widgetId: sdkClientInfo?.widgetId,
   };
   return sdkClientInfoConverter;
 }
 
 /**
- * @param data: [GetPostLikesResponse]
+ * @param data: [GetPostLikes]
  * @returns list of [LMLikeViewData]
  */
-export function convertToLMLikesList(
-  data: GetPostLikesResponse
-): LMLikeViewData[] {
+export function convertToLMLikesList(data: GetPostLikes): LMLikeViewData[] {
   const likesListData = data?.likes;
   const userData = data?.users;
   return likesListData?.map((item: Like) => {
@@ -264,7 +261,8 @@ export function convertToLMLikesList(
  */
 export function convertToLMLikeViewData(
   likes: Like,
-  users: { [key: string]: LMUserViewData }
+  // users: { [key: string]: LMUserViewData }
+  users: User[]
 ): LMLikeViewData {
   const likesData: LMLikeViewData = {
     id: likes?.id,
@@ -468,7 +466,8 @@ export function convertNotificationsFeed(
  */
 export function convertToLMActivityViewData(
   activity: Activity,
-  users: { [key: string]: LMUserViewData }
+  // users: { [key: string]: LMUserViewData }
+  users: Record<string, User>
 ): LMActivityViewData {
   const notificationData: LMActivityViewData = {
     id: activity.id,

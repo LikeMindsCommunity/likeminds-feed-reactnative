@@ -57,6 +57,7 @@ export const initialState: PostDetailReducerState = {
         user: 0,
         userUniqueId: "",
         uuid: "",
+        widgetId: ''
       },
       uuid: "",
       isGuest: false,

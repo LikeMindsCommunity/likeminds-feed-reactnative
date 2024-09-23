@@ -3,4 +3,5 @@ export interface LMSDKClientInfoViewData {
   user: number;
   userUniqueId: string;
   uuid: string;
+  widgetId: string;
 }

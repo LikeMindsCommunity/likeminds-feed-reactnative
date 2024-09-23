@@ -9,7 +9,7 @@ export interface LMUserViewData {
   sdkClientInfo: LMSDKClientInfoViewData;
   uuid: string;
   isGuest: boolean;
-  updatedAt: number;
+  updatedAt?: number;
   customTitle: string;
-  organisationName: string | null;
+  organisationName: string | undefined;
 }
