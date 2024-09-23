@@ -66,13 +66,7 @@ const LMPostQAFeedFooter = React.memo(() => {
           <LMButton
             onTap={likesCountHandler}
             icon={{
-              assetPath: liked
-                ? footerStyle?.likeIconButton?.activeIcon?.assetPath
-                  ? footerStyle?.likeIconButton.activeIcon.assetPath
-                  : require("../../../assets/images/heart_red_icon3x.png")
-                : footerStyle?.likeIconButton?.icon?.assetPath
-                ? footerStyle?.likeIconButton.icon.assetPath
-                : require("../../../assets/images/heart_icon3x.png"),
+              assetPath: require('../../../assets/images/upvote3x.png'),
               iconUrl: footerStyle?.likeIconButton?.icon?.iconUrl,
               iconStyle: footerStyle?.likeIconButton?.icon?.iconStyle,
               color: footerStyle?.likeIconButton?.icon?.color
