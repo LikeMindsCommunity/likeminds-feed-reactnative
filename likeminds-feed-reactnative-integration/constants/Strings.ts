@@ -74,7 +74,7 @@ export const SOCIAL_FEED_CREATE_POST_PLACEHOLDER_TEXT =
   "Write something here...";
 export const QA_FEED_CREATE_POST_PLACEHOLDER_TEXT = "Add description";
 export const QA_FEED_CREATE_POST_HEADING_PLACEHOLDER_TEXT =
-  "Add your question here";
+  "Add your question here *";
 export const ADD_MORE_MEDIA = "Add More";
 export const ADD_POST_TEXT = "POST";
 export const SAVE_POST_TEXT = "SAVE";

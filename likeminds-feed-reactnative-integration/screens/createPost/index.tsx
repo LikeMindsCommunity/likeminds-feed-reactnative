@@ -587,11 +587,6 @@ const CreatePostComponent = () => {
               placeholderTextColor={"grey"}
               style={{ fontSize: 16, color: "black", fontWeight: "600" }}
             />
-            {!heading ? (
-              <Text style={{ color: "red", fontSize: 18, marginLeft: 5 }}>
-                *
-              </Text>
-            ) : null}
           </View>
         ) : null}
 
