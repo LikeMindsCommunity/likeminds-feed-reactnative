@@ -294,7 +294,7 @@ const PostDetailComponent = React.memo(() => {
         post={postDetail}
         isHeadingEnabled={isHeadingEnabled}
         isTopResponse={isTopResponse}
-        lmPostCustomFooter={lmPostCustomFooter}
+        customFooter={lmPostCustomFooter}
         // header props
         headerProps={{
           onOverlayMenuClick: (event) =>
