@@ -76,6 +76,7 @@ import { Events } from "../enums/Events";
 import { Keys } from "../enums/Keys";
 import { CommunityConfigs } from "../communityConfigs";
 import { CREATE_POLL_SCREEN } from "../constants/screenNames";
+import STYLES from "../constants/Styles";
 
 interface CreatePostContextProps {
   children: ReactNode;
@@ -221,6 +222,10 @@ export const CreatePostContextProvider = ({
   const [allTags, setAllTags] = useState<Array<LMUserViewData>>([]);
   const [isUserTagging, setIsUserTagging] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const maxHeadingWords = STYLES?.$CREATE_POST_STYLE?.headingMaxWords
+    ? STYLES?.$CREATE_POST_STYLE?.headingMaxWords
+    : 200;
 
   // function handles the selection of images and videos
   const setSelectedImageVideo = (type: string) => {
@@ -753,7 +758,10 @@ export const CreatePostContextProvider = ({
 
   // this function is called on change text of heading inputText
   const handleHeadingInputChange = (event: string) => {
-    setHeading(event);
+    const wordArray = event.split(/\s+/); // Split text by spaces
+    if (wordArray.length <= maxHeadingWords) {
+      setHeading(event); // Update state only if within word limit
+    }
   };
 
   // this calls the tagging list api for different page number

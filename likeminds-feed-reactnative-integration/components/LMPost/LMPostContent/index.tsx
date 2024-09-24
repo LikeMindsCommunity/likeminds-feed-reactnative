@@ -32,7 +32,7 @@ const LMPostContent = React.memo(() => {
     let text = "";
 
     //get lines after it truncate
-    if( lines.length >= MAX_LINES ){
+    if (lines.length >= MAX_LINES) {
       if (Array.isArray(lines)) {
         text = lines
           .splice(0, MAX_LINES)
@@ -55,6 +55,11 @@ const LMPostContent = React.memo(() => {
         <MoreLessComponent
           truncatedText={truncatedText}
           fullText={post?.text}
+          textStyle={postContentStyle?.textStyle}
+          showMoreTextStyle={StyleSheet.flatten([
+            { fontWeight: "600" },
+            postContentStyle?.showMoreText?.textStyle,
+          ])}
         />
       ) : (
         <LMText

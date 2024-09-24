@@ -113,6 +113,16 @@ export interface PostListStyleProps {
       text: TextStyle;
       box: ViewStyle;
     };
+    postHeadingStyle?: TextStyle;
+    postTopResponse?: {
+      heading?: TextStyle;
+      profilePictureStyle?: ImageStyle;
+      profilePictureFallbackTextStyle?: TextStyle;
+      commentBox?: ViewStyle;
+      commentUserNameStyle?: TextStyle;
+      commentTimeStampStyle?: TextStyle;
+      commentTextStyle?: TextStyle;
+    };
   };
   media?: {
     postMediaStyle?: ViewStyle;
@@ -282,6 +292,7 @@ export interface PostDetailStyleProps {
 
 export interface CreatePostStyleProps {
   userNameTextStyle?: TextStyle;
+  headingMaxWords?: number;
   createPostScreenHeader?: {
     showBackArrow?: boolean;
     editPostHeading?: string;
