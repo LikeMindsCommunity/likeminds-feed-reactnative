@@ -32,8 +32,11 @@ const Feed = () => {
         <LMUniversalFeedHeader />
         <LMFilterTopics />
         <LMPostUploadIndicator />
-        <PostsList items={mappedTopics} lmPostCustomFooter={<LMPostQAFeedFooter />}  />
-        <LMCreatePostButton />
+        <PostsList
+          items={mappedTopics}
+          lmPostCustomFooter={<LMPostQAFeedFooter />}
+        />
+        <LMCreatePostButton customText="ASK QUESTION" />
       </UniversalFeed>
     </View>
   );

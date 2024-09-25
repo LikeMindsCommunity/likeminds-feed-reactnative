@@ -38,7 +38,13 @@ const LMPostHeading = () => {
           truncatedText={truncatedText}
           fullText={post?.text}
           textStyle={StyleSheet.flatten([
-            { fontSize: 16, fontWeight: "600" },
+            {
+              fontSize: 16,
+              fontWeight: "600",
+              color: STYLES.$IS_DARK_THEME
+                ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+                : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+            },
             postListStyle?.postContent?.postHeadingStyle,
           ])}
           showMoreTextStyle={{

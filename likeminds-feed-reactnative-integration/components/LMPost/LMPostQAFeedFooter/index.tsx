@@ -42,6 +42,13 @@ const LMPostQAFeedFooter = React.memo(() => {
     <View
       style={StyleSheet.flatten([
         styles.postFooter,
+        {
+          borderTopWidth: 1,
+          borderColor: STYLES.$IS_DARK_THEME
+            ? STYLES.$SEPARATOR_COLORS.DARK
+            : STYLES.$SEPARATOR_COLORS.LIGHT,
+          paddingHorizontal: 20,
+        },
         footerStyle?.footerBoxStyle,
       ])}
     >
@@ -59,6 +66,10 @@ const LMPostQAFeedFooter = React.memo(() => {
               gap: 5,
               borderRadius: 20,
               paddingVertical: 5,
+              borderWidth: 1,
+              borderColor: STYLES.$IS_DARK_THEME
+                ? STYLES.$SEPARATOR_COLORS.DARK
+                : "#c9d3dd",
             },
           ]}
         >
@@ -67,12 +78,12 @@ const LMPostQAFeedFooter = React.memo(() => {
             onTap={likesCountHandler}
             icon={{
               assetPath: liked
-              ? footerStyle?.likeIconButton?.activeIcon?.assetPath
-                ? footerStyle?.likeIconButton.activeIcon.assetPath
-                : require("../../../assets/images/upvote_filled3x.png")
-              : footerStyle?.likeIconButton?.icon?.assetPath
-              ? footerStyle?.likeIconButton.icon.assetPath
-              : require("../../../assets/images/upvote3x.png"),
+                ? footerStyle?.likeIconButton?.activeIcon?.assetPath
+                  ? footerStyle?.likeIconButton.activeIcon.assetPath
+                  : require("../../../assets/images/upvote_filled3x.png")
+                : footerStyle?.likeIconButton?.icon?.assetPath
+                ? footerStyle?.likeIconButton.icon.assetPath
+                : require("../../../assets/images/upvote3x.png"),
               iconUrl: footerStyle?.likeIconButton?.icon?.iconUrl,
               iconStyle: footerStyle?.likeIconButton?.icon?.iconStyle,
               height: footerStyle?.likeIconButton?.icon?.height
@@ -83,6 +94,7 @@ const LMPostQAFeedFooter = React.memo(() => {
                 : 20.5,
               boxFit: footerStyle?.likeIconButton?.icon?.boxFit,
               boxStyle: footerStyle?.likeIconButton?.icon?.boxStyle,
+              color: STYLES.$COLORS.PRIMARY,
             }}
             buttonStyle={StyleSheet.flatten([
               styles.defaultLikeIconView,
@@ -107,8 +119,8 @@ const LMPostQAFeedFooter = React.memo(() => {
             text={{
               children: likeCount
                 ? likeCount > 1
-                  ? `Upvote ${likeCount} `
-                  : `Upvote ${likeCount}`
+                  ? `Upvote · ${likeCount}`
+                  : `Upvote · ${likeCount}`
                 : "Upvote",
               textStyle: footerStyle?.likeTextButton?.text
                 ? footerStyle?.likeTextButton.text
@@ -137,7 +149,7 @@ const LMPostQAFeedFooter = React.memo(() => {
         style={StyleSheet.flatten([
           styles.alignRow,
           showBookMarkIcon &&
-            showShareIcon && { width: "40%", justifyContent: "space-between" },
+            showShareIcon && { justifyContent: "space-between", gap: 25 },
         ])}
       >
         {/* comment section */}
@@ -153,7 +165,7 @@ const LMPostQAFeedFooter = React.memo(() => {
                 ? post?.commentsCount > 1
                   ? `${post?.commentsCount}`
                   : `${post?.commentsCount}`
-                : "",
+                : "Answer",
             textStyle: footerStyle?.commentButton?.text
               ? footerStyle?.commentButton.text
               : {

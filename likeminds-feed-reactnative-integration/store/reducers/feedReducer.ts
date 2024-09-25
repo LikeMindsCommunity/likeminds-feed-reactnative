@@ -320,28 +320,6 @@ export const feedReducer = (state = initialState, action) => {
     case AUTO_PLAY_POST_VIDEO: {
       return { ...state, autoPlayVideoPostId: action.body };
     }
-    case POST_DATA_SUCCESS: {
-      const updatedFeed = state.feed;
-      const {
-        post = {},
-        users = {},
-        widgets = {},
-        filteredComments = {},
-      } = action.body;
-      const converterPostData = convertToLMPostViewData(
-        post,
-        users,
-        widgets,
-        filteredComments
-      );
-      const index = updatedFeed.findIndex(
-        (item) => item.id === converterPostData.id
-      );
-      if (index !== -1) {
-        updatedFeed[index] = converterPostData;
-      }
-      return { ...state, feed: updatedFeed };
-    }
     default:
       return state;
   }
