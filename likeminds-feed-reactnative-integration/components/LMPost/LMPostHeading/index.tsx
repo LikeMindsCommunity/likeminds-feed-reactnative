@@ -40,7 +40,7 @@ const LMPostHeading = () => {
           textStyle={StyleSheet.flatten([
             {
               fontSize: 16,
-              fontWeight: "600",
+              fontWeight: "800",
               color: STYLES.$IS_DARK_THEME
                 ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
                 : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
@@ -51,14 +51,20 @@ const LMPostHeading = () => {
             color: STYLES.$IS_DARK_THEME
               ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
               : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
-            fontWeight: "600",
+            fontWeight: "800",
             fontSize: 16,
           }}
         />
       ) : (
         <Text
           style={[
-            { fontSize: 16, fontWeight: "600" },
+            {
+              fontSize: 16,
+              fontWeight: "600",
+              color: STYLES.$IS_DARK_THEME
+                ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+                : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+            },
             postListStyle?.postContent?.postHeadingStyle,
           ]}
           onTextLayout={(e) => onTextLayout(e)}

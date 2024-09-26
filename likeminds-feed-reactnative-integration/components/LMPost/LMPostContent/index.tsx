@@ -57,7 +57,7 @@ const LMPostContent = React.memo(() => {
           fullText={post?.text}
           textStyle={postContentStyle?.textStyle}
           showMoreTextStyle={StyleSheet.flatten([
-            { fontWeight: "600" },
+            { fontWeight: "400" },
             postContentStyle?.showMoreText?.textStyle,
           ])}
         />

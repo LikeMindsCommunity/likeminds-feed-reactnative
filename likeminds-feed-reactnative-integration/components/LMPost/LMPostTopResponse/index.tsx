@@ -126,7 +126,7 @@ const LMPostTopResponse = () => {
                       color: STYLES.$IS_DARK_THEME
                         ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
                         : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
-                      fontWeight: "600",
+                      fontWeight: "400",
                     }}
                     disable={true}
                   />
