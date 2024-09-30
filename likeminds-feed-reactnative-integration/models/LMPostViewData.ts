@@ -2,6 +2,7 @@ import { LMAttachmentViewData } from "./LMAttachmentViewData";
 import { LMCommentViewData } from "./LMCommentViewData";
 import { LMMenuItemsViewData } from "./LMMenuItemsViewData";
 import { LMUserViewData } from "./LMUserViewData";
+import { FilterComment } from "@likeminds.community/feed-rn";
 
 // data model for post ViewData
 export interface LMPostViewData {
@@ -25,5 +26,5 @@ export interface LMPostViewData {
   user: LMUserViewData;
   topics: string[];
   users: { [key: string]: LMUserViewData };
-  filteredComments: any;
+  filteredComments: FilterComment;
 }

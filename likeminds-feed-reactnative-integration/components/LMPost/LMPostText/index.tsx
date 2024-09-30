@@ -20,11 +20,11 @@ const MoreLessComponent = ({
 }: MoreLessComponentProps) => {
   const [showMore, setShowMore] = React.useState(false);
   return (
-    <Text style={StyleSheet.flatten([styles.contentText, textStyle])}>
+    <Text style={[styles.contentText, textStyle]}>
       {!showMore ? `${truncatedText.trim()}...` : decode(fullText, true)}
       {/* show more button section */}
       <Text
-        style={StyleSheet.flatten([styles.showMoreText, showMoreTextStyle])}
+        style={[styles.showMoreText, showMoreTextStyle]}
         disabled={disable ? disable : showMore ? true : false}
         onPress={() => setShowMore(!showMore)}
       >

@@ -8,7 +8,7 @@ import { Keys } from "../../../enums/Keys";
 import STYLES from "../../../constants/Styles";
 import { styles } from "../LMPostFooter/styles";
 
-const LMPostQAFeedFooter = React.memo(() => {
+const LMPostQnAFeedFooter = React.memo(() => {
   const { post, footerProps }: LMPostContextValues = useLMPostContext();
   const postListStyle = STYLES.$POST_LIST_STYLE;
   const footerStyle: any = postListStyle?.footer;
@@ -88,10 +88,10 @@ const LMPostQAFeedFooter = React.memo(() => {
               iconStyle: footerStyle?.likeIconButton?.icon?.iconStyle,
               height: footerStyle?.likeIconButton?.icon?.height
                 ? footerStyle?.likeIconButton.icon.height
-                : 20.5,
+                : 18,
               width: footerStyle?.likeIconButton?.icon?.width
                 ? footerStyle?.likeIconButton.icon.width
-                : 20.5,
+                : 18,
               boxFit: footerStyle?.likeIconButton?.icon?.boxFit,
               boxStyle: footerStyle?.likeIconButton?.icon?.boxStyle,
               color: STYLES.$COLORS.PRIMARY,
@@ -291,4 +291,4 @@ const LMPostQAFeedFooter = React.memo(() => {
   );
 });
 
-export default LMPostQAFeedFooter;
+export default LMPostQnAFeedFooter;

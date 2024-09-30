@@ -39,7 +39,7 @@ const Feed = () => {
   );
 };
 
-const SocialFeedWrapper = ({ navigation, route }) => {
+const LMSocialFeedCreateScreen = ({ navigation, route }) => {
   return (
     <UniversalFeedContextProvider navigation={navigation} route={route}>
       <PostListContextProvider navigation={navigation} route={route}>
@@ -49,4 +49,4 @@ const SocialFeedWrapper = ({ navigation, route }) => {
   );
 };
 
-export default SocialFeedWrapper;
+export default LMSocialFeedCreateScreen;

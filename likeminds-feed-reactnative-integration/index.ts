@@ -55,15 +55,15 @@ import LMFilterTopics from "./components/LMFilterTopics";
 import LMPostUploadIndicator from "./components/LMPostUploadIndicator";
 import LMUniversalFeedHeader from "./components/LMUniversalFeedHeader";
 import {
-  DetailWrapper,
-  CreatePollScreenWrapper,
-  SocialFeedCreateWrapper,
-  QAFeedCreateWrapper,
-  LikesWrapper,
-  NotificationWrapper,
-  SocialFeedWrapper,
-  QAFeedWrapper,
-  TopicFeedWrapper,
+  LMSocialFeedPostDetailScreen,
+  LMCreatePollScreen,
+  LMLikesScreen,
+  LMNotificationScreen,
+  LMSocialFeedCreateScreen,
+  LMQnAFeedCreateScreen,
+  LMQnAPostDetailScreen,
+  LMQnAFeedScreen,
+  LMTopicFeedScreen,
 } from "./wrappers";
 import LMFeedTheme from "./constants/Styles";
 
@@ -117,14 +117,14 @@ export {
   NAVIGATED_FROM_NOTIFICATION,
   NAVIGATED_FROM_COMMENT,
   NAVIGATED_FROM_POST,
-  DetailWrapper,
-  CreatePollScreenWrapper,
-  SocialFeedCreateWrapper,
-  QAFeedCreateWrapper,
-  LikesWrapper,
-  NotificationWrapper,
-  SocialFeedWrapper,
-  QAFeedWrapper,
-  TopicFeedWrapper,
+  LMSocialFeedPostDetailScreen,
+  LMCreatePollScreen,
+  LMLikesScreen,
+  LMNotificationScreen,
+  LMSocialFeedCreateScreen,
+  LMQnAFeedCreateScreen,
+  LMQnAPostDetailScreen,
+  LMQnAFeedScreen,
+  LMTopicFeedScreen,
   LMFeedTheme,
 };

@@ -12,7 +12,7 @@ import LMFilterTopics from "../components/LMFilterTopics";
 import LMPostUploadIndicator from "../components/LMPostUploadIndicator";
 import { PostsList } from "../screens/postsList";
 import LMCreatePostButton from "../components/LMCreatePostButton";
-import LMPostQAFeedFooter from "../components/LMPost/LMPostQAFeedFooter";
+import LMPostQnAFeedFooter from "../components/LMPost/LMPostQnAFeedFooter";
 const Feed = () => {
   const mappedTopics = useAppSelector((state: any) => state.feed.mappedTopics);
   const [FCMToken, setFCMToken] = useState("");
@@ -34,7 +34,7 @@ const Feed = () => {
         <LMPostUploadIndicator />
         <PostsList
           items={mappedTopics}
-          lmPostCustomFooter={<LMPostQAFeedFooter />}
+          lmPostCustomFooter={<LMPostQnAFeedFooter />}
         />
         <LMCreatePostButton customText="ASK QUESTION" />
       </UniversalFeed>
@@ -42,7 +42,7 @@ const Feed = () => {
   );
 };
 
-const QAFeedWrapper = ({ navigation, route }) => {
+const QnAFeedWrapper = ({ navigation, route }) => {
   return (
     <UniversalFeedContextProvider navigation={navigation} route={route}>
       <PostListContextProvider navigation={navigation} route={route}>
@@ -52,4 +52,4 @@ const QAFeedWrapper = ({ navigation, route }) => {
   );
 };
 
-export default QAFeedWrapper;
+export default QnAFeedWrapper;

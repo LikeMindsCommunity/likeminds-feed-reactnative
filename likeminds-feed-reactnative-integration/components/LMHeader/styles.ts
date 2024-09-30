@@ -24,7 +24,7 @@ export const defaultStyles = StyleSheet.create({
   },
   headingStyle: {
     fontSize: 16,
-    fontWeight: "400",
+    fontWeight: "800",
     marginLeft: 8,
     flex: 1,
     color: STYLES.$IS_DARK_THEME

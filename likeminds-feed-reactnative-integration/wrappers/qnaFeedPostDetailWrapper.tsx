@@ -4,17 +4,17 @@ import {
   UniversalFeedContextProvider,
 } from "../context";
 import { PostDetail } from "../screens/postDetail";
-import LMPostQAFeedFooter from "../components/LMPost/LMPostQAFeedFooter";
+import LMPostQnAFeedFooter from "../components/LMPost/LMPostQnAFeedFooter";
 
-const QAFeedPostDetailWrapper = ({ navigation, route }: any) => {
+const LMQnAPostDetailScreen = ({ navigation, route }: any) => {
   return (
     <UniversalFeedContextProvider navigation={navigation} route={route}>
       <PostDetailContextProvider navigation={navigation} route={route}>
         {/* @ts-ignore */}
-        <PostDetail isHeadingEnabled={true} lmPostCustomFooter={<LMPostQAFeedFooter />} />
+        <PostDetail isHeadingEnabled={true} lmPostCustomFooter={<LMPostQnAFeedFooter />} />
       </PostDetailContextProvider>
     </UniversalFeedContextProvider>
   );
 };
 
-export default QAFeedPostDetailWrapper;
+export default LMQnAPostDetailScreen;

@@ -32,8 +32,8 @@ import {
   SELECT_IMAGE,
   SELECT_VIDEO,
   VIDEO_ATTACHMENT_TYPE,
-  QA_FEED_CREATE_POST_PLACEHOLDER_TEXT,
-  QA_FEED_CREATE_POST_HEADING_PLACEHOLDER_TEXT,
+  QnA_FEED_CREATE_POST_PLACEHOLDER_TEXT,
+  QnA_FEED_CREATE_POST_HEADING_PLACEHOLDER_TEXT,
 } from "../../constants/Strings";
 import { setUploadAttachments } from "../../store/actions/createPost";
 import { styles } from "./styles";
@@ -583,7 +583,7 @@ const CreatePostComponent = () => {
             <TextInput
               value={heading}
               onChangeText={handleHeadingInputChange}
-              placeholder={QA_FEED_CREATE_POST_HEADING_PLACEHOLDER_TEXT}
+              placeholder={QnA_FEED_CREATE_POST_HEADING_PLACEHOLDER_TEXT}
               placeholderTextColor={"grey"}
               style={{ fontSize: 16, color: "black", fontWeight: "600" }}
             />
@@ -608,7 +608,7 @@ const CreatePostComponent = () => {
             customTextInputStyle?.placeholderText
               ? customTextInputStyle?.placeholderText
               : isHeadingEnabled
-              ? QA_FEED_CREATE_POST_PLACEHOLDER_TEXT
+              ? QnA_FEED_CREATE_POST_PLACEHOLDER_TEXT
               : SOCIAL_FEED_CREATE_POST_PLACEHOLDER_TEXT
           }
           placeholderTextColor={

@@ -72,8 +72,8 @@ export const ADD_POLL = "Add Poll";
 export const ADD_VIDEOS = "Add Video";
 export const SOCIAL_FEED_CREATE_POST_PLACEHOLDER_TEXT =
   "Write something here...";
-export const QA_FEED_CREATE_POST_PLACEHOLDER_TEXT = "Add description";
-export const QA_FEED_CREATE_POST_HEADING_PLACEHOLDER_TEXT =
+export const QnA_FEED_CREATE_POST_PLACEHOLDER_TEXT = "Add description";
+export const QnA_FEED_CREATE_POST_HEADING_PLACEHOLDER_TEXT =
   "Add your question here *";
 export const ADD_MORE_MEDIA = "Add More";
 export const ADD_POST_TEXT = "POST";

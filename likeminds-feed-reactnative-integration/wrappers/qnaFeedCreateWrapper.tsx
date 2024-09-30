@@ -5,7 +5,7 @@ import {
 } from "../context";
 import { CreatePost } from "../screens/createPost";
 
-const QAFeedCreateWrapper = ({ navigation, route }) => {
+const QnAFeedCreateWrapper = ({ navigation, route }) => {
   return (
     <UniversalFeedContextProvider navigation={navigation} route={route}>
       <CreatePostContextProvider navigation={navigation} route={route}>
@@ -16,4 +16,4 @@ const QAFeedCreateWrapper = ({ navigation, route }) => {
   );
 };
 
-export default QAFeedCreateWrapper;
+export default QnAFeedCreateWrapper;
