@@ -64,6 +64,7 @@ import {
   LMQnAPostDetailScreen,
   LMQnAFeedScreen,
   LMTopicFeedScreen,
+  LMSocialFeedScreen,
 } from "./wrappers";
 import LMFeedTheme from "./constants/Styles";
 
@@ -126,5 +127,6 @@ export {
   LMQnAPostDetailScreen,
   LMQnAFeedScreen,
   LMTopicFeedScreen,
+  LMSocialFeedScreen,
   LMFeedTheme,
 };

@@ -8,18 +8,21 @@ import {
   TopicFeed,
   UNIVERSAL_FEED,
   TOPIC_FEED,
-  POSTS_LIST,
   POST_DETAIL,
   CREATE_POST,
   CAROUSEL_SCREEN,
   POST_LIKES_LIST,
   LMOverlayProvider,
   CarouselScreen,
-  LMFeedCreatePollScreen,
   LMFeedPollResult,
   initMyClient,
-  QAFeedCreateWrapper,
-  QAFeedWrapper,
+  LMSocialFeedPostDetailScreen,
+  LMCreatePollScreen,
+  LMLikesScreen,
+  LMNotificationScreen,
+  LMSocialFeedCreateScreen,
+  LMTopicFeedScreen,
+  LMSocialFeedScreen
 } from '@likeminds.community/feed-rn-core';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {LMCoreCallbacks} from '@likeminds.community/feed-rn-core/setupFeed';
@@ -61,9 +64,7 @@ import {carouselScreenStyle, createPollStyle, pollStyle} from './styles';
 import CreatePollScreenWrapper from './feedScreen/createPollScreenWrapper';
 import {LMFeedClient, InitiateUserRequest} from '@likeminds.community/feed-rn';
 import {LoginSchemaRO} from './login/loginSchemaRO';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import STYLES from '@likeminds.community/feed-rn-core/constants/Styles';
-import QAFeedPostDetailWrapper from '@likeminds.community/feed-rn-core/wrappers/qaFeedPostDetailWrapper';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 class CustomCallbacks implements LMFeedCallbacks, LMCarouselScreenCallbacks {
   onEventTriggered(eventName: string, eventProperties?: Map<string, string>) {
@@ -95,7 +96,7 @@ const App = () => {
   const [isTrue, setIsTrue] = useState(true);
 
   // realm setup
-  const loginSchemaArray: any = useQuery(LoginSchemaRO); 
+  const loginSchemaArray: any = useQuery(LoginSchemaRO);
   useEffect(() => {
     const userSchema = async () => {
       const loginSchema = loginSchemaArray[0];
@@ -252,11 +253,10 @@ const App = () => {
     },
   );
 
-
   return (
     <KeyboardAvoidingView
-    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    style={{flex: 1}}>
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{flex: 1}}>
       <GestureHandlerRootView style={{flex: 1}}>
         {userName && userUniqueID && apiKey && myClient ? (
           <LMOverlayProvider
@@ -268,18 +268,24 @@ const App = () => {
             callbackClass={callbackClass}>
             <NavigationContainer ref={navigationRef} independent={true}>
               <Stack.Navigator screenOptions={{headerShown: false}}>
-                <Stack.Screen name={UNIVERSAL_FEED} component={QAFeedWrapper} />
-                <Stack.Screen name={POST_DETAIL} component={QAFeedPostDetailWrapper} />
-                <Stack.Screen name={CREATE_POST} component={QAFeedCreateWrapper} />
-                <Stack.Screen name={POST_LIKES_LIST} component={LikesWrapper} />
+                <Stack.Screen name={UNIVERSAL_FEED} component={LMSocialFeedScreen} />
+                <Stack.Screen
+                  name={POST_DETAIL}
+                  component={LMSocialFeedPostDetailScreen}
+                />
+                <Stack.Screen
+                  name={CREATE_POST}
+                  component={LMSocialFeedCreateScreen}
+                />
+                <Stack.Screen name={POST_LIKES_LIST} component={LMLikesScreen} />
                 <Stack.Screen
                   name={TOPIC_FEED}
-                  component={TopicFeedWrapper}
+                  component={LMTopicFeedScreen}
                   options={{headerShown: true}}
                 />
                 <Stack.Screen
                   name={NOTIFICATION_FEED}
-                  component={NotificationWrapper}
+                  component={LMNotificationScreen}
                 />
                 <Stack.Screen
                   options={{gestureEnabled: false}}
@@ -295,7 +301,7 @@ const App = () => {
                 />
                 <Stack.Screen
                   name={CREATE_POLL_SCREEN}
-                  component={CreatePollScreenWrapper}
+                  component={LMCreatePollScreen}
                 />
               </Stack.Navigator>
             </NavigationContainer>
@@ -304,7 +310,7 @@ const App = () => {
           <FetchKeyInputScreen isTrue={isTrue} setIsTrue={setIsTrue} />
         ) : null}
       </GestureHandlerRootView>
-      </KeyboardAvoidingView>
+    </KeyboardAvoidingView>
   );
 };
 

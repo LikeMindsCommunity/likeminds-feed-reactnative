@@ -39,7 +39,7 @@ const Feed = () => {
   );
 };
 
-const LMSocialFeedCreateScreen = ({ navigation, route }) => {
+const LMSocialFeedScreen = ({ navigation, route }) => {
   return (
     <UniversalFeedContextProvider navigation={navigation} route={route}>
       <PostListContextProvider navigation={navigation} route={route}>
@@ -49,4 +49,4 @@ const LMSocialFeedCreateScreen = ({ navigation, route }) => {
   );
 };
 
-export default LMSocialFeedCreateScreen;
+export default LMSocialFeedScreen;
