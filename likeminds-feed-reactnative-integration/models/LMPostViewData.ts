@@ -1,8 +1,8 @@
+import { FilterComment } from "@likeminds.community/feed-rn";
 import { LMAttachmentViewData } from "./LMAttachmentViewData";
 import { LMCommentViewData } from "./LMCommentViewData";
 import { LMMenuItemsViewData } from "./LMMenuItemsViewData";
 import { LMUserViewData } from "./LMUserViewData";
-import { FilterComment } from "@likeminds.community/feed-rn";
 
 // data model for post ViewData
 export interface LMPostViewData {

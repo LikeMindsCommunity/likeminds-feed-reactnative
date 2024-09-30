@@ -34,6 +34,7 @@ import {
   LMSDKClientInfoViewData,
   LMUserViewData,
 } from "../models";
+import { LMFilterCommentViewData } from "../models/LMFilterCommentViewData";
 
 /**
  * @param data: [GetFeedResponse]
@@ -63,7 +64,7 @@ export function convertToLMPostViewData(
   post: Post,
   user: { [key: string]: LMUserViewData },
   widgets: any,
-  filteredComments: any
+  filteredComments: LMFilterCommentViewData
 ): LMPostViewData {
   const postData: LMPostViewData = {
     id: post.id,

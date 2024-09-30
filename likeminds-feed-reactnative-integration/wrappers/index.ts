@@ -1,6 +1,6 @@
 import LMSocialFeedPostDetailScreen from "./detailScreenWrapper";
 import LMCreatePollScreen from "./createPollScreenWrapper";
-import LMQnAFeedCreateScreen from "./qnaFeedCreateWrapper";
+import LMQnAFeedCreatePostScreen from "./qnaFeedCreateWrapper";
 import LMLikesScreen from "./likesWrapper";
 import LMNotificationScreen from "./notificationWrapper";
 import LMSocialFeedCreateScreen from "./socialFeedScreenWrapper";
@@ -15,7 +15,7 @@ export {
   LMLikesScreen,
   LMNotificationScreen,
   LMSocialFeedCreateScreen,
-  LMQnAFeedCreateScreen,
+  LMQnAFeedCreatePostScreen,
   LMQnAPostDetailScreen,
   LMQnAFeedScreen,
   LMTopicFeedScreen,
