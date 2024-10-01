@@ -609,6 +609,8 @@ export const CreatePostContextProvider = ({
         getPostResponse?.filteredComments
       )
     );
+
+    setHeading(getPostResponse?.post?.heading);
     return getPostResponse;
   };
 
@@ -666,12 +668,11 @@ export const CreatePostContextProvider = ({
     );
 
     // call edit post api
-
     if (formattedPollAttachments[0]?.attachmentMeta) {
       const editPostResponse = dispatch(
         editPost(
           EditPostRequest.builder()
-            .setHeading("")
+            .setHeading(heading)
             .setattachments([
               ...allAttachment,
               ...linkAttachments,
@@ -689,7 +690,7 @@ export const CreatePostContextProvider = ({
       const editPostResponse = dispatch(
         editPost(
           EditPostRequest.builder()
-            .setHeading("")
+            .setHeading(heading)
             .setattachments([...allAttachment, ...linkAttachments])
             .setpostId(postDetail?.id)
             .settext(contentText)
@@ -758,10 +759,7 @@ export const CreatePostContextProvider = ({
 
   // this function is called on change text of heading inputText
   const handleHeadingInputChange = (event: string) => {
-    const wordArray = event.split(/\s+/); // Split text by spaces
-    if (wordArray.length <= maxHeadingWords) {
-      setHeading(event); // Update state only if within word limit
-    }
+    setHeading(event);
   };
 
   // this calls the tagging list api for different page number

@@ -37,6 +37,7 @@ const LMPostHeading = () => {
         <MoreLessComponent
           truncatedText={truncatedText}
           fullText={post?.text}
+          isDecoding={false}
           textStyle={StyleSheet.flatten([
             {
               fontSize: 16,

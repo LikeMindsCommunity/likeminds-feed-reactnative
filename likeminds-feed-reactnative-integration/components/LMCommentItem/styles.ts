@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   commentUserName: {
-    fontWeight: "500",
+    fontWeight: "800",
     color: STYLES.$IS_DARK_THEME
       ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
       : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
@@ -96,8 +96,9 @@ export const styles = StyleSheet.create({
   rowAlignment: { flexDirection: "row", alignItems: "center" },
   showMoreText: {
     color: STYLES.$IS_DARK_THEME
-      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
-      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
+      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
+    fontWeight: '800',
   },
 });

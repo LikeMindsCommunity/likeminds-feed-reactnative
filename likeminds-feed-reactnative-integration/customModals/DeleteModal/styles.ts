@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
       ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
       : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
     fontSize: STYLES.$FONT_SIZES.LARGE,
-    fontWeight: STYLES.$FONT_WEIGHT.MEDIUM,
+    fontWeight: STYLES.$FONT_WEIGHT.BOLD,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
     marginVertical: STYLES.$MARGINS.SMALL,
   },

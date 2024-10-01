@@ -25,8 +25,8 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "400",
     color: STYLES.$IS_DARK_THEME
-      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
-      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
+      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
     marginVertical: 12,
   },
 });

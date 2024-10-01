@@ -9,6 +9,7 @@ interface MoreLessComponentProps {
   textStyle?: TextStyle;
   showMoreTextStyle?: TextStyle;
   disable?: boolean;
+  isDecoding?: boolean;
 }
 
 const MoreLessComponent = ({
@@ -17,11 +18,16 @@ const MoreLessComponent = ({
   textStyle,
   showMoreTextStyle,
   disable,
+  isDecoding,
 }: MoreLessComponentProps) => {
   const [showMore, setShowMore] = React.useState(false);
   return (
     <Text style={[styles.contentText, textStyle]}>
-      {!showMore ? `${truncatedText.trim()}...` : decode(fullText, true)}
+      {!showMore
+        ? `${truncatedText.trim()}...`
+        : isDecoding
+        ? `${fullText.trim()}`
+        : decode(fullText, true)}
       {/* show more button section */}
       <Text
         style={[styles.showMoreText, showMoreTextStyle]}
