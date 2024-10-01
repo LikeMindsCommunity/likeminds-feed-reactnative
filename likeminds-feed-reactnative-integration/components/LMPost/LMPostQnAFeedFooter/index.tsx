@@ -88,7 +88,7 @@ const LMPostQnAFeedFooter = React.memo(() => {
               iconStyle: footerStyle?.likeIconButton?.icon?.iconStyle,
               height: footerStyle?.likeIconButton?.icon?.height
                 ? footerStyle?.likeIconButton.icon.height
-                : 18,
+                : 16,
               width: footerStyle?.likeIconButton?.icon?.width
                 ? footerStyle?.likeIconButton.icon.width
                 : 18,
