@@ -13,7 +13,7 @@ import {
   LMCreatePollScreen,
   LMLikesScreen,
   LMNotificationScreen,
-  LMQnAFeedCreateScreen,
+  LMQnAFeedCreatePostScreen,
   LMQnAPostDetailScreen,
   LMQnAFeedScreen,
   LMTopicFeedScreen,
@@ -259,7 +259,7 @@ const App = () => {
                 />
                 <Stack.Screen
                   name={CREATE_POST}
-                  component={LMQnAFeedCreateScreen}
+                  component={LMQnAFeedCreatePostScreen}
                 />
                 <Stack.Screen name={POST_LIKES_LIST} component={LMLikesScreen} />
                 <Stack.Screen
