@@ -1,5 +1,5 @@
 import React, { createContext, ReactNode, useContext } from "react";
-import { LMPostUI } from "../models";
+import { LMPostViewData } from "../models";
 import { LMPostHeaderProps } from "../components/LMPost/LMPostHeader/types";
 import { LMPostFooterProps } from "../components/LMPost/LMPostFooter/types";
 import { LMPostContentProps } from "../components/LMPost/LMPostContent/types";
@@ -8,21 +8,27 @@ import { LMPostMediaProps } from "../components/LMPost/LMPostMedia/types";
 interface LMPostContextProps {
   children?: ReactNode;
   navigation: any;
-  post: LMPostUI;
+  post: LMPostViewData;
   headerProps?: LMPostHeaderProps;
   footerProps?: LMPostFooterProps;
   contentProps?: LMPostContentProps;
   mediaProps?: LMPostMediaProps;
+  isHeadingEnabled: boolean;
+  isTopResponse: boolean;
+  customFooter?: ReactNode;
 }
 
 export interface LMPostContextValues {
   navigation: any;
   children: ReactNode;
-  post: LMPostUI;
+  post: LMPostViewData;
   headerProps?: LMPostHeaderProps;
   footerProps?: LMPostFooterProps;
   contentProps?: LMPostContentProps;
   mediaProps?: LMPostMediaProps;
+  isHeadingEnabled: boolean;
+  isTopResponse: boolean;
+  customFooter?: ReactNode;
 }
 
 const LMPostContext = createContext<LMPostContextValues | undefined>(undefined);
@@ -45,6 +51,9 @@ export const LMPostContextProvider = ({
   footerProps,
   contentProps,
   mediaProps,
+  isHeadingEnabled = false,
+  isTopResponse = false,
+  customFooter,
 }: LMPostContextProps) => {
   const contextValues: LMPostContextValues = {
     navigation,
@@ -54,6 +63,9 @@ export const LMPostContextProvider = ({
     contentProps,
     footerProps,
     mediaProps,
+    isHeadingEnabled,
+    isTopResponse,
+    customFooter,
   };
 
   return (

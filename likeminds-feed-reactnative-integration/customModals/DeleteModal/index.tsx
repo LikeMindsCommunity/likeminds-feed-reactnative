@@ -36,7 +36,7 @@ import Toast from "react-native-toast-message";
 import { showToastMessage } from "../../store/actions/toast";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../models/RootStackParamsList";
-import { LMCommentUI, LMPostUI } from "../../models";
+import { LMCommentViewData, LMPostViewData } from "../../models";
 import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Events } from "../../enums/Events";
 import { Keys } from "../../enums/Keys";
@@ -50,8 +50,8 @@ interface DeleteModalProps {
   visible: boolean;
   displayModal: (value: boolean) => void;
   deleteType: string;
-  postDetail: LMPostUI;
-  commentDetail?: LMCommentUI;
+  postDetail: LMPostViewData;
+  commentDetail?: LMCommentViewData;
   modalBackdropColor?: string;
   parentCommentId?: string;
   navigation?: NativeStackNavigationProp<

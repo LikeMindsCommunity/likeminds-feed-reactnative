@@ -36,6 +36,8 @@ interface StylesProps {
   lightThemeBackgroundColor?: string;
   darkThemeBackgroundColor?: string;
   darkTransparentBackgroundColor?: string;
+  lightThemeSeparatorColor?: string;
+  darkThemeSeparatorColor?: string;
 }
 
 interface LMFeedStylesProps {
@@ -105,6 +107,10 @@ export class LMFeedTheme {
     LIGHT?: string;
     DARK?: string;
     DARK_TRANSPARENT?: string;
+  };
+  public $SEPARATOR_COLORS: {
+    LIGHT?: string;
+    DARK?: string;
   };
   public $TEXT_COLOR: {
     PRIMARY_TEXT_LIGHT?: string;
@@ -222,6 +228,10 @@ export class LMFeedTheme {
       DARK: darkThemeBackgroundColor,
       DARK_TRANSPARENT: "#00000088",
     };
+    this.$SEPARATOR_COLORS = {
+      LIGHT: "#f3f5fa",
+      DARK: "#121212",
+    };
     this.$TEXT_COLOR = {
       PRIMARY_TEXT_LIGHT: primaryLightTextColor,
       SECONDARY_TEXT_LIGHT: secondaryLightTextColor,
@@ -311,6 +321,10 @@ export class LMFeedTheme {
       themeProps.lightThemeBackgroundColor ?? this.$BACKGROUND_COLORS.LIGHT;
     this.$BACKGROUND_COLORS.DARK =
       themeProps.darkThemeBackgroundColor ?? this.$BACKGROUND_COLORS.DARK;
+    this.$SEPARATOR_COLORS.LIGHT =
+      themeProps.lightThemeSeparatorColor ?? this.$SEPARATOR_COLORS.LIGHT;
+    this.$SEPARATOR_COLORS.DARK =
+      themeProps.darkThemeSeparatorColor ?? this.$SEPARATOR_COLORS.DARK;
     this.$BACKGROUND_COLORS.DARK_TRANSPARENT =
       themeProps?.darkTransparentBackgroundColor ??
       this.$BACKGROUND_COLORS.DARK_TRANSPARENT;

@@ -10,7 +10,7 @@ import { LMPostMenuProps } from "./types";
 import layout from "../../constants/Layout";
 import { LMText } from "../../uiComponents";
 import { styles } from "./styles";
-import { LMPostUI } from "../../models";
+import { LMPostViewData } from "../../models";
 
 const LMPostMenu = React.memo(
   ({
@@ -23,7 +23,7 @@ const LMPostMenu = React.memo(
     menuViewStyle,
     backdropColor,
   }: LMPostMenuProps) => {
-    let postPinned = post as LMPostUI;
+    let postPinned = post as LMPostViewData;
     return (
       <Modal
         visible={modalVisible}

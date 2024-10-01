@@ -323,8 +323,8 @@ export const styles = StyleSheet.create({
   },
   borderBottom: {
     borderBottomColor: STYLES.$IS_DARK_THEME
-      ? "#121212"
-      : "#D0D8E2",
+      ? STYLES.$SEPARATOR_COLORS.DARK
+      : STYLES.$SEPARATOR_COLORS.LIGHT,
     borderBottomWidth: Layout.normalize(1),
   },
   greyBorder: {

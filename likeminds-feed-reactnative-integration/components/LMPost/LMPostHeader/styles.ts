@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
       ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
       : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
     fontSize: 16.5,
-    fontWeight: "500",
+    fontWeight: "800",
     lineHeight: 20,
   },
   postedDetail: {

@@ -24,7 +24,7 @@ export const defaultStyles = StyleSheet.create({
   },
   headingStyle: {
     fontSize: 16,
-    fontWeight: "400",
+    fontWeight: "800",
     marginLeft: 8,
     flex: 1,
     color: STYLES.$IS_DARK_THEME
@@ -34,9 +34,7 @@ export const defaultStyles = StyleSheet.create({
   },
   subHeadingStyle: {
     fontSize: 12,
-    color: STYLES.$IS_DARK_THEME
-      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
-      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
+    color: STYLES.$COLORS.PRIMARY,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
   },
 });

@@ -1,14 +1,14 @@
-import { LMUserUI } from "../models";
+import { LMUserViewData } from "../models";
 import React, { createContext, ReactNode, useContext } from "react";
 
 export interface PostLikesCallbacksContextProps {
   children?: ReactNode;
-  onTapUserItemProp?: (user: LMUserUI) => void;
+  onTapUserItemProp?: (user: LMUserViewData) => void;
   handleScreenBackPressProp?: () => void;
 }
 
 export interface PostLikesCustomisableMethodsContext {
-  onTapUserItemProp?: (user: LMUserUI) => void;
+  onTapUserItemProp?: (user: LMUserViewData) => void;
   handleScreenBackPressProp?: () => void;
 }
 

@@ -17,7 +17,7 @@ import {
   VIEW_MORE_TEXT,
 } from "../../constants/Strings";
 import LMLoader from "../LMLoader";
-import { LMCommentUI } from "../../models";
+import { LMCommentViewData } from "../../models";
 import { styles } from "./styles";
 import decode from "../../utils/decodeMentions";
 import { timeStamp } from "../../utils";
@@ -57,7 +57,7 @@ const LMCommentItem = React.memo(
     const [commentLikeCount, setCommentLikeCount] = useState(
       comment?.likesCount
     );
-    const [repliesArray, setRepliesArray] = useState<LMCommentUI[]>([]);
+    const [repliesArray, setRepliesArray] = useState<LMCommentViewData[]>([]);
     const [replyPageNumber, setReplyPageNumber] = useState(2);
     const customLikeIcon = likeIconButton?.icon;
     const loggedInUserMemberRights = useAppSelector(
@@ -83,7 +83,7 @@ const LMCommentItem = React.memo(
       if (isRepliesVisible) {
         setShowReplies(true);
         onTapReplies &&
-          onTapReplies((data: Array<LMCommentUI>) => setRepliesArray(data), "");
+          onTapReplies((data: Array<LMCommentViewData>) => setRepliesArray(data), "");
       }
     }, [isRepliesVisible]);
 
@@ -128,7 +128,7 @@ const LMCommentItem = React.memo(
       ) : showText ? (
         <Text></Text>
       ) : (
-        <Text style={styles.showMoreText}>See More</Text>
+        <Text style={styles.showMoreText}>Read More</Text>
       ),
       textStyle: showMoreProps?.textStyle,
     };
@@ -353,7 +353,7 @@ const LMCommentItem = React.memo(
                       onTap={() => {
                         onTapReplies
                           ? (onTapReplies(
-                              (data: Array<LMCommentUI>) =>
+                              (data: Array<LMCommentViewData>) =>
                                 setRepliesArray(data),
                               ""
                             ),
@@ -476,7 +476,7 @@ const LMCommentItem = React.memo(
                                       setReplyPageNumber(replyPageNumber + 1);
                                       onTapViewMore(
                                         replyPageNumber,
-                                        (data: Array<LMCommentUI>) =>
+                                        (data: Array<LMCommentViewData>) =>
                                           setRepliesArray(data)
                                       );
                                     }

@@ -1,17 +1,23 @@
-import DetailWrapper from "./detailScreenWrapper";
-import CreatePollScreenWrapper from "./createPollScreenWrapper";
-import CreateWrapper from "./createScreenWrapper";
-import LikesWrapper from "./likesWrapper";
-import NotificationWrapper from "./notificationWrapper";
-import FeedWrapper from "./universalFeedScreenWrapper";
-import TopicFeedWrapper from "./topicFeedScreenWrapper";
+import LMSocialFeedPostDetailScreen from "./detailScreenWrapper";
+import LMCreatePollScreen from "./createPollScreenWrapper";
+import LMQnAFeedCreatePostScreen from "./qnaFeedCreateWrapper";
+import LMLikesScreen from "./likesWrapper";
+import LMNotificationScreen from "./notificationWrapper";
+import LMSocialFeedCreateScreen from "./socialFeedScreenWrapper";
+import LMQnAFeedScreen from "./qnaFeedScreenWrapper";
+import LMTopicFeedScreen from "./topicFeedScreenWrapper";
+import LMQnAPostDetailScreen from "./qnaFeedPostDetailWrapper"
+import LMSocialFeedScreen from './socialFeedScreenWrapper'
 
 export {
-  DetailWrapper,
-  CreatePollScreenWrapper,
-  CreateWrapper,
-  LikesWrapper,
-  NotificationWrapper,
-  FeedWrapper,
-  TopicFeedWrapper,
+  LMSocialFeedPostDetailScreen,
+  LMCreatePollScreen,
+  LMLikesScreen,
+  LMNotificationScreen,
+  LMSocialFeedCreateScreen,
+  LMQnAFeedCreatePostScreen,
+  LMQnAPostDetailScreen,
+  LMQnAFeedScreen,
+  LMTopicFeedScreen,
+  LMSocialFeedScreen,
 };

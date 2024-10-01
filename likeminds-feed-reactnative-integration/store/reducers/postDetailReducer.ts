@@ -1,4 +1,7 @@
-import { convertToLMCommentUI, convertToLMPostUI } from "../../viewDataModels";
+import {
+  convertToLMCommentViewData,
+  convertToLMPostViewData,
+} from "../../viewDataModels";
 import {
   PIN_POST_ID,
   PIN_THIS_POST,
@@ -22,10 +25,10 @@ import {
   POST_DATA_SUCCESS,
   SAVE_POST_STATE,
 } from "../types/types";
-import { LMCommentUI, LMPostUI } from "../../models";
+import { LMCommentViewData, LMPostViewData } from "../../models";
 
 export interface PostDetailReducerState {
-  postDetail: LMPostUI;
+  postDetail: LMPostViewData;
 }
 export const initialState: PostDetailReducerState = {
   postDetail: {
@@ -40,6 +43,7 @@ export const initialState: PostDetailReducerState = {
     likesCount: 0,
     menuItems: [],
     text: "",
+    heading: "",
     updatedAt: 0,
     userId: "",
     uuid: "",
@@ -53,6 +57,7 @@ export const initialState: PostDetailReducerState = {
         user: 0,
         userUniqueId: "",
         uuid: "",
+        widgetId: "",
       },
       uuid: "",
       isGuest: false,
@@ -62,14 +67,42 @@ export const initialState: PostDetailReducerState = {
     },
     users: {},
     topics: [],
+    filteredComments: {
+      id: "",
+      attachments: [],
+      commentsCount: 0,
+      communityId: 0,
+      createdAt: 0,
+      isEdited: false,
+      isLiked: false,
+      level: 0,
+      likesCount: 0,
+      menuItems: [],
+      postId: "",
+      tempId: "",
+      text: "",
+      updatedAt: 0,
+      userId: "",
+      uuid: "",
+    },
   },
 };
 export const postDetailReducer = (state = initialState, action) => {
   switch (action.type) {
     case POST_DATA_SUCCESS: {
-      const { post = {}, users = {}, widgets = {} } = action.body;
+      const {
+        post = {},
+        users = {},
+        widgets = {},
+        filteredComments = {},
+      } = action.body;
       const updatedPostDetail = state.postDetail;
-      const converterPostData = convertToLMPostUI(post, users, widgets);
+      const converterPostData = convertToLMPostViewData(
+        post,
+        users,
+        widgets,
+        filteredComments
+      );
       let newReplies = converterPostData.replies || [];
       // filter out the replies already present in postDetail
       newReplies = newReplies.filter(
@@ -91,9 +124,19 @@ export const postDetailReducer = (state = initialState, action) => {
       };
     }
     case POST_DATA_REFRESH_SUCCESS: {
-      const { post = {}, users = {}, widgets = {} } = action.body;
+      const {
+        post = {},
+        users = {},
+        widgets = {},
+        filteredComments = {},
+      } = action.body;
       // model converter function
-      const converterPostData = convertToLMPostUI(post, users, widgets);
+      const converterPostData = convertToLMPostViewData(
+        post,
+        users,
+        widgets,
+        filteredComments
+      );
       return { ...state, postDetail: converterPostData };
     }
     case POST_COMMENTS_SUCCESS: {
@@ -102,7 +145,7 @@ export const postDetailReducer = (state = initialState, action) => {
       updatedDetail?.replies &&
         updatedDetail.replies.find((item) => {
           if (item.id === comment?.id) {
-            const commentData = convertToLMCommentUI(
+            const commentData = convertToLMCommentViewData(
               comment?.postId,
               comment.replies,
               users
@@ -135,7 +178,7 @@ export const postDetailReducer = (state = initialState, action) => {
       return { ...state, postDetail: updatedDetail };
     }
     case CLEAR_POST: {
-      return { ...state, postDetail: {} as LMPostUI };
+      return { ...state, postDetail: {} as LMPostViewData };
     }
     case PIN_POST_STATE: {
       const updatedFeed = state.postDetail;
@@ -165,7 +208,7 @@ export const postDetailReducer = (state = initialState, action) => {
       const { newComment, postId, tempId } = action.body.payload;
       const { loggedInUser } = action.body;
       // creating an local object of comment
-      const localComment: LMCommentUI = {
+      const localComment: LMCommentViewData = {
         id: "",
         postId: postId,
         repliesCount: 0,
@@ -195,8 +238,8 @@ export const postDetailReducer = (state = initialState, action) => {
       // finds the reply with same tempId
       updatedPostDetail.replies?.find((item) => {
         if (item.tempId === comment.tempId) {
-          // converts the response to LMCommentUI model
-          const commentData = convertToLMCommentUI(
+          // converts the response to LMCommentViewData model
+          const commentData = convertToLMCommentViewData(
             comment.postId,
             [comment],
             users
@@ -226,7 +269,7 @@ export const postDetailReducer = (state = initialState, action) => {
       const { newComment, postId, tempId, commentId } = action.body.payload;
       const { loggedInUser } = action.body;
       // creating an local object of reply
-      const localReply: LMCommentUI = {
+      const localReply: LMCommentViewData = {
         id: "",
         postId: postId,
         repliesCount: 0,
@@ -261,8 +304,8 @@ export const postDetailReducer = (state = initialState, action) => {
       // finds the parent comment
       updatedPostDetail.replies?.find((item) => {
         if (item.id === comment?.parentComment?.id) {
-          // converts the response to LMCommentUI model
-          const commentData = convertToLMCommentUI(
+          // converts the response to LMCommentViewData model
+          const commentData = convertToLMCommentViewData(
             comment.postId,
             [comment],
             users
@@ -294,18 +337,18 @@ export const postDetailReducer = (state = initialState, action) => {
     case EDIT_COMMENT_STATE: {
       const updatedPostDetail: any = state.postDetail;
       const { commentId, commentText, replyObject } = action.body;
-      let parentCommentId = replyObject?.comment?.id
-      if(updatedPostDetail?.replies?.length > 0){
-        updatedPostDetail?.replies?.forEach(item => {
-          if(item?.id == parentCommentId){
-            item.replies = replyObject?.comment?.replies
+      let parentCommentId = replyObject?.comment?.id;
+      if (updatedPostDetail?.replies?.length > 0) {
+        updatedPostDetail?.replies?.forEach((item) => {
+          if (item?.id == parentCommentId) {
+            item.replies = replyObject?.comment?.replies;
           }
-        })
+        });
       }
       const editCommentIndex =
         updatedPostDetail?.replies &&
         updatedPostDetail.replies.findIndex(
-          (item: LMCommentUI) => item?.id === commentId
+          (item: LMCommentViewData) => item?.id === commentId
         );
       // removes that comment from the data
       if (
@@ -321,7 +364,9 @@ export const postDetailReducer = (state = initialState, action) => {
           for (let i = 0; i <= updatedPostDetail?.replies?.length - 1; i++) {
             const editCommentIndexChild = updatedPostDetail.replies[
               i
-            ]?.replies.findIndex((item: LMCommentUI) => item?.id === commentId);
+            ]?.replies.findIndex(
+              (item: LMCommentViewData) => item?.id === commentId
+            );
             // removes that child comment from the data
             if (
               updatedPostDetail?.replies[i]?.replies &&
@@ -342,14 +387,14 @@ export const postDetailReducer = (state = initialState, action) => {
     case DELETE_COMMENT_STATE: {
       const updatedPostDetail: any = state.postDetail;
       // this gets the index of the comment that is deleted
-      const { replyObject } = action.body
-      let parentCommentId = replyObject?.comment?.id
-      if(updatedPostDetail?.replies?.length > 0){
-        updatedPostDetail?.replies?.forEach(item => {
-          if(item?.id == parentCommentId){
-            item.replies = replyObject?.comment?.replies
+      const { replyObject } = action.body;
+      let parentCommentId = replyObject?.comment?.id;
+      if (updatedPostDetail?.replies?.length > 0) {
+        updatedPostDetail?.replies?.forEach((item) => {
+          if (item?.id == parentCommentId) {
+            item.replies = replyObject?.comment?.replies;
           }
-        })
+        });
       }
       const deletedCommentIndex =
         updatedPostDetail?.replies &&
@@ -387,7 +432,7 @@ export const postDetailReducer = (state = initialState, action) => {
                 ...updatedPostDetail.replies[i],
                 replies: updatedPostDetail.replies[i].replies,
                 repliesCount: updatedPostDetail.replies[i].repliesCount - 1,
-              } as LMCommentUI;
+              } as LMCommentViewData;
             }
           }
         }
@@ -395,8 +440,18 @@ export const postDetailReducer = (state = initialState, action) => {
       return { ...state, postDetail: { ...updatedPostDetail } };
     }
     case EDIT_POST_SUCCESS: {
-      const { post = {}, users = {}, widgets = {} } = action.body;
-      const converterPostData = convertToLMPostUI(post, users, widgets);
+      const {
+        post = {},
+        users = {},
+        widgets = {},
+        filteredComments = {},
+      } = action.body;
+      const converterPostData = convertToLMPostViewData(
+        post,
+        users,
+        widgets,
+        filteredComments
+      );
       return { ...state, postDetail: converterPostData };
     }
     case LIKE_POST_STATE: {

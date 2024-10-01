@@ -76,7 +76,7 @@ import {
 import { showToastMessage } from "../store/actions/toast";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../models/RootStackParamsList";
-import { LMCommentUI, LMPostUI, LMUserUI } from "../models";
+import { LMCommentViewData, LMPostViewData, LMUserViewData } from "../models";
 import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
 import { Events } from "../enums/Events";
 import { Keys } from "../enums/Keys";
@@ -109,7 +109,7 @@ export interface PostDetailContextValues {
     params: Array<string>;
     path: undefined;
   };
-  postDetail: LMPostUI;
+  postDetail: LMPostViewData;
   modalPosition: {};
   showActionListModal: boolean;
   selectedMenuItemPostId: string;
@@ -135,7 +135,7 @@ export interface PostDetailContextValues {
   debounceTimeout: null;
   page: number;
   userTaggingListHeight: number;
-  allTags: Array<LMUserUI>;
+  allTags: Array<LMUserViewData>;
   isUserTagging: boolean;
   isLoading: boolean;
   isPostLoading: boolean;
@@ -161,7 +161,7 @@ export interface PostDetailContextValues {
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   setIsPostLoading: Dispatch<SetStateAction<boolean>>;
   setIsUserTagging: Dispatch<SetStateAction<boolean>>;
-  setAllTags: Dispatch<SetStateAction<Array<LMUserUI>>>;
+  setAllTags: Dispatch<SetStateAction<Array<LMUserViewData>>>;
   setUserTaggingListHeight: Dispatch<SetStateAction<number>>;
   setPage: Dispatch<SetStateAction<number>>;
   setDebounceTimeout: Dispatch<SetStateAction<null>>;
@@ -197,9 +197,9 @@ export interface PostDetailContextValues {
   handleDeleteComment: (visible: boolean) => void;
   handleEditComment: (commentId: string) => void;
   getCommentDetail: (
-    comments?: LMCommentUI[],
+    comments?: LMCommentViewData[],
     id?: string
-  ) => { commentDetail: LMCommentUI; parentCommentId?: string } | undefined;
+  ) => { commentDetail: LMCommentViewData; parentCommentId?: string } | undefined;
   getPostData: (page: number) => void;
   getCommentsReplies: (
     postId: string,
@@ -231,8 +231,8 @@ export interface PostDetailContextValues {
   ) => void;
   handlePostLoadMore: () => void;
   renderLoader: () => JSX.Element | null;
-  commentOnFocus: LMCommentUI | undefined;
-  setCommentOnFocus: Dispatch<SetStateAction<LMCommentUI | undefined>>;
+  commentOnFocus: LMCommentViewData | undefined;
+  setCommentOnFocus: Dispatch<SetStateAction<LMCommentViewData | undefined>>;
   repliesArrayUnderComments: any;
   setRepliesArrayUnderComments: Dispatch<SetStateAction<any>>;
 }
@@ -294,7 +294,7 @@ export const PostDetailContextProvider = ({
   const [page, setPage] = useState(1);
   const [userTaggingListHeight, setUserTaggingListHeight] =
     useState<number>(116);
-  const [allTags, setAllTags] = useState<Array<LMUserUI>>([]);
+  const [allTags, setAllTags] = useState<Array<LMUserViewData>>([]);
   const [isUserTagging, setIsUserTagging] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isPostLoading, setIsPostLoading] = useState(false);
@@ -313,7 +313,7 @@ export const PostDetailContextProvider = ({
   const [overlayMenuType, setOverlayMenuType] = useState("");
   const [isPaginationStopped, setIsPaginationStopped] = useState(false);
   const [showLoader, setShowLoader] = useState(true);
-  const [commentOnFocus,setCommentOnFocus] = useState<LMCommentUI>();
+  const [commentOnFocus,setCommentOnFocus] = useState<LMCommentViewData>();
   const loaderStyle = STYLES.$LOADER_STYLE
   const [repliesArrayUnderComments,setRepliesArrayUnderComments] = useState<any>([])
 
@@ -521,7 +521,7 @@ export const PostDetailContextProvider = ({
   };
 
   // this function gets the detail of comment whose menu item is clicked
-  const getCommentDetail = (comments?: LMCommentUI[], id?: string) => {
+  const getCommentDetail = (comments?: LMCommentViewData[], id?: string) => {
     const commentId = id ? id : selectedMenuItemCommentId;
     let replyObject = repliesArrayUnderComments?.find(item => item?.comment?.id == commentOnFocus?.parentId)
     let commentDetail;
