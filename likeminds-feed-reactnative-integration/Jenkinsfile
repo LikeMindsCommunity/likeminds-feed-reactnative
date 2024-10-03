@@ -1,7 +1,6 @@
 pipeline {
     agent any
     tools {nodejs "nodejs"}
-
     options {
         buildDiscarder logRotator(daysToKeepStr: '7', numToKeepStr: '1')
     }
@@ -13,7 +12,6 @@ pipeline {
         NODE_OPTIONS = "--max-old-space-size=8192"  // Setting the memory limit for Node.js
     }
     stages {
-
         stage('check'){
             steps{
                 dir('likeminds-feed-reactnative-integration'){
@@ -21,7 +19,6 @@ pipeline {
                 }
             }
         }
-
         stage('file upload'){
             steps{
                 dir('likeminds-feed-reactnative-integration'){
@@ -44,7 +41,6 @@ pipeline {
                 }
             }
         }
-
         stage('Build') {
             steps {
                 dir('likeminds-feed-reactnative-integration'){
@@ -52,7 +48,6 @@ pipeline {
                 }
             }
         }
-
         stage('Package') {
             steps {
                 dir('likeminds-feed-reactnative-integration'){
@@ -60,7 +55,6 @@ pipeline {
                 }
             }
         }
-
         stage('Archive Package') {
             steps {
                 dir('likeminds-feed-reactnative-integration'){
@@ -75,5 +69,4 @@ pipeline {
     //         cleanWs()
     //     }
     // }
-
 }
