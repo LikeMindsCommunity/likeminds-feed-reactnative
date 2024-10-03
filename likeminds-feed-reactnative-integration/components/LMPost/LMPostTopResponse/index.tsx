@@ -22,7 +22,7 @@ const LMPostTopResponse = () => {
     let text = "";
 
     //get lines after it truncate
-    if (lines.length >= MAX_LINES) {
+    if (lines.length > MAX_LINES) {
       if (Array.isArray(lines)) {
         text = lines
           .splice(0, MAX_LINES)

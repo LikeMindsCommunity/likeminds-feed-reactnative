@@ -598,6 +598,7 @@ const CreatePostComponent = () => {
                 flex: 1,
                 maxHeight: 100,
               }}
+              autoCapitalize="sentences"
             />
           </View>
         ) : null}
@@ -671,6 +672,7 @@ const CreatePostComponent = () => {
               }, // The mention style in the input
             },
           ]}
+          autoCapitalize="sentences"
         />
 
         {/* users tagging list */}
