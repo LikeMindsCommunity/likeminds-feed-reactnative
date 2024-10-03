@@ -325,9 +325,9 @@ export const PostDetailContextProvider = ({
     await dispatch(
       refreshPostDetail(
         GetPostRequest.builder()
-          .setpostId(route.params[0])
-          .setpage(1)
-          .setpageSize(10)
+          .setPostId(route.params[0])
+          .setPage(1)
+          .setPageSize(10)
           .build(),
         false
       )
@@ -374,7 +374,7 @@ export const PostDetailContextProvider = ({
     // calling like post api
     const postLikeResponse = await dispatch(
       likePost(
-        LikePostRequest.builder().setpostId(payload.postId).build(),
+        LikePostRequest.builder().setPostId(payload.postId).build(),
         false
       )
     );
@@ -401,7 +401,7 @@ export const PostDetailContextProvider = ({
       // calling the save post api
       const savePostResponse = await dispatch(
         savePost(
-          SavePostRequest.builder().setpostId(payload.postId).build(),
+          SavePostRequest.builder().setPostId(payload.postId).build(),
           false
         )
       );
@@ -429,7 +429,7 @@ export const PostDetailContextProvider = ({
     };
     dispatch(pinPostStateHandler(payload.postId));
     const pinPostResponse = await dispatch(
-      pinPost(PinPostRequest.builder().setpostId(payload.postId).build(), false)
+      pinPost(PinPostRequest.builder().setPostId(payload.postId).build(), false)
     );
     if (pinPostResponse !== undefined) {
       dispatch(
@@ -551,9 +551,9 @@ export const PostDetailContextProvider = ({
     const getPostResponse = await dispatch(
       getPost(
         GetPostRequest.builder()
-          .setpostId(route.params[0])
-          .setpage(pageNum)
-          .setpageSize(10)
+          .setPostId(route.params[0])
+          .setPage(pageNum)
+          .setPageSize(10)
           .build(),
         false
       )
@@ -572,10 +572,10 @@ export const PostDetailContextProvider = ({
     const commentsRepliesResponse = await dispatch(
       getComments(
         GetCommentRequest.builder()
-          .setpostId(postId)
-          .setcommentId(commentId)
-          .setpage(pageNo)
-          .setpageSize(10)
+          .setPostId(postId)
+          .setCommentId(commentId)
+          .setPage(pageNo)
+          .setPageSize(10)
           .build(),
         false
       )
@@ -598,8 +598,8 @@ export const PostDetailContextProvider = ({
     const commentLikeResponse = await dispatch(
       likeComment(
         LikeCommentRequest.builder()
-          .setcommentId(payload.commentId)
-          .setpostId(payload.postId)
+          .setCommentId(payload.commentId)
+          .setPostId(payload.postId)
           .build(),
         false
       )
@@ -628,8 +628,8 @@ export const PostDetailContextProvider = ({
     const commentAddResponse: any = await dispatch(
       addComment(
         AddCommentRequest.builder()
-          .setpostId(payload.postId)
-          .settext(payload.newComment)
+          .setPostId(payload.postId)
+          .setText(payload.newComment)
           .setTempId(`${payload.tempId}`)
           .build(),
         false
@@ -772,9 +772,9 @@ export const PostDetailContextProvider = ({
     const editCommentResponse = await dispatch(
       editComment(
         EditCommentRequest.builder()
-          .setcommentId(payload?.commentId)
-          .setpostId(postDetail?.id)
-          .settext(payload.commentText)
+          .setCommentId(payload?.commentId)
+          .setPostId(postDetail?.id)
+          .setText(payload.commentText)
           .build(),
         false
       )
@@ -814,9 +814,9 @@ export const PostDetailContextProvider = ({
         const taggingListResponse: any = await dispatch(
           getTaggingList(
             GetTaggingListRequest.builder()
-              .setsearchName(newMentions[mentionListLength - 1])
-              .setpage(1)
-              .setpageSize(10)
+              .setSearchName(newMentions[mentionListLength - 1])
+              .setPage(1)
+              .setPageSize(10)
               .build(),
             false
           )
@@ -850,9 +850,9 @@ export const PostDetailContextProvider = ({
     const taggingListResponse: any = await dispatch(
       getTaggingList(
         GetTaggingListRequest.builder()
-          .setsearchName(taggedUserName)
-          .setpage(newPage)
-          .setpageSize(10)
+          .setSearchName(taggedUserName)
+          .setPage(newPage)
+          .setPageSize(10)
           .build(),
         false
       )

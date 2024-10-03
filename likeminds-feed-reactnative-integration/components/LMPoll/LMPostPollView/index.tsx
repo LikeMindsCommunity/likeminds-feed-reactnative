@@ -249,9 +249,9 @@ const LMPostPollView = ({
     const getPostResponse = await dispatch(
       getPost(
         GetPostRequest.builder()
-          .setpostId(post?.id)
-          .setpage(1)
-          .setpageSize(10)
+          .setPostId(post?.id)
+          .setPage(1)
+          .setPageSize(10)
           .build(),
         false
       )

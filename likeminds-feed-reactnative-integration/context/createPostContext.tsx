@@ -593,9 +593,9 @@ export const CreatePostContextProvider = ({
     const getPostResponse: any = await dispatch(
       getPost(
         GetPostRequest.builder()
-          .setpostId(postToEdit)
-          .setpage(1)
-          .setpageSize(10)
+          .setPostId(postToEdit)
+          .setPage(1)
+          .setPageSize(10)
           .build(),
         false
       )
@@ -673,13 +673,13 @@ export const CreatePostContextProvider = ({
         editPost(
           EditPostRequest.builder()
             .setHeading(heading)
-            .setattachments([
+            .setAttachments([
               ...allAttachment,
               ...linkAttachments,
               pollAttachments,
             ])
-            .setpostId(postDetail?.id)
-            .settext(contentText)
+            .setPostId(postDetail?.id)
+            .setText(contentText)
             .setTopicIds(topics)
             .build(),
           false
@@ -691,9 +691,9 @@ export const CreatePostContextProvider = ({
         editPost(
           EditPostRequest.builder()
             .setHeading(heading)
-            .setattachments([...allAttachment, ...linkAttachments])
-            .setpostId(postDetail?.id)
-            .settext(contentText)
+            .setAttachments([...allAttachment, ...linkAttachments])
+            .setPostId(postDetail?.id)
+            .setText(contentText)
             .setTopicIds(topics)
             .build(),
           false
@@ -726,9 +726,9 @@ export const CreatePostContextProvider = ({
         const taggingListResponse: any = await dispatch(
           getTaggingList(
             GetTaggingListRequest.builder()
-              .setsearchName(newMentions[mentionListLength - 1])
-              .setpage(1)
-              .setpageSize(10)
+              .setSearchName(newMentions[mentionListLength - 1])
+              .setPage(1)
+              .setPageSize(10)
               .build(),
             false
           )
@@ -768,9 +768,9 @@ export const CreatePostContextProvider = ({
     const taggingListResponse: any = await dispatch(
       getTaggingList(
         GetTaggingListRequest.builder()
-          .setsearchName(taggedUserName)
-          .setpage(newPage)
-          .setpageSize(10)
+          .setSearchName(taggedUserName)
+          .setPage(newPage)
+          .setPageSize(10)
           .build(),
         false
       )

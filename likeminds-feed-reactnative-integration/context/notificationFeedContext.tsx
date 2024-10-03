@@ -110,8 +110,8 @@ export const NotificationFeedContextProvider = ({
     const getNotificationFeedResponse = await dispatch(
       getNotificationFeed(
         GetNotificationFeedRequest.builder()
-          .setpage(payload.page)
-          .setpageSize(payload.pageSize)
+          .setPage(payload.page)
+          .setPageSize(payload.pageSize)
           .build(),
         false
       )
@@ -123,7 +123,7 @@ export const NotificationFeedContextProvider = ({
     await dispatch(notificationReadHandler(activityId));
     const readNotificationResponse = await dispatch(
       markReadNotification(
-        MarkReadNotificationRequest.builder().setactivityId(activityId).build(),
+        MarkReadNotificationRequest.builder().setActivityId(activityId).build(),
         false
       )
     );
@@ -171,7 +171,7 @@ export const NotificationFeedContextProvider = ({
     // calling getNotification API
     await dispatch(
       refreshNotificationFeed(
-        GetNotificationFeedRequest.builder().setpage(1).setpageSize(20).build(),
+        GetNotificationFeedRequest.builder().setPage(1).setPageSize(20).build(),
         false
       )
     );

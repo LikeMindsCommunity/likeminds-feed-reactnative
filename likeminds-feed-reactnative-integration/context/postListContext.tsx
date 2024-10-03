@@ -180,8 +180,8 @@ export const PostListContextProvider = ({
     const getFeedResponse = await dispatch(
       getFeed(
         GetFeedRequest.builder()
-          .setpage(payload.page)
-          .setpageSize(payload.pageSize)
+          .setPage(payload.page)
+          .setPageSize(payload.pageSize)
           .build(),
         false
       )
@@ -239,7 +239,7 @@ export const PostListContextProvider = ({
     // calling like post api
     const postLikeResponse = await dispatch(
       likePost(
-        LikePostRequest.builder().setpostId(payload.postId).build(),
+        LikePostRequest.builder().setPostId(payload.postId).build(),
         false
       )
     );
@@ -266,7 +266,7 @@ export const PostListContextProvider = ({
       // calling the save post api
       const savePostResponse = await dispatch(
         savePost(
-          SavePostRequest.builder().setpostId(payload.postId).build(),
+          SavePostRequest.builder().setPostId(payload.postId).build(),
           false
         )
       );
@@ -324,7 +324,7 @@ export const PostListContextProvider = ({
     };
     dispatch(pinPostStateHandler(payload.postId));
     const pinPostResponse = await dispatch(
-      pinPost(PinPostRequest.builder().setpostId(payload.postId).build(), false)
+      pinPost(PinPostRequest.builder().setPostId(payload.postId).build(), false)
     );
     if (pinPostResponse !== undefined) {
       dispatch(
