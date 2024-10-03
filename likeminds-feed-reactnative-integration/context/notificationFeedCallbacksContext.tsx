@@ -1,14 +1,14 @@
-import { LMActivityUI } from "../models";
+import { LMActivityViewData } from "../models";
 import React, { createContext, ReactNode, useContext } from "react";
 
 export interface NotificationFeedCallbacksContextProps {
   children?: ReactNode;
-  onNotificationItemClickedProp?: (notification: LMActivityUI) => void;
+  onNotificationItemClickedProp?: (notification: LMActivityViewData) => void;
   handleScreenBackPressProp?: () => void;
 }
 
 export interface NotificationFeedCustomisableMethodsContext {
-  onNotificationItemClickedProp?: (notification: LMActivityUI) => void;
+  onNotificationItemClickedProp?: (notification: LMActivityViewData) => void;
   handleScreenBackPressProp?: () => void;
 }
 

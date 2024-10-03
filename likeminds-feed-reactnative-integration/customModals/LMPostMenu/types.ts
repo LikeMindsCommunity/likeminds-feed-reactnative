@@ -1,8 +1,8 @@
 import {TextStyle, ViewStyle} from 'react-native';
-import {LMPostUI, LMCommentUI} from '../../models';
+import {LMPostViewData, LMCommentViewData} from '../../models';
 
 export interface LMPostMenuProps {
-  post: LMPostUI | LMCommentUI;
+  post: LMPostViewData | LMCommentViewData;
   onSelected: (postId: string, itemId?: number, isPinned?: boolean) => void; // callback function executed on click of each item
   modalVisible: boolean; // this represents the visibility of the modal
   onCloseModal: () => void; // callback function that closes the modal

@@ -76,7 +76,7 @@ import {
 import { showToastMessage } from "../store/actions/toast";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../models/RootStackParamsList";
-import { LMCommentUI, LMPostUI, LMUserUI } from "../models";
+import { LMCommentViewData, LMPostViewData, LMUserViewData } from "../models";
 import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
 import { Events } from "../enums/Events";
 import { Keys } from "../enums/Keys";
@@ -109,7 +109,7 @@ export interface PostDetailContextValues {
     params: Array<string>;
     path: undefined;
   };
-  postDetail: LMPostUI;
+  postDetail: LMPostViewData;
   modalPosition: {};
   showActionListModal: boolean;
   selectedMenuItemPostId: string;
@@ -135,7 +135,7 @@ export interface PostDetailContextValues {
   debounceTimeout: null;
   page: number;
   userTaggingListHeight: number;
-  allTags: Array<LMUserUI>;
+  allTags: Array<LMUserViewData>;
   isUserTagging: boolean;
   isLoading: boolean;
   isPostLoading: boolean;
@@ -161,7 +161,7 @@ export interface PostDetailContextValues {
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   setIsPostLoading: Dispatch<SetStateAction<boolean>>;
   setIsUserTagging: Dispatch<SetStateAction<boolean>>;
-  setAllTags: Dispatch<SetStateAction<Array<LMUserUI>>>;
+  setAllTags: Dispatch<SetStateAction<Array<LMUserViewData>>>;
   setUserTaggingListHeight: Dispatch<SetStateAction<number>>;
   setPage: Dispatch<SetStateAction<number>>;
   setDebounceTimeout: Dispatch<SetStateAction<null>>;
@@ -197,9 +197,9 @@ export interface PostDetailContextValues {
   handleDeleteComment: (visible: boolean) => void;
   handleEditComment: (commentId: string) => void;
   getCommentDetail: (
-    comments?: LMCommentUI[],
+    comments?: LMCommentViewData[],
     id?: string
-  ) => { commentDetail: LMCommentUI; parentCommentId?: string } | undefined;
+  ) => { commentDetail: LMCommentViewData; parentCommentId?: string } | undefined;
   getPostData: (page: number) => void;
   getCommentsReplies: (
     postId: string,
@@ -231,8 +231,8 @@ export interface PostDetailContextValues {
   ) => void;
   handlePostLoadMore: () => void;
   renderLoader: () => JSX.Element | null;
-  commentOnFocus: LMCommentUI | undefined;
-  setCommentOnFocus: Dispatch<SetStateAction<LMCommentUI | undefined>>;
+  commentOnFocus: LMCommentViewData | undefined;
+  setCommentOnFocus: Dispatch<SetStateAction<LMCommentViewData | undefined>>;
   repliesArrayUnderComments: any;
   setRepliesArrayUnderComments: Dispatch<SetStateAction<any>>;
 }
@@ -294,7 +294,7 @@ export const PostDetailContextProvider = ({
   const [page, setPage] = useState(1);
   const [userTaggingListHeight, setUserTaggingListHeight] =
     useState<number>(116);
-  const [allTags, setAllTags] = useState<Array<LMUserUI>>([]);
+  const [allTags, setAllTags] = useState<Array<LMUserViewData>>([]);
   const [isUserTagging, setIsUserTagging] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isPostLoading, setIsPostLoading] = useState(false);
@@ -313,7 +313,7 @@ export const PostDetailContextProvider = ({
   const [overlayMenuType, setOverlayMenuType] = useState("");
   const [isPaginationStopped, setIsPaginationStopped] = useState(false);
   const [showLoader, setShowLoader] = useState(true);
-  const [commentOnFocus,setCommentOnFocus] = useState<LMCommentUI>();
+  const [commentOnFocus,setCommentOnFocus] = useState<LMCommentViewData>();
   const loaderStyle = STYLES.$LOADER_STYLE
   const [repliesArrayUnderComments,setRepliesArrayUnderComments] = useState<any>([])
 
@@ -325,9 +325,9 @@ export const PostDetailContextProvider = ({
     await dispatch(
       refreshPostDetail(
         GetPostRequest.builder()
-          .setpostId(route.params[0])
-          .setpage(1)
-          .setpageSize(10)
+          .setPostId(route.params[0])
+          .setPage(1)
+          .setPageSize(10)
           .build(),
         false
       )
@@ -374,7 +374,7 @@ export const PostDetailContextProvider = ({
     // calling like post api
     const postLikeResponse = await dispatch(
       likePost(
-        LikePostRequest.builder().setpostId(payload.postId).build(),
+        LikePostRequest.builder().setPostId(payload.postId).build(),
         false
       )
     );
@@ -401,7 +401,7 @@ export const PostDetailContextProvider = ({
       // calling the save post api
       const savePostResponse = await dispatch(
         savePost(
-          SavePostRequest.builder().setpostId(payload.postId).build(),
+          SavePostRequest.builder().setPostId(payload.postId).build(),
           false
         )
       );
@@ -429,7 +429,7 @@ export const PostDetailContextProvider = ({
     };
     dispatch(pinPostStateHandler(payload.postId));
     const pinPostResponse = await dispatch(
-      pinPost(PinPostRequest.builder().setpostId(payload.postId).build(), false)
+      pinPost(PinPostRequest.builder().setPostId(payload.postId).build(), false)
     );
     if (pinPostResponse !== undefined) {
       dispatch(
@@ -521,7 +521,7 @@ export const PostDetailContextProvider = ({
   };
 
   // this function gets the detail of comment whose menu item is clicked
-  const getCommentDetail = (comments?: LMCommentUI[], id?: string) => {
+  const getCommentDetail = (comments?: LMCommentViewData[], id?: string) => {
     const commentId = id ? id : selectedMenuItemCommentId;
     let replyObject = repliesArrayUnderComments?.find(item => item?.comment?.id == commentOnFocus?.parentId)
     let commentDetail;
@@ -551,9 +551,9 @@ export const PostDetailContextProvider = ({
     const getPostResponse = await dispatch(
       getPost(
         GetPostRequest.builder()
-          .setpostId(route.params[0])
-          .setpage(pageNum)
-          .setpageSize(10)
+          .setPostId(route.params[0])
+          .setPage(pageNum)
+          .setPageSize(10)
           .build(),
         false
       )
@@ -572,10 +572,10 @@ export const PostDetailContextProvider = ({
     const commentsRepliesResponse = await dispatch(
       getComments(
         GetCommentRequest.builder()
-          .setpostId(postId)
-          .setcommentId(commentId)
-          .setpage(pageNo)
-          .setpageSize(10)
+          .setPostId(postId)
+          .setCommentId(commentId)
+          .setPage(pageNo)
+          .setPageSize(10)
           .build(),
         false
       )
@@ -598,8 +598,8 @@ export const PostDetailContextProvider = ({
     const commentLikeResponse = await dispatch(
       likeComment(
         LikeCommentRequest.builder()
-          .setcommentId(payload.commentId)
-          .setpostId(payload.postId)
+          .setCommentId(payload.commentId)
+          .setPostId(payload.postId)
           .build(),
         false
       )
@@ -628,8 +628,8 @@ export const PostDetailContextProvider = ({
     const commentAddResponse: any = await dispatch(
       addComment(
         AddCommentRequest.builder()
-          .setpostId(payload.postId)
-          .settext(payload.newComment)
+          .setPostId(payload.postId)
+          .setText(payload.newComment)
           .setTempId(`${payload.tempId}`)
           .build(),
         false
@@ -772,9 +772,9 @@ export const PostDetailContextProvider = ({
     const editCommentResponse = await dispatch(
       editComment(
         EditCommentRequest.builder()
-          .setcommentId(payload?.commentId)
-          .setpostId(postDetail?.id)
-          .settext(payload.commentText)
+          .setCommentId(payload?.commentId)
+          .setPostId(postDetail?.id)
+          .setText(payload.commentText)
           .build(),
         false
       )
@@ -814,9 +814,9 @@ export const PostDetailContextProvider = ({
         const taggingListResponse: any = await dispatch(
           getTaggingList(
             GetTaggingListRequest.builder()
-              .setsearchName(newMentions[mentionListLength - 1])
-              .setpage(1)
-              .setpageSize(10)
+              .setSearchName(newMentions[mentionListLength - 1])
+              .setPage(1)
+              .setPageSize(10)
               .build(),
             false
           )
@@ -850,9 +850,9 @@ export const PostDetailContextProvider = ({
     const taggingListResponse: any = await dispatch(
       getTaggingList(
         GetTaggingListRequest.builder()
-          .setsearchName(taggedUserName)
-          .setpage(newPage)
-          .setpageSize(10)
+          .setSearchName(taggedUserName)
+          .setPage(newPage)
+          .setPageSize(10)
           .build(),
         false
       )

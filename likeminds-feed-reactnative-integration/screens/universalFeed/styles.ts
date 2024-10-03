@@ -29,9 +29,9 @@ export const styles = StyleSheet.create({
   newPostButtonView: {
     backgroundColor: STYLES.$COLORS.PRIMARY,
     flexDirection: "row",
-    width: "40%",
     alignItems: "center",
     padding: STYLES.$PADDINGS.SMALL,
+    paddingHorizontal: 20,
     justifyContent: "center",
     borderRadius: 25,
     position: "absolute",
@@ -47,7 +47,7 @@ export const styles = StyleSheet.create({
     },
   },
   newPostText: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: STYLES.$FONT_WEIGHT.MEDIUM,
     color: STYLES.$COLORS.WHITE_TEXT_COLOR,
     fontFamily: STYLES.$FONT_TYPES.BOLD,
@@ -63,7 +63,9 @@ export const styles = StyleSheet.create({
       ? STYLES.$BACKGROUND_COLORS.DARK
       : STYLES.$BACKGROUND_COLORS.LIGHT,
     borderBottomWidth: 11,
-    borderBottomColor: STYLES.$IS_DARK_THEME ? "#121212" : "#D0D8E2",
+    borderBottomColor: STYLES.$IS_DARK_THEME
+      ? STYLES.$SEPARATOR_COLORS.DARK
+      : STYLES.$SEPARATOR_COLORS.LIGHT,
     height: 50,
   },
   justifyCenter: {
@@ -73,7 +75,7 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontSize: STYLES.$FONT_SIZES.XL,
+    fontSize: 14,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
     color: STYLES.$COLORS.FONT_PRIMARY,
   },

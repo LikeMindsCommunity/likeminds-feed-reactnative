@@ -249,9 +249,9 @@ const LMFilterTopics = () => {
               flexDirection: "row",
               alignItems: "center",
               borderBottomWidth: 1,
-              borderBottomColor: STYLES.$IS_DARK_THEME ? "#121212" : "#D0D8E2",
+              borderBottomColor: STYLES.$IS_DARK_THEME ? STYLES.$SEPARATOR_COLORS.DARK : STYLES.$SEPARATOR_COLORS.LIGHT,
               borderTopWidth: 1,
-              borderTopColor: STYLES.$IS_DARK_THEME ? "#121212" : "#D0D8E2",
+              borderTopColor: STYLES.$IS_DARK_THEME ? STYLES.$SEPARATOR_COLORS.DARK : STYLES.$SEPARATOR_COLORS.LIGHT,
               paddingVertical: Layout.normalize(10),
               backgroundColor: STYLES.$IS_DARK_THEME
                 ? STYLES.$BACKGROUND_COLORS.DARK

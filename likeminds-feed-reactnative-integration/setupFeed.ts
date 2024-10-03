@@ -4,7 +4,7 @@ import {
   LMSDKCallbacks,
 } from "@likeminds.community/feed-rn";
 import { initMyClient } from "./setup";
-import { LoginSchemaRO } from "../example/login/loginSchemaRO";
+import { LoginSchemaRO } from "../social-feed/login/loginSchemaRO";
 import { Client } from "./client";
 const Realm = require("realm");
 

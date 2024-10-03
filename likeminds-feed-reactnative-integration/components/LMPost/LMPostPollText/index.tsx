@@ -43,7 +43,7 @@ const LMPostPollText = ({ truncatedText, fullText }: LMPostPollTextProps) => {
             pollQuestionStyles?.showMoreText,
           ])}
         >
-          {showMore ? "" : "See More"}
+          {showMore ? "" : "Read More"}
         </Text>
       </TouchableOpacity>
     </Text>

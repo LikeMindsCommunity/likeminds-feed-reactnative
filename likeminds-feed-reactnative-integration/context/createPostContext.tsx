@@ -40,7 +40,7 @@ import {
   convertImageVideoMetaData,
   convertLinkMetaData,
   convertPollMetaData,
-  convertToLMPostUI,
+  convertToLMPostViewData,
 } from "../viewDataModels";
 import _ from "lodash";
 import {
@@ -58,7 +58,12 @@ import { getPost, getTaggingList } from "../store/actions/postDetail";
 import { showToastMessage } from "../store/actions/toast";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../models/RootStackParamsList";
-import { LMAttachmentUI, LMOGTagsUI, LMPostUI, LMUserUI } from "../models";
+import {
+  LMAttachmentViewData,
+  LMOGTagsViewData,
+  LMPostViewData,
+  LMUserViewData,
+} from "../models";
 import {
   ADD_SELECTED_TOPICS,
   CLEAR_POLL,
@@ -71,6 +76,7 @@ import { Events } from "../enums/Events";
 import { Keys } from "../enums/Keys";
 import { CommunityConfigs } from "../communityConfigs";
 import { CREATE_POLL_SCREEN } from "../constants/screenNames";
+import STYLES from "../constants/Styles";
 
 interface CreatePostContextProps {
   children: ReactNode;
@@ -91,45 +97,52 @@ export interface CreatePostContextValues {
     params: { postId: string };
     path: undefined;
   };
-  memberData: LMUserUI;
-  formattedDocumentAttachments: Array<LMAttachmentUI>;
-  formattedMediaAttachments: Array<LMAttachmentUI>;
-  formattedLinkAttachments: Array<LMAttachmentUI>;
-  formattedPollAttachments: Array<LMAttachmentUI>;
+  memberData: LMUserViewData;
+  formattedDocumentAttachments: Array<LMAttachmentViewData>;
+  formattedMediaAttachments: Array<LMAttachmentViewData>;
+  formattedLinkAttachments: Array<LMAttachmentViewData>;
+  formattedPollAttachments: Array<LMAttachmentViewData>;
   showLinkPreview: boolean;
   closedOnce: boolean;
   showOptions: boolean;
   showSelecting: boolean;
   postToEdit: any;
-  postDetail: LMPostUI;
+  postDetail: LMPostViewData;
   postContentText: string;
   myRef: any;
   taggedUserName: string;
   debounceTimeout: NodeJS.Timeout | null;
   page: number;
   userTaggingListHeight: number;
-  allTags: Array<LMUserUI>;
+  allTags: Array<LMUserViewData>;
   isUserTagging: boolean;
   isLoading: boolean;
+  heading: string;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   setIsUserTagging: Dispatch<SetStateAction<boolean>>;
-  setAllTags: Dispatch<SetStateAction<Array<LMUserUI>>>;
+  setAllTags: Dispatch<SetStateAction<Array<LMUserViewData>>>;
   setUserTaggingListHeight: Dispatch<SetStateAction<number>>;
   setPage: Dispatch<SetStateAction<number>>;
   setDebounceTimeout: Dispatch<SetStateAction<NodeJS.Timeout | null>>;
   setTaggedUserName: Dispatch<SetStateAction<string>>;
   setPostContentText: Dispatch<SetStateAction<string>>;
-  setPostDetail: Dispatch<SetStateAction<LMPostUI>>;
+  setPostDetail: Dispatch<SetStateAction<LMPostViewData>>;
   setShowSelecting: Dispatch<SetStateAction<boolean>>;
   setShowOptions: Dispatch<SetStateAction<boolean>>;
   setClosedOnce: Dispatch<SetStateAction<boolean>>;
   setShowLinkPreview: Dispatch<SetStateAction<boolean>>;
-  setFormattedLinkAttachments: Dispatch<SetStateAction<Array<LMAttachmentUI>>>;
-  setFormattedMediaAttachments: Dispatch<SetStateAction<Array<LMAttachmentUI>>>;
-  setFormattedDocumentAttachments: Dispatch<
-    SetStateAction<Array<LMAttachmentUI>>
+  setFormattedLinkAttachments: Dispatch<
+    SetStateAction<Array<LMAttachmentViewData>>
   >;
-  setFormattedPollAttachments: Dispatch<SetStateAction<Array<LMAttachmentUI>>>;
+  setFormattedMediaAttachments: Dispatch<
+    SetStateAction<Array<LMAttachmentViewData>>
+  >;
+  setFormattedDocumentAttachments: Dispatch<
+    SetStateAction<Array<LMAttachmentViewData>>
+  >;
+  setFormattedPollAttachments: Dispatch<
+    SetStateAction<Array<LMAttachmentViewData>>
+  >;
   setSelectedImageVideo: (type: string) => void;
   setSelectedDocuments: () => void;
   handleGallery: (type: string) => void;
@@ -140,20 +153,21 @@ export interface CreatePostContextValues {
   removeSingleAttachment: () => void;
   removePollAttachment: () => void;
   editPollAttachment: () => void;
-  allAttachment: Array<LMAttachmentUI>;
+  allAttachment: Array<LMAttachmentViewData>;
   getPostData: () => void;
   postEdit: any;
   handleInputChange: (event: string) => void;
   loadData: (newPage: number) => void;
   handleLoadMore: () => void;
   onPostClick: (
-    allMedia: Array<LMAttachmentUI>,
-    linkData: Array<LMAttachmentUI>,
+    allMedia: Array<LMAttachmentViewData>,
+    linkData: Array<LMAttachmentViewData>,
     content: string,
     topics: string[],
     poll: any
   ) => void;
   handleScreenBackPress: () => void;
+  handleHeadingInputChange: (event: string) => void;
 }
 
 const CreatePostContext = createContext<CreatePostContextValues | undefined>(
@@ -179,23 +193,24 @@ export const CreatePostContextProvider = ({
   const poll = useAppSelector((state) => state.createPost.pollAttachment);
   const dispatch = useAppDispatch();
   const [formattedDocumentAttachments, setFormattedDocumentAttachments] =
-    useState<Array<LMAttachmentUI>>([]);
+    useState<Array<LMAttachmentViewData>>([]);
   const [formattedMediaAttachments, setFormattedMediaAttachments] = useState<
-    Array<LMAttachmentUI>
+    Array<LMAttachmentViewData>
   >([]);
   const [formattedLinkAttachments, setFormattedLinkAttachments] = useState<
-    Array<LMAttachmentUI>
+    Array<LMAttachmentViewData>
   >([]);
   const [formattedPollAttachments, setFormattedPollAttachments] = useState<
-    Array<LMAttachmentUI>
+    Array<LMAttachmentViewData>
   >([]);
   const [showLinkPreview, setShowLinkPreview] = useState(false);
   const [closedOnce, setClosedOnce] = useState(false);
   const [showOptions, setShowOptions] = useState(true);
   const [showSelecting, setShowSelecting] = useState(false);
   const postToEdit = route?.params?.postId;
-  const [postDetail, setPostDetail] = useState({} as LMPostUI);
+  const [postDetail, setPostDetail] = useState({} as LMPostViewData);
   const [postContentText, setPostContentText] = useState("");
+  const [heading, setHeading] = useState("");
   const myRef = useRef<TextInput>(null);
   const [taggedUserName, setTaggedUserName] = useState("");
   const [debounceTimeout, setDebounceTimeout] = useState<NodeJS.Timeout | null>(
@@ -204,9 +219,13 @@ export const CreatePostContextProvider = ({
   const [page, setPage] = useState(1);
   const [userTaggingListHeight, setUserTaggingListHeight] =
     useState<number>(116);
-  const [allTags, setAllTags] = useState<Array<LMUserUI>>([]);
+  const [allTags, setAllTags] = useState<Array<LMUserViewData>>([]);
   const [isUserTagging, setIsUserTagging] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const maxHeadingWords = STYLES?.$CREATE_POST_STYLE?.headingMaxWords
+    ? STYLES?.$CREATE_POST_STYLE?.headingMaxWords
+    : 200;
 
   // function handles the selection of images and videos
   const setSelectedImageVideo = (type: string) => {
@@ -345,8 +364,8 @@ export const CreatePostContextProvider = ({
 
   // this handles the functionality of creating or editing post
   const onPostClick = async (
-    allMedia: Array<LMAttachmentUI>,
-    linkData: Array<LMAttachmentUI>,
+    allMedia: Array<LMAttachmentViewData>,
+    linkData: Array<LMAttachmentViewData>,
     content: string,
     topics: string[],
     poll: any
@@ -360,6 +379,7 @@ export const CreatePostContextProvider = ({
               mediaAttachmentData: allMedia,
               linkAttachmentData: linkData,
               postContentData: content.trim(),
+              heading: heading,
               topics: topics,
               poll: poll,
             })
@@ -494,7 +514,7 @@ export const CreatePostContextProvider = ({
       const links = detectURLs(text);
 
       if (links && links.length > 0) {
-        const responsePromises: Promise<LMOGTagsUI>[] = links.map(
+        const responsePromises: Promise<LMOGTagsViewData>[] = links.map(
           (item: string) => {
             return new Promise((resolve, reject) => {
               // calls the decodeUrl api
@@ -516,9 +536,9 @@ export const CreatePostContextProvider = ({
         );
 
         Promise.all(responsePromises)
-          .then(async (responses: LMOGTagsUI[]) => {
+          .then(async (responses: LMOGTagsViewData[]) => {
             const filteredResponses = responses.filter(
-              (response: LMOGTagsUI) => response !== undefined
+              (response: LMOGTagsViewData) => response !== undefined
             );
 
             if (filteredResponses.length > 0) {
@@ -573,21 +593,24 @@ export const CreatePostContextProvider = ({
     const getPostResponse: any = await dispatch(
       getPost(
         GetPostRequest.builder()
-          .setpostId(postToEdit)
-          .setpage(1)
-          .setpageSize(10)
+          .setPostId(postToEdit)
+          .setPage(1)
+          .setPageSize(10)
           .build(),
         false
       )
     );
 
     setPostDetail(
-      convertToLMPostUI(
+      convertToLMPostViewData(
         getPostResponse?.post,
         getPostResponse?.users,
-        getPostResponse?.widgets
+        getPostResponse?.widgets,
+        getPostResponse?.filteredComments
       )
     );
+
+    setHeading(getPostResponse?.post?.heading);
     return getPostResponse;
   };
 
@@ -645,36 +668,32 @@ export const CreatePostContextProvider = ({
     );
 
     // call edit post api
-
-    if(formattedPollAttachments[0]?.attachmentMeta){
+    if (formattedPollAttachments[0]?.attachmentMeta) {
       const editPostResponse = dispatch(
         editPost(
           EditPostRequest.builder()
-            .setHeading("")
-            .setattachments([
+            .setHeading(heading)
+            .setAttachments([
               ...allAttachment,
               ...linkAttachments,
               pollAttachments,
             ])
-            .setpostId(postDetail?.id)
-            .settext(contentText)
+            .setPostId(postDetail?.id)
+            .setText(contentText)
             .setTopicIds(topics)
             .build(),
           false
         )
       );
       return editPostResponse;
-    }else{
+    } else {
       const editPostResponse = dispatch(
         editPost(
           EditPostRequest.builder()
-            .setHeading("")
-            .setattachments([
-              ...allAttachment,
-              ...linkAttachments,
-            ])
-            .setpostId(postDetail?.id)
-            .settext(contentText)
+            .setHeading(heading)
+            .setAttachments([...allAttachment, ...linkAttachments])
+            .setPostId(postDetail?.id)
+            .setText(contentText)
             .setTopicIds(topics)
             .build(),
           false
@@ -682,9 +701,6 @@ export const CreatePostContextProvider = ({
       );
       return editPostResponse;
     }
-
-
-   
   };
 
   // this function is called on change text of inputText
@@ -710,9 +726,9 @@ export const CreatePostContextProvider = ({
         const taggingListResponse: any = await dispatch(
           getTaggingList(
             GetTaggingListRequest.builder()
-              .setsearchName(newMentions[mentionListLength - 1])
-              .setpage(1)
-              .setpageSize(10)
+              .setSearchName(newMentions[mentionListLength - 1])
+              .setPage(1)
+              .setPageSize(10)
               .build(),
             false
           )
@@ -741,15 +757,20 @@ export const CreatePostContextProvider = ({
     }
   };
 
+  // this function is called on change text of heading inputText
+  const handleHeadingInputChange = (event: string) => {
+    setHeading(event);
+  };
+
   // this calls the tagging list api for different page number
   const loadData = async (newPage: number) => {
     setIsLoading(true);
     const taggingListResponse: any = await dispatch(
       getTaggingList(
         GetTaggingListRequest.builder()
-          .setsearchName(taggedUserName)
-          .setpage(newPage)
-          .setpageSize(10)
+          .setSearchName(taggedUserName)
+          .setPage(newPage)
+          .setPageSize(10)
           .build(),
         false
       )
@@ -811,6 +832,7 @@ export const CreatePostContextProvider = ({
     allTags,
     isUserTagging,
     isLoading,
+    heading,
     setIsLoading,
     setIsUserTagging,
     setAllTags,
@@ -842,6 +864,7 @@ export const CreatePostContextProvider = ({
     getPostData,
     postEdit,
     handleInputChange,
+    handleHeadingInputChange,
     loadData,
     handleLoadMore,
     onPostClick,

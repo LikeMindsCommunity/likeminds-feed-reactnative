@@ -8,7 +8,7 @@ import {
 } from "../../context";
 import { LMFeedNotificationFeedListView } from "../notificationsList";
 import LMHeader from "../../components/LMHeader";
-import { LMActivityUI, RootStackParamList } from "../../models";
+import { LMActivityViewData, RootStackParamList } from "../../models";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { styles } from "./styles";
 import STYLES from "../../constants/Styles";
@@ -25,7 +25,7 @@ interface NotificationFeedProps {
     params: Array<string>;
     path: undefined;
   };
-  onNotificationItemClickedProp?: (notification: LMActivityUI) => void;
+  onNotificationItemClickedProp?: (notification: LMActivityViewData) => void;
   handleScreenBackPressProp?: () => void;
 }
 

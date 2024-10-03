@@ -15,11 +15,11 @@ import {
 import { useAppDispatch } from "../../store/store";
 import STYLES from "../../constants/Styles";
 
-const LMCreatePostButton = () => {
+const LMCreatePostButton = ({ customText }: { customText?: string }) => {
   const dispatch = useAppDispatch();
   const { showCreatePost, newPostButtonClick }: UniversalFeedContextValues =
     useUniversalFeedContext();
-    const universalFeedStyle = STYLES.$UNIVERSAL_FEED_STYLE;
+  const universalFeedStyle = STYLES.$UNIVERSAL_FEED_STYLE;
   const { newPostButtonClickProps } =
     useUniversalFeedCustomisableMethodsContext();
   return (
@@ -53,7 +53,7 @@ const LMCreatePostButton = () => {
         {...universalFeedStyle?.newPostIcon}
       />
       <Text style={[styles.newPostText, universalFeedStyle?.newPostButtonText]}>
-        NEW POST
+        {customText ? customText : "NEW POST"}
       </Text>
     </TouchableOpacity>
   );

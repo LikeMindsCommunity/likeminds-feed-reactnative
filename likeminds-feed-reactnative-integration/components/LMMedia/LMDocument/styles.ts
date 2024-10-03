@@ -10,8 +10,8 @@ export const styles = StyleSheet.create({
   docView: {
     flexDirection: "row",
     borderColor: STYLES.$IS_DARK_THEME
-      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
-      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
+      ? STYLES.$SEPARATOR_COLORS.DARK
+      : STYLES.$SEPARATOR_COLORS.LIGHT,
     borderWidth: 1,
     marginHorizontal: 15,
     borderRadius: 5,

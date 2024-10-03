@@ -29,7 +29,7 @@ import { RootStackParamList } from "../models/RootStackParamsList";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { showToastMessage } from "../store/actions/toast";
 import { FlatList } from "react-native";
-import { LMAttachmentUI, LMPostUI } from "../models";
+import { LMAttachmentViewData, LMPostViewData } from "../models";
 import {
   CREATE_POST,
   NOTIFICATION_FEED,
@@ -66,7 +66,7 @@ interface UniversalFeedContextProps {
 
 export interface UniversalFeedContextValues {
   navigation: NativeStackNavigationProp<RootStackParamList, "UniversalFeed">;
-  feedData: Array<LMPostUI>;
+  feedData: Array<LMPostViewData>;
   accessToken: string;
   memberData: {};
   memberRight: [];
@@ -74,7 +74,7 @@ export interface UniversalFeedContextValues {
   showCreatePost: boolean;
   refreshing: boolean;
   localRefresh: boolean;
-  listRef: MutableRefObject<FlatList<LMPostUI> | null>;
+  listRef: MutableRefObject<FlatList<LMPostViewData> | null>;
   mediaAttachmemnts: [];
   linkAttachments: [];
   postContent: string;
@@ -121,7 +121,7 @@ export const UniversalFeedContextProvider = ({
   const memberRight = useAppSelector((state) => state.login.memberRights);
   const [postUploading, setPostUploading] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(true);
-  const { mediaAttachmemnts, linkAttachments, postContent, topics } =
+  const { mediaAttachmemnts, linkAttachments, postContent, heading, topics } =
     useAppSelector((state) => state.createPost);
   const poll = useAppSelector((state) => state.createPost.poll);
   const unreadNotificationCount = useAppSelector(
@@ -132,7 +132,7 @@ export const UniversalFeedContextProvider = ({
 
   const [refreshing, setRefreshing] = useState(false);
   const [localRefresh, setLocalRefresh] = useState(false);
-  const listRef = useRef<FlatList<LMPostUI>>(null);
+  const listRef = useRef<FlatList<LMPostViewData>>(null);
   const route = useRoute();
   const myClient = Client.myClient;
 
@@ -158,7 +158,7 @@ export const UniversalFeedContextProvider = ({
     // calling getFeed API
     await dispatch(
       refreshFeed(
-        GetFeedRequest.builder().setpage(1).setpageSize(20).build(),
+        GetFeedRequest.builder().setPage(1).setPageSize(20).build(),
         false
       )
     );
@@ -178,9 +178,10 @@ export const UniversalFeedContextProvider = ({
   const postAdd = async () => {
     // replace the mentions with route
     const postContentText = mentionToRouteConverter(postContent);
+    const headingText = heading;
     // upload media to aws
     const uploadPromises = mediaAttachmemnts?.map(
-      async (item: LMAttachmentUI) => {
+      async (item: LMAttachmentViewData) => {
         if (item?.attachmentType == 2) {
           await createThumbnail({
             url: item?.attachmentMeta?.url,
@@ -233,6 +234,7 @@ export const UniversalFeedContextProvider = ({
             ...pollAttachment,
           ])
           .setText(postContentText)
+          .setHeading(headingText)
           .setTopicIds(topics)
           .build(),
         false
@@ -311,10 +313,10 @@ export const UniversalFeedContextProvider = ({
       setPostUploading(true);
       postAdd();
     }
-  }, [mediaAttachmemnts, linkAttachments, postContent, topics, poll]);
+  }, [mediaAttachmemnts, linkAttachments, postContent, heading, topics, poll]);
 
   // keyExtractor of feed list
-  const keyExtractor = (item: LMPostUI) => {
+  const keyExtractor = (item: LMPostViewData) => {
     const id = item?.id;
     const itemLiked = item?.isLiked;
     const itemPinned = item?.isPinned;

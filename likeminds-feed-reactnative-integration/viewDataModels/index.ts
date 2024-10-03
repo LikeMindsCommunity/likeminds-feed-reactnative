@@ -1,15 +1,15 @@
 import {
   Attachment,
   AttachmentMeta,
-  GetFeedResponse,
-  IActivities,
-  IActivity,
-  IMenuItem,
-  IOgTag,
-  IPost,
-  IUser,
+  GetNotification,
+  Activity,
+  MenuItem,
+  OgTag,
+  User,
+  Post,
+  Reply,
   Like,
-  GetPostLikesResponse,
+  GetPostLikes,
 } from "@likeminds.community/feed-rn";
 import {
   DocumentMetaData,
@@ -22,47 +22,54 @@ import {
   POLL_ATTACHMENT_TYPE,
   VIDEO_ATTACHMENT_TYPE,
 } from "../constants/Strings";
-import { IComment } from "@likeminds.community/feed-rn";
 import {
-  LMActivityEntityUI,
-  LMActivityUI,
-  LMAttachmentMetaUI,
-  LMAttachmentUI,
-  LMLikeUI,
-  LMMenuItemsUI,
-  LMOGTagsUI,
-  LMPostUI,
-  LMSDKClientInfoUI,
-  LMUserUI,
+  LMActivityEntityViewData,
+  LMActivityViewData,
+  LMAttachmentMetaViewData,
+  LMAttachmentViewData,
+  LMLikeViewData,
+  LMMenuItemsViewData,
+  LMOGTagsViewData,
+  LMPostViewData,
+  LMSDKClientInfoViewData,
+  LMUserViewData,
 } from "../models";
+import { LMFilterCommentViewData } from "../models/LMFilterCommentViewData";
 
 /**
  * @param data: [GetFeedResponse]
- * @returns list of [LMPostUI]
+ * @returns list of [LMPostViewData]
  */
-export function convertUniversalFeedPosts(data: any): LMPostUI[] {
-  const postData = data.posts;
+export function convertUniversalFeedPosts(data: any): LMPostViewData[] {
+  const postData = data.posts ? data.posts : [];
   const userData = data.users;
   const widgetData = data.widgets;
-  return postData?.map((item: IPost) => {
-    return convertToLMPostUI(item, userData, widgetData);
+  const filteredComments = data.filteredComments;
+  return postData?.map((item: Post) => {
+    return convertToLMPostViewData(
+      item,
+      userData,
+      widgetData,
+      filteredComments
+    );
   });
 }
 
 /**
- * @param post: [IPost]
+ * @param post: [Post]
  * @param user: [Map] of String to User
- * @returns LMPostUI
+ * @returns LMPostViewData
  */
-export function convertToLMPostUI(
-  post: IPost,
-  user: { [key: string]: LMUserUI },
-  widgets: any
-): LMPostUI {
-  const postData: LMPostUI = {
+export function convertToLMPostViewData(
+  post: Post,
+  user: { [key: string]: LMUserViewData },
+  widgets: any,
+  filteredComments: LMFilterCommentViewData
+): LMPostViewData {
+  const postData: LMPostViewData = {
     id: post.id,
     attachments: post.attachments
-      ? convertToLMAttachmentsUI(post.attachments, widgets)
+      ? convertToLMAttachmentsViewData(post.attachments, widgets)
       : [],
     commentsCount: post.commentsCount,
     communityId: post.communityId,
@@ -72,32 +79,41 @@ export function convertToLMPostUI(
     isPinned: post.isPinned,
     isSaved: post.isSaved,
     likesCount: post.likesCount,
-    menuItems: convertToLMMenuItemsUI(post.menuItems),
+    menuItems: convertToLMMenuItemsViewData(post.menuItems),
     replies: post?.replies
-      ? convertToLMCommentUI(post.id, post.replies, user)
+      ? convertToLMCommentViewData(post.id, post.replies, user)
       : [],
     text: post.text,
+    heading: post.heading,
     updatedAt: post.updatedAt,
     userId: user?.id?.toString(),
     uuid: post.uuid,
-    user: convertToLMUserUI(user[post.uuid]),
+    user: convertToLMUserViewData(user[post.uuid]),
     topics: post.topics,
     users: user,
+    filteredComments: post?.commentIds
+      ? filteredComments.hasOwnProperty(post?.commentIds[0])
+        ? filteredComments[post?.commentIds[0]]
+        : {}
+      : {},
   };
   return postData;
 }
 
 /**
  * @param data: [Attachment]
- * @returns list of [LMAttachmentUI]
+ * @returns list of [LMAttachmentViewData]
  */
-export function convertToLMAttachmentsUI(
+export function convertToLMAttachmentsViewData(
   data: Attachment[],
   widgets: any
-): LMAttachmentUI[] {
+): LMAttachmentViewData[] {
   return data?.map((item: Attachment) => {
     return {
-      attachmentMeta: convertToLMAttachmentMetaUI(item.attachmentMeta, widgets),
+      attachmentMeta: convertToLMAttachmentMetaViewData(
+        item.attachmentMeta,
+        widgets
+      ),
       attachmentType: item.attachmentType,
     };
   });
@@ -105,22 +121,22 @@ export function convertToLMAttachmentsUI(
 
 /**
  * @param data: AttachmentMeta
- * @returns LMAttachmentMetaUI
+ * @returns LMAttachmentMetaViewData
  */
-export function convertToLMAttachmentMetaUI(
+export function convertToLMAttachmentMetaViewData(
   data: AttachmentMeta,
   widgets
-): LMAttachmentMetaUI {
-  const attachmentMetaData: LMAttachmentMetaUI = {
+): LMAttachmentMetaViewData {
+  const attachmentMetaData: LMAttachmentMetaViewData = {
     duration: data.duration,
     format: data.format,
     name: data.name,
-    ogTags: convertToLMOgTagsUI(data.ogTags),
+    ogTags: data.ogTags ? convertToLMOgTagsViewData(data.ogTags) : undefined,
     pageCount: data.pageCount,
     size: data.size,
     url: data.url,
     thumbnailUrl: data.thumbnailUrl,
-    ...convertToLMPollUI(data?.entityId, widgets),
+    ...convertToLMPollViewData(data?.entityId ? data?.entityId : "", widgets),
   };
   return attachmentMetaData;
 }
@@ -140,7 +156,7 @@ const calculateDaysToExpiry = (item) => {
  * @param widgets: any
  * @returns any
  */
-export function convertToLMPollUI(id: string, widgets: any) {
+export function convertToLMPollViewData(id: string, widgets: any) {
   const item = widgets[id];
   const pollMetaData: any = {
     id: id,
@@ -161,11 +177,11 @@ export function convertToLMPollUI(id: string, widgets: any) {
 }
 
 /**
- * @param data: IOgTag
- * @returns LMOGTagsUI
+ * @param data: OgTag
+ * @returns LMOGTagsViewData
  */
-export function convertToLMOgTagsUI(data: IOgTag): LMOGTagsUI {
-  const ogTagsData: LMOGTagsUI = {
+export function convertToLMOgTagsViewData(data: OgTag): LMOGTagsViewData {
+  const ogTagsData: LMOGTagsViewData = {
     title: data.title,
     description: data.description,
     url: data.url,
@@ -175,10 +191,12 @@ export function convertToLMOgTagsUI(data: IOgTag): LMOGTagsUI {
 }
 
 /**
- * @param data: [IMenuItem]
- * @returns [LMMenuItemsUI]
+ * @param data: [MenuItem]
+ * @returns [LMMenuItemsViewData]
  */
-export function convertToLMMenuItemsUI(data: IMenuItem[]): LMMenuItemsUI[] {
+export function convertToLMMenuItemsViewData(
+  data: MenuItem[]
+): LMMenuItemsViewData[] {
   return data?.map((item) => {
     return {
       title: item.title,
@@ -188,18 +206,18 @@ export function convertToLMMenuItemsUI(data: IMenuItem[]): LMMenuItemsUI[] {
 }
 
 /**
- * @param data: IUser
- * @returns LMUserUI
+ * @param data: User
+ * @returns LMUserViewData
  */
-export function convertToLMUserUI(data: IUser): LMUserUI {
-  const userData: LMUserUI = {
+export function convertToLMUserViewData(data: User): LMUserViewData {
+  const userData: LMUserViewData = {
     customTitle: data?.customTitle,
     id: data?.id,
     imageUrl: data?.imageUrl,
     isGuest: data?.isGuest,
     name: data?.name,
     organisationName: data?.organisationName,
-    sdkClientInfo: convertToLMSDKClientInfoUI(data),
+    sdkClientInfo: convertToLMSDKClientInfoViewData(data),
     updatedAt: data?.updatedAt,
     userUniqueId: data?.userUniqueId,
     uuid: data?.uuid,
@@ -208,59 +226,63 @@ export function convertToLMUserUI(data: IUser): LMUserUI {
 }
 
 /**
- * @param data: IUser
- * @returns LMSDKClientInfoUI
+ * @param data: User
+ * @returns LMSDKClientInfoViewData
  */
-export function convertToLMSDKClientInfoUI(data: IUser): LMSDKClientInfoUI {
+export function convertToLMSDKClientInfoViewData(
+  data: User
+): LMSDKClientInfoViewData {
   const sdkClientInfo = data?.sdkClientInfo;
-  const sdkClientInfoConverter: LMSDKClientInfoUI = {
+  const sdkClientInfoConverter: LMSDKClientInfoViewData = {
     community: sdkClientInfo?.community,
     user: sdkClientInfo?.user,
     uuid: sdkClientInfo?.uuid,
     userUniqueId: sdkClientInfo?.userUniqueId,
+    widgetId: sdkClientInfo?.widgetId,
   };
   return sdkClientInfoConverter;
 }
 
 /**
- * @param data: [GetPostLikesResponse]
- * @returns list of [LMLikeUI]
+ * @param data: [GetPostLikes]
+ * @returns list of [LMLikeViewData]
  */
-export function convertToLMLikesList(data: GetPostLikesResponse): LMLikeUI[] {
+export function convertToLMLikesList(data: GetPostLikes): LMLikeViewData[] {
   const likesListData = data?.likes;
   const userData = data?.users;
   return likesListData?.map((item: Like) => {
-    return convertToLMLikeUI(item, userData);
+    return convertToLMLikeViewData(item, userData);
   });
 }
 
 /**
  * @param likes: [Like]
  * @param users: [Map] of String to User
- * @returns LMLikeUI
+ * @returns LMLikeViewData
  */
-export function convertToLMLikeUI(
+export function convertToLMLikeViewData(
   likes: Like,
-  users: { [key: string]: LMUserUI }
-): LMLikeUI {
-  const likesData: LMLikeUI = {
+  // users: { [key: string]: LMUserViewData }
+  users: User[]
+): LMLikeViewData {
+  const likesData: LMLikeViewData = {
     id: likes?.id,
     createdAt: likes?.createdAt,
     updatedAt: likes?.updatedAt,
     userId: likes?.uuid,
     uuid: likes?.uuid,
-    user: convertToLMUserUI(users[likes?.uuid]),
+    user: convertToLMUserViewData(users[likes?.uuid]),
   };
   return likesData;
 }
 
 /**
  * @param data: [ImageVideoMetaData]
- * @returns list of [LMAttachmentUI]
+ * @returns list of [LMAttachmentViewData]
  */
 export function convertImageVideoMetaData(
   data: ImageVideoMetaData[]
-): LMAttachmentUI[] {
+): LMAttachmentViewData[] {
   const convertedImageVideoMetaData = data?.map((item) => {
     return {
       attachmentMeta: {
@@ -288,11 +310,11 @@ export function convertImageVideoMetaData(
 
 /**
  * @param data: [DocumentMetaData]
- * @returns list of [LMAttachmentUI]
+ * @returns list of [LMAttachmentViewData]
  */
 export function convertDocumentMetaData(
   data: DocumentMetaData[]
-): LMAttachmentUI[] {
+): LMAttachmentViewData[] {
   const convertedDocumentMetaData = data?.map((item) => {
     return {
       attachmentMeta: {
@@ -317,10 +339,12 @@ export function convertDocumentMetaData(
 }
 
 /**
- * @param data: [LMOGTagsUI]
- * @returns list of [LMAttachmentUI]
+ * @param data: [LMOGTagsViewData]
+ * @returns list of [LMAttachmentViewData]
  */
-export function convertLinkMetaData(data: LMOGTagsUI[]): LMAttachmentUI[] {
+export function convertLinkMetaData(
+  data: LMOGTagsViewData[]
+): LMAttachmentViewData[] {
   const convertedLinkMetaData = data?.map((item) => {
     return {
       attachmentMeta: {
@@ -357,9 +381,9 @@ export function convertPollOptionsMetaData(
 
 /**
  * @param item: any
- * @returns LMAttachmentUI
+ * @returns LMAttachmentViewData
  */
-export function convertPollMetaData(item: any): LMAttachmentUI {
+export function convertPollMetaData(item: any): LMAttachmentViewData {
   return {
     attachmentMeta: {
       entityId: item?.id ? item?.id : "",
@@ -392,16 +416,16 @@ export function convertPollMetaData(item: any): LMAttachmentUI {
 
 /**
  * @param postId: string
- * @param data: [IComment]
+ * @param data: [Reply]
  * @param user: [Map] of String to User
- * @returns list of [LMCommentUI]
+ * @returns list of [LMCommentViewData]
  */
-export function convertToLMCommentUI(
+export function convertToLMCommentViewData(
   postId: string,
-  data: IComment[],
-  user: { [key: string]: LMUserUI }
+  data: Reply[],
+  user: { [key: string]: LMUserViewData }
 ): any[] {
-  return data?.map((item: IComment) => {
+  return data?.map((item: Reply) => {
     return {
       id: item.id,
       postId: postId,
@@ -411,39 +435,42 @@ export function convertToLMCommentUI(
       isEdited: item.isEdited,
       isLiked: item.isLiked,
       likesCount: item.likesCount,
-      menuItems: convertToLMMenuItemsUI(item.menuItems),
+      menuItems: convertToLMMenuItemsViewData(item.menuItems),
       text: item.text,
       replies: item?.replies ? item.replies : [],
       updatedAt: item.updatedAt,
       userId: item.uuid,
       uuid: item.uuid,
-      user: convertToLMUserUI(user[item.uuid]),
+      user: convertToLMUserViewData(user[item.uuid]),
     };
   });
 }
 
 /**
- * @param data: [IActivities]
- * @returns list of [LMActivityUI]
+ * @param data: [GetNotification]
+ * @returns list of [LMActivityViewData]
  */
-export function convertNotificationsFeed(data: IActivities): LMActivityUI[] {
+export function convertNotificationsFeed(
+  data: GetNotification
+): LMActivityViewData[] {
   const notificationData = data.activities;
   const userData = data.users;
   return notificationData?.map((item) => {
-    return convertToLMActivityUI(item, userData);
+    return convertToLMActivityViewData(item, userData);
   });
 }
 
 /**
- * @param post: [IActivity]
+ * @param post: [Activity]
  * @param user: [Map] of String to User
- * @returns LMActivityUI
+ * @returns LMActivityViewData
  */
-export function convertToLMActivityUI(
-  activity: IActivity,
-  users: { [key: string]: LMUserUI }
-): LMActivityUI {
-  const notificationData: LMActivityUI = {
+export function convertToLMActivityViewData(
+  activity: Activity,
+  // users: { [key: string]: LMUserViewData }
+  users: Record<string, User>
+): LMActivityViewData {
+  const notificationData: LMActivityViewData = {
     id: activity.id,
     isRead: activity.isRead,
     actionOn: activity.actionOn,
@@ -454,10 +481,10 @@ export function convertToLMActivityUI(
     action: activity.action,
     cta: activity.cta,
     activityText: activity.activityText,
-    activityEntityData: convertToLMActivityEntityUI(
+    activityEntityData: convertToLMActivityEntityViewData(
       activity.activityEntityData
     ),
-    activityByUser: convertToLMUserUI(
+    activityByUser: convertToLMUserViewData(
       users[activity.actionBy[activity.actionBy.length - 1]]
     ),
     createdAt: activity.createdAt,
@@ -469,10 +496,12 @@ export function convertToLMActivityUI(
 
 /**
  * @param data
- * @returns LMActivityEntityUI
+ * @returns LMActivityEntityViewData
  */
-export function convertToLMActivityEntityUI(data): LMActivityEntityUI {
-  const activityEntityData: LMActivityEntityUI = {
+export function convertToLMActivityEntityViewData(
+  data
+): LMActivityEntityViewData {
+  const activityEntityData: LMActivityEntityViewData = {
     id: data?.id,
     text: data?.text,
     deleteReason: data?.deleteReason,

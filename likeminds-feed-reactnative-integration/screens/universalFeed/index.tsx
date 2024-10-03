@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { styles } from "./styles";
 import { UniversalFeedCustomisableMethodsContextProvider } from "../../context";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { LMMenuItemsUI, RootStackParamList } from "../../models";
+import { LMMenuItemsViewData, RootStackParamList } from "../../models";
 import { PollCustomisableMethodsContextProvider } from "../../context/pollCustomisableCallback";
 
 interface UniversalFeedProps {
@@ -15,6 +15,8 @@ interface UniversalFeedProps {
     params: Array<string>;
     path: undefined;
   };
+  isHeadingEnabled?: boolean;
+  isTopResponse?: boolean;
   postLikeHandlerProp?: (id: string) => void;
   savePostHandlerProp?: (id: string, saved?: boolean) => void;
   selectPinPostProp?: (id: string, pinned?: boolean) => void;
@@ -28,7 +30,7 @@ interface UniversalFeedProps {
     event: {
       nativeEvent: { pageX: number; pageY: number };
     },
-    menuItems: LMMenuItemsUI[],
+    menuItems: LMMenuItemsViewData[],
     postId: string
   ) => void;
   onTapNotificationBellProp?: () => void;
@@ -61,6 +63,8 @@ const UniversalFeed = ({
   onSubmitButtonClicked,
   onAddPollOptionsClicked,
   onPollOptionClicked,
+  isHeadingEnabled = false,
+  isTopResponse = false,
 }: UniversalFeedProps) => {
   return (
     <PollCustomisableMethodsContextProvider
@@ -81,6 +85,8 @@ const UniversalFeed = ({
         onOverlayMenuClickProp={onOverlayMenuClickProp}
         onTapNotificationBellProp={onTapNotificationBellProp}
         onSharePostClicked={onSharePostClicked}
+        isHeadingEnabled={isHeadingEnabled}
+        isTopResponse={isTopResponse}
       >
         <UniversalFeedComponent children={children} />
       </UniversalFeedCustomisableMethodsContextProvider>

@@ -11,6 +11,7 @@ import {
   ScrollView,
   Alert,
   Platform,
+  TextInput,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { NetworkUtil, nameInitials, replaceLastMention } from "../../utils";
@@ -22,7 +23,7 @@ import {
   ADD_POLL,
   ADD_POST_TEXT,
   ADD_VIDEOS,
-  CREATE_POST_PLACEHOLDER_TEXT,
+  SOCIAL_FEED_CREATE_POST_PLACEHOLDER_TEXT,
   DOCUMENT_ATTACHMENT_TYPE,
   IMAGE_ATTACHMENT_TYPE,
   SAVE_POST_TEXT,
@@ -31,6 +32,8 @@ import {
   SELECT_IMAGE,
   SELECT_VIDEO,
   VIDEO_ATTACHMENT_TYPE,
+  QnA_FEED_CREATE_POST_PLACEHOLDER_TEXT,
+  QnA_FEED_CREATE_POST_HEADING_PLACEHOLDER_TEXT,
 } from "../../constants/Strings";
 import { setUploadAttachments } from "../../store/actions/createPost";
 import { styles } from "./styles";
@@ -48,7 +51,11 @@ import {
   LMProfilePicture,
   LMText,
 } from "../../uiComponents";
-import { LMAttachmentUI, LMUserUI, RootStackParamList } from "../../models";
+import {
+  LMAttachmentViewData,
+  LMUserViewData,
+  RootStackParamList,
+} from "../../models";
 import LMCarousel from "../../components/LMMedia/LMCarousel";
 import LMDocument from "../../components/LMMedia/LMDocument";
 import LMImage from "../../components/LMMedia/LMImage";
@@ -89,8 +96,8 @@ interface CreatePostProps {
   handleDocumentProp?: () => void;
   handlePollProp?: () => void;
   onPostClickProp?: (
-    allMedia: Array<LMAttachmentUI>,
-    linkData: Array<LMAttachmentUI>,
+    allMedia: Array<LMAttachmentViewData>,
+    linkData: Array<LMAttachmentViewData>,
     content: string,
     topics: string[],
     poll: any
@@ -98,12 +105,10 @@ interface CreatePostProps {
   handleScreenBackPressProp?: () => void;
   onPollEditClicked: any;
   onPollClearClicked: any;
+  isHeadingEnabled: boolean;
 }
 
 const CreatePost = ({
-  navigation,
-  route,
-  children,
   handleDocumentProp,
   handlePollProp,
   handleGalleryProp,
@@ -111,6 +116,7 @@ const CreatePost = ({
   handleScreenBackPressProp,
   onPollEditClicked,
   onPollClearClicked,
+  isHeadingEnabled = false,
 }: CreatePostProps) => {
   return (
     <PollCustomisableMethodsContextProvider
@@ -118,6 +124,7 @@ const CreatePost = ({
       onPollClearClicked={onPollClearClicked}
     >
       <CreatePostCustomisableMethodsContextProvider
+        isHeadingEnabled={isHeadingEnabled}
         handleDocumentProp={handleDocumentProp}
         handlePollProp={handlePollProp}
         handleGalleryProp={handleGalleryProp}
@@ -143,12 +150,15 @@ const CreatePostComponent = () => {
   const customAddMoreAttachmentsButton =
     createPostStyle?.addMoreAttachmentsButton;
   const customCreatePostScreenHeader = createPostStyle?.createPostScreenHeader;
-  const customAttachmentOptionsStyle: any = createPostStyle?.attachmentOptionsStyle;
+  const customAttachmentOptionsStyle: any =
+    createPostStyle?.attachmentOptionsStyle;
   const postHeaderStyle = postListStyle?.header;
   const postMediaStyle: any = postListStyle?.media;
   const selectTopicPlaceholder = topicsStyle?.selectTopicPlaceholder;
   const selectedTopicsStyle = topicsStyle?.selectedTopicsStyle;
   const plusIconStyle = topicsStyle?.plusIconStyle;
+
+  const MAX_LENGTH = 200;
   let {
     navigation,
     postToEdit,
@@ -156,7 +166,9 @@ const CreatePostComponent = () => {
     memberData,
     myRef,
     postContentText,
+    heading,
     handleInputChange,
+    handleHeadingInputChange,
     handleDocument,
     handlePoll,
     handleGallery,
@@ -410,6 +422,7 @@ const CreatePostComponent = () => {
     handleGalleryProp,
     onPostClickProp,
     handleScreenBackPressProp,
+    isHeadingEnabled,
   } = useCreatePostCustomisableMethodsContext();
 
   // this renders the post detail UI
@@ -559,13 +572,71 @@ const CreatePostComponent = () => {
           </View>
         ) : null}
 
+        {isHeadingEnabled ? (
+          <View
+            style={{
+              paddingVertical: 10,
+              margin: 15,
+              marginBottom: 0,
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <TextInput
+              value={heading}
+              onChangeText={handleHeadingInputChange}
+              placeholder={QnA_FEED_CREATE_POST_HEADING_PLACEHOLDER_TEXT}
+              placeholderTextColor={"grey"}
+              multiline
+              maxLength={MAX_LENGTH}
+              style={{
+                fontSize: 16,
+                color: STYLES.$IS_DARK_THEME
+                  ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+                  : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+                fontWeight: "600",
+                flex: 1,
+                maxHeight: 100,
+              }}
+              autoCapitalize="sentences"
+            />
+          </View>
+        ) : null}
+
+        {isHeadingEnabled ? (
+          <View
+            style={{
+              borderColor: STYLES.$IS_DARK_THEME
+                ? STYLES.$SEPARATOR_COLORS.DARK
+                : STYLES.$SEPARATOR_COLORS.LIGHT,
+              borderWidth: 1,
+              marginHorizontal: 15,
+              marginTop: 10,
+            }}
+          />
+        ) : null}
+
+        {isHeadingEnabled ? (
+          <Text
+            style={{
+              marginHorizontal: 15,
+              textAlign: "right",
+              color: STYLES.$IS_DARK_THEME
+                ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
+            }}
+          >{`${heading.length}/${MAX_LENGTH}`}</Text>
+        ) : null}
+
         {/* text input field */}
         <LMInputText
           {...customTextInputStyle}
           placeholderText={
             customTextInputStyle?.placeholderText
               ? customTextInputStyle?.placeholderText
-              : CREATE_POST_PLACEHOLDER_TEXT
+              : isHeadingEnabled
+              ? QnA_FEED_CREATE_POST_PLACEHOLDER_TEXT
+              : SOCIAL_FEED_CREATE_POST_PLACEHOLDER_TEXT
           }
           placeholderTextColor={
             customTextInputStyle?.placeholderTextColor
@@ -601,6 +672,7 @@ const CreatePostComponent = () => {
               }, // The mention style in the input
             },
           ]}
+          autoCapitalize="sentences"
         />
 
         {/* users tagging list */}
@@ -617,7 +689,7 @@ const CreatePostComponent = () => {
           >
             <FlatList
               data={[...allTags]}
-              renderItem={({ item }: { item: LMUserUI }) => {
+              renderItem={({ item }: { item: LMUserViewData }) => {
                 return (
                   <Pressable
                     onPress={() => {
@@ -976,7 +1048,13 @@ const CreatePostComponent = () => {
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             disabled={
               postToEdit
-                ? false
+                ? isHeadingEnabled
+                  ? heading?.trim() === ""
+                  : false
+                : isHeadingEnabled
+                ? heading?.trim() !== ""
+                  ? false
+                  : true
                 : allAttachment?.length > 0 ||
                   formattedLinkAttachments?.length > 0 ||
                   postContentText.trim() !== "" ||
@@ -986,7 +1064,15 @@ const CreatePostComponent = () => {
             }
             style={
               postToEdit
-                ? styles.enabledOpacity
+                ? isHeadingEnabled
+                  ? heading?.trim() !== ""
+                    ? styles.enabledOpacity
+                    : styles.disabledOpacity
+                  : styles.enabledOpacity
+                : isHeadingEnabled
+                ? heading?.trim() !== ""
+                  ? styles.enabledOpacity
+                  : styles.disabledOpacity
                 : allAttachment?.length > 0 ||
                   formattedLinkAttachments?.length > 0 ||
                   postContentText.trim() !== "" ||

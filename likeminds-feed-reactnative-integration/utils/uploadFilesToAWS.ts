@@ -1,4 +1,4 @@
-import { LMAttachmentMetaUI } from "../models";
+import { LMAttachmentMetaViewData } from "../models";
 import { S3_BUCKET, getAWS } from "./AWSConfig";
 
 // this function converts the image/video url to blob
@@ -27,7 +27,7 @@ function uriToBlob(uri: string): Promise<Blob> {
 
 // this function uploads the media on AWS S3 bucket
 export const uploadFilesToAWS = async (
-  media: LMAttachmentMetaUI,
+  media: LMAttachmentMetaViewData,
   userUniqueId: string,
   url: string
 ) => {

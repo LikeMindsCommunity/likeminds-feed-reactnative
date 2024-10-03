@@ -1,4 +1,4 @@
-import { LMAttachmentUI } from "../models";
+import { LMAttachmentViewData } from "../models";
 import React, { createContext, ReactNode, useContext } from "react";
 
 export interface CreatePostCallbacksContextProps {
@@ -7,13 +7,14 @@ export interface CreatePostCallbacksContextProps {
   handleDocumentProp?: () => void;
   handlePollProp?: () => void;
   onPostClickProp?: (
-    allMedia: Array<LMAttachmentUI>,
-    linkData: Array<LMAttachmentUI>,
+    allMedia: Array<LMAttachmentViewData>,
+    linkData: Array<LMAttachmentViewData>,
     content: string,
     topics: string[],
     poll: any
   ) => void;
   handleScreenBackPressProp?: () => void;
+  isHeadingEnabled: boolean;
 }
 
 export interface CreatePostCustomisableMethodsContext {
@@ -21,13 +22,14 @@ export interface CreatePostCustomisableMethodsContext {
   handleDocumentProp?: () => void;
   handlePollProp?: () => void;
   onPostClickProp?: (
-    allMedia: Array<LMAttachmentUI>,
-    linkData: Array<LMAttachmentUI>,
+    allMedia: Array<LMAttachmentViewData>,
+    linkData: Array<LMAttachmentViewData>,
     content: string,
     topics: string[],
     poll: any
   ) => void;
   handleScreenBackPressProp?: () => void;
+  isHeadingEnabled: boolean;
 }
 
 const CreatePostCustomisableMethodsContext = createContext<
@@ -51,6 +53,7 @@ export const CreatePostCustomisableMethodsContextProvider = ({
   handlePollProp,
   onPostClickProp,
   handleScreenBackPressProp,
+  isHeadingEnabled,
 }: CreatePostCallbacksContextProps) => {
   const contextValues: CreatePostCustomisableMethodsContext = {
     handleGalleryProp,
@@ -58,6 +61,7 @@ export const CreatePostCustomisableMethodsContextProvider = ({
     handlePollProp,
     onPostClickProp,
     handleScreenBackPressProp,
+    isHeadingEnabled,
   };
 
   return (

@@ -104,8 +104,8 @@ const LMNotificationFeedItem = React.memo(
               : unreadBackgroundColor
               ? unreadBackgroundColor
               : STYLES.$IS_DARK_THEME
-              ? STYLES.$BACKGROUND_COLORS.DARK
-              : STYLES.$COLORS.LIGHT_GREY,
+              ? STYLES.$SEPARATOR_COLORS.DARK
+              : STYLES.$SEPARATOR_COLORS.LIGHT,
           },
         ])}
       >

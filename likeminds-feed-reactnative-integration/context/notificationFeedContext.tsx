@@ -12,7 +12,7 @@ import React, {
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../models/RootStackParamsList";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { LMActivityUI } from "../models";
+import { LMActivityViewData } from "../models";
 import {
   getNotificationFeed,
   markReadNotification,
@@ -54,7 +54,7 @@ export interface NotificationFeedContextValues {
   };
   notificationFeedPageNumber: number;
   setNotificationFeedPageNumber: Dispatch<SetStateAction<number>>;
-  notifications: LMActivityUI[];
+  notifications: LMActivityViewData[];
   refreshing: boolean;
   setRefreshing: Dispatch<SetStateAction<boolean>>;
   isLoading: boolean;
@@ -62,7 +62,7 @@ export interface NotificationFeedContextValues {
   fetchNotificationFeed: (page: number) => void;
   readNotification: (id: string) => void;
   handleScreenBackPress: () => void;
-  handleActivityOnTap: (activity: LMActivityUI) => void;
+  handleActivityOnTap: (activity: LMActivityViewData) => void;
   onRefresh: () => void;
   handleLoadMore: () => void;
 }
@@ -110,8 +110,8 @@ export const NotificationFeedContextProvider = ({
     const getNotificationFeedResponse = await dispatch(
       getNotificationFeed(
         GetNotificationFeedRequest.builder()
-          .setpage(payload.page)
-          .setpageSize(payload.pageSize)
+          .setPage(payload.page)
+          .setPageSize(payload.pageSize)
           .build(),
         false
       )
@@ -123,7 +123,7 @@ export const NotificationFeedContextProvider = ({
     await dispatch(notificationReadHandler(activityId));
     const readNotificationResponse = await dispatch(
       markReadNotification(
-        MarkReadNotificationRequest.builder().setactivityId(activityId).build(),
+        MarkReadNotificationRequest.builder().setActivityId(activityId).build(),
         false
       )
     );
@@ -171,7 +171,7 @@ export const NotificationFeedContextProvider = ({
     // calling getNotification API
     await dispatch(
       refreshNotificationFeed(
-        GetNotificationFeedRequest.builder().setpage(1).setpageSize(20).build(),
+        GetNotificationFeedRequest.builder().setPage(1).setPageSize(20).build(),
         false
       )
     );

@@ -36,7 +36,7 @@ import {
 } from "../../context";
 import { postLikesClear } from "../../store/actions/postLikes";
 import LMPost from "../../components/LMPost/LMPost";
-import { LMPostUI } from "../../models";
+import { LMPostViewData } from "../../models";
 import LMLoader from "../../components/LMLoader";
 import { autoPlayPostVideo } from "../../store/actions/feed";
 import LMPostMenu from "../../customModals/LMPostMenu";
@@ -47,12 +47,17 @@ import { getPostType } from "../../utils/analytics";
 import { SET_FLOW_TO_POST_DETAIL_SCREEN } from "../../store/types/types";
 import STYLES from "../../constants/Styles";
 
-const PostsList = ({ route, children, items }: any) => {
+const PostsList = ({ route, children, items, lmPostCustomFooter }: any) => {
   const { navigation }: UniversalFeedContextValues = useUniversalFeedContext();
-  return <PostsListComponent topics={items} />;
+  return (
+    <PostsListComponent
+      topics={items}
+      lmPostCustomFooter={lmPostCustomFooter}
+    />
+  );
 };
 
-const PostsListComponent = ({ topics }: any) => {
+const PostsListComponent = ({ topics, lmPostCustomFooter }: any) => {
   const dispatch = useAppDispatch();
   const {
     listRef,
@@ -102,13 +107,15 @@ const PostsListComponent = ({ topics }: any) => {
     handleReportPostProps,
     onOverlayMenuClickProp,
     onSharePostClicked,
+    isHeadingEnabled,
+    isTopResponse,
   } = useUniversalFeedCustomisableMethodsContext();
   // this function returns the id of the item selected from menu list and handles further functionalities accordingly
   const onMenuItemSelect = (
     postId: string,
     itemId?: number,
     pinnedValue?: boolean,
-    postDetail?: LMPostUI
+    postDetail?: LMPostViewData
   ) => {
     setSelectedMenuItemPostId(postId);
     if (itemId === PIN_POST_MENU_ITEM || itemId === UNPIN_POST_MENU_ITEM) {
@@ -171,7 +178,7 @@ const PostsListComponent = ({ topics }: any) => {
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
             data={feedData}
-            renderItem={({ item }: { item: LMPostUI }) => {
+            renderItem={({ item }: { item: LMPostViewData }) => {
               // Log the item before rendering
 
               // Check if the item's topic matches any name in the topics array
@@ -205,6 +212,8 @@ const PostsListComponent = ({ topics }: any) => {
                     key={item?.id}
                   >
                     <LMPost
+                      isHeadingEnabled={isHeadingEnabled}
+                      isTopResponse={isTopResponse}
                       post={item}
                       // header props
                       headerProps={{
@@ -264,6 +273,7 @@ const PostsListComponent = ({ topics }: any) => {
                           },
                         },
                       }}
+                      customFooter={lmPostCustomFooter}
                     />
                   </TouchableOpacity>
                 );
@@ -293,8 +303,8 @@ const PostsListComponent = ({ topics }: any) => {
                       style={{
                         height: 11,
                         backgroundColor: STYLES.$IS_DARK_THEME
-                          ? "#121212"
-                          : "#D0D8E2",
+                          ? STYLES.$SEPARATOR_COLORS.DARK
+                          : STYLES.$SEPARATOR_COLORS.LIGHT,
                       }}
                     />
                   ) : null}

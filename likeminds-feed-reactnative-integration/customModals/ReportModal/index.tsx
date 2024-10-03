@@ -36,7 +36,7 @@ import { getReportTags, postReport } from "../../store/actions/feed";
 import Toast from "react-native-toast-message";
 import { showToastMessage } from "../../store/actions/toast";
 import LMLoader from "../../components/LMLoader";
-import { LMCommentUI, LMPostUI } from "../../models";
+import { LMCommentViewData, LMPostViewData } from "../../models";
 import { getPostType, reportAnalytics } from "../../utils/analytics";
 import Layout from "../../constants/Layout";
 import { Client } from "../../client";
@@ -56,8 +56,8 @@ interface ReportModalProps {
   visible: boolean;
   closeModal: () => void;
   reportType: string;
-  postDetail: LMPostUI;
-  commentDetail?: LMCommentUI;
+  postDetail: LMPostViewData;
+  commentDetail?: LMCommentViewData;
 }
 
 const ReportModal = ({
@@ -105,7 +105,7 @@ const ReportModal = ({
     };
     const reportTagsResponse = await dispatch(
       getReportTags(
-        GetReportTagsRequest.builder().settype(payload.type).build(),
+        GetReportTagsRequest.builder().setType(payload.type).build(),
         false
       )
     );

@@ -63,7 +63,7 @@ export const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   border: {
-    borderBottomColor: STYLES.$IS_DARK_THEME ? "#121212" : "#D0D8E2",
+    borderBottomColor: STYLES.$IS_DARK_THEME ? STYLES.$SEPARATOR_COLORS.DARK : STYLES.$SEPARATOR_COLORS.LIGHT,
     borderBottomWidth: 1,
   },
   search: {

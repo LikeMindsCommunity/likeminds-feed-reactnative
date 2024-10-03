@@ -10,6 +10,8 @@ import { LMPostContextProvider, useLMPostContext } from "../../../context";
 import { useAppSelector } from "../../../store/store";
 import Layout from "../../../constants/Layout";
 import STYLES from "../../../constants/Styles";
+import LMPostHeading from "../LMPostHeading";
+import LMPostTopResponse from "../LMPostTopResponse";
 
 const LMPost = ({
   navigation,
@@ -19,6 +21,9 @@ const LMPost = ({
   contentProps,
   mediaProps,
   footerProps,
+  isHeadingEnabled,
+  isTopResponse,
+  customFooter,
 }: any) => {
   return (
     <LMPostContextProvider
@@ -28,13 +33,17 @@ const LMPost = ({
       footerProps={footerProps}
       contentProps={contentProps}
       mediaProps={mediaProps}
+      isHeadingEnabled={isHeadingEnabled}
+      isTopResponse={isTopResponse}
+      customFooter={customFooter}
     >
       <LMPostComponent />
     </LMPostContextProvider>
   );
 };
 const LMPostComponent = React.memo(() => {
-  const { post } = useLMPostContext();
+  const { post, isHeadingEnabled, isTopResponse, customFooter } =
+    useLMPostContext();
   const allTopics = useAppSelector((state) => state.feed.topics);
   const postListStyle = STYLES.$POST_LIST_STYLE;
 
@@ -42,6 +51,8 @@ const LMPostComponent = React.memo(() => {
     <View style={styles.mainContainer}>
       {/* post header */}
       <LMPostHeader />
+
+      {/* post topics */}
       {post?.topics?.length > 0 ? (
         <View style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 10 }}>
           {post?.topics?.map((item, index) => {
@@ -80,15 +91,24 @@ const LMPostComponent = React.memo(() => {
           })}
         </View>
       ) : null}
+
+      {/* post heading */}
+      {isHeadingEnabled ? <LMPostHeading /> : null}
+
       {/* post content */}
       {(post?.text ||
         post?.attachments?.find(
           (item) => item?.attachmentType === LINK_ATTACHMENT_TYPE
         )?.attachmentType === LINK_ATTACHMENT_TYPE) && <LMPostContent />}
+
       {/* post media */}
       {post?.attachments && post?.attachments.length > 0 && <LMPostMedia />}
+
+      {/* post top response */}
+      {isTopResponse ? <LMPostTopResponse /> : null}
+
       {/* post footer */}
-      <LMPostFooter />
+      {customFooter ? customFooter : <LMPostFooter />}
     </View>
   );
 });

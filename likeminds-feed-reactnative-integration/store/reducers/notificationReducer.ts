@@ -1,4 +1,4 @@
-import { LMActivityUI } from "../../models";
+import { LMActivityViewData } from "../../models";
 import { convertNotificationsFeed } from "../../viewDataModels";
 import {
   MARK_READ_NOTIFICATION_SUCCESS,
@@ -10,7 +10,7 @@ import {
 } from "../types/types";
 
 export interface NotificationReducerState {
-  activities: LMActivityUI[];
+  activities: LMActivityViewData[];
   users: {};
   activitiesCount: 0;
 }

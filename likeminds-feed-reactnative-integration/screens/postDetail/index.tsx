@@ -12,7 +12,7 @@ import {
   View,
   SafeAreaView,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ReactNode } from "react";
 import { POST_LIKES_LIST } from "../../constants/screenNames";
 import {
   COMMENT_LIKES,
@@ -50,7 +50,11 @@ import LMHeader from "../../components/LMHeader";
 import LMLoader from "../../components/LMLoader";
 import LMCommentItem from "../../components/LMCommentItem";
 import LMPost from "../../components/LMPost/LMPost";
-import { LMMenuItemsUI, LMUserUI, RootStackParamList } from "../../models";
+import {
+  LMMenuItemsViewData,
+  LMUserViewData,
+  RootStackParamList,
+} from "../../models";
 import {
   LMIcon,
   LMInputText,
@@ -95,13 +99,16 @@ interface PostDetailProps {
     event: {
       nativeEvent: { pageX: number; pageY: number };
     },
-    menuItems: LMMenuItemsUI[],
+    menuItems: LMMenuItemsViewData[],
     commentId: string
   ) => void;
   onSharePostClicked?: (id: string) => void;
   onSubmitButtonClicked: any;
   onAddPollOptionsClicked: any;
   onPollOptionClicked: any;
+  isHeadingEnabled?: boolean;
+  isTopResponse?: boolean;
+  lmPostCustomFooter?: ReactNode;
 }
 
 const PostDetail = ({
@@ -121,6 +128,9 @@ const PostDetail = ({
   onSubmitButtonClicked,
   onAddPollOptionsClicked,
   onPollOptionClicked,
+  isHeadingEnabled,
+  isTopResponse,
+  lmPostCustomFooter,
 }: PostDetailProps) => {
   return (
     <PollCustomisableMethodsContextProvider
@@ -139,6 +149,9 @@ const PostDetail = ({
         handleScreenBackPressProp={handleScreenBackPressProp}
         onCommentOverflowMenuClickProp={onCommentOverflowMenuClickProp}
         onSharePostClicked={onSharePostClicked}
+        isHeadingEnabled={isHeadingEnabled}
+        isTopResponse={isTopResponse}
+        lmPostCustomFooter={lmPostCustomFooter}
       >
         <PostDetailComponent />
       </PostDetailCustomisableMethodsContextProvider>
@@ -231,6 +244,9 @@ const PostDetailComponent = React.memo(() => {
     handleScreenBackPressProp,
     onCommentOverflowMenuClickProp,
     onSharePostClicked,
+    isHeadingEnabled,
+    isTopResponse,
+    lmPostCustomFooter,
   } = usePostDetailCustomisableMethodsContext();
   const postHeaderStyle: any = postListStyle?.header;
   const customScreenHeader: any = postDetailStyle?.screenHeader;
@@ -276,6 +292,9 @@ const PostDetailComponent = React.memo(() => {
     return (
       <LMPost
         post={postDetail}
+        isHeadingEnabled={isHeadingEnabled}
+        isTopResponse={isTopResponse}
+        customFooter={lmPostCustomFooter}
         // header props
         headerProps={{
           onOverlayMenuClick: (event) =>
@@ -440,8 +459,8 @@ const PostDetailComponent = React.memo(() => {
                               style={{
                                 height: 11,
                                 backgroundColor: STYLES.$IS_DARK_THEME
-                                  ? "#121212"
-                                  : "#D0D8E2",
+                                  ? STYLES.$SEPARATOR_COLORS.DARK
+                                  : STYLES.$SEPARATOR_COLORS.LIGHT,
                               }}
                             />
                           ) : null}
@@ -562,7 +581,7 @@ const PostDetailComponent = React.memo(() => {
                                     commentLikeHandlerProp
                                       ? commentLikeHandlerProp(item?.postId, id)
                                       : commentLikeHandler(item?.postId, id);
-                                    postListStyle?.footer?.likeIconButton?.onTap()
+                                    postListStyle?.footer?.likeIconButton?.onTap();
                                   },
                                 }}
                                 // this executes on click of like text of comment
@@ -748,7 +767,7 @@ const PostDetailComponent = React.memo(() => {
               >
                 <FlatList
                   data={[...allTags]}
-                  renderItem={({ item }: { item: LMUserUI }) => {
+                  renderItem={({ item }: { item: LMUserViewData }) => {
                     return (
                       <Pressable
                         onPress={() => {
@@ -932,7 +951,7 @@ const PostDetailComponent = React.memo(() => {
               multilineField={
                 customCommentTextInput?.multilineField != undefined
                   ? customCommentTextInput?.multilineField
-                  : true
+                  : false
               }
               partTypes={[
                 {
@@ -1023,7 +1042,7 @@ const PostDetailComponent = React.memo(() => {
               multilineField={
                 customCommentTextInput?.multilineField != undefined
                   ? customCommentTextInput?.multilineField
-                  : true
+                  : false
               }
               partTypes={[
                 {

@@ -11,7 +11,7 @@ import {
 import { LMMemberListItem } from "../../components";
 import LMHeader from "../../components/LMHeader";
 import LMLoader from "../../components/LMLoader";
-import { LMLikeUI, LMUserUI, RootStackParamList } from "../../models";
+import { LMLikeViewData, LMUserViewData, RootStackParamList } from "../../models";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import STYLES from "../../constants/Styles";
 
@@ -24,7 +24,7 @@ interface PostLikesProps {
     params: Array<string>;
     path: undefined;
   };
-  onTapUserItemProp?: (user: LMUserUI) => void;
+  onTapUserItemProp?: (user: LMUserViewData) => void;
   handleScreenBackPressProp?: () => void;
 }
 
@@ -86,7 +86,7 @@ const PostLikesListComponent = React.memo(() => {
       {postLike?.length > 0 ? (
         <FlatList
           data={postLike}
-          renderItem={({ item }: { item: LMLikeUI }) => {
+          renderItem={({ item }: { item: LMLikeViewData }) => {
             return (
               <LMMemberListItem
                 likes={item}
