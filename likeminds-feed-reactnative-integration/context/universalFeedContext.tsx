@@ -158,7 +158,7 @@ export const UniversalFeedContextProvider = ({
     // calling getFeed API
     await dispatch(
       refreshFeed(
-        GetFeedRequest.builder().setpage(1).setpageSize(20).build(),
+        GetFeedRequest.builder().setPage(1).setPageSize(20).build(),
         false
       )
     );

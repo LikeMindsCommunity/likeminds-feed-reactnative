@@ -62,8 +62,8 @@ export const LMFeedProvider = ({
       const validateResponse = await dispatch(
         validateUser(
           ValidateUserRequest.builder()
-            .setaccessToken(accessToken)
-            .setrefreshToken(refreshToken)
+            .setAccessToken(accessToken)
+            .setRefreshToken(refreshToken)
             .build(),
           true
         )

@@ -73,9 +73,9 @@ export const PostLikesListContextProvider = ({
     const postLikesResponse = await dispatch(
       postLikes(
         GetPostLikesRequest.builder()
-          .setpostId(payload.postId)
-          .setpage(1)
-          .setpageSize(10)
+          .setPostId(payload.postId)
+          .setPage(1)
+          .setPageSize(10)
           .build(),
         false
       )
@@ -93,10 +93,10 @@ export const PostLikesListContextProvider = ({
     const commentLikesResponse = await dispatch(
       commentLikes(
         GetCommentLikesRequest.builder()
-          .setcommentId(payload.commentId)
-          .setpage(1)
-          .setpageSize(10)
-          .setpostId(payload.postId)
+          .setCommentId(payload.commentId)
+          .setPage(1)
+          .setPageSize(10)
+          .setPostId(payload.postId)
           .build(),
         false
       )
