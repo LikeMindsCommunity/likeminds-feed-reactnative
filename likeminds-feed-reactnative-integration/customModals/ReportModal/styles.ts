@@ -36,7 +36,8 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     paddingVertical: 8,
     paddingHorizontal: STYLES.$PADDINGS.MEDIUM,
-    margin: 8,
+    marginRight: 8,
+    marginVertical: 8,
     borderWidth: 1,
     borderColor: STYLES.$IS_DARK_THEME
       ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
@@ -76,7 +77,7 @@ const styles = StyleSheet.create({
       ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
       : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
     borderBottomWidth: 1,
-    paddingHorizontal: STYLES.$PADDINGS.LARGE,
+    paddingHorizontal: STYLES.$PADDINGS.MEDIUM,
     paddingVertical: STYLES.$PADDINGS.SMALL,
     alignItems: "center",
   },
@@ -88,18 +89,18 @@ const styles = StyleSheet.create({
   },
   contentView: {
     gap: 15,
-    paddingHorizontal: STYLES.$PADDINGS.LARGE,
+    paddingHorizontal: STYLES.$PADDINGS.MEDIUM,
     paddingTop: STYLES.$PADDINGS.SMALL,
   },
   tagView: {
     flexDirection: "row",
     flexWrap: "wrap",
     marginTop: STYLES.$MARGINS.MEDIUM,
-    paddingHorizontal: STYLES.$PADDINGS.LARGE,
+    paddingHorizontal: STYLES.$PADDINGS.MEDIUM,
   },
   otherSection: {
     marginTop: STYLES.$MARGINS.XL,
-    paddingHorizontal: STYLES.$PADDINGS.LARGE,
+    paddingHorizontal: STYLES.$PADDINGS.MEDIUM,
   },
   otherTextInput: {
     margin: 12,

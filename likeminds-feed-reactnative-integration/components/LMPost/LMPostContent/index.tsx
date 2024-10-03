@@ -32,7 +32,7 @@ const LMPostContent = React.memo(() => {
     let text = "";
 
     //get lines after it truncate
-    if (lines.length >= MAX_LINES) {
+    if (lines.length > MAX_LINES) {
       if (Array.isArray(lines)) {
         text = lines
           .splice(0, MAX_LINES)
@@ -47,7 +47,7 @@ const LMPostContent = React.memo(() => {
     <View
       style={StyleSheet.flatten([
         postContentStyle?.postContentViewStyle,
-        { paddingHorizontal: 16, paddingTop: 15 },
+        { paddingHorizontal: 16, paddingTop: 15, paddingBottom: 10 },
       ])}
     >
       {/* post content text */}

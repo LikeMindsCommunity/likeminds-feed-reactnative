@@ -157,6 +157,8 @@ const CreatePostComponent = () => {
   const selectTopicPlaceholder = topicsStyle?.selectTopicPlaceholder;
   const selectedTopicsStyle = topicsStyle?.selectedTopicsStyle;
   const plusIconStyle = topicsStyle?.plusIconStyle;
+
+  const MAX_LENGTH = 200;
   let {
     navigation,
     postToEdit,
@@ -585,7 +587,18 @@ const CreatePostComponent = () => {
               onChangeText={handleHeadingInputChange}
               placeholder={QnA_FEED_CREATE_POST_HEADING_PLACEHOLDER_TEXT}
               placeholderTextColor={"grey"}
-              style={{ fontSize: 16, color: "black", fontWeight: "600" }}
+              multiline
+              maxLength={MAX_LENGTH}
+              style={{
+                fontSize: 16,
+                color: STYLES.$IS_DARK_THEME
+                  ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+                  : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+                fontWeight: "600",
+                flex: 1,
+                maxHeight: 100,
+              }}
+              autoCapitalize="sentences"
             />
           </View>
         ) : null}
@@ -593,12 +606,26 @@ const CreatePostComponent = () => {
         {isHeadingEnabled ? (
           <View
             style={{
-              borderColor: STYLES.$IS_DARK_THEME ? STYLES.$SEPARATOR_COLORS.DARK : STYLES.$SEPARATOR_COLORS.LIGHT,
+              borderColor: STYLES.$IS_DARK_THEME
+                ? STYLES.$SEPARATOR_COLORS.DARK
+                : STYLES.$SEPARATOR_COLORS.LIGHT,
               borderWidth: 1,
               marginHorizontal: 15,
               marginTop: 10,
             }}
           />
+        ) : null}
+
+        {isHeadingEnabled ? (
+          <Text
+            style={{
+              marginHorizontal: 15,
+              textAlign: "right",
+              color: STYLES.$IS_DARK_THEME
+                ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
+            }}
+          >{`${heading.length}/${MAX_LENGTH}`}</Text>
         ) : null}
 
         {/* text input field */}
@@ -645,6 +672,7 @@ const CreatePostComponent = () => {
               }, // The mention style in the input
             },
           ]}
+          autoCapitalize="sentences"
         />
 
         {/* users tagging list */}
@@ -1020,7 +1048,9 @@ const CreatePostComponent = () => {
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             disabled={
               postToEdit
-                ? false
+                ? isHeadingEnabled
+                  ? heading?.trim() === ""
+                  : false
                 : isHeadingEnabled
                 ? heading?.trim() !== ""
                   ? false
@@ -1034,7 +1064,11 @@ const CreatePostComponent = () => {
             }
             style={
               postToEdit
-                ? styles.enabledOpacity
+                ? isHeadingEnabled
+                  ? heading?.trim() !== ""
+                    ? styles.enabledOpacity
+                    : styles.disabledOpacity
+                  : styles.enabledOpacity
                 : isHeadingEnabled
                 ? heading?.trim() !== ""
                   ? styles.enabledOpacity

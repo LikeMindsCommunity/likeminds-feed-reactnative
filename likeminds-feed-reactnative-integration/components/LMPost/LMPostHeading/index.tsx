@@ -20,7 +20,7 @@ const LMPostHeading = () => {
     let text = "";
 
     //get lines after it truncate
-    if (lines.length >= MAX_LINES) {
+    if (lines.length > MAX_LINES) {
       if (Array.isArray(lines)) {
         text = lines
           .splice(0, MAX_LINES)
@@ -36,7 +36,8 @@ const LMPostHeading = () => {
       {truncatedText ? (
         <MoreLessComponent
           truncatedText={truncatedText}
-          fullText={post?.text}
+          fullText={post?.heading}
+          isDecoding={true}
           textStyle={StyleSheet.flatten([
             {
               fontSize: 16,

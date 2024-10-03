@@ -22,7 +22,7 @@ const LMPostTopResponse = () => {
     let text = "";
 
     //get lines after it truncate
-    if (lines.length >= MAX_LINES) {
+    if (lines.length > MAX_LINES) {
       if (Array.isArray(lines)) {
         text = lines
           .splice(0, MAX_LINES)
@@ -35,7 +35,7 @@ const LMPostTopResponse = () => {
   return (
     <>
       {Object.keys(post?.filteredComments).length > 0 ? (
-        <View style={{ paddingHorizontal: 15, paddingVertical: 10 }}>
+        <View style={{ paddingHorizontal: 15, paddingBottom: 10 }}>
           <Text
             style={[
               {
