@@ -1,3 +1,5 @@
+import { WordAction } from "../enums/Variables";
+
 // @ts-nocheck 
 
 function Pluralize() {
@@ -490,17 +492,17 @@ function Pluralize() {
 
 export default function pluralizeOrCapitalize(word: string, action: string) {
     switch (action) {
-        case WordAction.FIRST_LETTER_CAPITAL_SINGULAR:
+        case WordAction.firstLetterCapitalSingular:
             return manipulateString((Pluralize().singular(word) as string),WordAction.capitalizeFirst);
-        case WordAction.ALL_CAPITAL_SINGULAR:
+        case WordAction.allCapitalSingular:
             return manipulateString((Pluralize().singular(word) as string),WordAction.capitalizeAll);
-        case WordAction.ALL_SMALL_SINGULAR:
+        case WordAction.allSmallSingular:
             return manipulateString((Pluralize().singular(word) as string),WordAction.lowerCaseAll);
-        case WordAction.FIRST_LETTER_CAPITAL_PLURAL:
+        case WordAction.firstLetterCapitalPlural:
             return manipulateString((Pluralize().plural(word) as string),WordAction.capitalizeFirst);
-        case WordAction.ALL_CAPITAL_PLURAL:
+        case WordAction.allCapitalPlural:
             return manipulateString((Pluralize().plural(word) as string),WordAction.capitalizeAll);
-        case WordAction.ALL_SMALL_PLURAL:
+        case WordAction.allSmallPlural:
             return manipulateString((Pluralize().plural(word) as string),WordAction.lowerCaseAll);
         default:
             throw new Error("Invalid WordAction");
