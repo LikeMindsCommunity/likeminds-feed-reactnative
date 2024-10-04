@@ -1,6 +1,6 @@
+// @ts-nocheck 
 import { WordAction } from "../enums/Variables";
 
-// @ts-nocheck 
 
 function Pluralize() {
     // Rule storage - pluralize and singularize need to be run sequentially,
