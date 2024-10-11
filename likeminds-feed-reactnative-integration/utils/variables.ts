@@ -509,7 +509,7 @@ export default function pluralizeOrCapitalize(word: string, action: string) {
     }
 }
 
-function manipulateString(str: string, action: string) {
+export function manipulateString(str: string, action: string) {
     switch (action) {
       case WordAction.capitalizeFirst:
         return str.charAt(0).toUpperCase() + str.slice(1);
