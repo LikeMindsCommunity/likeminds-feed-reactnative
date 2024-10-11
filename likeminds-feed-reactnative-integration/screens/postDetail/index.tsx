@@ -72,9 +72,9 @@ import {
   SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
 } from "../../store/types/types";
 import STYLES from "../../constants/Styles";
-import pluralizeOrCapitalize from "@likeminds.community/feed-rn-core/utils/variables";
-import { CommunityConfigs } from "@likeminds.community/feed-rn-core/communityConfigs";
-import { WordAction } from "@likeminds.community/feed-rn-core/enums/Variables";
+import pluralizeOrCapitalize from "../../utils/variables";
+import { CommunityConfigs } from "../../communityConfigs";
+import { WordAction } from "../..//enums/Variables";
 
 interface PostDetailProps {
   children?: React.ReactNode;
@@ -648,7 +648,7 @@ const PostDetailComponent = React.memo(() => {
                               postDetailStyle?.noCommentHeadingTextStyle,
                             ]}
                           >
-                            No {(pluralizeOrCapitalize(CommunityConfigs.communityConfigs[1].value.comment,WordAction.firstLetterCapitalSingular))} found
+                            No {(pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.comment,WordAction.firstLetterCapitalSingular))} found
                           </Text>
                           <Text
                             style={[
@@ -656,7 +656,7 @@ const PostDetailComponent = React.memo(() => {
                               postDetailStyle?.noCommentSubHeadingTextStyle,
                             ]}
                           >
-                            Be the first one to {(pluralizeOrCapitalize(CommunityConfigs.communityConfigs[1].value.comment,WordAction.firstLetterCapitalSingular))}
+                            Be the first one to {(pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.comment,WordAction.firstLetterCapitalSingular))}
                           </Text>
                         </View>
                       }
@@ -869,7 +869,7 @@ const PostDetailComponent = React.memo(() => {
                 fontFamily: STYLES.$FONT_TYPES.LIGHT,
               }}
             >
-              Deleted {pluralizeOrCapitalize(CommunityConfigs.communityConfigs[1]?.value?.post,WordAction.allSmallSingular)}
+              Deleted {pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post,WordAction.allSmallSingular)}
             </Text>
           </View>
         ) : null}
@@ -906,7 +906,7 @@ const PostDetailComponent = React.memo(() => {
               placeholderText={
                 customCommentTextInput?.placeholderText
                   ? customCommentTextInput?.placeholderText
-                  : `Write a ${pluralizeOrCapitalize(CommunityConfigs.communityConfigs[1]?.value?.comment,WordAction.allSmallSingular)}`
+                  : `Write a ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.comment,WordAction.allSmallSingular)}`
               }
               placeholderTextColor={
                 customCommentTextInput?.placeholderTextColor
@@ -997,7 +997,7 @@ const PostDetailComponent = React.memo(() => {
               placeholderText={
                 customCommentTextInput?.placeholderText
                   ? customCommentTextInput?.placeholderText
-                  : `Write a ${(pluralizeOrCapitalize(CommunityConfigs.communityConfigs[1].value.comment,WordAction.firstLetterCapitalSingular))}`
+                  : `Write a ${(pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.comment,WordAction.firstLetterCapitalSingular))}`
               }
               placeholderTextColor={
                 customCommentTextInput?.placeholderTextColor
@@ -1061,7 +1061,7 @@ const PostDetailComponent = React.memo(() => {
             !showLoader && (
               <View style={styles.textContainer}>
                 <Text style={styles.disabledText}>
-                  You don't have permission to {(pluralizeOrCapitalize(CommunityConfigs.communityConfigs[1].value.comment,WordAction.firstLetterCapitalSingular))}
+                  You don't have permission to {(pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.comment,WordAction.firstLetterCapitalSingular))}
                 </Text>
               </View>
             )
@@ -1131,5 +1131,5 @@ const PostDetailComponent = React.memo(() => {
     </SafeAreaView>
   );
 });
-console.log(CommunityConfigs.communityConfigs)
+
 export { PostDetail };

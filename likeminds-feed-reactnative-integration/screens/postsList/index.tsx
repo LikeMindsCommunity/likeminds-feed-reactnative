@@ -328,7 +328,7 @@ const PostsListComponent = ({ topics, lmPostCustomFooter }: any) => {
                 postListStyle?.noPostText,
               ]}
             >
-              No {pluralizeOrCapitalize(CommunityConfigs?.communityConfigs[1]?.value?.post ?? "posted",WordAction.firstLetterCapitalSingular)}
+              No {pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post ?? "posted",WordAction.firstLetterCapitalSingular)}
             </Text>
           </View>
         )
