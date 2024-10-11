@@ -14,6 +14,9 @@ import {
 } from "../../context";
 import { useAppDispatch } from "../../store/store";
 import STYLES from "../../constants/Styles";
+import { CommunityConfigs } from "../../communityConfigs";
+import pluralizeOrCapitalize from "../../utils/variables";
+import { WordAction } from "../../enums/Variables";
 
 const LMCreatePostButton = ({ customText }: { customText?: string }) => {
   const dispatch = useAppDispatch();
@@ -53,7 +56,7 @@ const LMCreatePostButton = ({ customText }: { customText?: string }) => {
         {...universalFeedStyle?.newPostIcon}
       />
       <Text style={[styles.newPostText, universalFeedStyle?.newPostButtonText]}>
-        {customText ? customText : "NEW POST"}
+        {customText ? customText : `NEW ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post,WordAction.allCapitalSingular)}`}
       </Text>
     </TouchableOpacity>
   );

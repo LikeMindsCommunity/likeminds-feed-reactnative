@@ -16,6 +16,9 @@ import Layout from "../../constants/Layout";
 import STYLES from "../../constants/Styles";
 import { styles } from "../../screens/universalFeed/styles";
 import { TOPIC_FEED } from "../../constants/screenNames";
+import { CommunityConfigs } from "../../communityConfigs";
+import { WordAction } from "../../enums/Variables";
+import pluralizeOrCapitalize from "../../utils/variables";
 
 const LMFilterTopics = () => {
   const dispatch = useAppDispatch();
@@ -302,7 +305,7 @@ const LMFilterTopics = () => {
       {/* posts list section */}
       {!isAnyMatchFound ? (
         <View style={[styles.justifyCenter]}>
-          <Text style={styles.title}>No matching post found</Text>
+          <Text style={styles.title}>No matching {pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post,WordAction.allSmallSingular)} found</Text>
         </View>
       ) : (
         <></>

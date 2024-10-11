@@ -7,6 +7,9 @@ import { LMFeedAnalytics } from "../../../analytics/LMFeedAnalytics";
 import { Events } from "../../../enums/Events";
 import { Keys } from "../../../enums/Keys";
 import STYLES from "../../../constants/Styles";
+import { CommunityConfigs } from "../../../communityConfigs";
+import { WordAction } from "../../../enums/Variables";
+import pluralizeOrCapitalize from "../../../utils/variables";
 
 const LMPostFooter = React.memo(() => {
   const { post, footerProps }: LMPostContextValues = useLMPostContext();
@@ -109,9 +112,9 @@ const LMPostFooter = React.memo(() => {
             text={{
               children: likeCount
                 ? likeCount > 1
-                  ? `${likeCount} Likes`
-                  : `${likeCount} Like`
-                : "Like",
+                  ? `${likeCount} ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1]).value?.likeEntityVariable?.entityName,WordAction.firstLetterCapitalPlural)}`
+                  : `${likeCount} ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.likeEntityVariable?.entityName,WordAction.firstLetterCapitalSingular)}`
+                : `${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.likeEntityVariable?.entityName,WordAction.firstLetterCapitalSingular)}`,
               textStyle: footerStyle?.likeTextButton?.text
                 ? footerStyle?.likeTextButton.text
                 : {
@@ -145,9 +148,9 @@ const LMPostFooter = React.memo(() => {
               children:
                 post?.commentsCount > 0
                   ? post?.commentsCount > 1
-                    ? `${post?.commentsCount} Comments`
-                    : `${post?.commentsCount} Comment`
-                  : "Add Comment",
+                    ? `${post?.commentsCount} ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.comment,WordAction.firstLetterCapitalPlural)}`
+                    : `${post?.commentsCount} ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.comment,WordAction.firstLetterCapitalSingular)}`
+                  : `Add ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.comment,WordAction.firstLetterCapitalSingular)}`,
               textStyle: footerStyle?.commentButton?.text
                 ? footerStyle?.commentButton.text
                 : {

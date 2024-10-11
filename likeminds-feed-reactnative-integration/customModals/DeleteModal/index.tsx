@@ -44,6 +44,9 @@ import { getPostType } from "../../utils/analytics";
 import { UNIVERSAL_FEED } from "../../constants/screenNames";
 import { Client } from "../../client";
 import { usePostDetailContext } from "../../context";
+import { CommunityConfigs } from "../../communityConfigs";
+import { WordAction } from "../../enums/Variables";
+import pluralizeOrCapitalize from "../../utils/variables";
 
 // delete modal's props
 interface DeleteModalProps {
@@ -281,9 +284,9 @@ const DeleteModal = ({
                 {/* main modal section */}
                 <TouchableWithoutFeedback>
                   <View style={styles.modalContainer}>
-                    <Text style={styles.textHeading}>Delete {deleteType}?</Text>
+                    <Text style={styles.textHeading}>Delete {(pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post,WordAction.allSmallSingular))}?</Text>
                     <Text style={styles.text}>
-                      {CONFIRM_DELETE(deleteType)}
+                      {CONFIRM_DELETE(pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post,WordAction.allSmallSingular))}
                     </Text>
 
                     {/* delete reason selection section */}
