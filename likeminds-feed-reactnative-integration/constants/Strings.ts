@@ -1,3 +1,7 @@
+import { Configuration } from "../communityConfigs";
+import { WordAction } from "../enums/Variables";
+import pluralizeOrCapitalize from "../utils/variables";
+
 // post attachment types
 export const IMAGE_ATTACHMENT_TYPE = 1;
 export const VIDEO_ATTACHMENT_TYPE = 2;
@@ -26,18 +30,18 @@ export const COMMENT_TYPE = "comment";
 export const REPLY_TYPE = "reply";
 
 // toast messages
-export const REPORTED_SUCCESSFULLY = "Post Reported!";
-export const COMMENT_REPORTED_SUCCESSFULLY = "Comment Reported!";
+export let REPORTED_SUCCESSFULLY = "Post Reported!";
+export let COMMENT_REPORTED_SUCCESSFULLY = "Comment Reported!";
 export const SOMETHING_WENT_WRONG = "Something Went Wrong";
-export const REASON_FOR_REPORTING_PLACEHOLDER =
+export let REASON_FOR_REPORTING_PLACEHOLDER =
   "Enter the reason for reporting this post";
-export const REASON_FOR_DELETION_PLACEHOLDER =
+export let REASON_FOR_DELETION_PLACEHOLDER =
   "Enter the reason for deleting this post";
-export const ENTER_REASON_FOR_DELETION =
+export let ENTER_REASON_FOR_DELETION =
   "Please enter a specific reason for deleting this post";
 // pin option in menu items
-export const PIN_THIS_POST = "Pin this Post";
-export const UNPIN_THIS_POST = "Unpin this Post";
+export let PIN_THIS_POST = "Pin this Post";
+export let UNPIN_THIS_POST = "Unpin this Post";
 export const PIN_POST_ID = 2;
 export const UNPIN_POST_ID = 3;
 
@@ -88,25 +92,25 @@ export const STORAGE_PERMISSION_ALERT_DESCRIPTION =
   "App needs access to your storage to read files. Please go to app settings and grant permission.";
 
 // toast messages
-export const POST_DELETE = "Post Deleted!";
-export const COMMENT_DELETE = "Comment Deleted!";
+export let POST_DELETE = "Post Deleted!";
+export let COMMENT_DELETE = "Comment Deleted!";
 export const REPORT_REASON_VALIDATION = "Please enter a reason";
-export const POST_UPLOADED = "Your post was shared";
-export const POST_PIN_SUCCESS = "Post pinned to top!";
-export const POST_UNPIN_SUCCESS = "Post unpinned!";
-export const POST_UPLOAD_INPROGRESS = "A post is already uploading!";
-export const CREATE_POST_PERMISSION =
+export let POST_UPLOADED = "Your post was shared";
+export let POST_PIN_SUCCESS = "Post pinned to top!";
+export let POST_UNPIN_SUCCESS = "Post unpinned!";
+export let POST_UPLOAD_INPROGRESS = "A post is already uploading!";
+export let CREATE_POST_PERMISSION =
   "You do not have permission to create a post.";
 export const FILE_UPLOAD_SIZE_VALIDATION =
   "Files below 100 KB and above 100MB are not allowed";
 export const FILE_UPLOAD_IMAGE_SIZE_VALIDATION = "Max file size allowed: <x>Mb";
 export const FILE_UPLOAD_VIDEO_SIZE_VALIDATION = "Max file size allowed: <x>Mb";
 export const MEDIA_UPLOAD_COUNT_VALIDATION = "You can select upto 10 items!";
-export const POST_SAVED_SUCCESS = "Post saved!";
-export const POST_UNSAVED_SUCCESS = "Post unsaved!";
+export let POST_SAVED_SUCCESS = "Post saved!";
+export let POST_UNSAVED_SUCCESS = "Post unsaved!";
 
-export const POST_LIKES = "Post likes";
-export const COMMENT_LIKES = "Comment likes";
+export let POST_LIKES = "Post likes";
+export let COMMENT_LIKES = "Comment likes";
 export const DELETE_REASON_SELECTION = "Please select a reason for deletion";
 
 export const IMAGE_TEXT = "image";
@@ -188,3 +192,33 @@ export const POLL_MULTIPLE_STATE_MAX = 1;
 export const POLL_MULTIPLE_STATE_LEAST = 2;
 export const OKAY = "Okay";
 export const NO_RESPONSES = "No Response";
+
+export function updateVariables (communityConfig: Configuration[]) {
+    const POST = (communityConfig[1])?.value?.post ?? "post"
+    const COMMENT = (communityConfig[1])?.value?.comment ?? "comment"
+    const LIKE = (communityConfig[1])?.value?.likeEntityVariable?.entityName ?? "like"
+
+
+    REPORTED_SUCCESSFULLY = `${pluralizeOrCapitalize(POST,WordAction.firstLetterCapitalSingular)} Reported!`;
+    COMMENT_REPORTED_SUCCESSFULLY = `${pluralizeOrCapitalize(COMMENT,WordAction.firstLetterCapitalSingular)} Reported!`;
+    REASON_FOR_REPORTING_PLACEHOLDER =
+      `Enter the reason for reporting this ${pluralizeOrCapitalize(POST,WordAction.allSmallSingular)}`;
+    REASON_FOR_DELETION_PLACEHOLDER =
+      `Enter the reason for deleting this ${pluralizeOrCapitalize(POST,WordAction.allSmallSingular)}`;
+    ENTER_REASON_FOR_DELETION =
+      `Please enter a specific reason for deleting this ${pluralizeOrCapitalize(POST,WordAction.allSmallSingular)}`;
+    PIN_THIS_POST = `Pin this ${pluralizeOrCapitalize(POST,WordAction.allSmallSingular)}`;
+    UNPIN_THIS_POST = `Unpin this ${pluralizeOrCapitalize(POST,WordAction.allSmallSingular)}`;
+    POST_DELETE = `${pluralizeOrCapitalize(POST,WordAction.firstLetterCapitalSingular)} Deleted!`;
+    COMMENT_DELETE = `${pluralizeOrCapitalize(COMMENT,WordAction.allSmallSingular)} Deleted!`;
+    POST_UPLOADED = `Your ${pluralizeOrCapitalize(POST,WordAction.allSmallSingular)} was shared`;
+    POST_PIN_SUCCESS = `${pluralizeOrCapitalize(POST,WordAction.firstLetterCapitalSingular)} pinned to top!`;
+    POST_UNPIN_SUCCESS = `${pluralizeOrCapitalize(POST,WordAction.firstLetterCapitalSingular)} unpinned!`;
+    POST_UPLOAD_INPROGRESS = `A ${pluralizeOrCapitalize(POST,WordAction.allSmallSingular)} is already uploading!`;
+    CREATE_POST_PERMISSION =
+      `You do not have permission to create a ${pluralizeOrCapitalize(POST,WordAction.allSmallSingular)}.`;
+    POST_SAVED_SUCCESS = `${pluralizeOrCapitalize(POST,WordAction.firstLetterCapitalSingular)} saved!`;
+    POST_UNSAVED_SUCCESS = `${pluralizeOrCapitalize(POST,WordAction.firstLetterCapitalSingular)} unsaved!`;
+    POST_LIKES = `${pluralizeOrCapitalize(POST,WordAction.firstLetterCapitalSingular)} ${pluralizeOrCapitalize(LIKE,WordAction.allSmallPlural)}`;
+    COMMENT_LIKES = `${pluralizeOrCapitalize(COMMENT,WordAction.firstLetterCapitalSingular)} ${pluralizeOrCapitalize(LIKE,WordAction.allSmallPlural)}`;
+}

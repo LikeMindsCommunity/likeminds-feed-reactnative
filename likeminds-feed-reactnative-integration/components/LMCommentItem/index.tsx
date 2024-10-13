@@ -25,7 +25,9 @@ import { useAppSelector } from "../../store/store";
 import { MemberRightsEnum } from "../../enums/MemberRightsEnum";
 import STYLES from "../../constants/Styles";
 import { usePostDetailContext } from "../../context";
-
+import { CommunityConfigs } from "../../communityConfigs";
+import pluralizeOrCapitalize from "../../utils/variables";
+import { WordAction } from "../../enums/Variables";
 const LMCommentItem = React.memo(
   ({
     likeIconButton,
@@ -260,11 +262,11 @@ const LMCommentItem = React.memo(
                   children:
                     commentLikeCount > 1 ? (
                       <Text style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}>
-                        {commentLikeCount} Likes
+                        {commentLikeCount} {pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.likeEntityVariable?.entityName,WordAction.firstLetterCapitalPlural)}
                       </Text>
                     ) : (
                       <Text style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}>
-                        {commentLikeCount} Like
+                        {commentLikeCount} {pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.likeEntityVariable?.entityName,WordAction.firstLetterCapitalSingular)}
                       </Text>
                     ),
                   textStyle: {
