@@ -47,17 +47,28 @@ import { getPostType } from "../../utils/analytics";
 import { SET_FLOW_TO_POST_DETAIL_SCREEN } from "../../store/types/types";
 import STYLES from "../../constants/Styles";
 
-const PostsList = ({ route, children, items, lmPostCustomFooter }: any) => {
+const PostsList = ({
+  route,
+  children,
+  items,
+  lmPostCustomFooter,
+  customWidgetPostView,
+}: any) => {
   const { navigation }: UniversalFeedContextValues = useUniversalFeedContext();
   return (
     <PostsListComponent
       topics={items}
       lmPostCustomFooter={lmPostCustomFooter}
+      customWidgetPostView={customWidgetPostView}
     />
   );
 };
 
-const PostsListComponent = ({ topics, lmPostCustomFooter }: any) => {
+const PostsListComponent = ({
+  topics,
+  lmPostCustomFooter,
+  customWidgetPostView,
+}: any) => {
   const dispatch = useAppDispatch();
   const {
     listRef,
@@ -274,6 +285,7 @@ const PostsListComponent = ({ topics, lmPostCustomFooter }: any) => {
                         },
                       }}
                       customFooter={lmPostCustomFooter}
+                      customWidgetPostView={customWidgetPostView}
                     />
                   </TouchableOpacity>
                 );

@@ -16,6 +16,7 @@ interface LMPostContextProps {
   isHeadingEnabled: boolean;
   isTopResponse: boolean;
   customFooter?: ReactNode;
+  customWidgetPostView?: ReactNode;
 }
 
 export interface LMPostContextValues {
@@ -29,6 +30,7 @@ export interface LMPostContextValues {
   isHeadingEnabled: boolean;
   isTopResponse: boolean;
   customFooter?: ReactNode;
+  customWidgetPostView?: ReactNode;
 }
 
 const LMPostContext = createContext<LMPostContextValues | undefined>(undefined);
@@ -54,6 +56,7 @@ export const LMPostContextProvider = ({
   isHeadingEnabled = false,
   isTopResponse = false,
   customFooter,
+  customWidgetPostView,
 }: LMPostContextProps) => {
   const contextValues: LMPostContextValues = {
     navigation,
@@ -66,6 +69,7 @@ export const LMPostContextProvider = ({
     isHeadingEnabled,
     isTopResponse,
     customFooter,
+    customWidgetPostView,
   };
 
   return (

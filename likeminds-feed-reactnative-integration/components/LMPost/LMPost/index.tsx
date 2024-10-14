@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useMemo } from "react";
 import LMPostHeader from "../LMPostHeader";
 import LMPostContent from "../LMPostContent";
 import LMPostMedia from "../LMPostMedia";
@@ -24,6 +24,7 @@ const LMPost = ({
   isHeadingEnabled,
   isTopResponse,
   customFooter,
+  customWidgetPostView,
 }: any) => {
   return (
     <LMPostContextProvider
@@ -36,16 +37,47 @@ const LMPost = ({
       isHeadingEnabled={isHeadingEnabled}
       isTopResponse={isTopResponse}
       customFooter={customFooter}
+      customWidgetPostView={customWidgetPostView}
     >
       <LMPostComponent />
     </LMPostContextProvider>
   );
 };
 const LMPostComponent = React.memo(() => {
-  const { post, isHeadingEnabled, isTopResponse, customFooter } =
-    useLMPostContext();
+  const {
+    post,
+    isHeadingEnabled,
+    isTopResponse,
+    customFooter,
+    customWidgetPostView,
+  } = useLMPostContext();
   const allTopics = useAppSelector((state) => state.feed.topics);
   const postListStyle = STYLES.$POST_LIST_STYLE;
+
+  const showCustomPostViewWidget = useMemo(() => {
+    if (post?.attachments && post?.attachments.length > 0) {
+      const attachments = post.attachments;
+      const attachmentLength = attachments.length;
+      let noOfCustomViewAttachments = 0;
+      for (const attachment of attachments) {
+        if (attachment.attachmentType.toString() === "5") {
+          noOfCustomViewAttachments++;
+        }
+      }
+      if (noOfCustomViewAttachments === attachmentLength) {
+        return true;
+      } else {
+        false;
+      }
+    } else {
+      return false;
+    }
+  }, [post]);
+  if (showCustomPostViewWidget) {
+    // TODO Custom Widget
+    // Render the complete custom Post View widget
+    return customWidgetPostView;
+  }
 
   return (
     <View style={styles.mainContainer}>
