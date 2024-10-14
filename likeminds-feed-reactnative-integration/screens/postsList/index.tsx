@@ -46,6 +46,9 @@ import { Keys } from "../../enums/Keys";
 import { getPostType } from "../../utils/analytics";
 import { SET_FLOW_TO_POST_DETAIL_SCREEN } from "../../store/types/types";
 import STYLES from "../../constants/Styles";
+import { CommunityConfigs } from "../../communityConfigs";
+import { WordAction } from "../../enums/Variables";
+import pluralizeOrCapitalize from "../../utils/variables";
 
 const PostsList = ({ route, children, items, lmPostCustomFooter }: any) => {
   const { navigation }: UniversalFeedContextValues = useUniversalFeedContext();
@@ -178,7 +181,7 @@ const PostsListComponent = ({ topics, lmPostCustomFooter }: any) => {
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
             data={feedData}
-            renderItem={({ item }: { item: LMPostViewData }) => {
+            renderItem={({ item, index }: { item: LMPostViewData, index: number }) => {
               // Log the item before rendering
 
               // Check if the item's topic matches any name in the topics array
@@ -191,91 +194,103 @@ const PostsListComponent = ({ topics, lmPostCustomFooter }: any) => {
 
               if (isTopicMatched || topics.length === 0) {
                 return (
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    style={{
-                      backgroundColor: STYLES.$IS_DARK_THEME
-                        ? STYLES.$BACKGROUND_COLORS.DARK
-                        : STYLES.$BACKGROUND_COLORS.LIGHT,
-                    }}
-                    onPress={() => {
-                      dispatch(clearPostDetail() as any);
-                      dispatch({
-                        type: SET_FLOW_TO_POST_DETAIL_SCREEN,
-                        body: { flowToPostDetailScreen: true },
-                      });
-                      navigation.navigate(POST_DETAIL, [
-                        item?.id,
-                        NAVIGATED_FROM_POST,
-                      ]);
-                    }}
-                    key={item?.id}
-                  >
-                    <LMPost
-                      isHeadingEnabled={isHeadingEnabled}
-                      isTopResponse={isTopResponse}
-                      post={item}
-                      // header props
-                      headerProps={{
-                        postMenu: {
-                          modalPosition: modalPosition,
-                          modalVisible: showActionListModal,
-                          onCloseModal: closePostActionListModal,
-                          onSelected: (postId, itemId) => {
-                            onMenuItemSelect(postId, itemId, item?.isPinned);
-                          },
-                        },
-                        onOverlayMenuClick: (event) => {
-                          onOverlayMenuClickProp
-                            ? onOverlayMenuClickProp(
-                                event,
-                                item?.menuItems,
-                                item?.id
-                              )
-                            : onOverlayMenuClick(event, item?.id);
-                        },
+                  <>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      style={{
+                        backgroundColor: STYLES.$IS_DARK_THEME
+                          ? STYLES.$BACKGROUND_COLORS.DARK
+                          : STYLES.$BACKGROUND_COLORS.LIGHT,
                       }}
-                      // footer props
-                      footerProps={{
-                        likeIconButton: {
-                          onTap: () => {
-                            postLikeHandlerProp
-                              ? postLikeHandlerProp(item?.id)
-                              : postLikeHandler(item?.id);
-                          },
-                        },
-                        saveButton: {
-                          onTap: () => {
-                            savePostHandlerProp
-                              ? savePostHandlerProp(item?.id, item?.isSaved)
-                              : savePostHandler(item?.id, item?.isSaved);
-                          },
-                        },
-                        likeTextButton: {
-                          onTap: () => {
-                            onTapLikeCountProps
-                              ? onTapLikeCountProps(item?.id)
-                              : onTapLikeCount(item?.id);
-                          },
-                        },
-                        commentButton: {
-                          onTap: () => {
-                            onSelectCommentCountProp
-                              ? onSelectCommentCountProp(item?.id)
-                              : onTapCommentCount(item?.id);
-                          },
-                        },
-                        shareButton: {
-                          onTap: () => {
-                            onSharePostClicked
-                              ? onSharePostClicked(item?.id)
-                              : {};
-                          },
-                        },
+                      onPress={() => {
+                        dispatch(clearPostDetail() as any);
+                        dispatch({
+                          type: SET_FLOW_TO_POST_DETAIL_SCREEN,
+                          body: { flowToPostDetailScreen: true },
+                        });
+                        navigation.navigate(POST_DETAIL, [
+                          item?.id,
+                          NAVIGATED_FROM_POST,
+                        ]);
                       }}
-                      customFooter={lmPostCustomFooter}
+                      key={item?.id}
+                    >
+                      <LMPost
+                        isHeadingEnabled={isHeadingEnabled}
+                        isTopResponse={isTopResponse}
+                        post={item}
+                        // header props
+                        headerProps={{
+                          postMenu: {
+                            modalPosition: modalPosition,
+                            modalVisible: showActionListModal,
+                            onCloseModal: closePostActionListModal,
+                            onSelected: (postId, itemId) => {
+                              onMenuItemSelect(postId, itemId, item?.isPinned);
+                            },
+                          },
+                          onOverlayMenuClick: (event) => {
+                            onOverlayMenuClickProp
+                              ? onOverlayMenuClickProp(
+                                  event,
+                                  item?.menuItems,
+                                  item?.id
+                                )
+                              : onOverlayMenuClick(event, item?.id);
+                          },
+                        }}
+                        // footer props
+                        footerProps={{
+                          likeIconButton: {
+                            onTap: () => {
+                              postLikeHandlerProp
+                                ? postLikeHandlerProp(item?.id)
+                                : postLikeHandler(item?.id);
+                            },
+                          },
+                          saveButton: {
+                            onTap: () => {
+                              savePostHandlerProp
+                                ? savePostHandlerProp(item?.id, item?.isSaved)
+                                : savePostHandler(item?.id, item?.isSaved);
+                            },
+                          },
+                          likeTextButton: {
+                            onTap: () => {
+                              onTapLikeCountProps
+                                ? onTapLikeCountProps(item?.id)
+                                : onTapLikeCount(item?.id);
+                            },
+                          },
+                          commentButton: {
+                            onTap: () => {
+                              onSelectCommentCountProp
+                                ? onSelectCommentCountProp(item?.id)
+                                : onTapCommentCount(item?.id);
+                            },
+                          },
+                          shareButton: {
+                            onTap: () => {
+                              onSharePostClicked
+                                ? onSharePostClicked(item?.id)
+                                : {};
+                            },
+                          },
+                        }}
+                        customFooter={lmPostCustomFooter}
+                      />
+                    </TouchableOpacity>
+                    {!postListStyle.shouldHideSeparator && index != feedData.length - 1 ? (
+                    <View
+                      style={{
+                        height: 11,
+                        backgroundColor: STYLES.$IS_DARK_THEME
+                          ? STYLES.$SEPARATOR_COLORS.DARK
+                          : STYLES.$SEPARATOR_COLORS.LIGHT,
+                      }}
                     />
-                  </TouchableOpacity>
+                  ) : null}
+                  </>
                 );
               } else {
                 return null;
@@ -295,22 +310,6 @@ const PostsListComponent = ({ topics, lmPostCustomFooter }: any) => {
               }
             }}
             viewabilityConfig={{ viewAreaCoveragePercentThreshold: 60 }}
-            ItemSeparatorComponent={() => {
-              return (
-                <>
-                  {!postListStyle.shouldHideSeparator ? (
-                    <View
-                      style={{
-                        height: 11,
-                        backgroundColor: STYLES.$IS_DARK_THEME
-                          ? STYLES.$SEPARATOR_COLORS.DARK
-                          : STYLES.$SEPARATOR_COLORS.LIGHT,
-                      }}
-                    />
-                  ) : null}
-                </>
-              );
-            }}
           />
         ) : (
           <View style={[styles.noDataView, postListStyle?.noPostView]}>
@@ -325,7 +324,7 @@ const PostsListComponent = ({ topics, lmPostCustomFooter }: any) => {
                 postListStyle?.noPostText,
               ]}
             >
-              No Post
+              No {pluralizeOrCapitalize(CommunityConfigs?.communityConfigs[1]?.value?.post ?? "posted",WordAction.firstLetterCapitalSingular)}
             </Text>
           </View>
         )
