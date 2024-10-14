@@ -377,7 +377,8 @@ export const CreatePostContextProvider = ({
     linkData: Array<LMAttachmentViewData>,
     content: string,
     topics: string[],
-    poll: any
+    poll: any,
+    metaData?: any
   ) => {
     const isConnected = await NetworkUtil.isNetworkAvailable();
     if (isConnected) {
@@ -391,6 +392,7 @@ export const CreatePostContextProvider = ({
               heading: heading,
               topics: topics,
               poll: poll,
+              metaData: metaData,
             })
           );
       dispatch({ type: CLEAR_POLL });
