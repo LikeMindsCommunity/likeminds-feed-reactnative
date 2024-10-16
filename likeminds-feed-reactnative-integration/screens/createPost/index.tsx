@@ -100,12 +100,16 @@ interface CreatePostProps {
     linkData: Array<LMAttachmentViewData>,
     content: string,
     topics: string[],
-    poll: any
+    poll: any,
+    isAnonymous?: boolean
   ) => void;
   handleScreenBackPressProp?: () => void;
   onPollEditClicked: any;
   onPollClearClicked: any;
   isHeadingEnabled: boolean;
+  isAnonymousPostAllowed?: boolean;
+  handleOnAnonymousPostClickedProp?: (isAnonymous: Boolean) => void,
+  hintTextForAnonymous?: string
 }
 
 const CreatePost = ({
@@ -117,6 +121,9 @@ const CreatePost = ({
   onPollEditClicked,
   onPollClearClicked,
   isHeadingEnabled = false,
+  isAnonymousPostAllowed = false,
+  handleOnAnonymousPostClickedProp,
+  hintTextForAnonymous
 }: CreatePostProps) => {
   return (
     <PollCustomisableMethodsContextProvider
@@ -125,11 +132,14 @@ const CreatePost = ({
     >
       <CreatePostCustomisableMethodsContextProvider
         isHeadingEnabled={isHeadingEnabled}
+        isAnonymousPostAllowed={isAnonymousPostAllowed}
         handleDocumentProp={handleDocumentProp}
         handlePollProp={handlePollProp}
         handleGalleryProp={handleGalleryProp}
         onPostClickProp={onPostClickProp}
         handleScreenBackPressProp={handleScreenBackPressProp}
+        handleOnAnonymousPostClickedProp={handleOnAnonymousPostClickedProp}
+        hintTextForAnonymous={hintTextForAnonymous}
       >
         <CreatePostComponent />
       </CreatePostCustomisableMethodsContextProvider>
@@ -200,6 +210,8 @@ const CreatePostComponent = () => {
     postEdit,
     onPostClick,
     handleScreenBackPress,
+    anonymousPost,
+    handleOnAnonymousPostClicked
   }: CreatePostContextValues = useCreatePostContext();
 
   const handleAllTopicPress = () => {
@@ -299,14 +311,16 @@ const CreatePostComponent = () => {
           formattedLinkAttachments,
           postContentText,
           predefinedTopics ? [...predefinedTopics] : idValuesArray,
-          poll
+          poll,
+          anonymousPost
         )
       : onPostClick(
           allAttachment,
           formattedLinkAttachments,
           postContentText,
           predefinedTopics ? [...predefinedTopics] : idValuesArray,
-          poll
+          poll,
+          anonymousPost
         );
     if (!postToEdit) {
       const map: Map<string | undefined, string | undefined> = new Map();
@@ -423,6 +437,9 @@ const CreatePostComponent = () => {
     onPostClickProp,
     handleScreenBackPressProp,
     isHeadingEnabled,
+    isAnonymousPostAllowed,
+    handleOnAnonymousPostClickedProp,
+    hintTextForAnonymous
   } = useCreatePostCustomisableMethodsContext();
 
   // this renders the post detail UI
@@ -465,6 +482,12 @@ const CreatePostComponent = () => {
             }
           />
         </View>
+
+        {isAnonymousPostAllowed ? <View style={{marginTop: Layout.normalize(30), marginHorizontal: 15, flexDirection:'row', flex: 1}}>
+          <CheckBox label={(hintTextForAnonymous as string)?.length > 0 ? hintTextForAnonymous : "Share this as anonymous post"}
+           isChecked={anonymousPost} 
+           onPress={handleOnAnonymousPostClickedProp ? handleOnAnonymousPostClickedProp : handleOnAnonymousPostClicked}/>
+        </View> : <></>}
 
         {mappedTopics.length > 0 &&
         showTopics &&
@@ -1262,5 +1285,21 @@ const CreatePostComponent = () => {
     </SafeAreaView>
   );
 };
+
+function CheckBox({ isChecked, onPress, label }: any) {
+  return (
+      <TouchableOpacity onPress={onPress} style={{flexDirection:'row', gap: 8, justifyContent:'center', alignItems:'center'}}>
+        <View style={{ borderWidth: 1, borderColor: isChecked ? STYLES.$COLORS.PRIMARY : "#D0D5DD", height: 18, width: 18, justifyContent: 'center', alignItems: 'center', borderRadius: 3, backgroundColor: isChecked ? "#D0D5DD" : STYLES.$COLORS.WHITE }}>
+          { isChecked ? <LMIcon
+            assetPath={require("../../assets/images/white_tick3x.png")}
+            color={STYLES.$COLORS.PRIMARY}
+            height={12}
+            width={12}
+          /> : <></>}
+        </View>
+      <Text numberOfLines={2} style={{maxWidth: Layout.normalize(320)}}>{label}</Text>
+      </TouchableOpacity>
+  )
+}
 
 export { CreatePost };
