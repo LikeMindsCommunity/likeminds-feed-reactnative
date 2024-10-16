@@ -164,10 +164,13 @@ export interface CreatePostContextValues {
     linkData: Array<LMAttachmentViewData>,
     content: string,
     topics: string[],
-    poll: any
+    poll: any,
+    isAnonymous: boolean
   ) => void;
   handleScreenBackPress: () => void;
   handleHeadingInputChange: (event: string) => void;
+  anonymousPost: boolean, 
+  handleOnAnonymousPostClicked: () => void
 }
 
 const CreatePostContext = createContext<CreatePostContextValues | undefined>(
@@ -204,6 +207,7 @@ export const CreatePostContextProvider = ({
     Array<LMAttachmentViewData>
   >([]);
   const [showLinkPreview, setShowLinkPreview] = useState(false);
+  const [anonymousPost, setAnonymousPost] = useState(false);
   const [closedOnce, setClosedOnce] = useState(false);
   const [showOptions, setShowOptions] = useState(true);
   const [showSelecting, setShowSelecting] = useState(false);
@@ -368,7 +372,8 @@ export const CreatePostContextProvider = ({
     linkData: Array<LMAttachmentViewData>,
     content: string,
     topics: string[],
-    poll: any
+    poll: any,
+    isAnonymous: boolean = false
   ) => {
     const isConnected = await NetworkUtil.isNetworkAvailable();
     if (isConnected) {
@@ -382,6 +387,7 @@ export const CreatePostContextProvider = ({
               heading: heading,
               topics: topics,
               poll: poll,
+              isAnonymous
             })
           );
       dispatch({ type: CLEAR_POLL });
@@ -502,6 +508,10 @@ export const CreatePostContextProvider = ({
     dispatch({ type: CLEAR_POLL });
     setShowOptions(true);
   };
+
+  const handleOnAnonymousPostClicked = () => {
+    setAnonymousPost((val) => !val)
+  }
 
   // function edits poll attachment
   const editPollAttachment = () => {
@@ -869,6 +879,8 @@ export const CreatePostContextProvider = ({
     handleLoadMore,
     onPostClick,
     handleScreenBackPress,
+    anonymousPost,
+    handleOnAnonymousPostClicked
   };
 
   return (
