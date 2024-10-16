@@ -11,10 +11,14 @@ export interface CreatePostCallbacksContextProps {
     linkData: Array<LMAttachmentViewData>,
     content: string,
     topics: string[],
-    poll: any
+    poll: any,
+    isAnonymous?: boolean
   ) => void;
   handleScreenBackPressProp?: () => void;
   isHeadingEnabled: boolean;
+  isAnonymousPostAllowed?: boolean;
+  handleOnAnonymousPostClickedProp?: (isAnonymous: Boolean) => void;
+  hintTextForAnonymous?: string
 }
 
 export interface CreatePostCustomisableMethodsContext {
@@ -26,10 +30,14 @@ export interface CreatePostCustomisableMethodsContext {
     linkData: Array<LMAttachmentViewData>,
     content: string,
     topics: string[],
-    poll: any
+    poll: any,
+    isAnonymous?: boolean
   ) => void;
   handleScreenBackPressProp?: () => void;
   isHeadingEnabled: boolean;
+  isAnonymousPostAllowed?: boolean;
+  handleOnAnonymousPostClickedProp?: (isAnonymous: Boolean) => void;
+  hintTextForAnonymous?: string
 }
 
 const CreatePostCustomisableMethodsContext = createContext<
@@ -54,6 +62,9 @@ export const CreatePostCustomisableMethodsContextProvider = ({
   onPostClickProp,
   handleScreenBackPressProp,
   isHeadingEnabled,
+  isAnonymousPostAllowed = false,
+  handleOnAnonymousPostClickedProp,
+  hintTextForAnonymous
 }: CreatePostCallbacksContextProps) => {
   const contextValues: CreatePostCustomisableMethodsContext = {
     handleGalleryProp,
@@ -62,6 +73,9 @@ export const CreatePostCustomisableMethodsContextProvider = ({
     onPostClickProp,
     handleScreenBackPressProp,
     isHeadingEnabled,
+    isAnonymousPostAllowed,
+    handleOnAnonymousPostClickedProp,
+    hintTextForAnonymous
   };
 
   return (

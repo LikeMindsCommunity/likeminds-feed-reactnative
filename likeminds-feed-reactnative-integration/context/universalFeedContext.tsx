@@ -121,7 +121,7 @@ export const UniversalFeedContextProvider = ({
   const memberRight = useAppSelector((state) => state.login.memberRights);
   const [postUploading, setPostUploading] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(true);
-  const { mediaAttachmemnts, linkAttachments, postContent, heading, topics } =
+  const { mediaAttachmemnts, linkAttachments, postContent, heading, topics, isAnonymous } =
     useAppSelector((state) => state.createPost);
   const poll = useAppSelector((state) => state.createPost.poll);
   const unreadNotificationCount = useAppSelector(
@@ -236,6 +236,7 @@ export const UniversalFeedContextProvider = ({
           .setText(postContentText)
           .setHeading(headingText)
           .setTopicIds(topics)
+          .setIsAnonymous(isAnonymous ?? false)
           .build(),
         false
       )
