@@ -10,6 +10,7 @@ import { styles } from "./styles";
 import {
   DELETE_POST_MENU_ITEM,
   EDIT_POST_MENU_ITEM,
+  HIDE_POST_MENU_ITEM,
   IMAGE_ATTACHMENT_TYPE,
   NAVIGATED_FROM_COMMENT,
   NAVIGATED_FROM_POST,
@@ -17,6 +18,7 @@ import {
   POST_LIKES,
   POST_TYPE,
   REPORT_POST_MENU_ITEM,
+  UNHIDE_POST_MENU_ITEM,
   UNPIN_POST_MENU_ITEM,
   VIDEO_ATTACHMENT_TYPE,
 } from "../../constants/Strings";
@@ -46,9 +48,6 @@ import { Keys } from "../../enums/Keys";
 import { getPostType } from "../../utils/analytics";
 import { SET_FLOW_TO_POST_DETAIL_SCREEN } from "../../store/types/types";
 import STYLES from "../../constants/Styles";
-import { CommunityConfigs } from "../../communityConfigs";
-import { WordAction } from "../../enums/Variables";
-import pluralizeOrCapitalize from "../../utils/variables";
 
 const PostsList = ({ route, children, items, lmPostCustomFooter }: any) => {
   const { navigation }: UniversalFeedContextValues = useUniversalFeedContext();
@@ -93,6 +92,7 @@ const PostsListComponent = ({ topics, lmPostCustomFooter }: any) => {
     handlePinPost,
     handleReportPost,
     handleEditPost,
+    handleHidePost,
     onTapLikeCount,
     onOverlayMenuClick,
     setPostInViewport,
@@ -108,6 +108,7 @@ const PostsListComponent = ({ topics, lmPostCustomFooter }: any) => {
     onTapLikeCountProps,
     handleDeletePostProps,
     handleReportPostProps,
+    handleHidePostProp,
     onOverlayMenuClickProp,
     onSharePostClicked,
     isHeadingEnabled,
@@ -145,6 +146,12 @@ const PostsListComponent = ({ topics, lmPostCustomFooter }: any) => {
         ? handleDeletePostProps(true, postId)
         : handleDeletePost(true);
     }
+    if (itemId === HIDE_POST_MENU_ITEM || itemId === UNHIDE_POST_MENU_ITEM) {
+      handleHidePostProp
+      ? handleHidePostProp(postId)
+      : handleHidePost(postId)
+    }
+
     if (itemId === EDIT_POST_MENU_ITEM) {
       selectEditPostProp
         ? selectEditPostProp(postId, postDetail)
@@ -324,7 +331,7 @@ const PostsListComponent = ({ topics, lmPostCustomFooter }: any) => {
                 postListStyle?.noPostText,
               ]}
             >
-              No {pluralizeOrCapitalize(CommunityConfigs?.communityConfigs[1]?.value?.post ?? "posted",WordAction.firstLetterCapitalSingular)}
+              No posts
             </Text>
           </View>
         )
