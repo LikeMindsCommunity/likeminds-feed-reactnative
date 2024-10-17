@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {View, Text} from 'react-native';
 import {
   CreatePost,
   PostDetail,
@@ -20,10 +21,10 @@ import {
   LMCreatePollScreen,
   LMLikesScreen,
   LMNotificationScreen,
-  LMSocialFeedCreateScreen,
   LMTopicFeedScreen,
   LMSocialFeedScreen,
 } from '@likeminds.community/feed-rn-core';
+import LMSocialFeedCreateScreen from '@likeminds.community/feed-rn-core/wrappers/socialFeedCreateWrapper';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {LMCoreCallbacks} from '@likeminds.community/feed-rn-core/setupFeed';
 import {
@@ -65,6 +66,8 @@ import CreatePollScreenWrapper from './feedScreen/createPollScreenWrapper';
 import {LMFeedClient, InitiateUserRequest} from '@likeminds.community/feed-rn';
 import {LoginSchemaRO} from './login/loginSchemaRO';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import Video from 'react-native-video';
+import Layout from '@likeminds.community/feed-rn-core/constants/Layout';
 
 class CustomCallbacks implements LMFeedCallbacks, LMCarouselScreenCallbacks {
   onEventTriggered(eventName: string, eventProperties?: Map<string, string>) {
@@ -259,16 +262,77 @@ const App = () => {
       style={{flex: 1}}>
       <GestureHandlerRootView style={{flex: 1}}>
         {userName && userUniqueID && apiKey && myClient ? (
-          <LMOverlayProvider
-            myClient={myClient}
-            apiKey={apiKey}
-            userName={userName}
-            userUniqueId={userUniqueID}
-            lmFeedInterface={lmFeedInterface}
-            callbackClass={callbackClass}>
-            <NavigationContainer ref={navigationRef} independent={true}>
+          <NavigationContainer ref={navigationRef} independent={true}>
+            <LMOverlayProvider
+              myClient={myClient}
+              apiKey={apiKey}
+              userName={userName}
+              userUniqueId={userUniqueID}
+              lmFeedInterface={lmFeedInterface}
+              callbackClass={callbackClass}
+              videoCallback={videoProps => {
+                console.log('videoCallback ==', videoProps);
+                return (
+                  <Video
+                    paused={videoProps.paused}
+                    source={{uri: videoProps.source}}
+                    // ref={videoProps.ref}
+                    onLoad={data => {
+                      videoProps.onLoad(data);
+                      // videoProps.ref.current.seek(0); // this will set first frame of video as thumbnail
+                      videoProps.setLoading(false);
+                    }}
+                    style={videoProps.style}
+                    // resizeMode="contain"
+                    muted={videoProps.muted}
+                    repeat={videoProps.repeat}
+                    resizeMode={videoProps.resizeMode}
+                    playWhenInactive={false}
+                    playInBackground={false}
+                    ignoreSilentSwitch="obey"
+                    // onEnd={() => {
+                    //   setPaused(true); // Pause the video
+                    //   setProgress({ ...progress, currentTime: 0 }); // Reset seek position
+                    //   ref.current.seek(0); // Seek to the beginning of the video
+                    // }}
+                    onError={err => console.log('err', err)}
+                  />
+                );
+              }}
+              videoCarouselCallback={videoProps => {
+                console.log('videoCarouselCallback ==', videoProps);
+                return (
+                  <Video
+                    paused={videoProps.paused}
+                    source={{uri: videoProps.source}}
+                    // ref={videoProps.ref}
+                    onProgress={x => {
+                      videoProps.setProgress(x);
+                    }}
+                    style={{
+                      width: Layout.window.width,
+                      height:
+                        Platform.OS === 'ios'
+                          ? Layout.window.height - Layout.normalize(100)
+                          : Layout.window.height,
+                    }}
+                    resizeMode="contain"
+                    muted={videoProps.muted}
+                    // onEnd={() => {
+                    //   setPaused(true); // Pause the video
+                    //   setProgress({ ...progress, currentTime: 0 }); // Reset seek position
+                    //   ref.current.seek(0); // Seek to the beginning of the video
+                    // }}
+                    onError={err => console.log('err', err)}
+                  />
+                );
+              }}
+            >
               <Stack.Navigator screenOptions={{headerShown: false}}>
-                <Stack.Screen name={UNIVERSAL_FEED} component={LMSocialFeedScreen} />
+                <Stack.Screen
+                  name={UNIVERSAL_FEED}
+                  component={LMSocialFeedScreen}
+                />
                 <Stack.Screen
                   name={POST_DETAIL}
                   component={LMSocialFeedPostDetailScreen}
@@ -277,7 +341,10 @@ const App = () => {
                   name={CREATE_POST}
                   component={LMSocialFeedCreateScreen}
                 />
-                <Stack.Screen name={POST_LIKES_LIST} component={LMLikesScreen} />
+                <Stack.Screen
+                  name={POST_LIKES_LIST}
+                  component={LMLikesScreen}
+                />
                 <Stack.Screen
                   name={TOPIC_FEED}
                   component={LMTopicFeedScreen}
@@ -304,8 +371,8 @@ const App = () => {
                   component={LMCreatePollScreen}
                 />
               </Stack.Navigator>
-            </NavigationContainer>
-          </LMOverlayProvider>
+            </LMOverlayProvider>
+          </NavigationContainer>
         ) : !userName && !userUniqueID && !apiKey ? (
           <FetchKeyInputScreen isTrue={isTrue} setIsTrue={setIsTrue} />
         ) : null}

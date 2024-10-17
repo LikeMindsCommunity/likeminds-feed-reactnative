@@ -12,4 +12,6 @@ export interface LMOverlayProviderProps {
   refreshToken?: string;
   lmFeedInterface?: any;
   callbackClass: LMCoreCallbacks;
+  videoCallback?: any;
+  videoCarouselCallback?: any;
 }

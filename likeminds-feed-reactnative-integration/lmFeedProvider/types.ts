@@ -471,4 +471,6 @@ export interface LMFeedProviderProps {
   accessToken?: string;
   refreshToken?: string;
   lmFeedInterface?: any;
+  videoCallback?: any;
+  videoCarouselCallback?: any;
 }
