@@ -37,6 +37,7 @@ import {
   MAPPED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
   SET_NOTIFICATION_COUNT,
   SET_FLOW_TO_POST_DETAIL_SCREEN,
+  HIDE_POST_STATE,
 } from "../types/types";
 import { LMPostViewData } from "../../models";
 import Styles from "../../constants/Styles";
@@ -315,6 +316,22 @@ export const feedReducer = (state = initialState, action) => {
           item.commentsCount = item?.commentsCount - 1;
         }
       });
+      return { ...state };
+    }
+    case HIDE_POST_STATE: {
+      const feed = state.feed;
+      const {postId} = action.body
+      const post = feed.find((post) => post.id == postId);
+
+      post?.menuItems?.forEach((menuItem) => {
+        if(menuItem?.id == 12){
+          menuItem.id = 13;
+          menuItem.title = "Unhide Post"
+        }else if(menuItem?.id == 13){
+          menuItem.id = 12;
+          menuItem.title = "Hide Post"
+        }
+      })
       return { ...state };
     }
     case AUTO_PLAY_POST_VIDEO: {

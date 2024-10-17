@@ -17,17 +17,21 @@ import {
   DELETE_POST_MENU_ITEM,
   EDIT_COMMENT_MENU_ITEM,
   EDIT_POST_MENU_ITEM,
+  HIDE_POST_MENU_ITEM,
   NAVIGATED_FROM_COMMENT,
   PIN_POST_MENU_ITEM,
+  POST_HIDDEN,
   POST_LIKES,
   POST_PIN_SUCCESS,
   POST_SAVED_SUCCESS,
   POST_TYPE,
+  POST_UNHIDDEN,
   POST_UNPIN_SUCCESS,
   POST_UNSAVED_SUCCESS,
   REPORT_COMMENT_MENU_ITEM,
   REPORT_POST_MENU_ITEM,
   SOMETHING_WENT_WRONG,
+  UNHIDE_POST_MENU_ITEM,
   UNPIN_POST_MENU_ITEM,
 } from "../constants/Strings";
 import { Keyboard, Platform, TextInput, View } from "react-native";
@@ -51,6 +55,7 @@ import {
   GetCommentRequest,
   GetPostRequest,
   GetTaggingListRequest,
+  HidePostRequest,
   LikeCommentRequest,
   LikePostRequest,
   PinPostRequest,
@@ -59,6 +64,7 @@ import {
 } from "@likeminds.community/feed-rn";
 import {
   autoPlayPostVideo,
+  hidePost,
   likePost,
   likePostStateHandler,
   pinPost,
@@ -84,11 +90,14 @@ import { getPostType } from "../utils/analytics";
 import LMLoader from "../components/LMLoader";
 import Layout from "../constants/Layout";
 import {
+  HIDE_POST_STATE,
   SET_FLOW_TO_POST_DETAIL_SCREEN,
   SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
 } from "../store/types/types";
 import { commentResponseModelConvertor } from "../utils/commentResponseModelConvertor";
 import STYLES from "../constants/Styles";
+import { Client } from "../client";
+import { SHOW_TOAST } from "@likeminds.community/feed-rn-core/store/types/loader";
 
 interface PostDetailContextProps {
   children: ReactNode;
@@ -188,6 +197,7 @@ export interface PostDetailContextValues {
   handlePinPost: (id: string, pinned?: boolean) => void;
   handleReportPost: () => void;
   handleDeletePost: (visible: boolean) => void;
+  handleHidePost: (postId: string) => void;
   onMenuItemSelect: (
     postId: string,
     itemId?: number,
@@ -457,6 +467,36 @@ export const PostDetailContextProvider = ({
     setDeleteModal(visible);
   };
 
+  const handleHidePost = async (postId) => {
+    try {
+      const isPostHidden = (postDetail as LMPostViewData)?.menuItems?.find((menuItem) => menuItem.id == 13);
+      await dispatch(hidePost(
+        HidePostRequest.
+        builder()
+        .setPostId(postId)
+        .build(),
+        false
+      ))
+      dispatch({
+        type: HIDE_POST_STATE,
+        body: {
+          postId: postId
+        }
+      })
+      dispatch({
+        type: SHOW_TOAST,
+        body: {
+          isToast: true,
+          message: isPostHidden ? POST_UNHIDDEN : POST_HIDDEN,
+        },
+      });
+    } catch (error) {
+      console.log("error while hiding post")
+    }
+  }
+
+  
+
   // this function returns the id of the item selected from menu list and handles further functionalities accordingly for post
   const onMenuItemSelect = (
     postId: string,
@@ -482,6 +522,9 @@ export const PostDetailContextProvider = ({
     }
     if (itemId === DELETE_POST_MENU_ITEM) {
       handleDeletePost(true);
+    }
+    if (itemId === HIDE_POST_MENU_ITEM || itemId === UNHIDE_POST_MENU_ITEM) {
+      handleHidePost(postId)
     }
     if (itemId === EDIT_POST_MENU_ITEM) {
       dispatch(autoPlayPostVideo(""));
@@ -991,6 +1034,7 @@ export const PostDetailContextProvider = ({
     handlePinPost,
     handleReportPost,
     handleDeletePost,
+    handleHidePost,
     onMenuItemSelect,
     handleReportComment,
     handleDeleteComment,
