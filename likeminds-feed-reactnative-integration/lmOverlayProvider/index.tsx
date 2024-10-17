@@ -15,6 +15,8 @@ export const LMOverlayProvider: any = ({
   refreshToken,
   lmFeedInterface,
   callbackClass,
+  videoCallback,
+  videoCarouselCallback,
 }: // Create a prop for passing LMCoreCallbacks
 LMOverlayProviderProps) => {
   useEffect(() => {
@@ -32,6 +34,8 @@ LMOverlayProviderProps) => {
         accessToken={accessToken}
         refreshToken={refreshToken}
         lmFeedInterface={lmFeedInterface}
+        videoCallback={videoCallback}
+        videoCarouselCallback={videoCarouselCallback}
         // add a prop for adding lmcorecallbacks
       >
         <View style={styles.flexStyling}>{children}</View>
