@@ -14,6 +14,8 @@ export const EDIT_POST_MENU_ITEM = 5;
 export const DELETE_COMMENT_MENU_ITEM = 6;
 export const REPORT_COMMENT_MENU_ITEM = 7;
 export const EDIT_COMMENT_MENU_ITEM = 8;
+export const HIDE_POST_MENU_ITEM = 12;
+export const UNHIDE_POST_MENU_ITEM = 13;
 
 // report entity types
 export const POST_REPORT_ENTITY_TYPE = 5;
@@ -38,6 +40,8 @@ export const ENTER_REASON_FOR_DELETION =
 // pin option in menu items
 export const PIN_THIS_POST = "Pin this Post";
 export const UNPIN_THIS_POST = "Unpin this Post";
+export const POST_HIDDEN = "Post is hidden";
+export const POST_UNHIDDEN = "Post is visible";
 export const PIN_POST_ID = 2;
 export const UNPIN_POST_ID = 3;
 
