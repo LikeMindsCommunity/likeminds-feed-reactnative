@@ -35,7 +35,7 @@ export const styles = StyleSheet.create({
   },
   labelView: {
     backgroundColor: STYLES.$COLORS.PRIMARY,
-    marginLeft: 10,
+    // marginLeft: 10,
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 2,
