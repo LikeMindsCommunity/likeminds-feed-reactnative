@@ -13,6 +13,7 @@ export interface UniversalFeedCallbacksContextProps {
   onTapLikeCountProps?: (id: string) => void;
   handleDeletePostProps?: (visible: boolean, postId: string) => void;
   handleReportPostProps?: (postId: string) => void;
+  handleHidePostProp?: (postId: string) => void;
   newPostButtonClickProps?: () => void;
   onOverlayMenuClickProp?: (
     event: {
@@ -36,6 +37,7 @@ export interface UniversalFeedCustomisableMethodsContext {
   onTapLikeCountProps?: (id: string) => void;
   handleDeletePostProps?: (visible: boolean, postId: string) => void;
   handleReportPostProps?: (postId: string) => void;
+  handleHidePostProp?: (postId: string) => void;
   newPostButtonClickProps?: () => void;
   onOverlayMenuClickProp?: (
     event: {
@@ -74,6 +76,7 @@ export const UniversalFeedCustomisableMethodsContextProvider = ({
   handleReportPostProps,
   newPostButtonClickProps,
   onOverlayMenuClickProp,
+  handleHidePostProp,
   onTapNotificationBellProp,
   onSharePostClicked,
   isHeadingEnabled = false,
@@ -88,6 +91,7 @@ export const UniversalFeedCustomisableMethodsContextProvider = ({
     onTapLikeCountProps,
     handleDeletePostProps,
     handleReportPostProps,
+    handleHidePostProp,
     newPostButtonClickProps,
     onOverlayMenuClickProp,
     onTapNotificationBellProp,
