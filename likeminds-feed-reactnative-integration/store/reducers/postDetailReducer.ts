@@ -18,6 +18,7 @@ import {
   DELETE_COMMENT_STATE,
   EDIT_COMMENT_STATE,
   EDIT_POST_SUCCESS,
+  HIDE_POST_STATE,
   LIKE_POST_STATE,
   PIN_POST_STATE,
   POST_COMMENTS_SUCCESS,
@@ -472,6 +473,19 @@ export const postDetailReducer = (state = initialState, action) => {
       // this updates the isSaved value
       updatedDetail.isSaved = !updatedDetail.isSaved;
       return { ...state, postDetail: updatedDetail };
+    }
+    case HIDE_POST_STATE: {
+      const post = state.postDetail;
+      post?.menuItems?.forEach((menuItem) => {
+        if(menuItem?.id == 12){
+          menuItem.id = 13;
+          menuItem.title = "Unhide Post"
+        }else if(menuItem?.id == 13){
+          menuItem.id = 12;
+          menuItem.title = "Hide Post"
+        }
+      })
+      return { ...state };
     }
     default:
       return state;

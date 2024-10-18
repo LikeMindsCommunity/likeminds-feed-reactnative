@@ -41,8 +41,9 @@ const LMPostHeader = React.memo(() => {
       <TouchableOpacity
         activeOpacity={0.8}
         onPress={() => customPostHeaderStyle?.onTap(post?.user)}
+        style={{flex:0.9}}
       >
-        <View style={styles.alignRow}>
+        <View style={{...styles.alignRow}}>
           <LMProfilePicture
             fallbackText={{
               children: nameInitials(post?.user?.name),
@@ -60,14 +61,15 @@ const LMPostHeader = React.memo(() => {
             }
           />
           {/* author details */}
-          <View style={styles.autherDetailView}>
+          <View style={{...styles.autherDetailView, flexWrap: 'wrap', flex: 1}}>
             {/* author heading */}
-            <View style={styles.alignRow}>
+            <View style={{...styles.alignRow, flexWrap: 'wrap' }}>
               <LMText
                 selectable={false}
                 textStyle={StyleSheet.flatten([
                   styles.postAuthorName,
                   customPostHeaderStyle?.titleText,
+                  [{marginRight: 10}]
                 ])}
               >
                 {post?.user?.name}
@@ -137,6 +139,7 @@ const LMPostHeader = React.memo(() => {
         style={[
           styles.topRightView,
           post?.isPinned && styles.topRightViewIfPinned,
+          [{gap: 3}]
         ]}
       >
         {/* pin icon section */}

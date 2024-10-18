@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "../store/store";
 import {
   autoPlayPostVideo,
   getFeed,
+  hidePost,
   likePost,
   likePostStateHandler,
   pinPost,
@@ -21,6 +22,7 @@ import {
 } from "../store/actions/feed";
 import {
   GetFeedRequest,
+  HidePostRequest,
   LikePostRequest,
   PinPostRequest,
   SavePostRequest,
@@ -31,9 +33,11 @@ import {
   EDIT_POST_MENU_ITEM,
   NAVIGATED_FROM_COMMENT,
   PIN_POST_MENU_ITEM,
+  POST_HIDDEN,
   POST_LIKES,
   POST_PIN_SUCCESS,
   POST_SAVED_SUCCESS,
+  POST_UNHIDDEN,
   POST_UNPIN_SUCCESS,
   POST_UNSAVED_SUCCESS,
   REPORT_POST_MENU_ITEM,
@@ -57,7 +61,8 @@ import Layout from "../constants/Layout";
 import STYLES from "../constants/Styles";
 import { useUniversalFeedContext } from "../context/universalFeedContext";
 import { useIsFocused } from "@react-navigation/native";
-import { SET_CURRENT_ID_OF_VIDEO } from "../store/types/types";
+import { HIDE_POST_STATE, SET_CURRENT_ID_OF_VIDEO } from "../store/types/types";
+import { SHOW_TOAST } from "..//store/types/loader";
 
 interface PostListContextProps {
   children: ReactNode;
@@ -101,6 +106,7 @@ export interface PostListContextValues {
   getPostDetail: () => LMPostViewData;
   handleDeletePost: (visible: boolean) => void;
   handleEditPost: (id: string, post: LMPostViewData | undefined) => void;
+  handleHidePost: (postId: string) => void;
   fetchFeed: (page: number) => Promise<any>;
   handleLoadMore: () => void;
   postLikeHandler: (id: string) => void;
@@ -354,6 +360,38 @@ export const PostListContextProvider = ({
     navigation.navigate(CREATE_POST, { postId, post });
   };
 
+  // this function handles hide/unhide post
+  const handleHidePost = async (postId) => {
+    try {
+      const post = (feedData as LMPostViewData[])?.find(
+        (post) => post.id == postId
+      );
+      const isPostHidden = post?.menuItems?.find((menuItem) => menuItem.id == 13);
+      await dispatch(hidePost(
+        HidePostRequest.
+        builder()
+        .setPostId(postId)
+        .build(),
+        false
+      ))
+      dispatch({
+        type: HIDE_POST_STATE,
+        body: {
+          postId: postId
+        }
+      })
+      dispatch({
+        type: SHOW_TOAST,
+        body: {
+          isToast: true,
+          message: isPostHidden ? POST_UNHIDDEN : POST_HIDDEN,
+        },
+      });
+    } catch (error) {
+      console.log("error while hiding post")
+    }
+  }
+
   // this handles the click on comment count section of footer
   const onTapCommentCount = (postId) => {
     dispatch(clearPostDetail());
@@ -406,6 +444,7 @@ export const PostListContextProvider = ({
     getPostDetail,
     handleDeletePost,
     handleEditPost,
+    handleHidePost,
     fetchFeed,
     handleLoadMore,
     postLikeHandler,
