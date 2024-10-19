@@ -24,6 +24,7 @@ const LMPost = ({
   isHeadingEnabled,
   isTopResponse,
   customFooter,
+  hideTopicsView = false,
 }: any) => {
   return (
     <LMPostContextProvider
@@ -36,13 +37,14 @@ const LMPost = ({
       isHeadingEnabled={isHeadingEnabled}
       isTopResponse={isTopResponse}
       customFooter={customFooter}
+      hideTopicsView={hideTopicsView}
     >
       <LMPostComponent />
     </LMPostContextProvider>
   );
 };
 const LMPostComponent = React.memo(() => {
-  const { post, isHeadingEnabled, isTopResponse, customFooter } =
+  const { post, isHeadingEnabled, isTopResponse, customFooter, hideTopicsView } =
     useLMPostContext();
   const allTopics = useAppSelector((state) => state.feed.topics);
   const postListStyle = STYLES.$POST_LIST_STYLE;
@@ -53,7 +55,7 @@ const LMPostComponent = React.memo(() => {
       <LMPostHeader />
 
       {/* post topics */}
-      {post?.topics?.length > 0 ? (
+      {!hideTopicsView && post?.topics?.length > 0 ? (
         <View style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 10 }}>
           {post?.topics?.map((item, index) => {
             // Find the corresponding topic object from allTopics
