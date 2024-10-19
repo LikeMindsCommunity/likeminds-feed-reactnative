@@ -5,7 +5,8 @@ import layout from "../../../constants/Layout";
 // default post header style
 export const styles = StyleSheet.create({
   postHeader: {
-    width: "100%",
+    // width: "100%",
+    flex: 1,
     paddingHorizontal: 15,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -52,12 +53,12 @@ export const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   topRightView: {
-    width: "16%",
+    // width: "16%",
     flexDirection: "row",
     justifyContent: "flex-end",
   },
   topRightViewIfPinned: {
-    width: "16%",
+    // width: "16%",
     flexDirection: "row",
     justifyContent: "space-between",
   },
