@@ -106,6 +106,8 @@ interface CreatePostProps {
   onPollEditClicked: any;
   onPollClearClicked: any;
   isHeadingEnabled: boolean;
+  hideTopicsViewCreate?: boolean;
+  hideTopicsViewEdit?: boolean;
 }
 
 const CreatePost = ({
@@ -117,6 +119,8 @@ const CreatePost = ({
   onPollEditClicked,
   onPollClearClicked,
   isHeadingEnabled = false,
+  hideTopicsViewCreate = false,
+  hideTopicsViewEdit = false
 }: CreatePostProps) => {
   return (
     <PollCustomisableMethodsContextProvider
@@ -130,6 +134,8 @@ const CreatePost = ({
         handleGalleryProp={handleGalleryProp}
         onPostClickProp={onPostClickProp}
         handleScreenBackPressProp={handleScreenBackPressProp}
+        hideTopicsViewCreate={hideTopicsViewCreate}
+        hideTopicsViewEdit={hideTopicsViewEdit}
       >
         <CreatePostComponent />
       </CreatePostCustomisableMethodsContextProvider>
@@ -423,8 +429,12 @@ const CreatePostComponent = () => {
     onPostClickProp,
     handleScreenBackPressProp,
     isHeadingEnabled,
+    hideTopicsViewCreate,
+    hideTopicsViewEdit
   } = useCreatePostCustomisableMethodsContext();
 
+  const shouldHideTopicsView = (postToEdit && hideTopicsViewEdit) ? true : (postToEdit == undefined && hideTopicsViewCreate) ? true : false
+  
   // this renders the post detail UI
   const uiRenderForPost = () => {
     return (
@@ -467,7 +477,7 @@ const CreatePostComponent = () => {
         </View>
 
         {mappedTopics.length > 0 &&
-        showTopics &&
+        showTopics && !shouldHideTopicsView &&
         !(predefinedTopics.length > 0) ? (
           <View
             style={{
@@ -526,7 +536,7 @@ const CreatePostComponent = () => {
               </View>
             ))}
           </View>
-        ) : showTopics && !(predefinedTopics.length > 0) ? (
+        ) : showTopics && !shouldHideTopicsView && !(predefinedTopics.length > 0) ? (
           <View
             style={{
               flexDirection: "row",

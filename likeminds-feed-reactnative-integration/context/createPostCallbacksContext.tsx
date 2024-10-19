@@ -15,6 +15,8 @@ export interface CreatePostCallbacksContextProps {
   ) => void;
   handleScreenBackPressProp?: () => void;
   isHeadingEnabled: boolean;
+  hideTopicsViewCreate?: boolean;
+  hideTopicsViewEdit?: boolean;
 }
 
 export interface CreatePostCustomisableMethodsContext {
@@ -30,6 +32,8 @@ export interface CreatePostCustomisableMethodsContext {
   ) => void;
   handleScreenBackPressProp?: () => void;
   isHeadingEnabled: boolean;
+  hideTopicsViewCreate?: boolean;
+  hideTopicsViewEdit?: boolean;
 }
 
 const CreatePostCustomisableMethodsContext = createContext<
@@ -54,6 +58,8 @@ export const CreatePostCustomisableMethodsContextProvider = ({
   onPostClickProp,
   handleScreenBackPressProp,
   isHeadingEnabled,
+  hideTopicsViewCreate,
+  hideTopicsViewEdit
 }: CreatePostCallbacksContextProps) => {
   const contextValues: CreatePostCustomisableMethodsContext = {
     handleGalleryProp,
@@ -62,6 +68,8 @@ export const CreatePostCustomisableMethodsContextProvider = ({
     onPostClickProp,
     handleScreenBackPressProp,
     isHeadingEnabled,
+    hideTopicsViewCreate,
+    hideTopicsViewEdit
   };
 
   return (
