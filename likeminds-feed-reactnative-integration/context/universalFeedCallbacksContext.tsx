@@ -5,6 +5,7 @@ export interface UniversalFeedCallbacksContextProps {
   children?: ReactNode;
   isHeadingEnabled: boolean;
   isTopResponse: boolean;
+  hideTopicsView?: boolean;
   postLikeHandlerProp?: (id: string) => void;
   savePostHandlerProp?: (id: string, saved?: boolean) => void;
   selectPinPostProp?: (id: string, pinned?: boolean) => void;
@@ -29,6 +30,7 @@ export interface UniversalFeedCallbacksContextProps {
 export interface UniversalFeedCustomisableMethodsContext {
   isHeadingEnabled: boolean;
   isTopResponse: boolean;
+  hideTopicsView?: boolean;
   postLikeHandlerProp?: (id: string) => void;
   savePostHandlerProp?: (id: string, saved?: boolean) => void;
   selectPinPostProp?: (id: string, pinned?: boolean) => void;
@@ -81,6 +83,7 @@ export const UniversalFeedCustomisableMethodsContextProvider = ({
   onSharePostClicked,
   isHeadingEnabled = false,
   isTopResponse = false,
+  hideTopicsView = false
 }: UniversalFeedCallbacksContextProps) => {
   const contextValues: UniversalFeedCustomisableMethodsContext = {
     postLikeHandlerProp,
@@ -98,6 +101,7 @@ export const UniversalFeedCustomisableMethodsContextProvider = ({
     onSharePostClicked,
     isHeadingEnabled,
     isTopResponse,
+    hideTopicsView,
   };
 
   return (

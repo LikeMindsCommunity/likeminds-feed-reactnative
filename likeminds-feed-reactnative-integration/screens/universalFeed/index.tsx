@@ -39,6 +39,7 @@ interface UniversalFeedProps {
   onSubmitButtonClicked?: any;
   onAddPollOptionsClicked?: any;
   onPollOptionClicked?: any;
+  hideTopicsView?: boolean;
 }
 
 interface UniversalFeedComponentProps {
@@ -67,6 +68,7 @@ const UniversalFeed = ({
   onPollOptionClicked,
   isHeadingEnabled = false,
   isTopResponse = false,
+  hideTopicsView = false
 }: UniversalFeedProps) => {
   return (
     <PollCustomisableMethodsContextProvider
@@ -90,6 +92,7 @@ const UniversalFeed = ({
         onSharePostClicked={onSharePostClicked}
         isHeadingEnabled={isHeadingEnabled}
         isTopResponse={isTopResponse}
+        hideTopicsView={hideTopicsView}
       >
         <UniversalFeedComponent children={children} />
       </UniversalFeedCustomisableMethodsContextProvider>

@@ -113,6 +113,7 @@ const PostsListComponent = ({ topics, lmPostCustomFooter }: any) => {
     onSharePostClicked,
     isHeadingEnabled,
     isTopResponse,
+    hideTopicsView,
   } = useUniversalFeedCustomisableMethodsContext();
   // this function returns the id of the item selected from menu list and handles further functionalities accordingly
   const onMenuItemSelect = (
@@ -285,6 +286,7 @@ const PostsListComponent = ({ topics, lmPostCustomFooter }: any) => {
                           },
                         }}
                         customFooter={lmPostCustomFooter}
+                        hideTopicsView={hideTopicsView ?? false}
                       />
                     </TouchableOpacity>
                     {!postListStyle.shouldHideSeparator && index != feedData.length - 1 ? (
