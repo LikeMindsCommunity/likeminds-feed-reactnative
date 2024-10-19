@@ -109,6 +109,7 @@ interface PostDetailProps {
   isHeadingEnabled?: boolean;
   isTopResponse?: boolean;
   lmPostCustomFooter?: ReactNode;
+  hideTopicsView?: boolean;
 }
 
 const PostDetail = ({
@@ -131,6 +132,7 @@ const PostDetail = ({
   isHeadingEnabled,
   isTopResponse,
   lmPostCustomFooter,
+  hideTopicsView = false
 }: PostDetailProps) => {
   return (
     <PollCustomisableMethodsContextProvider
@@ -152,6 +154,7 @@ const PostDetail = ({
         isHeadingEnabled={isHeadingEnabled}
         isTopResponse={isTopResponse}
         lmPostCustomFooter={lmPostCustomFooter}
+        hideTopicsView={hideTopicsView}
       >
         <PostDetailComponent />
       </PostDetailCustomisableMethodsContextProvider>
@@ -247,6 +250,7 @@ const PostDetailComponent = React.memo(() => {
     isHeadingEnabled,
     isTopResponse,
     lmPostCustomFooter,
+    hideTopicsView,
   } = usePostDetailCustomisableMethodsContext();
   const postHeaderStyle: any = postListStyle?.header;
   const customScreenHeader: any = postDetailStyle?.screenHeader;
@@ -295,6 +299,7 @@ const PostDetailComponent = React.memo(() => {
         isHeadingEnabled={isHeadingEnabled}
         isTopResponse={isTopResponse}
         customFooter={lmPostCustomFooter}
+        hideTopicsView={hideTopicsView ?? false}
         // header props
         headerProps={{
           onOverlayMenuClick: (event) =>
