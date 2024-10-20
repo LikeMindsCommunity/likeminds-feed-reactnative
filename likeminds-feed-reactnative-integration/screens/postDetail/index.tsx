@@ -247,6 +247,7 @@ const PostDetailComponent = React.memo(() => {
     isHeadingEnabled,
     isTopResponse,
     lmPostCustomFooter,
+    customWidgetPostView,
   } = usePostDetailCustomisableMethodsContext();
   const postHeaderStyle: any = postListStyle?.header;
   const customScreenHeader: any = postDetailStyle?.screenHeader;
@@ -295,6 +296,7 @@ const PostDetailComponent = React.memo(() => {
         isHeadingEnabled={isHeadingEnabled}
         isTopResponse={isTopResponse}
         customFooter={lmPostCustomFooter}
+        customWidgetPostView={customWidgetPostView}
         // header props
         headerProps={{
           onOverlayMenuClick: (event) =>

@@ -27,6 +27,7 @@ export interface PostDetailCallbacksContextProps {
   isHeadingEnabled?: boolean;
   isTopResponse?: boolean;
   lmPostCustomFooter?: ReactNode;
+  customWidgetPostView?: ReactNode;
 }
 
 export interface PostDetailCustomisableMethodsContext {
@@ -54,6 +55,7 @@ export interface PostDetailCustomisableMethodsContext {
   isHeadingEnabled?: boolean;
   isTopResponse?: boolean;
   lmPostCustomFooter?: ReactNode;
+  customWidgetPostView?: ReactNode;
 }
 
 const PostDetailCustomisableMethodsContext = createContext<
@@ -85,6 +87,7 @@ export const PostDetailCustomisableMethodsContextProvider = ({
   isHeadingEnabled,
   isTopResponse,
   lmPostCustomFooter,
+  customWidgetPostView,
 }: PostDetailCallbacksContextProps) => {
   const contextValues: PostDetailCustomisableMethodsContext = {
     getCommentsRepliesProp,
@@ -100,6 +103,7 @@ export const PostDetailCustomisableMethodsContextProvider = ({
     isHeadingEnabled,
     isTopResponse,
     lmPostCustomFooter,
+    customWidgetPostView
   };
 
   return (

@@ -164,10 +164,17 @@ export interface CreatePostContextValues {
     linkData: Array<LMAttachmentViewData>,
     content: string,
     topics: string[],
-    poll: any
+    poll: any,
+    metaData?: any
   ) => void;
   handleScreenBackPress: () => void;
   handleHeadingInputChange: (event: string) => void;
+  setDisabledTopicsGlobal: any;
+  disbaledTopicsGlobal: any;
+  showTopics: boolean;
+  setShowTopics: Dispatch<SetStateAction<boolean>>;
+  mappedTopics: any;
+  setMappedTopics: any;
 }
 
 const CreatePostContext = createContext<CreatePostContextValues | undefined>(
@@ -222,6 +229,9 @@ export const CreatePostContextProvider = ({
   const [allTags, setAllTags] = useState<Array<LMUserViewData>>([]);
   const [isUserTagging, setIsUserTagging] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [disbaledTopicsGlobal, setDisabledTopicsGlobal] = useState([] as any);
+  const [showTopics, setShowTopics] = useState(false);
+  const [mappedTopics, setMappedTopics] = useState([] as any);
 
   const maxHeadingWords = STYLES?.$CREATE_POST_STYLE?.headingMaxWords
     ? STYLES?.$CREATE_POST_STYLE?.headingMaxWords
@@ -368,7 +378,8 @@ export const CreatePostContextProvider = ({
     linkData: Array<LMAttachmentViewData>,
     content: string,
     topics: string[],
-    poll: any
+    poll: any,
+    metaData?: any
   ) => {
     const isConnected = await NetworkUtil.isNetworkAvailable();
     if (isConnected) {
@@ -382,6 +393,7 @@ export const CreatePostContextProvider = ({
               heading: heading,
               topics: topics,
               poll: poll,
+              metaData: metaData,
             })
           );
       dispatch({ type: CLEAR_POLL });
@@ -833,6 +845,9 @@ export const CreatePostContextProvider = ({
     isUserTagging,
     isLoading,
     heading,
+    disbaledTopicsGlobal,
+    showTopics,
+    mappedTopics,
     setIsLoading,
     setIsUserTagging,
     setAllTags,
@@ -869,6 +884,9 @@ export const CreatePostContextProvider = ({
     handleLoadMore,
     onPostClick,
     handleScreenBackPress,
+    setDisabledTopicsGlobal,
+    setShowTopics,
+    setMappedTopics,
   };
 
   return (
