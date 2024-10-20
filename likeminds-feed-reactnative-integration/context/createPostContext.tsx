@@ -164,7 +164,8 @@ export interface CreatePostContextValues {
     linkData: Array<LMAttachmentViewData>,
     content: string,
     topics: string[],
-    poll: any
+    poll: any,
+    metaData?: any
   ) => void;
   handleScreenBackPress: () => void;
   handleHeadingInputChange: (event: string) => void;

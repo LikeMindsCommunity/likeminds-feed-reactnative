@@ -268,14 +268,14 @@ const App = () => {
             callbackClass={callbackClass}>
             <NavigationContainer ref={navigationRef} independent={true}>
               <Stack.Navigator screenOptions={{headerShown: false}}>
-                <Stack.Screen name={UNIVERSAL_FEED} component={LMSocialFeedScreen} />
+                <Stack.Screen name={UNIVERSAL_FEED} component={FeedWrapper} />
                 <Stack.Screen
                   name={POST_DETAIL}
                   component={LMSocialFeedPostDetailScreen}
                 />
                 <Stack.Screen
                   name={CREATE_POST}
-                  component={LMSocialFeedCreateScreen}
+                  component={CreateWrapper}
                 />
                 <Stack.Screen name={POST_LIKES_LIST} component={LMLikesScreen} />
                 <Stack.Screen

@@ -41,10 +41,11 @@ interface CreatePostProps {
   handleScreenBackPressProp?: () => void;
   onPollEditClicked: any;
   onPollClearClicked: any;
-  isHeadingEnabled: boolean;
+  isHeadingEnabled?: boolean;
 }
 
 const CreatePost = ({
+  children,
   handleDocumentProp,
   handlePollProp,
   handleGalleryProp,
@@ -67,69 +68,14 @@ const CreatePost = ({
         onPostClickProp={onPostClickProp}
         handleScreenBackPressProp={handleScreenBackPressProp}
       >
-        <CreatePostComponent />
+        <CreatePostComponent children={children} />
       </CreatePostCustomisableMethodsContextProvider>
     </PollCustomisableMethodsContextProvider>
   );
 };
 
-const CreatePostComponent = () => {
-  let { postToEdit, showOptions, postDetail }: CreatePostContextValues =
-    useCreatePostContext();
-
-  // this renders the post detail UI
-  const uiRenderForPost = () => {
-    return (
-      <ScrollView
-        style={
-          postToEdit
-            ? styles.scrollViewStyleWithoutOptions
-            : showOptions
-            ? styles.scrollViewStyleWithOptions
-            : styles.scrollViewStyleWithoutOptions
-        }
-      >
-        {/* user profile section */}
-        <LMUserProfileSection />
-
-        {/* post topics section */}
-        <LMCreatePostTopics />
-
-        {/* post heading section */}
-        <LMCreatePostHeading />
-
-        {/* text input field */}
-        <LMCreatePostTextInput />
-
-        {/* users tagging list */}
-        <LMCreatePostUserTagging />
-
-        {/* selected media section */}
-        <LMCreatePostMedia />
-      </ScrollView>
-    );
-  };
-
-  return (
-    <SafeAreaView style={styles.container}>
-      {/* screen header section*/}
-      <LMCreatePostHeader />
-
-      {/* handles the UI to be rendered for edit post and create post */}
-      {!postToEdit ? (
-        uiRenderForPost()
-      ) : postDetail?.id ? (
-        uiRenderForPost()
-      ) : (
-        // loader view section
-        <View style={styles.rowAlignMent}>
-          <LMLoader />
-        </View>
-      )}
-      {/* selection options section */}
-      <LMCreatePostAttachmentSelection />
-    </SafeAreaView>
-  );
+const CreatePostComponent = ({ children }) => {
+  return <SafeAreaView style={styles.container}>{children}</SafeAreaView>;
 };
 
 export { CreatePost };
