@@ -97,7 +97,7 @@ import {
 import { commentResponseModelConvertor } from "../utils/commentResponseModelConvertor";
 import STYLES from "../constants/Styles";
 import { Client } from "../client";
-import { SHOW_TOAST } from "@likeminds.community/feed-rn-core/store/types/loader";
+import { SHOW_TOAST } from "../store/types/loader";
 
 interface PostDetailContextProps {
   children: ReactNode;
