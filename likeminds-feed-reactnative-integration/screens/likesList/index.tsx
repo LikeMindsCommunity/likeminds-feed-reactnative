@@ -14,6 +14,9 @@ import LMLoader from "../../components/LMLoader";
 import { LMLikeViewData, LMUserViewData, RootStackParamList } from "../../models";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import STYLES from "../../constants/Styles";
+import { CommunityConfigs } from "../../communityConfigs";
+import pluralizeOrCapitalize from "../../utils/variables";
+import { WordAction } from "../../enums/Variables";
 
 interface PostLikesProps {
   children?: React.ReactNode;
@@ -67,14 +70,14 @@ const PostLikesListComponent = React.memo(() => {
             : true
         }
         heading={
-          customScreenHeader?.heading ? customScreenHeader?.heading : "Likes"
+          customScreenHeader?.heading ? customScreenHeader?.heading : pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.likeEntityVariable?.entityName,WordAction.firstLetterCapitalPlural)
         }
         subHeading={
           customScreenHeader?.subHeading
             ? customScreenHeader?.subHeading
             : totalLikes > 1
-            ? `${totalLikes} likes`
-            : `${totalLikes} like`
+            ? `${totalLikes} ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.likeEntityVariable?.entityName,WordAction.allSmallPlural)}`
+            : `${totalLikes} ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.likeEntityVariable?.entityName,WordAction.allSmallSingular)}`
         }
         onBackPress={() => {
           handleScreenBackPressProp

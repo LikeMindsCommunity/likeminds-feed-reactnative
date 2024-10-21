@@ -48,6 +48,9 @@ import { Keys } from "../../enums/Keys";
 import { getPostType } from "../../utils/analytics";
 import { SET_FLOW_TO_POST_DETAIL_SCREEN } from "../../store/types/types";
 import STYLES from "../../constants/Styles";
+import { CommunityConfigs } from "../../communityConfigs";
+import { WordAction } from "../../enums/Variables";
+import pluralizeOrCapitalize from "../../utils/variables";
 
 const PostsList = ({ route, children, items, lmPostCustomFooter }: any) => {
   const { navigation }: UniversalFeedContextValues = useUniversalFeedContext();
@@ -333,7 +336,7 @@ const PostsListComponent = ({ topics, lmPostCustomFooter }: any) => {
                 postListStyle?.noPostText,
               ]}
             >
-              No posts
+              No {pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post ?? "post",WordAction.firstLetterCapitalSingular)}
             </Text>
           </View>
         )

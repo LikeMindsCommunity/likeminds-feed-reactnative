@@ -82,6 +82,9 @@ import { LMPostPollView } from "../../components/LMPoll";
 import { useRoute } from "@react-navigation/native";
 import STYLES from "../../constants/Styles";
 import { PollCustomisableMethodsContextProvider } from "../../context/pollCustomisableCallback";
+import { CommunityConfigs } from "../../communityConfigs";
+import pluralizeOrCapitalize from "../../utils/variables";
+import { WordAction } from "../../enums/Variables";
 
 interface CreatePostProps {
   children?: React.ReactNode;
@@ -1046,10 +1049,10 @@ const CreatePostComponent = () => {
           postToEdit
             ? customCreatePostScreenHeader?.editPostHeading
               ? customCreatePostScreenHeader?.editPostHeading
-              : "Edit Post"
+              : `Edit ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post,WordAction.firstLetterCapitalSingular)}`
             : customCreatePostScreenHeader?.createPostHeading
             ? customCreatePostScreenHeader?.createPostHeading
-            : "Create a Post"
+            : `Create ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post,WordAction.firstLetterCapitalSingular)}`
         }
         rightComponent={
           // post button section
