@@ -164,10 +164,20 @@ export interface CreatePostContextValues {
     linkData: Array<LMAttachmentViewData>,
     content: string,
     topics: string[],
-    poll: any
+    poll: any,
+    metaData?: any,
+    isAnonymous?: boolean
   ) => void;
   handleScreenBackPress: () => void;
   handleHeadingInputChange: (event: string) => void;
+  setDisabledTopicsGlobal: any;
+  disbaledTopicsGlobal: any;
+  showTopics: boolean;
+  setShowTopics: Dispatch<SetStateAction<boolean>>;
+  mappedTopics: any;
+  setMappedTopics: any;
+  anonymousPost: boolean, 
+  handleOnAnonymousPostClicked: () => void
 }
 
 const CreatePostContext = createContext<CreatePostContextValues | undefined>(
@@ -204,6 +214,7 @@ export const CreatePostContextProvider = ({
     Array<LMAttachmentViewData>
   >([]);
   const [showLinkPreview, setShowLinkPreview] = useState(false);
+  const [anonymousPost, setAnonymousPost] = useState(false);
   const [closedOnce, setClosedOnce] = useState(false);
   const [showOptions, setShowOptions] = useState(true);
   const [showSelecting, setShowSelecting] = useState(false);
@@ -222,6 +233,9 @@ export const CreatePostContextProvider = ({
   const [allTags, setAllTags] = useState<Array<LMUserViewData>>([]);
   const [isUserTagging, setIsUserTagging] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [disbaledTopicsGlobal, setDisabledTopicsGlobal] = useState([] as any);
+  const [showTopics, setShowTopics] = useState(false);
+  const [mappedTopics, setMappedTopics] = useState([] as any);
 
   const maxHeadingWords = STYLES?.$CREATE_POST_STYLE?.headingMaxWords
     ? STYLES?.$CREATE_POST_STYLE?.headingMaxWords
@@ -368,7 +382,9 @@ export const CreatePostContextProvider = ({
     linkData: Array<LMAttachmentViewData>,
     content: string,
     topics: string[],
-    poll: any
+    poll: any,
+    metaData?: any,
+    isAnonymous: boolean = false
   ) => {
     const isConnected = await NetworkUtil.isNetworkAvailable();
     if (isConnected) {
@@ -382,6 +398,8 @@ export const CreatePostContextProvider = ({
               heading: heading,
               topics: topics,
               poll: poll,
+              metaData: metaData,
+              isAnonymous
             })
           );
       dispatch({ type: CLEAR_POLL });
@@ -502,6 +520,10 @@ export const CreatePostContextProvider = ({
     dispatch({ type: CLEAR_POLL });
     setShowOptions(true);
   };
+
+  const handleOnAnonymousPostClicked = () => {
+    setAnonymousPost((val) => !val)
+  }
 
   // function edits poll attachment
   const editPollAttachment = () => {
@@ -833,6 +855,9 @@ export const CreatePostContextProvider = ({
     isUserTagging,
     isLoading,
     heading,
+    disbaledTopicsGlobal,
+    showTopics,
+    mappedTopics,
     setIsLoading,
     setIsUserTagging,
     setAllTags,
@@ -869,6 +894,11 @@ export const CreatePostContextProvider = ({
     handleLoadMore,
     onPostClick,
     handleScreenBackPress,
+    setDisabledTopicsGlobal,
+    setShowTopics,
+    setMappedTopics,
+    anonymousPost,
+    handleOnAnonymousPostClicked
   };
 
   return (
