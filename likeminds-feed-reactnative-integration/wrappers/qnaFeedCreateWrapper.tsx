@@ -5,7 +5,7 @@ import {
   CreatePostContextProvider,
   UniversalFeedContextProvider,
   useCreatePostContext,
-} from '@likeminds.community/feed-rn-core';
+} from "../index"
 import {
   LMCreatePostAttachmentSelection,
   LMCreatePostHeader,
@@ -16,7 +16,7 @@ import {
   LMCreatePostUIRender,
   LMCreatePostUserTagging,
   LMUserProfileSection,
-} from '@likeminds.community/feed-rn-core';
+} from "../index"
 
 const CreateScreen = () => {
   const {

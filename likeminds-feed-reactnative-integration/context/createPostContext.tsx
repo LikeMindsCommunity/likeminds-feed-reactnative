@@ -166,7 +166,7 @@ export interface CreatePostContextValues {
     topics: string[],
     poll: any,
     metaData?: any,
-    isAnonymous: boolean
+    isAnonymous?: boolean
   ) => void;
   handleScreenBackPress: () => void;
   handleHeadingInputChange: (event: string) => void;

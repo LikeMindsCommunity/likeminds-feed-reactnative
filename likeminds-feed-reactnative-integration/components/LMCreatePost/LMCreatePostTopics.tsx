@@ -10,6 +10,7 @@ import { Client } from "../../client";
 import STYLES from "../../constants/Styles";
 import { styles } from "../../screens/createPost/styles";
 import Layout from "../../constants/Layout";
+import { LMIcon } from "../../uiComponents";
 
 const LMCreatePostTopics = () => {
   const dispatch = useAppDispatch();
@@ -28,10 +29,12 @@ const LMCreatePostTopics = () => {
     mappedTopics,
     setShowTopics,
     setMappedTopics,
-    postToEdit
+    postToEdit,
+    anonymousPost,
+    handleOnAnonymousPostClicked
   }: CreatePostContextValues = useCreatePostContext();
 
-  const { hideTopicsViewCreate, hideTopicsViewEdit } = useCreatePostCustomisableMethodsContext();
+  const { hideTopicsViewCreate, hideTopicsViewEdit, hintTextForAnonymous, isAnonymousPostAllowed, handleOnAnonymousPostClickedProp } = useCreatePostCustomisableMethodsContext();
 
   const shouldHideTopicsView = (postToEdit && hideTopicsViewEdit) ? true : (postToEdit == undefined && hideTopicsViewCreate) ? true : false
 
@@ -113,6 +116,12 @@ const LMCreatePostTopics = () => {
   }, [selectedTopics, topicsSelected]);
   return (
     <>
+      {isAnonymousPostAllowed ? <View style={{ marginTop: Layout.normalize(30), marginHorizontal: 15, flexDirection: 'row', flex: 1 }}>
+        <CheckBox label={(hintTextForAnonymous as string)?.length > 0 ? hintTextForAnonymous : "Share this as anonymous post"}
+          isChecked={anonymousPost}
+          onPress={handleOnAnonymousPostClickedProp ? handleOnAnonymousPostClickedProp : handleOnAnonymousPostClicked} />
+      </View> : <></>}
+      
       {mappedTopics.length > 0 &&
       showTopics && !shouldHideTopicsView &&
       !(predefinedTopics.length > 0) ? (
@@ -223,3 +232,31 @@ const LMCreatePostTopics = () => {
 };
 
 export default LMCreatePostTopics;
+
+function CheckBox({ isChecked, onPress, label }: any) {
+  return (
+    <TouchableOpacity onPress={onPress} style={{ flexDirection: 'row', gap: 8, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{
+        borderWidth: 1, borderColor: isChecked ? STYLES.$COLORS.PRIMARY : "#D0D5DD",
+        height: 18, width: 18, justifyContent: 'center',
+        alignItems: 'center', borderRadius: 3,
+        backgroundColor: isChecked ? "#D0D5DD" : STYLES.$COLORS.WHITE
+      }}>
+
+        {isChecked ? <LMIcon
+          assetPath={require("../../assets/images/white_tick3x.png")}
+          color={STYLES.$COLORS.PRIMARY}
+          height={12}
+          width={12}
+        /> : <></>}
+
+      </View>
+      <Text numberOfLines={2} style={{
+        maxWidth: Layout.normalize(320),
+        color: STYLES.$IS_DARK_THEME ? STYLES.$COLORS.WHITE_TEXT_COLOR : STYLES.$COLORS.BLACK
+      }}>
+        {label}
+      </Text>
+    </TouchableOpacity>
+  )
+}

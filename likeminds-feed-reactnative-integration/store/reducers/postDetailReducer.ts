@@ -41,6 +41,8 @@ export const initialState: PostDetailReducerState = {
     isLiked: false,
     isPinned: false,
     isSaved: false,
+    isAnonymous: false,
+    isHidden: false,
     likesCount: 0,
     menuItems: [],
     text: "",
