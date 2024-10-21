@@ -112,6 +112,7 @@ interface PostDetailProps {
   isHeadingEnabled?: boolean;
   isTopResponse?: boolean;
   lmPostCustomFooter?: ReactNode;
+  customWidgetPostView?: ReactNode;
   hideTopicsView?: boolean;
 }
 
@@ -135,6 +136,7 @@ const PostDetail = ({
   isHeadingEnabled,
   isTopResponse,
   lmPostCustomFooter,
+  customWidgetPostView,
   hideTopicsView = false
 }: PostDetailProps) => {
   return (
@@ -158,6 +160,7 @@ const PostDetail = ({
         isTopResponse={isTopResponse}
         lmPostCustomFooter={lmPostCustomFooter}
         hideTopicsView={hideTopicsView}
+        customWidgetPostView={customWidgetPostView}
       >
         <PostDetailComponent />
       </PostDetailCustomisableMethodsContextProvider>
