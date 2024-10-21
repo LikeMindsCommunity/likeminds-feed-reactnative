@@ -16,6 +16,8 @@ export interface LMPostViewData {
   isPinned: boolean;
   isSaved: boolean;
   likesCount: number;
+  isAnonymous: boolean;
+  isHidden: boolean;
   menuItems: Array<LMMenuItemsViewData>;
   replies?: Array<LMCommentViewData>;
   text: string;

@@ -165,7 +165,8 @@ export interface CreatePostContextValues {
     content: string,
     topics: string[],
     poll: any,
-    metaData?: any
+    metaData?: any,
+    isAnonymous: boolean
   ) => void;
   handleScreenBackPress: () => void;
   handleHeadingInputChange: (event: string) => void;
@@ -175,6 +176,8 @@ export interface CreatePostContextValues {
   setShowTopics: Dispatch<SetStateAction<boolean>>;
   mappedTopics: any;
   setMappedTopics: any;
+  anonymousPost: boolean, 
+  handleOnAnonymousPostClicked: () => void
 }
 
 const CreatePostContext = createContext<CreatePostContextValues | undefined>(
@@ -211,6 +214,7 @@ export const CreatePostContextProvider = ({
     Array<LMAttachmentViewData>
   >([]);
   const [showLinkPreview, setShowLinkPreview] = useState(false);
+  const [anonymousPost, setAnonymousPost] = useState(false);
   const [closedOnce, setClosedOnce] = useState(false);
   const [showOptions, setShowOptions] = useState(true);
   const [showSelecting, setShowSelecting] = useState(false);
@@ -379,7 +383,8 @@ export const CreatePostContextProvider = ({
     content: string,
     topics: string[],
     poll: any,
-    metaData?: any
+    metaData?: any,
+    isAnonymous: boolean = false
   ) => {
     const isConnected = await NetworkUtil.isNetworkAvailable();
     if (isConnected) {
@@ -394,6 +399,7 @@ export const CreatePostContextProvider = ({
               topics: topics,
               poll: poll,
               metaData: metaData,
+              isAnonymous
             })
           );
       dispatch({ type: CLEAR_POLL });
@@ -514,6 +520,10 @@ export const CreatePostContextProvider = ({
     dispatch({ type: CLEAR_POLL });
     setShowOptions(true);
   };
+
+  const handleOnAnonymousPostClicked = () => {
+    setAnonymousPost((val) => !val)
+  }
 
   // function edits poll attachment
   const editPollAttachment = () => {
@@ -887,6 +897,8 @@ export const CreatePostContextProvider = ({
     setDisabledTopicsGlobal,
     setShowTopics,
     setMappedTopics,
+    anonymousPost,
+    handleOnAnonymousPostClicked
   };
 
   return (

@@ -40,7 +40,11 @@ const LMPostHeader = React.memo(() => {
       {/* author detail section */}
       <TouchableOpacity
         activeOpacity={0.8}
-        onPress={() => customPostHeaderStyle?.onTap(post?.user)}
+        onPress={
+          !(post?.isAnonymous && post?.uuid == "lm-anonymous-user") ?
+          () => customPostHeaderStyle?.onTap(post?.user)
+          : undefined
+        }
         style={{flex:0.9}}
       >
         <View style={{...styles.alignRow}}>
@@ -51,7 +55,11 @@ const LMPostHeader = React.memo(() => {
                 customPostHeaderStyle?.profilePicture?.fallbackTextStyle,
             }}
             imageUrl={post?.user?.imageUrl}
-            onTap={customPostHeaderStyle?.profilePicture?.onTap}
+            onTap={
+              !(post?.isAnonymous && post?.uuid == "lm-anonymous-user") ?
+              customPostHeaderStyle?.profilePicture?.onTap
+              : undefined
+            }
             size={customPostHeaderStyle?.profilePicture?.size}
             fallbackTextBoxStyle={
               customPostHeaderStyle?.profilePicture?.fallbackTextBoxStyle

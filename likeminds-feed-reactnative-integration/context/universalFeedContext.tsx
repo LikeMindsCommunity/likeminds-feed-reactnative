@@ -128,6 +128,7 @@ export const UniversalFeedContextProvider = ({
     heading,
     topics,
     metaData,
+    isAnonymous
   } = useAppSelector((state) => state.createPost);
   const poll = useAppSelector((state) => state.createPost.poll);
   const unreadNotificationCount = useAppSelector(
@@ -243,6 +244,7 @@ export const UniversalFeedContextProvider = ({
           .setText(postContentText)
           .setHeading(headingText)
           .setTopicIds(topics)
+          .setIsAnonymous(isAnonymous ?? false)
           .build(),
         false
       )

@@ -39,7 +39,8 @@ interface CreatePostProps {
     linkData: Array<LMAttachmentViewData>,
     content: string,
     topics: string[],
-    poll: any
+    poll: any,
+    isAnonymous?: boolean
   ) => void;
   handleScreenBackPressProp?: () => void;
   onPollEditClicked: any;
@@ -47,6 +48,9 @@ interface CreatePostProps {
   isHeadingEnabled: boolean;
   hideTopicsViewCreate?: boolean;
   hideTopicsViewEdit?: boolean;
+  isAnonymousPostAllowed?: boolean;
+  handleOnAnonymousPostClickedProp?: (isAnonymous: Boolean) => void,
+  hintTextForAnonymous?: string
 }
 
 const CreatePost = ({
@@ -60,7 +64,10 @@ const CreatePost = ({
   onPollClearClicked,
   isHeadingEnabled = false,
   hideTopicsViewCreate = false,
-  hideTopicsViewEdit = false
+  hideTopicsViewEdit = false,
+  isAnonymousPostAllowed = false,
+  handleOnAnonymousPostClickedProp,
+  hintTextForAnonymous
 }: CreatePostProps) => {
   return (
     <PollCustomisableMethodsContextProvider
@@ -69,6 +76,7 @@ const CreatePost = ({
     >
       <CreatePostCustomisableMethodsContextProvider
         isHeadingEnabled={isHeadingEnabled}
+        isAnonymousPostAllowed={isAnonymousPostAllowed}
         handleDocumentProp={handleDocumentProp}
         handlePollProp={handlePollProp}
         handleGalleryProp={handleGalleryProp}
@@ -76,6 +84,8 @@ const CreatePost = ({
         handleScreenBackPressProp={handleScreenBackPressProp}
         hideTopicsViewCreate={hideTopicsViewCreate}
         hideTopicsViewEdit={hideTopicsViewEdit}
+        handleOnAnonymousPostClickedProp={handleOnAnonymousPostClickedProp}
+        hintTextForAnonymous={hintTextForAnonymous}
       >
         <CreatePostComponent children={children} />
       </CreatePostCustomisableMethodsContextProvider>
@@ -86,5 +96,21 @@ const CreatePost = ({
 const CreatePostComponent = ({ children }) => {
   return <SafeAreaView style={styles.container}>{children}</SafeAreaView>;
 };
+
+function CheckBox({ isChecked, onPress, label }: any) {
+  return (
+    <TouchableOpacity onPress={onPress} style={{ flexDirection: 'row', gap: 8, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ borderWidth: 1, borderColor: isChecked ? STYLES.$COLORS.PRIMARY : "#D0D5DD", height: 18, width: 18, justifyContent: 'center', alignItems: 'center', borderRadius: 3, backgroundColor: isChecked ? "#D0D5DD" : STYLES.$COLORS.WHITE }}>
+        {isChecked ? <LMIcon
+          assetPath={require("../../assets/images/white_tick3x.png")}
+          color={STYLES.$COLORS.PRIMARY}
+          height={12}
+          width={12}
+        /> : <></>}
+      </View>
+      <Text numberOfLines={2} style={{ maxWidth: Layout.normalize(320), color: STYLES.$IS_DARK_THEME ? STYLES.$COLORS.WHITE_TEXT_COLOR : STYLES.$COLORS.BLACK }}>{label}</Text>
+    </TouchableOpacity>
+  )
+}
 
 export { CreatePost };

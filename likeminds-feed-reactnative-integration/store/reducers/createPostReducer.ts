@@ -22,6 +22,7 @@ export interface CreatePostReducerState {
   predefinedTopics: [];
   pollAttachment: {};
   metaData: {};
+  isAnonymous: boolean;
 }
 
 export const initialState: CreatePostReducerState = {
@@ -37,6 +38,7 @@ export const initialState: CreatePostReducerState = {
   predefinedTopics: [],
   pollAttachment: {}, // for local preview of poll data
   metaData: {}, // meta data for custom widget
+  isAnonymous: false
 };
 
 export function createPostReducer(state = initialState, action) {
@@ -91,6 +93,7 @@ export function createPostReducer(state = initialState, action) {
         topics = [],
         poll = {},
         metaData = {},
+        isAnonymous = false
       } = action.body;
       return {
         ...state,
@@ -101,6 +104,7 @@ export function createPostReducer(state = initialState, action) {
         topics: topics,
         poll: poll,
         metaData: metaData,
+        isAnonymous: isAnonymous
       };
     }
     default:
