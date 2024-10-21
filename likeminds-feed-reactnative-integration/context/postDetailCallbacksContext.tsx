@@ -89,7 +89,7 @@ export const PostDetailCustomisableMethodsContextProvider = ({
   isHeadingEnabled,
   isTopResponse,
   lmPostCustomFooter,
-  hideTopicsView
+  hideTopicsView,
   customWidgetPostView,
 }: PostDetailCallbacksContextProps) => {
   const contextValues: PostDetailCustomisableMethodsContext = {
@@ -106,7 +106,7 @@ export const PostDetailCustomisableMethodsContextProvider = ({
     isHeadingEnabled,
     isTopResponse,
     lmPostCustomFooter,
-    hideTopicsView
+    hideTopicsView,
     customWidgetPostView
   };
 

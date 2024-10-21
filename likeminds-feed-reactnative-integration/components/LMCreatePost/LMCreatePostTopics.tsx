@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import React, { useEffect, useState } from "react";
-import { CreatePostContextValues, useCreatePostContext } from "../../context";
+import { CreatePostContextValues, useCreatePostContext, useCreatePostCustomisableMethodsContext } from "../../context";
 import {
   ADD_SELECTED_TOPICS,
   SET_DISABLED_TOPICS,
@@ -28,7 +28,12 @@ const LMCreatePostTopics = () => {
     mappedTopics,
     setShowTopics,
     setMappedTopics,
+    postToEdit
   }: CreatePostContextValues = useCreatePostContext();
+
+  const { hideTopicsViewCreate, hideTopicsViewEdit } = useCreatePostCustomisableMethodsContext();
+
+  const shouldHideTopicsView = (postToEdit && hideTopicsViewEdit) ? true : (postToEdit == undefined && hideTopicsViewCreate) ? true : false
 
   const handleAllTopicPress = () => {
     const arrayOfIds = mappedTopics.map((obj) => obj.id);
@@ -109,7 +114,7 @@ const LMCreatePostTopics = () => {
   return (
     <>
       {mappedTopics.length > 0 &&
-      showTopics &&
+      showTopics && !shouldHideTopicsView &&
       !(predefinedTopics.length > 0) ? (
         <View
           style={{
@@ -168,7 +173,7 @@ const LMCreatePostTopics = () => {
             </View>
           ))}
         </View>
-      ) : showTopics && !(predefinedTopics.length > 0) ? (
+      ) : showTopics && !shouldHideTopicsView && !(predefinedTopics.length > 0) ? (
         <View
           style={{
             flexDirection: "row",

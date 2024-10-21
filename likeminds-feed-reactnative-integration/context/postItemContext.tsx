@@ -72,8 +72,8 @@ export const LMPostContextProvider = ({
     isHeadingEnabled,
     isTopResponse,
     customFooter,
-    hideTopicsView
-    customWidgetPostView,
+    hideTopicsView,
+    customWidgetPostView
   };
 
   return (
