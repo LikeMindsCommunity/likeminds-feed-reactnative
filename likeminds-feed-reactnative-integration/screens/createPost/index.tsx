@@ -1049,10 +1049,10 @@ const CreatePostComponent = () => {
           postToEdit
             ? customCreatePostScreenHeader?.editPostHeading
               ? customCreatePostScreenHeader?.editPostHeading
-              : `Edit ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post,WordAction.firstLetterCapitalSingular)}`
+              : `Edit ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post ?? "Post",WordAction.firstLetterCapitalSingular)}`
             : customCreatePostScreenHeader?.createPostHeading
             ? customCreatePostScreenHeader?.createPostHeading
-            : `Create ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post,WordAction.firstLetterCapitalSingular)}`
+            : `Create ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post ?? "Post",WordAction.firstLetterCapitalSingular)}`
         }
         rightComponent={
           // post button section

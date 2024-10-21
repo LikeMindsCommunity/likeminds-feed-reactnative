@@ -262,11 +262,11 @@ const LMCommentItem = React.memo(
                   children:
                     commentLikeCount > 1 ? (
                       <Text style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}>
-                        {commentLikeCount} {pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.likeEntityVariable?.entityName,WordAction.firstLetterCapitalPlural)}
+                        {commentLikeCount} {pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.likeEntityVariable?.entityName ?? "like",WordAction.firstLetterCapitalPlural)}
                       </Text>
                     ) : (
                       <Text style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}>
-                        {commentLikeCount} {pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.likeEntityVariable?.entityName,WordAction.firstLetterCapitalSingular)}
+                        {commentLikeCount} {pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.likeEntityVariable?.entityName ?? "like",WordAction.firstLetterCapitalSingular)}
                       </Text>
                     ),
                   textStyle: {

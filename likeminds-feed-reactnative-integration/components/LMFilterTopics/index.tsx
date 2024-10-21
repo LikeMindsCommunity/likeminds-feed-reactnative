@@ -305,7 +305,7 @@ const LMFilterTopics = () => {
       {/* posts list section */}
       {!isAnyMatchFound ? (
         <View style={[styles.justifyCenter]}>
-          <Text style={styles.title}>No matching {pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post,WordAction.allSmallSingular)} found</Text>
+          <Text style={styles.title}>No matching {pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post ?? "post",WordAction.allSmallSingular)} found</Text>
         </View>
       ) : (
         <></>

@@ -70,14 +70,14 @@ const PostLikesListComponent = React.memo(() => {
             : true
         }
         heading={
-          customScreenHeader?.heading ? customScreenHeader?.heading : pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.likeEntityVariable?.entityName,WordAction.firstLetterCapitalPlural)
+          customScreenHeader?.heading ? customScreenHeader?.heading : pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.likeEntityVariable?.entityName ?? "like",WordAction.firstLetterCapitalPlural)
         }
         subHeading={
           customScreenHeader?.subHeading
             ? customScreenHeader?.subHeading
             : totalLikes > 1
-            ? `${totalLikes} ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.likeEntityVariable?.entityName,WordAction.allSmallPlural)}`
-            : `${totalLikes} ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.likeEntityVariable?.entityName,WordAction.allSmallSingular)}`
+            ? `${totalLikes} ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.likeEntityVariable?.entityName ?? "like",WordAction.allSmallPlural)}`
+            : `${totalLikes} ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.likeEntityVariable?.entityName ?? "like",WordAction.allSmallSingular)}`
         }
         onBackPress={() => {
           handleScreenBackPressProp
