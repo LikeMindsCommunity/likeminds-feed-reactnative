@@ -254,6 +254,7 @@ const PostDetailComponent = React.memo(() => {
     isTopResponse,
     lmPostCustomFooter,
     hideTopicsView,
+    customWidgetPostView,
   } = usePostDetailCustomisableMethodsContext();
   const postHeaderStyle: any = postListStyle?.header;
   const customScreenHeader: any = postDetailStyle?.screenHeader;
@@ -303,6 +304,7 @@ const PostDetailComponent = React.memo(() => {
         isTopResponse={isTopResponse}
         customFooter={lmPostCustomFooter}
         hideTopicsView={hideTopicsView ?? false}
+        customWidgetPostView={customWidgetPostView}
         // header props
         headerProps={{
           onOverlayMenuClick: (event) =>

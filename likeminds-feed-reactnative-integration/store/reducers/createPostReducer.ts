@@ -14,13 +14,14 @@ export interface CreatePostReducerState {
   mediaAttachmemnts: [];
   linkAttachments: [];
   postContent: "";
-  heading: "",
+  heading: "";
   topics: [];
   poll: {};
   selectedTopics: [];
   disbaledTopics: [];
   predefinedTopics: [];
   pollAttachment: {};
+  metaData: {};
 }
 
 export const initialState: CreatePostReducerState = {
@@ -35,6 +36,7 @@ export const initialState: CreatePostReducerState = {
   disbaledTopics: [],
   predefinedTopics: [],
   pollAttachment: {}, // for local preview of poll data
+  metaData: {}, // meta data for custom widget
 };
 
 export function createPostReducer(state = initialState, action) {
@@ -88,6 +90,7 @@ export function createPostReducer(state = initialState, action) {
         heading = "",
         topics = [],
         poll = {},
+        metaData = {},
       } = action.body;
       return {
         ...state,
@@ -97,6 +100,7 @@ export function createPostReducer(state = initialState, action) {
         heading: heading,
         topics: topics,
         poll: poll,
+        metaData: metaData,
       };
     }
     default:

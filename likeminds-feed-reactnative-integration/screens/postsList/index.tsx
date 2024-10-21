@@ -52,17 +52,28 @@ import { CommunityConfigs } from "../../communityConfigs";
 import { WordAction } from "../../enums/Variables";
 import pluralizeOrCapitalize from "../../utils/variables";
 
-const PostsList = ({ route, children, items, lmPostCustomFooter }: any) => {
+const PostsList = ({
+  route,
+  children,
+  items,
+  lmPostCustomFooter,
+  customWidgetPostView,
+}: any) => {
   const { navigation }: UniversalFeedContextValues = useUniversalFeedContext();
   return (
     <PostsListComponent
       topics={items}
       lmPostCustomFooter={lmPostCustomFooter}
+      customWidgetPostView={customWidgetPostView}
     />
   );
 };
 
-const PostsListComponent = ({ topics, lmPostCustomFooter }: any) => {
+const PostsListComponent = ({
+  topics,
+  lmPostCustomFooter,
+  customWidgetPostView,
+}: any) => {
   const dispatch = useAppDispatch();
   const {
     listRef,
@@ -289,6 +300,7 @@ const PostsListComponent = ({ topics, lmPostCustomFooter }: any) => {
                           },
                         }}
                         customFooter={lmPostCustomFooter}
+                        customWidgetPostView={customWidgetPostView}
                         hideTopicsView={hideTopicsView ?? false}
                       />
                     </TouchableOpacity>

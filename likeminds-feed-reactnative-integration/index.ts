@@ -67,6 +67,17 @@ import {
   LMSocialFeedScreen,
 } from "./wrappers";
 import LMFeedTheme from "./constants/Styles";
+import {
+  LMCreatePostHeader,
+  LMCreatePostAttachmentSelection,
+  LMCreatePostHeading,
+  LMCreatePostMedia,
+  LMCreatePostTextInput,
+  LMCreatePostTopics,
+  LMCreatePostUIRender,
+  LMCreatePostUserTagging,
+  LMUserProfileSection,
+} from "./components/LMCreatePost";
 
 export {
   LMOverlayProvider,
@@ -129,4 +140,13 @@ export {
   LMTopicFeedScreen,
   LMSocialFeedScreen,
   LMFeedTheme,
+  LMCreatePostHeader,
+  LMCreatePostUIRender,
+  LMUserProfileSection,
+  LMCreatePostTopics,
+  LMCreatePostHeading,
+  LMCreatePostTextInput,
+  LMCreatePostUserTagging,
+  LMCreatePostMedia,
+  LMCreatePostAttachmentSelection,
 };

@@ -6,7 +6,6 @@ import {
 import { initMyClient } from "./setup";
 import { LoginSchemaRO } from "../social-feed/login/loginSchemaRO";
 import { Client } from "./client";
-const Realm = require("realm");
 
 // create a class by LMFeedCoreCallbacks and take two functions in its contructors, assign these two functions to the class's functions
 export class LMCoreCallbacks {

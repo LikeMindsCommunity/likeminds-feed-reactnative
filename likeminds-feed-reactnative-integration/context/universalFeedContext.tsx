@@ -121,8 +121,14 @@ export const UniversalFeedContextProvider = ({
   const memberRight = useAppSelector((state) => state.login.memberRights);
   const [postUploading, setPostUploading] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(true);
-  const { mediaAttachmemnts, linkAttachments, postContent, heading, topics } =
-    useAppSelector((state) => state.createPost);
+  const {
+    mediaAttachmemnts,
+    linkAttachments,
+    postContent,
+    heading,
+    topics,
+    metaData,
+  } = useAppSelector((state) => state.createPost);
   const poll = useAppSelector((state) => state.createPost.poll);
   const unreadNotificationCount = useAppSelector(
     (state) => state.notification.activitiesCount
@@ -232,6 +238,7 @@ export const UniversalFeedContextProvider = ({
             ...updatedAttachments,
             ...linkAttachments,
             ...pollAttachment,
+            ...[{ attachmentType: "5", attachmentMeta: { meta: metaData } }],
           ])
           .setText(postContentText)
           .setHeading(headingText)
