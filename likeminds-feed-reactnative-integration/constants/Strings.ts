@@ -213,6 +213,8 @@ export function updateVariables (communityConfig: Configuration[]) {
       `Please enter a specific reason for deleting this ${pluralizeOrCapitalize(POST,WordAction.allSmallSingular)}`;
     PIN_THIS_POST = `Pin this ${pluralizeOrCapitalize(POST,WordAction.allSmallSingular)}`;
     UNPIN_THIS_POST = `Unpin this ${pluralizeOrCapitalize(POST,WordAction.allSmallSingular)}`;
+    POST_HIDDEN = `${pluralizeOrCapitalize(POST,WordAction.firstLetterCapitalSingular)} is hidden`;
+    POST_UNHIDDEN = `${pluralizeOrCapitalize(POST,WordAction.firstLetterCapitalSingular)} is visible`;
     POST_DELETE = `${pluralizeOrCapitalize(POST,WordAction.firstLetterCapitalSingular)} Deleted!`;
     COMMENT_DELETE = `${pluralizeOrCapitalize(COMMENT,WordAction.allSmallSingular)} Deleted!`;
     POST_UPLOADED = `Your ${pluralizeOrCapitalize(POST,WordAction.allSmallSingular)} was shared`;

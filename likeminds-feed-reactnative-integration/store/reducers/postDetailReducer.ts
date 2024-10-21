@@ -476,13 +476,14 @@ export const postDetailReducer = (state = initialState, action) => {
     }
     case HIDE_POST_STATE: {
       const post = state.postDetail;
+      const { title } = action.body
       post?.menuItems?.forEach((menuItem) => {
         if(menuItem?.id == 12){
           menuItem.id = 13;
-          menuItem.title = "Unhide Post"
+          menuItem.title = title
         }else if(menuItem?.id == 13){
           menuItem.id = 12;
-          menuItem.title = "Hide Post"
+          menuItem.title = title
         }
       })
       return { ...state };

@@ -98,6 +98,9 @@ import { commentResponseModelConvertor } from "../utils/commentResponseModelConv
 import STYLES from "../constants/Styles";
 import { Client } from "../client";
 import { SHOW_TOAST } from "../store/types/loader";
+import { CommunityConfigs } from "../communityConfigs";
+import pluralizeOrCapitalize from "../utils/variables";
+import { WordAction } from "../enums/Variables";
 
 interface PostDetailContextProps {
   children: ReactNode;
@@ -480,7 +483,10 @@ export const PostDetailContextProvider = ({
       dispatch({
         type: HIDE_POST_STATE,
         body: {
-          postId: postId
+          postId: postId,
+          title: `${isPostHidden ? "Hide" : "Unhide"} This ${pluralizeOrCapitalize(
+            (CommunityConfigs?.communityConfigs[1])?.value?.post ?? "post",
+            WordAction.firstLetterCapitalSingular)}`
         }
       })
       dispatch({

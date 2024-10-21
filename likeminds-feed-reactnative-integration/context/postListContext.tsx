@@ -63,6 +63,9 @@ import { useUniversalFeedContext } from "../context/universalFeedContext";
 import { useIsFocused } from "@react-navigation/native";
 import { HIDE_POST_STATE, SET_CURRENT_ID_OF_VIDEO } from "../store/types/types";
 import { SHOW_TOAST } from "..//store/types/loader";
+import pluralizeOrCapitalize from "../utils/variables";
+import { WordAction } from "../enums/Variables";
+import { CommunityConfigs } from "../communityConfigs";
 
 interface PostListContextProps {
   children: ReactNode;
@@ -377,7 +380,10 @@ export const PostListContextProvider = ({
       dispatch({
         type: HIDE_POST_STATE,
         body: {
-          postId: postId
+          postId: postId,
+          title: `${isPostHidden ? "Hide" : "Unhide"} This ${pluralizeOrCapitalize(
+            (CommunityConfigs?.communityConfigs[1])?.value?.post ?? "post",
+            WordAction.firstLetterCapitalSingular)}`
         }
       })
       dispatch({
