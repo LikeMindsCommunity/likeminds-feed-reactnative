@@ -27,6 +27,9 @@ import {
 } from "../../constants/Strings";
 import LMHeader from "../LMHeader";
 import { styles } from "../../screens/createPost/styles";
+import { CommunityConfigs } from "../../communityConfigs";
+import pluralizeOrCapitalize from "../../utils/variables";
+import { WordAction } from "../../enums/Variables";
 
 const LMCreatePostHeader = () => {
   const dispatch = useAppDispatch();
@@ -195,10 +198,10 @@ const LMCreatePostHeader = () => {
           postToEdit
             ? customCreatePostScreenHeader?.editPostHeading
               ? customCreatePostScreenHeader?.editPostHeading
-              : "Edit Post"
+              : `Edit ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post ?? "post",WordAction.firstLetterCapitalSingular)}`
             : customCreatePostScreenHeader?.createPostHeading
             ? customCreatePostScreenHeader?.createPostHeading
-            : "Create a Post"
+            : `Create ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post ?? "post",WordAction.firstLetterCapitalSingular)}`
         }
         rightComponent={
           // post button section

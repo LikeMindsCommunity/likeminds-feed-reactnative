@@ -11,6 +11,9 @@ import STYLES from "../../constants/Styles";
 import { styles } from "../../screens/createPost/styles";
 import Layout from "../../constants/Layout";
 import { LMIcon } from "../../uiComponents";
+import pluralizeOrCapitalize from "../../utils/variables";
+import { WordAction } from "../../enums/Variables";
+import { CommunityConfigs } from "../../communityConfigs";
 
 const LMCreatePostTopics = () => {
   const dispatch = useAppDispatch();
@@ -117,7 +120,7 @@ const LMCreatePostTopics = () => {
   return (
     <>
       {isAnonymousPostAllowed ? <View style={{ marginTop: Layout.normalize(30), marginHorizontal: 15, flexDirection: 'row', flex: 1 }}>
-        <CheckBox label={(hintTextForAnonymous as string)?.length > 0 ? hintTextForAnonymous : "Share this as anonymous post"}
+        <CheckBox label={(hintTextForAnonymous as string)?.length > 0 ? hintTextForAnonymous : `Share this as an anonymous ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post ?? "post",WordAction.allSmallSingular)}`}
           isChecked={anonymousPost}
           onPress={handleOnAnonymousPostClickedProp ? handleOnAnonymousPostClickedProp : handleOnAnonymousPostClicked} />
       </View> : <></>}
