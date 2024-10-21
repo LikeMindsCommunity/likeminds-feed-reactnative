@@ -6,4 +6,4 @@ try {
   console.log("react-native-video is not installed");
 }
 
-export default RNVideo.default;
+export default RNVideo?.default;
