@@ -54,38 +54,12 @@ export const LMFeedProvider = ({
 
   const callGetCommunityConfigurations = async () => {
     const response = await myClient?.getCommunityConfigurations();
-    console.log(response?.data)
     CommunityConfigs.setCommunityConfigs(
       /* @ts-ignore */
-      [null,{value: {
-        comment: "customComment0",
-        likeEntityVariable: {
-          entityName: "customLike0",
-          pastTenseVerb: "customLiked0"
-        },
-        post: "customPost0",
-        universalFeed: {
-          commentCount: 1,
-          commentSortOrder: "",
-          commentSortOrderKey: ""
-        }
-      }}]
+      response?.data?.communityConfigurations
     );
-    updateVariables([null,{
-      value: {
-        comment: "customComment",
-        likeEntityVariable: {
-          entityName: "customLike",
-          pastTenseVerb: "customLiked"
-        },
-        post: "customPost",
-        universalFeed: {
-          commentCount: 1,
-          commentSortOrder: "",
-          commentSortOrderKey: ""
-        }
-      }
-    }])
+    /*@ts-ignore*/
+    updateVariables(response?.data?.communityConfigurations)
   };
 
   useEffect(() => {
