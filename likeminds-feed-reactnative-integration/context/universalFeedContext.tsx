@@ -239,7 +239,7 @@ export const UniversalFeedContextProvider = ({
             ...updatedAttachments,
             ...linkAttachments,
             ...pollAttachment,
-            ...[{ attachmentType: "5", attachmentMeta: { meta: metaData } }],
+            ...[{ attachmentType: 5, attachmentMeta: { meta: metaData } }],
           ])
           .setText(postContentText)
           .setHeading(headingText)
