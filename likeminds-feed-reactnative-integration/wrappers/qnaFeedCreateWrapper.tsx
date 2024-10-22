@@ -44,6 +44,7 @@ const CreateScreen = () => {
     postContentText,
     topics,
     poll,
+    isAnonymous
   ) => {
     console.log('before post click');
     onPostClick(
@@ -53,6 +54,7 @@ const CreateScreen = () => {
       topics,
       poll,
       {text: 'custom widget is working'},
+      isAnonymous
     );
     console.log('after post click');
   };
@@ -73,8 +75,8 @@ const CreateScreen = () => {
   };
   return (
     <CreatePost
-      isAnonymousPostAllowed={true}
       isHeadingEnabled={true}
+      isAnonymousPostAllowed={true}
       handleDocumentProp={() => customHandleDocumentProp()}
       handleGalleryProp={type => customHandleGalleryProp(type)}
       onPostClickProp={(
@@ -83,6 +85,7 @@ const CreateScreen = () => {
         postContentText,
         topics,
         poll,
+        isAnonymous
       ) =>
         customHandleCreatePost(
           allAttachment,
@@ -90,6 +93,7 @@ const CreateScreen = () => {
           postContentText,
           topics,
           poll,
+          isAnonymous
         )
       }
       handleScreenBackPressProp={() => customBackHandler()}

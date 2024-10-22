@@ -21,6 +21,7 @@ import {
   POLL_ENDED_WARNING,
   POLL_SUBMITTED_SUCCESSFULLY,
   POST_UPLOADED,
+  POST_UPLOADED_ANONYMOUSLY,
   POST_UPLOAD_INPROGRESS,
   RIGHT_CREATE_POST,
   STATE_ADMIN,
@@ -264,7 +265,7 @@ export const UniversalFeedContextProvider = ({
       dispatch(
         showToastMessage({
           isToast: true,
-          message: POST_UPLOADED,
+          message: isAnonymous ? POST_UPLOADED_ANONYMOUSLY : POST_UPLOADED,
         })
       );
     }

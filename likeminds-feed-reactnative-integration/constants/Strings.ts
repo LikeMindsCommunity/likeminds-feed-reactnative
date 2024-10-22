@@ -100,6 +100,7 @@ export let POST_DELETE = "Post Deleted!";
 export let COMMENT_DELETE = "Comment Deleted!";
 export const REPORT_REASON_VALIDATION = "Please enter a reason";
 export let POST_UPLOADED = "Your post was shared";
+export let POST_UPLOADED_ANONYMOUSLY = "Your post was shared anonymously"
 export let POST_PIN_SUCCESS = "Post pinned to top!";
 export let POST_UNPIN_SUCCESS = "Post unpinned!";
 export let POST_UPLOAD_INPROGRESS = "A post is already uploading!";
@@ -218,6 +219,7 @@ export function updateVariables (communityConfig: Configuration[]) {
     POST_DELETE = `${pluralizeOrCapitalize(POST,WordAction.firstLetterCapitalSingular)} Deleted!`;
     COMMENT_DELETE = `${pluralizeOrCapitalize(COMMENT,WordAction.allSmallSingular)} Deleted!`;
     POST_UPLOADED = `Your ${pluralizeOrCapitalize(POST,WordAction.allSmallSingular)} was shared`;
+    POST_UPLOADED_ANONYMOUSLY = `Your ${pluralizeOrCapitalize(POST,WordAction.allSmallSingular)} was shared anonymously`
     POST_PIN_SUCCESS = `${pluralizeOrCapitalize(POST,WordAction.firstLetterCapitalSingular)} pinned to top!`;
     POST_UNPIN_SUCCESS = `${pluralizeOrCapitalize(POST,WordAction.firstLetterCapitalSingular)} unpinned!`;
     POST_UPLOAD_INPROGRESS = `A ${pluralizeOrCapitalize(POST,WordAction.allSmallSingular)} is already uploading!`;

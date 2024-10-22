@@ -50,6 +50,7 @@ const LMCreatePostHeader = () => {
     disbaledTopicsGlobal,
     showTopics,
     mappedTopics,
+    anonymousPost
   }: CreatePostContextValues = useCreatePostContext();
   const poll = useAppSelector((state) => state.createPost.pollAttachment);
 
@@ -61,14 +62,17 @@ const LMCreatePostHeader = () => {
           formattedLinkAttachments,
           postContentText,
           predefinedTopics ? [...predefinedTopics] : idValuesArray,
-          poll
+          poll,
+          anonymousPost
         )
       : onPostClick(
           allAttachment,
           formattedLinkAttachments,
           postContentText,
           predefinedTopics ? [...predefinedTopics] : idValuesArray,
-          poll
+          poll,
+          {},
+          anonymousPost
         );
     if (!postToEdit) {
       const map: Map<string | undefined, string | undefined> = new Map();
