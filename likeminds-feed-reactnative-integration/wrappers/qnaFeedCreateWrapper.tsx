@@ -73,6 +73,7 @@ const CreateScreen = () => {
   };
   return (
     <CreatePost
+      isAnonymousPostAllowed={true}
       isHeadingEnabled={true}
       handleDocumentProp={() => customHandleDocumentProp()}
       handleGalleryProp={type => customHandleGalleryProp(type)}
