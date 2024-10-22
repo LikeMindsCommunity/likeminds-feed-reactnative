@@ -284,9 +284,9 @@ const DeleteModal = ({
                 {/* main modal section */}
                 <TouchableWithoutFeedback>
                   <View style={styles.modalContainer}>
-                    <Text style={styles.textHeading}>Delete {(pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post,WordAction.allSmallSingular))}?</Text>
+                    <Text style={styles.textHeading}>Delete {(pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post ?? "post",WordAction.allSmallSingular))}?</Text>
                     <Text style={styles.text}>
-                      {CONFIRM_DELETE(pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post,WordAction.allSmallSingular))}
+                      {CONFIRM_DELETE(pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post ?? "post",WordAction.allSmallSingular))}
                     </Text>
 
                     {/* delete reason selection section */}

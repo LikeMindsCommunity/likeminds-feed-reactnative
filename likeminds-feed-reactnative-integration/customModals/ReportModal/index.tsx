@@ -257,7 +257,7 @@ const ReportModal = ({
           {/* modal content */}
           <View style={styles.contentView}>
             <Text style={styles.textHeading}>{REPORT_PROBLEM}</Text>
-            <Text style={styles.text}>{REPORT_INSTRUSTION(pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post,WordAction.allSmallSingular))}</Text>
+            <Text style={styles.text}>{REPORT_INSTRUSTION(pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post ?? "post",WordAction.allSmallSingular))}</Text>
           </View>
           {/* report tags list section */}
           <View style={styles.tagView}>
@@ -359,7 +359,7 @@ const ReportModal = ({
                   : () => null
               }
             >
-              <Text style={styles.reportBtnText}>{reportType == POST_TYPE ? `REPORT ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post,WordAction.allCapitalSingular)}` : "REPORT"}</Text>
+              <Text style={styles.reportBtnText}>{reportType == POST_TYPE ? `REPORT ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post ?? "post",WordAction.allCapitalSingular)}` : "REPORT"}</Text>
             </TouchableOpacity>
           </View>
         </TouchableOpacity>
