@@ -66,6 +66,9 @@ export default UniversalFeedScreen;
 const LMPostComponent = React.memo(() => {
   const {
     post,
+    customFooter,
+    isHeadingEnabled,
+    isTopResponse
   } = useLMPostContext();
 
   return (
@@ -74,7 +77,7 @@ const LMPostComponent = React.memo(() => {
       <LMPostHeader />
 
       {/* post heading */}
-      <LMPostHeading />
+      {isHeadingEnabled ? <LMPostHeading /> : null}
 
       {/* post content */}
       {(post?.text ||
@@ -86,10 +89,10 @@ const LMPostComponent = React.memo(() => {
       {post?.attachments && post?.attachments.length > 0 && <LMPostMedia />}
 
       {/* post top response */}
-      <LMPostTopResponse />
+      {isTopResponse ? <LMPostTopResponse /> : null}
 
       {/* post footer */}
-      <LMPostFooter />
+      {customFooter ? customFooter : <LMPostFooter />}
     </View>
   );
 });
