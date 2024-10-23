@@ -54,7 +54,7 @@ const LMCreatePostAttachmentSelection = () => {
   const myClient = Client.myClient;
   const [showTopics, setShowTopics] = useState(false);
   const route: any = useRoute();
-  const hidePoll = route?.params?.hidePoll;
+  const hidePoll = route?.params?.hidePoll || STYLES.$POLL_STYLE?.hidePoll;
 
   const getTopics = async () => {
     const apiRes = await myClient?.getTopics({
