@@ -14,6 +14,7 @@ import { LMIcon } from "../../uiComponents";
 import pluralizeOrCapitalize from "../../utils/variables";
 import { WordAction } from "../../enums/Variables";
 import { CommunityConfigs } from "../../communityConfigs";
+import { TOPIC_FEED } from "../../constants/screenNames";
 
 const LMCreatePostTopics = () => {
   const dispatch = useAppDispatch();
@@ -34,8 +35,11 @@ const LMCreatePostTopics = () => {
     setMappedTopics,
     postToEdit,
     anonymousPost,
-    handleOnAnonymousPostClicked
+    handleOnAnonymousPostClicked,
+    postDetail,
+    setAnonymousPost
   }: CreatePostContextValues = useCreatePostContext();
+
 
   const { hideTopicsViewCreate, hideTopicsViewEdit, hintTextForAnonymous, isAnonymousPostAllowed, handleOnAnonymousPostClickedProp } = useCreatePostCustomisableMethodsContext();
 
@@ -84,6 +88,12 @@ const LMCreatePostTopics = () => {
   };
 
   useEffect(() => {
+    if(postDetail) {
+      setAnonymousPost(postDetail.isAnonymous)
+    }
+  }, [postDetail])
+
+  useEffect(() => {
     // Create a new state array named mappedTopics
     if (topicsSelected.length > 0) {
       const filteredTopicArray = topicsSelected.map((topicId) => ({
@@ -119,7 +129,7 @@ const LMCreatePostTopics = () => {
   }, [selectedTopics, topicsSelected]);
   return (
     <>
-      {isAnonymousPostAllowed ? <View style={{ marginTop: Layout.normalize(30), marginHorizontal: 15, flexDirection: 'row', flex: 1 }}>
+      {isAnonymousPostAllowed && !postToEdit ? <View style={{ marginTop: Layout.normalize(30), marginHorizontal: 15, flexDirection: 'row', flex: 1 }}>
         <CheckBox label={(hintTextForAnonymous as string)?.length > 0 ? hintTextForAnonymous : `Share this as an anonymous ${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.post ?? "post",WordAction.allSmallSingular)}`}
           isChecked={anonymousPost}
           onPress={handleOnAnonymousPostClickedProp ? handleOnAnonymousPostClickedProp : handleOnAnonymousPostClicked} />

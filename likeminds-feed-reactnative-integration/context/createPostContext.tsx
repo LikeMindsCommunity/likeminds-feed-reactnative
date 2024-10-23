@@ -176,8 +176,9 @@ export interface CreatePostContextValues {
   setShowTopics: Dispatch<SetStateAction<boolean>>;
   mappedTopics: any;
   setMappedTopics: any;
-  anonymousPost: boolean, 
-  handleOnAnonymousPostClicked: () => void
+  anonymousPost: boolean;
+  handleOnAnonymousPostClicked: () => void;
+  setAnonymousPost: Dispatch<SetStateAction<boolean>>;
 }
 
 const CreatePostContext = createContext<CreatePostContextValues | undefined>(
@@ -858,6 +859,7 @@ export const CreatePostContextProvider = ({
     disbaledTopicsGlobal,
     showTopics,
     mappedTopics,
+    setAnonymousPost,
     setIsLoading,
     setIsUserTagging,
     setAllTags,
