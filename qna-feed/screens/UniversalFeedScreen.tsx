@@ -1,25 +1,26 @@
 import React, { useState, useEffect } from "react";
 import {
+    LMCreatePostButton,
+  LMFilterTopics,
+  LMPostUploadIndicator,
+  LMUniversalFeedHeader,
   PostListContextProvider,
+  PostsList,
+  UniversalFeed,
   UniversalFeedContextProvider,
-  useLMPostContext,
   usePostListContext,
-} from "../context";
-import { useAppSelector } from "../store/store";
-import { token } from "../utils/pushNotifications";
+} from "@likeminds.community/feed-rn-core";
 import { View } from "react-native";
-import { UniversalFeed } from "../screens/universalFeed";
-import LMUniversalFeedHeader from "../components/LMUniversalFeedHeader";
-import LMFilterTopics from "../components/LMFilterTopics";
-import LMPostUploadIndicator from "../components/LMPostUploadIndicator";
-import { PostsList } from "../screens/postsList";
-import LMCreatePostButton from "../components/LMCreatePostButton";
-import LMPostQnAFeedFooter from "../components/LMPost/LMPostQnAFeedFooter";
-import STYLES from "../constants/Styles";
-import { LINK_ATTACHMENT_TYPE } from "../constants/Strings";
-import { LMPostContent, LMPostFooter, LMPostHeader, LMPostMedia } from "../components";
-import LMPostTopResponse from "../components/LMPost/LMPostTopResponse";
-import LMPostHeading from "../components/LMPost/LMPostHeading";
+import { LMPostContent, LMPostFooter, LMPostHeader, LMPostMedia } from "@likeminds.community/feed-rn-core/components";
+import { useLMPostContext } from "@likeminds.community/feed-rn-core/context";
+import { token } from "../pushNotification";
+import { LINK_ATTACHMENT_TYPE } from "@likeminds.community/feed-rn-core/constants/Strings";
+import LMPostQnAFeedFooter from "@likeminds.community/feed-rn-core/components/LMPost/LMPostQnAFeedFooter";
+import { useAppSelector } from "@likeminds.community/feed-rn-core/store/store";
+import LMPostHeading from "@likeminds.community/feed-rn-core/components/LMPost/LMPostHeading";
+import LMPostTopResponse from "@likeminds.community/feed-rn-core/components/LMPost/LMPostTopResponse";
+
+
 const Feed = () => {
   const mappedTopics = useAppSelector((state: any) => state.feed.mappedTopics);
   const [FCMToken, setFCMToken] = useState("");
@@ -50,7 +51,7 @@ const Feed = () => {
   );
 };
 
-const QnAFeedWrapper = ({ navigation, route }) => {
+const UniversalFeedScreen = ({ navigation, route }) => {
   return (
     <UniversalFeedContextProvider navigation={navigation} route={route}>
       <PostListContextProvider navigation={navigation} route={route}>
@@ -60,14 +61,14 @@ const QnAFeedWrapper = ({ navigation, route }) => {
   );
 };
 
-export default QnAFeedWrapper;
+export default UniversalFeedScreen;
 
 const LMPostComponent = React.memo(() => {
   const {
     post,
-    isHeadingEnabled,
-    isTopResponse,
     customFooter,
+    isHeadingEnabled,
+    isTopResponse
   } = useLMPostContext();
 
   return (

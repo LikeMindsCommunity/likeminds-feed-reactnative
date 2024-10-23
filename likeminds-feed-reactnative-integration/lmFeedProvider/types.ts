@@ -433,6 +433,7 @@ export interface PollStyle {
   editPollOptionsIcon?: string;
   clearPollOptionsStyles?: React.CSSProperties;
   clearPollOptionsIcon?: string;
+  hidePoll?: boolean;
 }
 
 export interface CreatePollStyle {

@@ -21,6 +21,7 @@ import {
   POLL_ENDED_WARNING,
   POLL_SUBMITTED_SUCCESSFULLY,
   POST_UPLOADED,
+  POST_UPLOADED_ANONYMOUSLY,
   POST_UPLOAD_INPROGRESS,
   RIGHT_CREATE_POST,
   STATE_ADMIN,
@@ -121,8 +122,15 @@ export const UniversalFeedContextProvider = ({
   const memberRight = useAppSelector((state) => state.login.memberRights);
   const [postUploading, setPostUploading] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(true);
-  const { mediaAttachmemnts, linkAttachments, postContent, heading, topics } =
-    useAppSelector((state) => state.createPost);
+  const {
+    mediaAttachmemnts,
+    linkAttachments,
+    postContent,
+    heading,
+    topics,
+    metaData,
+    isAnonymous
+  } = useAppSelector((state) => state.createPost);
   const poll = useAppSelector((state) => state.createPost.poll);
   const unreadNotificationCount = useAppSelector(
     (state) => state.notification.activitiesCount
@@ -232,10 +240,12 @@ export const UniversalFeedContextProvider = ({
             ...updatedAttachments,
             ...linkAttachments,
             ...pollAttachment,
+            ...[{ attachmentType: 5, attachmentMeta: { meta: metaData } }],
           ])
           .setText(postContentText)
           .setHeading(headingText)
           .setTopicIds(topics)
+          .setIsAnonymous(isAnonymous ?? false)
           .build(),
         false
       )
@@ -255,7 +265,7 @@ export const UniversalFeedContextProvider = ({
       dispatch(
         showToastMessage({
           isToast: true,
-          message: POST_UPLOADED,
+          message: isAnonymous ? POST_UPLOADED_ANONYMOUSLY : POST_UPLOADED,
         })
       );
     }

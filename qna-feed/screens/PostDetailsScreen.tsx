@@ -1,18 +1,18 @@
 import React from "react";
 import {
+    PostDetail,
   PostDetailContextProvider,
   UniversalFeedContextProvider,
-  useLMPostContext,
-} from "../context";
-import { PostDetail } from "../screens/postDetail";
-import LMPostQnAFeedFooter from "../components/LMPost/LMPostQnAFeedFooter";
-import { LMPostContent, LMPostFooter, LMPostHeader, LMPostMedia } from "@likeminds.community/feed-rn-core/components";
+} from "@likeminds.community/feed-rn-core";
+import { LMPostContent, LMPostFooter, LMPostHeader, LMPostMedia,  } from "@likeminds.community/feed-rn-core/components";
 import { View } from "react-native";
 import LMPostHeading from "@likeminds.community/feed-rn-core/components/LMPost/LMPostHeading";
 import { LINK_ATTACHMENT_TYPE } from "@likeminds.community/feed-rn-core/constants/Strings";
 import LMPostTopResponse from "@likeminds.community/feed-rn-core/components/LMPost/LMPostTopResponse";
+import { useLMPostContext } from "@likeminds.community/feed-rn-core/context";
+import LMPostQnAFeedFooter from "@likeminds.community/feed-rn-core/components/LMPost/LMPostQnAFeedFooter";
 
-const LMQnAPostDetailScreen = ({ navigation, route }: any) => {
+const PostDetailsScreen = ({ navigation, route }: any) => {
   return (
     <UniversalFeedContextProvider navigation={navigation} route={route}>
       <PostDetailContextProvider navigation={navigation} route={route}>
@@ -23,7 +23,7 @@ const LMQnAPostDetailScreen = ({ navigation, route }: any) => {
   );
 };
 
-export default LMQnAPostDetailScreen;
+export default PostDetailsScreen;
 
 const LMPostComponent = React.memo(() => {
   const {

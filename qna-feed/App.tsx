@@ -49,6 +49,8 @@ import {
 import {LMFeedClient, InitiateUserRequest} from '@likeminds.community/feed-rn';
 import {LoginSchemaRO} from './login/loginSchemaRO';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import UniversalFeedScreen from './screens/UniversalFeedScreen';
+import PostDetailsScreen from './screens/PostDetailsScreen';
 
 class CustomCallbacks implements LMFeedCallbacks, LMCarouselScreenCallbacks {
   onEventTriggered(eventName: string, eventProperties?: Map<string, string>) {
@@ -252,10 +254,10 @@ const App = () => {
             callbackClass={callbackClass}>
             <NavigationContainer ref={navigationRef} independent={true}>
               <Stack.Navigator screenOptions={{headerShown: false}}>
-                <Stack.Screen name={UNIVERSAL_FEED} component={LMQnAFeedScreen} />
+                <Stack.Screen name={UNIVERSAL_FEED} component={UniversalFeedScreen} />
                 <Stack.Screen
                   name={POST_DETAIL}
-                  component={LMQnAPostDetailScreen}
+                  component={PostDetailsScreen}
                 />
                 <Stack.Screen
                   name={CREATE_POST}

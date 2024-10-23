@@ -41,6 +41,9 @@ import { getPostType, reportAnalytics } from "../../utils/analytics";
 import Layout from "../../constants/Layout";
 import { Client } from "../../client";
 import { usePostDetailContext } from "../../context";
+import pluralizeOrCapitalize from "../../utils/variables";
+import { WordAction } from "../../enums/Variables";
+import { CommunityConfigs } from "../../communityConfigs";
 
 // interface for post report api request
 interface ReportRequest {
@@ -254,7 +257,7 @@ const ReportModal = ({
           {/* modal content */}
           <View style={styles.contentView}>
             <Text style={styles.textHeading}>{REPORT_PROBLEM}</Text>
-            <Text style={styles.text}>{REPORT_INSTRUSTION(reportType)}</Text>
+            <Text style={styles.text}>{REPORT_INSTRUSTION(pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.post ?? "post",WordAction.allSmallSingular))}</Text>
           </View>
           {/* report tags list section */}
           <View style={styles.tagView}>
@@ -356,7 +359,7 @@ const ReportModal = ({
                   : () => null
               }
             >
-              <Text style={styles.reportBtnText}>{reportType == POST_TYPE ? "REPORT POST" : "REPORT"}</Text>
+              <Text style={styles.reportBtnText}>{reportType == POST_TYPE ? `REPORT ${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.post ?? "post",WordAction.allCapitalSingular)}` : "REPORT"}</Text>
             </TouchableOpacity>
           </View>
         </TouchableOpacity>

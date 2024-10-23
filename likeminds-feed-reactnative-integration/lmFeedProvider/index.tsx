@@ -24,6 +24,7 @@ import { LMToast } from "../components";
 import { CallBack } from "../callBacks/callBackClass";
 import { Client } from "../client";
 import { CommunityConfigs } from "../communityConfigs";
+import { updateVariables } from "../constants/Strings";
 
 // Create a context for LMFeedProvider
 const LMFeedContext = createContext<LMFeedClient | undefined>(undefined);
@@ -51,6 +52,16 @@ export const LMFeedProvider = ({
   const dispatch = useAppDispatch();
   const showToast = useAppSelector((state) => state.loader.isToast);
 
+  const callGetCommunityConfigurations = async () => {
+    const response = await myClient?.getCommunityConfigurations();
+    CommunityConfigs.setCommunityConfigs(
+      /* @ts-ignore */
+      response?.data?.communityConfigurations
+    );
+    /*@ts-ignore*/
+    updateVariables(response?.data?.communityConfigurations)
+  };
+
   useEffect(() => {
     //setting client in Client class
     Client.setMyClient(myClient);
@@ -72,7 +83,9 @@ export const LMFeedProvider = ({
       if (validateResponse !== undefined && validateResponse !== null) {
         // calling getMemberState API
         await dispatch(getMemberState());
+        
       }
+      await callGetCommunityConfigurations()
       setIsInitiated(true);
     };
 
@@ -99,6 +112,7 @@ export const LMFeedProvider = ({
           initiateResponse?.accessToken,
           initiateResponse?.refreshToken
         );
+        await callGetCommunityConfigurations()
         setIsInitiated(true);
       }
     }
@@ -110,16 +124,6 @@ export const LMFeedProvider = ({
     }
   }, [accessToken, refreshToken]);
 
-  useEffect(() => {
-    const callGetCommunityConfigurations = async () => {
-      const response = await myClient?.getCommunityConfigurations();
-      CommunityConfigs.setCommunityConfigs(
-        /* @ts-ignore */
-        response?.data?.communityConfigurations
-      );
-    };
-    if (isInitiated) callGetCommunityConfigurations();
-  }, [isInitiated]);
 
   return isInitiated ? (
     <LMFeedContext.Provider value={myClient}>
