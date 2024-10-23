@@ -32,4 +32,10 @@ export class CommunityConfigs {
   static get communityConfigs(): Configuration[] {
     return CommunityConfigs.communityConfig;
   }
+
+  static getCommunityConfigs(type?: string): Configuration {
+      let idx = this.communityConfig.findIndex(obj => obj.type === type);
+      return this.communityConfig[idx]
+  }
+
 }
