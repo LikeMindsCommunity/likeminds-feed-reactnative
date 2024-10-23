@@ -112,9 +112,9 @@ const LMPostFooter = React.memo(() => {
             text={{
               children: likeCount
                 ? likeCount > 1
-                  ? `${likeCount} ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1]).value?.likeEntityVariable?.entityName ?? "like",WordAction.firstLetterCapitalPlural)}`
-                  : `${likeCount} ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.likeEntityVariable?.entityName ?? "like",WordAction.firstLetterCapitalSingular)}`
-                : `${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.likeEntityVariable?.entityName ?? "like",WordAction.firstLetterCapitalSingular)}`,
+                  ? `${likeCount} ${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata")).value?.likeEntityVariable?.entityName ?? "like",WordAction.firstLetterCapitalPlural)}`
+                  : `${likeCount} ${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.likeEntityVariable?.entityName ?? "like",WordAction.firstLetterCapitalSingular)}`
+                : `${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.likeEntityVariable?.entityName ?? "like",WordAction.firstLetterCapitalSingular)}`,
               textStyle: footerStyle?.likeTextButton?.text
                 ? footerStyle?.likeTextButton.text
                 : {
@@ -148,9 +148,9 @@ const LMPostFooter = React.memo(() => {
               children:
                 post?.commentsCount > 0
                   ? post?.commentsCount > 1
-                    ? `${post?.commentsCount} ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.comment ?? "comment",WordAction.firstLetterCapitalPlural)}`
-                    : `${post?.commentsCount} ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.comment ?? "comment",WordAction.firstLetterCapitalSingular)}`
-                  : `Add ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.comment ?? "comment",WordAction.firstLetterCapitalSingular)}`,
+                    ? `${post?.commentsCount} ${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.comment ?? "comment",WordAction.firstLetterCapitalPlural)}`
+                    : `${post?.commentsCount} ${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.comment ?? "comment",WordAction.firstLetterCapitalSingular)}`
+                  : `Add ${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.comment ?? "comment",WordAction.firstLetterCapitalSingular)}`,
               textStyle: footerStyle?.commentButton?.text
                 ? footerStyle?.commentButton.text
                 : {

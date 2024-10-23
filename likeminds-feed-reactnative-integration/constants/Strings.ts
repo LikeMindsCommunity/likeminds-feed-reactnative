@@ -199,9 +199,10 @@ export const OKAY = "Okay";
 export const NO_RESPONSES = "No Response";
 
 export function updateVariables (communityConfig: Configuration[]) {
-    const POST = (communityConfig[1])?.value?.post ?? "post"
-    const COMMENT = (communityConfig[1])?.value?.comment ?? "comment"
-    const LIKE = (communityConfig[1])?.value?.likeEntityVariable?.entityName ?? "like"
+    const config = communityConfig.find((item) => item?.type == "feed_metadata")
+    const POST = (config)?.value?.post ?? "post"
+    const COMMENT = (config)?.value?.comment ?? "comment"
+    const LIKE = (config)?.value?.likeEntityVariable?.entityName ?? "like"
 
 
     REPORTED_SUCCESSFULLY = `${pluralizeOrCapitalize(POST,WordAction.firstLetterCapitalSingular)} Reported!`;

@@ -56,7 +56,7 @@ const LMCreatePostButton = ({ customText }: { customText?: string }) => {
         {...universalFeedStyle?.newPostIcon}
       />
       <Text style={[styles.newPostText, universalFeedStyle?.newPostButtonText]}>
-        {customText ? customText : `NEW ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post ?? "post",WordAction.allCapitalSingular)}`}
+        {customText ? customText : `NEW ${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.post ?? "post",WordAction.allCapitalSingular)}`}
       </Text>
     </TouchableOpacity>
   );

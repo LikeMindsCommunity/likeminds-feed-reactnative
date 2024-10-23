@@ -348,7 +348,7 @@ const PostsListComponent = ({
                 postListStyle?.noPostText,
               ]}
             >
-              No {pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post ?? "post",WordAction.firstLetterCapitalSingular)}
+              No {pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.post ?? "post",WordAction.firstLetterCapitalSingular)}
             </Text>
           </View>
         )

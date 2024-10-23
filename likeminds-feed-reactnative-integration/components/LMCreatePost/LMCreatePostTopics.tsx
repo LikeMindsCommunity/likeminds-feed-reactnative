@@ -120,7 +120,7 @@ const LMCreatePostTopics = () => {
   return (
     <>
       {isAnonymousPostAllowed ? <View style={{ marginTop: Layout.normalize(30), marginHorizontal: 15, flexDirection: 'row', flex: 1 }}>
-        <CheckBox label={(hintTextForAnonymous as string)?.length > 0 ? hintTextForAnonymous : `Share this as an anonymous ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post ?? "post",WordAction.allSmallSingular)}`}
+        <CheckBox label={(hintTextForAnonymous as string)?.length > 0 ? hintTextForAnonymous : `Share this as an anonymous ${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.post ?? "post",WordAction.allSmallSingular)}`}
           isChecked={anonymousPost}
           onPress={handleOnAnonymousPostClickedProp ? handleOnAnonymousPostClickedProp : handleOnAnonymousPostClicked} />
       </View> : <></>}

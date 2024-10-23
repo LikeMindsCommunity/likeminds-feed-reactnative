@@ -485,7 +485,7 @@ export const PostDetailContextProvider = ({
         body: {
           postId: postId,
           title: `${isPostHidden ? "Hide" : "Unhide"} This ${pluralizeOrCapitalize(
-            (CommunityConfigs?.communityConfigs[1])?.value?.post ?? "post",
+            (CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.post ?? "post",
             WordAction.firstLetterCapitalSingular)}`
         }
       })

@@ -202,10 +202,10 @@ const LMCreatePostHeader = () => {
           postToEdit
             ? customCreatePostScreenHeader?.editPostHeading
               ? customCreatePostScreenHeader?.editPostHeading
-              : `Edit ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post ?? "post",WordAction.firstLetterCapitalSingular)}`
+              : `Edit ${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.post ?? "post",WordAction.firstLetterCapitalSingular)}`
             : customCreatePostScreenHeader?.createPostHeading
             ? customCreatePostScreenHeader?.createPostHeading
-            : `Create ${pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.post ?? "post",WordAction.firstLetterCapitalSingular)}`
+            : `Create ${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.post ?? "post",WordAction.firstLetterCapitalSingular)}`
         }
         rightComponent={
           // post button section
