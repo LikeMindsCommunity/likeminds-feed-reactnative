@@ -6,11 +6,11 @@ import {
 } from "../context";
 import { PostDetail } from "../screens/postDetail";
 import LMPostQnAFeedFooter from "../components/LMPost/LMPostQnAFeedFooter";
-import { LMPostContent, LMPostFooter, LMPostHeader, LMPostMedia } from "@likeminds.community/feed-rn-core/components";
+import { LMPostContent, LMPostFooter, LMPostHeader, LMPostMedia } from "../components";
 import { View } from "react-native";
-import LMPostHeading from "@likeminds.community/feed-rn-core/components/LMPost/LMPostHeading";
-import { LINK_ATTACHMENT_TYPE } from "@likeminds.community/feed-rn-core/constants/Strings";
-import LMPostTopResponse from "@likeminds.community/feed-rn-core/components/LMPost/LMPostTopResponse";
+import LMPostHeading from "../components/LMPost/LMPostHeading";
+import { LINK_ATTACHMENT_TYPE } from "../constants/Strings";
+import LMPostTopResponse from "../components/LMPost/LMPostTopResponse";
 
 const LMQnAPostDetailScreen = ({ navigation, route }: any) => {
   return (

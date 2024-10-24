@@ -5,9 +5,9 @@ import { LMProfilePicture } from "../../../uiComponents";
 import { nameInitials, timeStamp } from "../../../utils";
 import STYLES from "../../../constants/Styles";
 import MoreLessComponent from "../LMPostText";
-import pluralizeOrCapitalize from "@likeminds.community/feed-rn-core/utils/variables";
-import { WordAction } from "@likeminds.community/feed-rn-core/enums/Variables";
-import { CommunityConfigs } from "@likeminds.community/feed-rn-core/communityConfigs";
+import pluralizeOrCapitalize from "../../../utils/variables";
+import { WordAction } from "../../../enums/Variables";
+import { CommunityConfigs } from "../../../communityConfigs";
 
 const LMPostTopResponse = () => {
   const [truncatedText, setTruncatedText] = useState("");
