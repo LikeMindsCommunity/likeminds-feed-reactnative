@@ -321,17 +321,21 @@ export const feedReducer = (state = initialState, action) => {
     case HIDE_POST_STATE: {
       const feed = state.feed;
       const { postId, title } = action.body
-      const post = feed.find((post) => post.id == postId);
+      const postIndex = feed.findIndex((post) => post.id == postId);
 
-      post?.menuItems?.forEach((menuItem) => {
-        if(menuItem?.id == 12){
-          menuItem.id = 13;
-          menuItem.title = title
-        }else if(menuItem?.id == 13){
-          menuItem.id = 12;
-          menuItem.title = title
-        }
-      })
+      if(postIndex != -1) {
+        feed[postIndex].isHidden = !(feed[postIndex])?.isHidden;
+        (feed[postIndex])?.menuItems?.forEach((menuItem) => {
+          if(menuItem?.id == 12){
+            menuItem.id = 13;
+            menuItem.title = title
+          }else if(menuItem?.id == 13){
+            menuItem.id = 12;
+            menuItem.title = title
+          }
+        })
+      }
+
       return { ...state };
     }
     case AUTO_PLAY_POST_VIDEO: {
