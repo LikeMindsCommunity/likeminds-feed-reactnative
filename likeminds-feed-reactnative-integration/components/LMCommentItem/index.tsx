@@ -262,11 +262,11 @@ const LMCommentItem = React.memo(
                   children:
                     commentLikeCount > 1 ? (
                       <Text style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}>
-                        {commentLikeCount} {pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.likeEntityVariable?.entityName ?? "like",WordAction.firstLetterCapitalPlural)}
+                        {commentLikeCount} {pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.likeEntityVariable?.entityName ?? "like",WordAction.firstLetterCapitalPlural)}
                       </Text>
                     ) : (
                       <Text style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}>
-                        {commentLikeCount} {pluralizeOrCapitalize((CommunityConfigs?.communityConfigs[1])?.value?.likeEntityVariable?.entityName ?? "like",WordAction.firstLetterCapitalSingular)}
+                        {commentLikeCount} {pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.likeEntityVariable?.entityName ?? "like",WordAction.firstLetterCapitalSingular)}
                       </Text>
                     ),
                   textStyle: {
@@ -283,8 +283,8 @@ const LMCommentItem = React.memo(
             {/* reply section */}
             {comment?.level === PARENT_LEVEL_COMMENT && (
               <>
-                {isCM ||
-                  (commentingRight?.isSelected && (
+                {(isCM || commentingRight?.isSelected)
+                && (
                     <>
                       <LMText
                         children={<Text> | </Text>}
@@ -332,7 +332,7 @@ const LMCommentItem = React.memo(
                         ])}
                       />
                     </>
-                  ))}
+                  )}
 
                 {/* this shows all the replies of a comment */}
                 {comment.repliesCount > 0 && (
