@@ -232,16 +232,22 @@ export const UniversalFeedContextProvider = ({
     if (Object.keys(poll).length > 0) {
       let updatedPollAttachment = convertPollMetaData(poll);
       pollAttachment = [...pollAttachment, updatedPollAttachment];
+
     }
+    const attachments = Object.keys(metaData).length > 0 ? [
+      ...updatedAttachments,
+      ...linkAttachments,
+      ...pollAttachment,
+      ...[{ attachmentType: 5, attachmentMeta: { meta: metaData } }]
+    ] : [
+      ...updatedAttachments,
+      ...linkAttachments,
+      ...pollAttachment
+    ]
     const addPostResponse = await dispatch(
       addPost(
         AddPostRequest.builder()
-          .setAttachments([
-            ...updatedAttachments,
-            ...linkAttachments,
-            ...pollAttachment,
-            ...[{ attachmentType: 5, attachmentMeta: { meta: metaData } }],
-          ])
+          .setAttachments(attachments)
           .setText(postContentText)
           .setHeading(headingText)
           .setTopicIds(topics)
@@ -316,6 +322,7 @@ export const UniversalFeedContextProvider = ({
       (mediaAttachmemnts.length > 0 ||
         linkAttachments.length > 0 ||
         postContent !== "" ||
+        heading !== "" ||
         topics?.length > 0 ||
         Object.keys(poll).length > 0) &&
       route.name === UNIVERSAL_FEED
