@@ -479,6 +479,8 @@ export const postDetailReducer = (state = initialState, action) => {
     case HIDE_POST_STATE: {
       const post = state.postDetail;
       const { title } = action.body
+      post.isHidden = !(post.isHidden);
+      
       post?.menuItems?.forEach((menuItem) => {
         if(menuItem?.id == 12){
           menuItem.id = 13;

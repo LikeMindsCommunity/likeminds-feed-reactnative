@@ -440,18 +440,29 @@ export const PostDetailContextProvider = ({
     const payload = {
       postId: id,
     };
-    dispatch(pinPostStateHandler(payload.postId));
-    const pinPostResponse = await dispatch(
-      pinPost(PinPostRequest.builder().setPostId(payload.postId).build(), false)
-    );
-    if (pinPostResponse !== undefined) {
+
+    if(postDetail?.isHidden) {
       dispatch(
         showToastMessage({
           isToast: true,
-          message: pinned ? POST_UNPIN_SUCCESS : POST_PIN_SUCCESS,
+          message: "Something went wrong",
         })
       );
+      return undefined
     }
+    
+    const pinPostResponse = await dispatch(
+      pinPost(PinPostRequest.builder().setPostId(payload.postId).build(), false)
+    );
+
+    dispatch(pinPostStateHandler(payload.postId));
+
+    dispatch(
+      showToastMessage({
+        isToast: true,
+        message: pinned ? POST_UNPIN_SUCCESS : POST_PIN_SUCCESS,
+      })
+    );
     return pinPostResponse;
   };
 
