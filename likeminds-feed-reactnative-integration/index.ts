@@ -67,6 +67,7 @@ import {
   LMSocialFeedScreen,
 } from "./wrappers";
 import LMFeedTheme from "./constants/Styles";
+import Layout from "./constants/Layout";
 
 export {
   LMOverlayProvider,
@@ -129,4 +130,5 @@ export {
   LMTopicFeedScreen,
   LMSocialFeedScreen,
   LMFeedTheme,
+  Layout,
 };
