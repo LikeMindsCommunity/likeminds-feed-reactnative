@@ -58,22 +58,22 @@ const LMCreatePostHeader = () => {
     const idValuesArray = mappedTopics.map((topic) => topic.id);
     onPostClickProp
       ? onPostClickProp(
-          allAttachment,
-          formattedLinkAttachments,
-          postContentText,
-          predefinedTopics ? [...predefinedTopics] : idValuesArray,
-          poll,
-          anonymousPost
-        )
+        allAttachment,
+        formattedLinkAttachments,
+        postContentText,
+        predefinedTopics?.length > 0 ? [...predefinedTopics] : idValuesArray,
+        poll,
+        anonymousPost
+      )
       : onPostClick(
-          allAttachment,
-          formattedLinkAttachments,
-          postContentText,
-          predefinedTopics ? [...predefinedTopics] : idValuesArray,
-          poll,
-          {},
-          anonymousPost
-        );
+        allAttachment,
+        formattedLinkAttachments,
+        postContentText,
+        predefinedTopics?.length > 0 ? [...predefinedTopics] : idValuesArray,
+        poll,
+        {},
+        anonymousPost
+      );
     if (!postToEdit) {
       const map: Map<string | undefined, string | undefined> = new Map();
       const taggedUsers: any = userTaggingDecoder(postContentText);
