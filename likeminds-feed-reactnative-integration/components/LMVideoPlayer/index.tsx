@@ -15,7 +15,9 @@ import RNVideo from "../../optionalDependencies/Video";
 import { useLMFeed } from "../../lmFeedProvider";
 
 function LMVideoPlayer({ url, setDisableGesture }) {
-  const { videoCarouselCallback } = useLMFeed();
+  const LMFeedProvider = useLMFeed();
+  const videoCarouselCallback = LMFeedProvider?.videoCarouselCallback;
+
   const ref = useRef<any>();
   const [clicked, setClicked] = useState(false);
   const [puased, setPaused] = useState(false);
@@ -100,8 +102,8 @@ function LMVideoPlayer({ url, setDisableGesture }) {
               uri: url,
             }}
             ref={ref}
-            onProgress={(x) => {
-              setProgress(x);
+            onProgress={(value) => {
+              setProgress(value);
             }}
             style={styles.videoPlayer}
             resizeMode="contain"

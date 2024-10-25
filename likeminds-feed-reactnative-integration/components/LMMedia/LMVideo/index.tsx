@@ -52,7 +52,9 @@ const LMVideo = React.memo(
     currentVideoInCarousel,
     showPlayPause,
   }: LMVideoProps) => {
-    const { videoCallback } = useLMFeed();
+    const LMFeedProvider = useLMFeed();
+    const videoCallback = LMFeedProvider?.videoCallback;
+    
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [playingStatus, setPlayingStatus] = useState(true);

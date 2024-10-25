@@ -24,6 +24,10 @@ import { LMToast } from "../components";
 import { CallBack } from "../callBacks/callBackClass";
 import { Client } from "../client";
 import { CommunityConfigs } from "../communityConfigs";
+import {
+  VideoCallback,
+  VideoCarouselCallback,
+} from "../components/LMMedia/LMVideo/types";
 
 // Create a context for LMFeedProvider
 const LMFeedContext = createContext<LMFeedClient | undefined>(undefined);
@@ -123,7 +127,11 @@ export const LMFeedProvider = ({
     if (isInitiated) callGetCommunityConfigurations();
   }, [isInitiated]);
 
-  const contextValues: any = {
+  const contextValues: {
+    myClient: LMFeedClient;
+    videoCallback?: VideoCallback;
+    videoCarouselCallback?: VideoCarouselCallback;
+  } = {
     myClient: myClient,
     videoCallback: videoCallback,
     videoCarouselCallback: videoCarouselCallback,
