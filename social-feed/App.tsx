@@ -66,8 +66,6 @@ import CreatePollScreenWrapper from './feedScreen/createPollScreenWrapper';
 import {LMFeedClient, InitiateUserRequest} from '@likeminds.community/feed-rn';
 import {LoginSchemaRO} from './login/loginSchemaRO';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import Video from 'react-native-video';
-import Layout from '@likeminds.community/feed-rn-core/constants/Layout';
 
 class CustomCallbacks implements LMFeedCallbacks, LMCarouselScreenCallbacks {
   onEventTriggered(eventName: string, eventProperties?: Map<string, string>) {
@@ -268,64 +266,7 @@ const App = () => {
             userName={userName}
             userUniqueId={userUniqueID}
             lmFeedInterface={lmFeedInterface}
-            callbackClass={callbackClass}
-            videoCallback={videoProps => {
-              console.log('videoCallback ==', videoProps);
-              return (
-                <Video
-                  paused={videoProps.paused}
-                  source={{uri: videoProps.source}}
-                  // ref={videoProps.ref}
-                  onLoad={data => {
-                    videoProps.onLoad(data);
-                    // videoProps.ref.current.seek(0); // this will set first frame of video as thumbnail
-                    videoProps.setLoading(false);
-                  }}
-                  style={videoProps.style}
-                  // resizeMode="contain"
-                  muted={videoProps.muted}
-                  repeat={videoProps.repeat}
-                  resizeMode={videoProps.resizeMode}
-                  playWhenInactive={false}
-                  playInBackground={false}
-                  ignoreSilentSwitch="obey"
-                  // onEnd={() => {
-                  //   setPaused(true); // Pause the video
-                  //   setProgress({ ...progress, currentTime: 0 }); // Reset seek position
-                  //   ref.current.seek(0); // Seek to the beginning of the video
-                  // }}
-                  onError={err => console.log('err', err)}
-                />
-              );
-            }}
-            videoCarouselCallback={videoProps => {
-              console.log('videoCarouselCallback ==', videoProps);
-              return (
-                <Video
-                  paused={videoProps.paused}
-                  source={{uri: videoProps.source}}
-                  // ref={videoProps.ref}
-                  onProgress={x => {
-                    videoProps.setProgress(x);
-                  }}
-                  style={{
-                    width: Layout.window.width,
-                    height:
-                      Platform.OS === 'ios'
-                        ? Layout.window.height - Layout.normalize(100)
-                        : Layout.window.height,
-                  }}
-                  resizeMode="contain"
-                  muted={videoProps.muted}
-                  // onEnd={() => {
-                  //   setPaused(true); // Pause the video
-                  //   setProgress({ ...progress, currentTime: 0 }); // Reset seek position
-                  //   ref.current.seek(0); // Seek to the beginning of the video
-                  // }}
-                  onError={err => console.log('err', err)}
-                />
-              );
-            }}>
+            callbackClass={callbackClass}>
             <NavigationContainer ref={navigationRef} independent={true}>
               <Stack.Navigator screenOptions={{headerShown: false}}>
                 <Stack.Screen
