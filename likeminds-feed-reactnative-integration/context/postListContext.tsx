@@ -207,6 +207,8 @@ export const PostListContextProvider = ({
         if (res?.posts?.length === 0 || !res?.posts) {
           setIsPaginationStopped(true);
           setIsLoading(false);
+        } else {
+          setIsLoading(false);
         }
       }
     }, 200);
