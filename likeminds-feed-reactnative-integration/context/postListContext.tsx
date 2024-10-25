@@ -60,7 +60,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { SET_CURRENT_ID_OF_VIDEO } from "../store/types/types";
 
 interface PostListContextProps {
-  children: ReactNode;
+  children?: ReactNode;
   navigation: NativeStackNavigationProp<
     RootStackParamList,
     "PostsList" | "UniversalFeed"

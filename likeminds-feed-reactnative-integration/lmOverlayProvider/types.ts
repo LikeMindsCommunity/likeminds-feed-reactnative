@@ -5,7 +5,7 @@ import { VideoCallback, VideoCarouselCallback } from "../components/LMMedia/LMVi
 
 export interface LMOverlayProviderProps {
   myClient: LMFeedClient;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   apiKey?: string;
   userName?: string;
   userUniqueId?: string;
