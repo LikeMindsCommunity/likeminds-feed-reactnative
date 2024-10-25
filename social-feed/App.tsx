@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {View, Text} from 'react-native';
 import {
   CreatePost,
   PostDetail,
@@ -20,10 +21,10 @@ import {
   LMCreatePollScreen,
   LMLikesScreen,
   LMNotificationScreen,
-  LMSocialFeedCreateScreen,
   LMTopicFeedScreen,
   LMSocialFeedScreen,
 } from '@likeminds.community/feed-rn-core';
+import LMSocialFeedCreateScreen from '@likeminds.community/feed-rn-core/wrappers/socialFeedCreateWrapper';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {LMCoreCallbacks} from '@likeminds.community/feed-rn-core/setupFeed';
 import {
@@ -268,7 +269,10 @@ const App = () => {
             callbackClass={callbackClass}>
             <NavigationContainer ref={navigationRef} independent={true}>
               <Stack.Navigator screenOptions={{headerShown: false}}>
-                <Stack.Screen name={UNIVERSAL_FEED} component={LMSocialFeedScreen} />
+                <Stack.Screen
+                  name={UNIVERSAL_FEED}
+                  component={LMSocialFeedScreen}
+                />
                 <Stack.Screen
                   name={POST_DETAIL}
                   component={LMSocialFeedPostDetailScreen}
@@ -277,7 +281,10 @@ const App = () => {
                   name={CREATE_POST}
                   component={LMSocialFeedCreateScreen}
                 />
-                <Stack.Screen name={POST_LIKES_LIST} component={LMLikesScreen} />
+                <Stack.Screen
+                  name={POST_LIKES_LIST}
+                  component={LMLikesScreen}
+                />
                 <Stack.Screen
                   name={TOPIC_FEED}
                   component={LMTopicFeedScreen}

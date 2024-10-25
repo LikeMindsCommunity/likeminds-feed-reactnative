@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import { ViewStyle } from "react-native";
+import { ReactNode, MutableRefObject } from "react";
+import { ViewStyle, StyleProp } from "react-native";
 import { LMButtonProps } from "../../../uiComponents";
 
 export interface LMVideoProps {
@@ -26,4 +26,38 @@ export interface LMVideoProps {
   videoInCarousel?: boolean;
   currentVideoInCarousel?: string;
   showPlayPause?: boolean;
+}
+
+interface VideoCarouselCallbackProps {
+  paused: boolean;
+  source: string;
+  ref: MutableRefObject<any>;
+  setProgress: (progress: number) => void;
+  muted: boolean;
+  setPaused: (paused: boolean) => void;
+}
+
+interface VideoCallbackProps {
+  paused: boolean;
+  source: string;
+  ref: MutableRefObject<any>;
+  muted: boolean;
+  repeat: boolean;
+  resizeMode: "cover" | "contain" | "stretch" | "center";
+  playWhenInactive: boolean;
+  playInBackground: boolean;
+  ignoreSilentSwitch: "obey" | "ignore";
+  onLoad: () => void;
+  setLoading: (loading: boolean) => void;
+  style: StyleProp<ViewStyle>;
+}
+
+// Callback function types for each
+
+export interface VideoCarouselCallback {
+  (props: VideoCarouselCallbackProps): void;
+}
+
+export interface VideoCallback {
+  (props: VideoCallbackProps): void;
 }
