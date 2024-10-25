@@ -368,13 +368,13 @@ const LMCommentItem = React.memo(
                             <Text
                               style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}
                             >
-                              {comment.repliesCount} Replies
+                              {" " + comment.repliesCount} Replies
                             </Text>
                           ) : (
                             <Text
                               style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}
                             >
-                              {comment.repliesCount} Reply
+                              {" " + comment.repliesCount} Reply
                             </Text>
                           ),
                         textStyle: StyleSheet.flatten([
