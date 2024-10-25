@@ -91,7 +91,7 @@ import { commentResponseModelConvertor } from "../utils/commentResponseModelConv
 import STYLES from "../constants/Styles";
 
 interface PostDetailContextProps {
-  children: ReactNode;
+  children?: ReactNode;
   navigation: NativeStackNavigationProp<RootStackParamList, "PostDetail">;
   route: {
     key: string;
