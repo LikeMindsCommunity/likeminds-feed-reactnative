@@ -20,7 +20,7 @@ function LMVideoPlayer({ url, setDisableGesture }) {
 
   const ref = useRef<any>();
   const [clicked, setClicked] = useState(false);
-  const [puased, setPaused] = useState(false);
+  const [paused, setPaused] = useState(false);
   const [progress, setProgress] = useState<any>(null);
   const [mute, setMute] = useState(false);
   const format = (seconds) => {
@@ -97,7 +97,7 @@ function LMVideoPlayer({ url, setDisableGesture }) {
         )}
         {RNVideo ? (
           <RNVideo
-            paused={puased}
+            paused={paused}
             source={{
               uri: url,
             }}
@@ -117,7 +117,7 @@ function LMVideoPlayer({ url, setDisableGesture }) {
           />
         ) : (
           videoCarouselCallback({
-            paused: puased,
+            paused: paused,
             source: url,
             ref: ref,
             setProgress: setProgress,
@@ -139,12 +139,12 @@ function LMVideoPlayer({ url, setDisableGesture }) {
             <View style={{ flexDirection: "row" }}>
               <TouchableOpacity
                 onPress={() => {
-                  setPaused(!puased);
+                  setPaused(!paused);
                 }}
               >
                 <Image
                   source={
-                    puased
+                    paused
                       ? isPlayIconLocalPath && playIconPath
                         ? playIconPath
                         : !isPlayIconLocalPath && playIconPath
@@ -160,7 +160,7 @@ function LMVideoPlayer({ url, setDisableGesture }) {
                     width: 40,
                     height: 40,
                     tintColor: "white",
-                    ...(puased ? playIconStyle : pauseIconStyle),
+                    ...(paused ? playIconStyle : pauseIconStyle),
                   }}
                 />
               </TouchableOpacity>
