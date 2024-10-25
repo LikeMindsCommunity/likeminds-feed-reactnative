@@ -21,6 +21,7 @@ import {
   CLEAR_SELECTED_TOPICS,
   SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
   SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
+  SET_TOPICS,
 } from "../../store/types/types";
 import { useCreatePostContext } from "../../context";
 
@@ -63,6 +64,7 @@ const TopicFeed = () => {
     (state) => state.createPost.selectedTopics
   );
   const allTopics = useAppSelector((state) => state.feed.topics);
+  
   const selectedTopicsFromUniversalFeedScreen = useAppSelector(
     (state) => state.feed.selectedTopicsFromUniversalFeedScreen
   );
@@ -327,6 +329,31 @@ const TopicFeed = () => {
         pageSize: 10,
       } as any);
       const response = apiResponse?.data;
+
+      const topicsResponse: any = response?.topics;
+      if (topicsResponse && topicsResponse?.length > 0) {
+        const topicsObject = {};
+        topicsResponse.forEach((topic) => {
+          topicsObject[topic.id] = {
+            allParentIds: topic.allParentIds,
+            isEnabled: topic.isEnabled,
+            isSearchable: topic.isSearchable,
+            level: topic.level,
+            name: topic.name,
+            numberOfPosts: topic.numberOfPosts,
+            parentId: topic.parentId,
+            parentName: topic.parentName,
+            priority: topic.priority,
+            totalChildCount: topic.totalChildCount,
+            widgetId: topic.widgetId,
+          };
+        });
+        dispatch({
+          type: SET_TOPICS,
+          body: { topics: { ...allTopics, ...topicsObject } },
+        });
+      }
+
       setTopics((topics: any) => [...topics, ...response?.topics]);
       setPage(2);
     }
@@ -388,6 +415,29 @@ const TopicFeed = () => {
     setIsLoading(true);
     const res = await updateData(newPage);
     if (res) {
+      const topicsResponse: any = res?.topics;
+      if (topicsResponse && topicsResponse?.length > 0) {
+        const topicsObject = {};
+        topicsResponse.forEach((topic) => {
+          topicsObject[topic.id] = {
+            allParentIds: topic.allParentIds,
+            isEnabled: topic.isEnabled,
+            isSearchable: topic.isSearchable,
+            level: topic.level,
+            name: topic.name,
+            numberOfPosts: topic.numberOfPosts,
+            parentId: topic.parentId,
+            parentName: topic.parentName,
+            priority: topic.priority,
+            totalChildCount: topic.totalChildCount,
+            widgetId: topic.widgetId,
+            };
+          });
+          dispatch({
+            type: SET_TOPICS,
+            body: { topics: {...allTopics,...topicsObject} },
+          });
+        }
       setTopics([...topics, ...res?.topics]);
       setIsLoading(false);
     }
@@ -436,10 +486,22 @@ const TopicFeed = () => {
     );
   };
 
+  function getUniqueObjectsById(topics : any[]) {
+    if(!Array.isArray(topics)) return []
+    const seen = new Set(); // To track unique ids
+    return topics.filter(topic => {
+      if (!topic?.id || seen.has(topic?.id)) {
+        return false; // Ignore if id is missing or already seen
+      }
+      seen.add(topic?.id); // Add id to the set
+      return true; // Keep the object
+    });
+  }
+
   return (
     <View style={styles.page}>
       <FlatList
-        data={topics}
+        data={getUniqueObjectsById(topics)}
         renderItem={({ item }: any) => {
           return (
             <>
