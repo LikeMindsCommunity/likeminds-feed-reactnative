@@ -666,7 +666,7 @@ const PostDetailComponent = React.memo(() => {
                               postDetailStyle?.noCommentSubHeadingTextStyle,
                             ]}
                           >
-                            Be the first one to {(pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.comment ?? "comment",WordAction.firstLetterCapitalSingular))}
+                            Be the first one to create a {(pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.comment ?? "comment",WordAction.firstLetterCapitalSingular))}
                           </Text>
                         </View>
                       }

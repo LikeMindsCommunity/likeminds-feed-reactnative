@@ -84,7 +84,7 @@ export const QnA_FEED_CREATE_POST_PLACEHOLDER_TEXT = "Add description";
 export const QnA_FEED_CREATE_POST_HEADING_PLACEHOLDER_TEXT =
   "Add your question here *";
 export const ADD_MORE_MEDIA = "Add More";
-export const ADD_POST_TEXT = "POST";
+export const ADD_POST_TEXT = "CREATE";
 export const SAVE_POST_TEXT = "SAVE";
 
 // android storage permession's text
