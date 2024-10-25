@@ -8,15 +8,19 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./styles";
 import STYLES from "../../constants/Styles";
-import Video from "react-native-video";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { SET_MUTED_STATE } from "../../store/types/types";
 import Slider from "@react-native-community/slider";
+import RNVideo from "../../optionalDependencies/Video";
+import { useLMFeed } from "../../lmFeedProvider";
 
 function LMVideoPlayer({ url, setDisableGesture }) {
+  const LMFeedProvider = useLMFeed();
+  const videoCarouselCallback = LMFeedProvider?.videoCarouselCallback;
+
   const ref = useRef<any>();
   const [clicked, setClicked] = useState(false);
-  const [puased, setPaused] = useState(false);
+  const [paused, setPaused] = useState(false);
   const [progress, setProgress] = useState<any>(null);
   const [mute, setMute] = useState(false);
   const format = (seconds) => {
@@ -32,7 +36,7 @@ function LMVideoPlayer({ url, setDisableGesture }) {
 
   const resetClicked = () => {
     setTimeout(() => {
-      setDisableGesture(false)
+      setDisableGesture(false);
       setClicked(false);
     }, 3000);
   };
@@ -42,7 +46,7 @@ function LMVideoPlayer({ url, setDisableGesture }) {
     setMute(muteStatus);
   }, [muteStatus]);
 
-  const carouselScreenStyle = STYLES.$CAROUSEL_SCREEN_STYLE
+  const carouselScreenStyle = STYLES.$CAROUSEL_SCREEN_STYLE;
   const thumbImage = carouselScreenStyle?.sliderThumbImage;
   const thumbTintColor = carouselScreenStyle?.thumbTintColor;
   const minimumTrackTintColor = carouselScreenStyle?.minimumTrackTintColor;
@@ -91,25 +95,36 @@ function LMVideoPlayer({ url, setDisableGesture }) {
             />
           </View>
         )}
-        <Video
-          paused={puased}
-          source={{
-            uri: url,
-          }}
-          ref={ref}
-          onProgress={(x) => {
-            setProgress(x);
-          }}
-          style={styles.videoPlayer}
-          resizeMode="contain"
-          muted={mute}
-          onEnd={() => {
-            setPaused(true); // Pause the video
-            setProgress({ ...progress, currentTime: 0 }); // Reset seek position
-            ref.current.seek(0); // Seek to the beginning of the video
-          }}
-          onError={(err) => console.log("err", err)}
-        />
+        {RNVideo ? (
+          <RNVideo
+            paused={paused}
+            source={{
+              uri: url,
+            }}
+            ref={ref}
+            onProgress={(value) => {
+              setProgress(value);
+            }}
+            style={styles.videoPlayer}
+            resizeMode="contain"
+            muted={mute}
+            onEnd={() => {
+              setPaused(true); // Pause the video
+              setProgress({ ...progress, currentTime: 0 }); // Reset seek position
+              ref.current.seek(0); // Seek to the beginning of the video
+            }}
+            onError={(err) => console.log("err", err)}
+          />
+        ) : (
+          videoCarouselCallback({
+            paused: paused,
+            source: url,
+            ref: ref,
+            setProgress: setProgress,
+            muted: mute,
+            setPaused,
+          })
+        )}
         {clicked && (
           <TouchableOpacity
             style={{
@@ -124,12 +139,12 @@ function LMVideoPlayer({ url, setDisableGesture }) {
             <View style={{ flexDirection: "row" }}>
               <TouchableOpacity
                 onPress={() => {
-                  setPaused(!puased);
+                  setPaused(!paused);
                 }}
               >
                 <Image
                   source={
-                    puased
+                    paused
                       ? isPlayIconLocalPath && playIconPath
                         ? playIconPath
                         : !isPlayIconLocalPath && playIconPath
@@ -145,7 +160,7 @@ function LMVideoPlayer({ url, setDisableGesture }) {
                     width: 40,
                     height: 40,
                     tintColor: "white",
-                    ...(puased ? playIconStyle : pauseIconStyle),
+                    ...(paused ? playIconStyle : pauseIconStyle),
                   }}
                 />
               </TouchableOpacity>
