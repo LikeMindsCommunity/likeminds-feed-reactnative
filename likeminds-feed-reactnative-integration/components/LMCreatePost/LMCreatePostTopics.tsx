@@ -96,7 +96,21 @@ const LMCreatePostTopics = () => {
   useEffect(() => {
     // Create a new state array named mappedTopics
     if (topicsSelected.length > 0) {
-      const filteredTopicArray = topicsSelected.map((topicId) => ({
+
+      let combinedTopics = [];
+      
+      if(topicsSelected?.length > 0 && selectedTopics?.length > 0) {
+        combinedTopics = [...new Set([...topicsSelected, ...selectedTopics])] as any;
+      } else{
+        if(topicsSelected?.length > 0) {
+          combinedTopics = [...topicsSelected] as any
+        }
+        else {
+          combinedTopics = [...selectedTopics] as any
+        }
+      }
+
+      const filteredTopicArray = combinedTopics.map((topicId) => ({
         id: topicId,
         name: topics[topicId]?.name || "Unknown", // Use optional chaining and provide a default name if not found
       }));
@@ -126,7 +140,7 @@ const LMCreatePostTopics = () => {
         body: { topics: disabledTopics },
       });
     }
-  }, [selectedTopics, topicsSelected]);
+  }, [selectedTopics, topicsSelected, topics]);
   return (
     <>
       {isAnonymousPostAllowed && !postToEdit ? <View style={{ marginTop: Layout.normalize(30), marginHorizontal: 15, flexDirection: 'row', flex: 1 }}>
