@@ -159,7 +159,7 @@ export const feedReducer = (state = initialState, action) => {
     }
     case SET_TOPICS: {
       const { topics = {} } = action.body;
-      return { ...state, topics: topics };
+      return { ...state, topics: {...state.topics, ...topics} };
     }
     case MAPPED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN: {
       const { topics = {} } = action.body;

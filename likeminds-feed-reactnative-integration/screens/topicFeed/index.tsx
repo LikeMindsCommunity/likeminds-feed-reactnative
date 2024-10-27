@@ -350,7 +350,7 @@ const TopicFeed = () => {
         });
         dispatch({
           type: SET_TOPICS,
-          body: { topics: { ...allTopics, ...topicsObject } },
+          body: { topics: topicsObject},
         });
       }
 
@@ -435,7 +435,7 @@ const TopicFeed = () => {
           });
           dispatch({
             type: SET_TOPICS,
-            body: { topics: {...allTopics,...topicsObject} },
+            body: { topics: topicsObject },
           });
         }
       setTopics([...topics, ...res?.topics]);
