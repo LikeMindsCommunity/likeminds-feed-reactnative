@@ -38,6 +38,7 @@ import {
   SET_NOTIFICATION_COUNT,
   SET_FLOW_TO_POST_DETAIL_SCREEN,
   HIDE_POST_STATE,
+  CLEAR_SELECTED_TOPICS,
 } from "../types/types";
 import { LMPostViewData } from "../../models";
 import Styles from "../../constants/Styles";
@@ -167,6 +168,12 @@ export const feedReducer = (state = initialState, action) => {
         ...state,
         mappedTopics: topics,
       };
+    }
+    case CLEAR_SELECTED_TOPICS: {
+      return {
+        ...state,
+        selectedTopicsForUniversalFeedScreen: []
+      }
     }
     case UNIVERSAL_FEED_SUCCESS: {
       const { users = {} } = action.body;

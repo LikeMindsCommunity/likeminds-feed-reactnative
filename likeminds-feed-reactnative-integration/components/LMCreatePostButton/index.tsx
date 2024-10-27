@@ -44,9 +44,6 @@ const LMCreatePostButton = ({ customText }: { customText?: string }) => {
         dispatch({
           type: CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
         });
-        dispatch({
-          type: CLEAR_SELECTED_TOPICS,
-        });
       }}
     >
       <Image

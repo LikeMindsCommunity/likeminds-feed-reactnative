@@ -164,9 +164,6 @@ const TopicFeed = () => {
         type: SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
         body: { topics: newTopics },
       });
-      await dispatch({
-        type: CLEAR_SELECTED_TOPICS,
-      });
     }
     navigation.goBack();
   };

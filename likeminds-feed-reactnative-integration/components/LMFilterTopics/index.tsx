@@ -9,6 +9,7 @@ import {
 import {
   CLEAR_SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
   MAPPED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
+  SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
   SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
   SET_TOPICS,
 } from "../../store/types/types";
@@ -82,10 +83,15 @@ const LMFilterTopics = () => {
 
   const removeItem = (index: any) => {
     const newItems = [...mappedTopics]; // Create a copy of the array
+    const filteredTopics = selectedTopics?.filter(topic =>  topic != (newItems[index])?.id);
     newItems.splice(index, 1); // Remove the item at the specified index
     dispatch({
       type: MAPPED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
       body: { topics: newItems },
+    }); // Update the state with the new array
+    dispatch({
+      type: SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
+      body: { topics: filteredTopics },
     }); // Update the state with the new array
   };
 
@@ -256,6 +262,10 @@ const LMFilterTopics = () => {
               onPress={() => {
                 dispatch({
                   type: MAPPED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
+                  body: { topics: [] },
+                });
+                dispatch({
+                  type: SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
                   body: { topics: [] },
                 });
               }}
