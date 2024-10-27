@@ -7,6 +7,7 @@ import React, {
   useEffect,
   useState,
   JSX,
+  useLayoutEffect,
 } from "react";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import {
@@ -302,7 +303,7 @@ export const PostListContextProvider = ({
     setFeedFetching(true);
   }, []);
   // this calls the getFeed api whenever the page number gets changed
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (accessToken) {
       // fetch feed
       const initialPage = 1;
