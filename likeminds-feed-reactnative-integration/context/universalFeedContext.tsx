@@ -95,6 +95,8 @@ export interface UniversalFeedContextValues {
   addPollOption: any;
   setSelectedPollOptions: any;
   submitPoll: any;
+  isAnyMatchingPost: boolean;
+  setIsAnyMatchingPost: Dispatch<SetStateAction<boolean>>;
 }
 
 const UniversalFeedContext = createContext<
@@ -122,6 +124,7 @@ export const UniversalFeedContextProvider = ({
   const memberRight = useAppSelector((state) => state.login.memberRights);
   const [postUploading, setPostUploading] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(true);
+  const [isAnyMatchingPost, setIsAnyMatchingPost] = useState(false);
   const {
     mediaAttachmemnts,
     linkAttachments,
@@ -602,6 +605,8 @@ export const UniversalFeedContextProvider = ({
     addPollOption,
     setSelectedPollOptions,
     submitPoll,
+    isAnyMatchingPost,
+    setIsAnyMatchingPost
   };
 
   return (

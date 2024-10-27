@@ -26,10 +26,12 @@ const LMFilterTopics = () => {
     feedData,
     navigation,
     getNotificationsCount,
+    setIsAnyMatchingPost
   }: UniversalFeedContextValues = useUniversalFeedContext();
   const myClient = Client.myClient;
   const [showTopics, setShowTopics] = useState(false);
   const topicsStyle = STYLES.$TOPICS_STYLE;
+  const [topicsPage, setTopicsPage] = useState(1);
 
   const selectedTopics = useAppSelector(
     (state) => state.feed.selectedTopicsForUniversalFeedScreen
@@ -92,14 +94,14 @@ const LMFilterTopics = () => {
       isEnabled: null,
       search: "",
       searchType: "name",
-      page: 1,
+      page: topicsPage,
       pageSize: 10,
     } as any);
-    const topics: any = apiRes?.data?.topics;
-    if (topics && topics?.length > 0) {
+    const topicsResponse: any = apiRes?.data?.topics;
+    if (topicsResponse && topicsResponse?.length > 0) {
       setShowTopics(true);
       const topicsObject = {};
-      topics.forEach((topic) => {
+      topicsResponse.forEach((topic) => {
         topicsObject[topic.id] = {
           allParentIds: topic.allParentIds,
           isEnabled: topic.isEnabled,
@@ -123,7 +125,7 @@ const LMFilterTopics = () => {
 
   useEffect(() => {
     getTopics();
-  }, [showTopics]);
+  }, [showTopics, topicsPage]);
 
   const [isAnyMatchFound, setIsAnyMatchFound] = useState(true);
 
@@ -146,10 +148,35 @@ const LMFilterTopics = () => {
     // If no match is found and topics are present, set the flag to false
     if (!isTopicMatched && mappedTopics?.length > 0) {
       setIsAnyMatchFound(false);
+      setIsAnyMatchingPost(false)
     } else if (mappedTopics?.length === 0) {
       setIsAnyMatchFound(true);
+      setIsAnyMatchingPost(true);
     }
-  }, [mappedTopics, feedData]);
+  }, [mappedTopics, feedData, topics]);
+
+
+  useEffect(() => {
+    let isTopicMissing = false; // Initialize as false
+
+    // Loop through the items
+    for (const item of feedData) {
+      // Check if the item's topic matches any name in the topics array
+      if (
+        item?.topics?.some((topicId) => {
+          return topics[topicId] == undefined
+        })
+      ) {
+        isTopicMissing = true; // Set to true if any match is found
+        break; // Exit loop once a match is found
+      }
+    }
+
+    if (isTopicMissing) {
+      setTopicsPage(previousPage => previousPage + 1);
+    }
+  }, [topics, feedData]);
+
   return (
     <View
       style={{

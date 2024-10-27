@@ -81,6 +81,7 @@ const PostsListComponent = ({
     onRefresh,
     localRefresh,
     keyExtractor,
+    isAnyMatchingPost
   }: UniversalFeedContextValues = useUniversalFeedContext();
   const {
     navigation,
@@ -194,7 +195,7 @@ const PostsListComponent = ({
     >
       {/* posts list section */}
       {!feedFetching ? (
-        feedData?.length > 0 ? (
+        feedData?.length > 0 && isAnyMatchingPost ? (
           <FlatList
             ref={listRef}
             refreshing={refreshing}
