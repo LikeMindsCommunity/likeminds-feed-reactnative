@@ -19,6 +19,7 @@ import { useAppDispatch, useAppSelector } from "../../store/store";
 import { useUniversalFeedContext } from "../../context/universalFeedContext";
 import {
   CLEAR_SELECTED_TOPICS,
+  CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
   SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
   SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
   SET_TOPICS,
@@ -160,6 +161,10 @@ const TopicFeed = () => {
         body,
       });
     } else if (previousRoute?.name === "CreatePost") {
+      // clearing selected topics for create screen to allow deselecting and updating topics
+      dispatch({
+        type: CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN
+      })
       await dispatch({
         type: SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
         body: { topics: newTopics },

@@ -2,6 +2,7 @@ import {
   ADD_SELECTED_TOPICS,
   CLEAR_POLL,
   CLEAR_SELECTED_TOPICS,
+  CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
   DECODE_URL_SUCCESS,
   SET_DISABLED_TOPICS,
   SET_POLL,
@@ -49,6 +50,12 @@ export function createPostReducer(state = initialState, action) {
         ...state,
         selectedTopics: topics,
       };
+    }
+    case CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN: {
+      return {
+        ...state,
+        selectedTopics: []
+      }
     }
     case SET_PREDEFINED_TOPICS: {
       const { topics = {} } = action.body;
