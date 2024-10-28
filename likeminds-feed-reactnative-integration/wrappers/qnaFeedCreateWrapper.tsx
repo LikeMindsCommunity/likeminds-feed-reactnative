@@ -54,8 +54,8 @@ const CreateScreen = () => {
       postContentText,
       topics,
       poll,
-      {},
-      isAnonymous
+      isAnonymous,
+      {}
     );
     console.log('after post click');
   };

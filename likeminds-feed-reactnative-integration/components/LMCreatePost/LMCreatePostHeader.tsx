@@ -57,7 +57,7 @@ const LMCreatePostHeader = () => {
   const handleAcceptedOnPress = () => {
     const idValuesArray = mappedTopics.map((topic) => topic.id);
     onPostClickProp
-      ? onPostClickProp(
+    ? onPostClickProp(
         allAttachment,
         formattedLinkAttachments,
         postContentText,
@@ -65,14 +65,14 @@ const LMCreatePostHeader = () => {
         poll,
         anonymousPost
       )
-      : onPostClick(
+    : onPostClick(
         allAttachment,
         formattedLinkAttachments,
         postContentText,
         predefinedTopics?.length > 0 ? [...predefinedTopics] : idValuesArray,
         poll,
+        anonymousPost,
         {},
-        anonymousPost
       );
     if (!postToEdit) {
       const map: Map<string | undefined, string | undefined> = new Map();
