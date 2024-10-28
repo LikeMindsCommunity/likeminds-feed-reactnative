@@ -33,6 +33,7 @@ import {
   HIDE_POST_SUCCESS,
   HIDE_POST_FAILED,
   HIDE_POST_STATE,
+  UNIVERSAL_TOPICS_FEED_SUCCESS,
 } from "../types/types";
 import { Client } from "../../client";
 import {
@@ -57,6 +58,26 @@ export const getFeed = (payload: GetFeedRequest, showLoader: boolean) => () => {
         types: [
           UNIVERSAL_FEED_DATA,
           UNIVERSAL_FEED_SUCCESS,
+          UNIVERSAL_FEED_FAILED,
+        ],
+        showLoader: showLoader,
+      },
+    };
+  } catch (error) {
+    Alert.alert(`${error}`);
+  }
+};
+
+export const getTopicsFeed = (payload: GetFeedRequest, showLoader: boolean) => () => {
+  try {
+    return {
+      type: UNIVERSAL_TOPICS_FEED_SUCCESS,
+      [CALL_API]: {
+        func: Client.myClient.getFeed(payload),
+        body: payload,
+        types: [
+          UNIVERSAL_FEED_DATA,
+          UNIVERSAL_TOPICS_FEED_SUCCESS,
           UNIVERSAL_FEED_FAILED,
         ],
         showLoader: showLoader,
