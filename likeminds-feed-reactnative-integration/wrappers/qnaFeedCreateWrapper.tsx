@@ -1,11 +1,11 @@
-import React from 'react';
-import {View} from 'react-native';
+import React from "react";
+import { View } from "react-native";
 import {
   CreatePost,
   CreatePostContextProvider,
   UniversalFeedContextProvider,
   useCreatePostContext,
-} from "../index"
+} from "../index";
 import {
   LMCreatePostAttachmentSelection,
   LMCreatePostHeader,
@@ -16,81 +16,11 @@ import {
   LMCreatePostUIRender,
   LMCreatePostUserTagging,
   LMUserProfileSection,
-} from "../index"
+} from "../index";
 
 const CreateScreen = () => {
-  const {
-    handleDocument,
-    handleGallery,
-    onPostClick,
-    handleScreenBackPress,
-    removePollAttachment,
-    editPollAttachment,
-    handleOnAnonymousPostClicked
-  } = useCreatePostContext();
-
-  const customHandleDocumentProp = () => {
-    console.log('before document handle');
-    handleDocument();
-    console.log('after document handle');
-  };
-  const customHandleGalleryProp = type => {
-    console.log('before gallery handle');
-    handleGallery(type);
-    console.log('after gallery handle');
-  };
-  const customHandleCreatePost = (
-    allAttachment,
-    formattedLinkAttachments,
-    postContentText,
-    topics,
-    poll,
-    isAnonymous
-  ) => {
-    console.log('before post click');
-    onPostClick(
-      allAttachment,
-      formattedLinkAttachments,
-      postContentText,
-      topics,
-      poll,
-      isAnonymous,
-      {}
-    );
-    console.log('after post click');
-  };
-  const customBackHandler = () => {
-    console.log('before back click');
-    handleScreenBackPress();
-    console.log('after back click');
-  };
-  const customPollEditClicked = () => {
-    console.log('before edit poll click');
-    editPollAttachment();
-    console.log('after edit poll  click');
-  };
-  const customPollClearClicked = () => {
-    console.log('before clear poll  click');
-    removePollAttachment();
-    console.log('after clear poll  click');
-  };
-  const customClick = () => {
-    console.log("before")
-    handleOnAnonymousPostClicked();
-    console.log("after")
-  }
   return (
-    <CreatePost
-      isHeadingEnabled={true}
-      isAnonymousPostAllowed={true}
-      handleDocumentProp={() => customHandleDocumentProp()}
-      handleGalleryProp={type => customHandleGalleryProp(type)}
-      handleScreenBackPressProp={() => customBackHandler()}
-      onPollEditClicked={customPollEditClicked}
-      onPollClearClicked={customPollClearClicked}
-      handleOnAnonymousPostClickedProp={customClick}
-      onPostClickProp={customHandleCreatePost}
-      >
+    <CreatePost isHeadingEnabled={true} isAnonymousPostAllowed={true}>
       {/* screen header section*/}
       <LMCreatePostHeader />
 
@@ -121,12 +51,12 @@ const CreateScreen = () => {
   );
 };
 
-export default function QnAFeedCreateWrapper({navigation, route}) {
+export default function QnAFeedCreateWrapper({ navigation, route }) {
   return (
     <UniversalFeedContextProvider navigation={navigation} route={route}>
       <CreatePostContextProvider navigation={navigation} route={route}>
-        <CreateScreen/>
+        <CreateScreen />
       </CreatePostContextProvider>
     </UniversalFeedContextProvider>
-  )
+  );
 }

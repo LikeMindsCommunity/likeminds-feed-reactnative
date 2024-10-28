@@ -4,7 +4,11 @@ import LMLoader from "../LMLoader";
 import { CreatePostContextValues, useCreatePostContext } from "../../context";
 import { styles } from "../../screens/createPost/styles";
 
-const LMCreatePostUIRender = ({ children }) => {
+interface LMCreatePostUIRenderProps {
+  children?: any;
+}
+
+const LMCreatePostUIRender = ({ children }: LMCreatePostUIRenderProps) => {
   let { postToEdit, showOptions, postDetail }: CreatePostContextValues =
     useCreatePostContext();
   return (

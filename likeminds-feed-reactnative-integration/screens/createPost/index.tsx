@@ -43,8 +43,8 @@ interface CreatePostProps {
     isAnonymous?: boolean
   ) => void;
   handleScreenBackPressProp?: () => void;
-  onPollEditClicked: any;
-  onPollClearClicked: any;
+  onPollEditClicked?: any;
+  onPollClearClicked?: any;
   isHeadingEnabled: boolean;
   hideTopicsViewCreate?: boolean;
   hideTopicsViewEdit?: boolean;
