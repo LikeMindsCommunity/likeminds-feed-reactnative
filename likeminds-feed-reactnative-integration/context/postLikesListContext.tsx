@@ -13,7 +13,7 @@ import { Events } from "../enums/Events";
 import { Keys } from "../enums/Keys";
 
 interface PostLikesListContextProps {
-  children: ReactNode;
+  children?: ReactNode;
   navigation: NativeStackNavigationProp<RootStackParamList, "PostLikesList">;
   route: {
     key: string;

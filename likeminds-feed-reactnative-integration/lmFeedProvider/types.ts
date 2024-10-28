@@ -8,6 +8,10 @@ import {
   LMProfilePictureProps,
   LMTextProps,
 } from "../uiComponents";
+import {
+  VideoCallback,
+  VideoCarouselCallback,
+} from "../components/LMMedia/LMVideo/types";
 
 interface TextStyles {
   fontSize: number;
@@ -472,4 +476,6 @@ export interface LMFeedProviderProps {
   accessToken?: string;
   refreshToken?: string;
   lmFeedInterface?: any;
+  videoCallback?: VideoCallback;
+  videoCarouselCallback?: VideoCarouselCallback;
 }

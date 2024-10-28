@@ -7,7 +7,7 @@ import { LMMenuItemsViewData, RootStackParamList } from "../../models";
 import { PollCustomisableMethodsContextProvider } from "../../context/pollCustomisableCallback";
 
 interface UniversalFeedProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   navigation?: NativeStackNavigationProp<RootStackParamList, "UniversalFeed">;
   route?: {
     key: string;

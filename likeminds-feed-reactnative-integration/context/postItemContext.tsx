@@ -22,7 +22,7 @@ interface LMPostContextProps {
 
 export interface LMPostContextValues {
   navigation: any;
-  children: ReactNode;
+  children?: ReactNode;
   post: LMPostViewData;
   headerProps?: LMPostHeaderProps;
   footerProps?: LMPostFooterProps;

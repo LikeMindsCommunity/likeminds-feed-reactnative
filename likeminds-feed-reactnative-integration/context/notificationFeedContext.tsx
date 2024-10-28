@@ -34,7 +34,7 @@ import { Client } from "../client";
 import { SET_NOTIFICATION_COUNT } from "../store/types/types";
 
 interface NotificationFeedContextProps {
-  children: ReactNode;
+  children?: ReactNode;
   navigation: NativeStackNavigationProp<RootStackParamList, "NotificationFeed">;
   route: {
     key: string;

@@ -25,6 +25,10 @@ import { CallBack } from "../callBacks/callBackClass";
 import { Client } from "../client";
 import { CommunityConfigs } from "../communityConfigs";
 import { updateVariables } from "../constants/Strings";
+import {
+  VideoCallback,
+  VideoCarouselCallback,
+} from "../components/LMMedia/LMVideo/types";
 
 // Create a context for LMFeedProvider
 const LMFeedContext = createContext<LMFeedClient | undefined>(undefined);
@@ -47,6 +51,8 @@ export const LMFeedProvider = ({
   accessToken,
   refreshToken,
   lmFeedInterface,
+  videoCallback,
+  videoCarouselCallback,
 }: LMFeedProviderProps): React.JSX.Element => {
   const [isInitiated, setIsInitiated] = useState(false);
   const dispatch = useAppDispatch();
@@ -125,8 +131,18 @@ export const LMFeedProvider = ({
   }, [accessToken, refreshToken]);
 
 
+  const contextValues: {
+    myClient: LMFeedClient;
+    videoCallback?: VideoCallback;
+    videoCarouselCallback?: VideoCarouselCallback;
+  } = {
+    myClient: myClient,
+    videoCallback: videoCallback,
+    videoCarouselCallback: videoCarouselCallback,
+  };
+
   return isInitiated ? (
-    <LMFeedContext.Provider value={myClient}>
+    <LMFeedContext.Provider value={contextValues}>
       <View style={styles.flexStyling}>{children}</View>
       {showToast && <LMToast />}
     </LMFeedContext.Provider>

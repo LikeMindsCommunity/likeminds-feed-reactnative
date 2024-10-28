@@ -55,7 +55,7 @@ import {
 } from "../store/types/types";
 
 interface UniversalFeedContextProps {
-  children: ReactNode;
+  children?: ReactNode;
   navigation: NativeStackNavigationProp<RootStackParamList, "UniversalFeed">;
   route: {
     key: string;

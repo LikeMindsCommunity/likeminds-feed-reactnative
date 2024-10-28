@@ -103,7 +103,7 @@ import pluralizeOrCapitalize from "../utils/variables";
 import { WordAction } from "../enums/Variables";
 
 interface PostDetailContextProps {
-  children: ReactNode;
+  children?: ReactNode;
   navigation: NativeStackNavigationProp<RootStackParamList, "PostDetail">;
   route: {
     key: string;

@@ -79,7 +79,7 @@ import { CREATE_POLL_SCREEN } from "../constants/screenNames";
 import STYLES from "../constants/Styles";
 
 interface CreatePostContextProps {
-  children: ReactNode;
+  children?: ReactNode;
   navigation: NativeStackNavigationProp<RootStackParamList, "CreatePost">;
   route: {
     key: string;

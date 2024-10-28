@@ -78,6 +78,7 @@ import {
   LMCreatePostUserTagging,
   LMUserProfileSection,
 } from "./components/LMCreatePost";
+import Layout from "./constants/Layout";
 
 export {
   LMOverlayProvider,
@@ -149,4 +150,5 @@ export {
   LMCreatePostUserTagging,
   LMCreatePostMedia,
   LMCreatePostAttachmentSelection,
+  Layout,
 };

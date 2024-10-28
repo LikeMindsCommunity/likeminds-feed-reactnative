@@ -70,7 +70,7 @@ import { WordAction } from "../enums/Variables";
 import { CommunityConfigs } from "../communityConfigs";
 
 interface PostListContextProps {
-  children: ReactNode;
+  children?: ReactNode;
   navigation: NativeStackNavigationProp<
     RootStackParamList,
     "PostsList" | "UniversalFeed"

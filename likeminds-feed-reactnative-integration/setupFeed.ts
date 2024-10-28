@@ -3,8 +3,6 @@ import {
   LMFeedClient,
   LMSDKCallbacks,
 } from "@likeminds.community/feed-rn";
-import { initMyClient } from "./setup";
-import { LoginSchemaRO } from "../social-feed/login/loginSchemaRO";
 import { Client } from "./client";
 
 // create a class by LMFeedCoreCallbacks and take two functions in its contructors, assign these two functions to the class's functions
