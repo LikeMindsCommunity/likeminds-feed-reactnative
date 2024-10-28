@@ -25,7 +25,9 @@ import { useAppSelector } from "../../store/store";
 import { MemberRightsEnum } from "../../enums/MemberRightsEnum";
 import STYLES from "../../constants/Styles";
 import { usePostDetailContext } from "../../context";
-
+import { CommunityConfigs } from "../../communityConfigs";
+import pluralizeOrCapitalize from "../../utils/variables";
+import { WordAction } from "../../enums/Variables";
 const LMCommentItem = React.memo(
   ({
     likeIconButton,
@@ -260,11 +262,11 @@ const LMCommentItem = React.memo(
                   children:
                     commentLikeCount > 1 ? (
                       <Text style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}>
-                        {commentLikeCount} Likes
+                        {commentLikeCount} {pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.likeEntityVariable?.entityName ?? "like",WordAction.firstLetterCapitalPlural)}
                       </Text>
                     ) : (
                       <Text style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}>
-                        {commentLikeCount} Like
+                        {commentLikeCount} {pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.likeEntityVariable?.entityName ?? "like",WordAction.firstLetterCapitalSingular)}
                       </Text>
                     ),
                   textStyle: {
@@ -281,8 +283,8 @@ const LMCommentItem = React.memo(
             {/* reply section */}
             {comment?.level === PARENT_LEVEL_COMMENT && (
               <>
-                {isCM ||
-                  (commentingRight?.isSelected && (
+                {(isCM || commentingRight?.isSelected)
+                && (
                     <>
                       <LMText
                         children={<Text> | </Text>}
@@ -330,7 +332,7 @@ const LMCommentItem = React.memo(
                         ])}
                       />
                     </>
-                  ))}
+                  )}
 
                 {/* this shows all the replies of a comment */}
                 {comment.repliesCount > 0 && (
@@ -366,13 +368,13 @@ const LMCommentItem = React.memo(
                             <Text
                               style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}
                             >
-                              {comment.repliesCount} Replies
+                              {" " + comment.repliesCount} Replies
                             </Text>
                           ) : (
                             <Text
                               style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}
                             >
-                              {comment.repliesCount} Reply
+                              {" " + comment.repliesCount} Reply
                             </Text>
                           ),
                         textStyle: StyleSheet.flatten([

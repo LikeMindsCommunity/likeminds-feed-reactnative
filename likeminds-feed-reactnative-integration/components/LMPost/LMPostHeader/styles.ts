@@ -5,7 +5,7 @@ import layout from "../../../constants/Layout";
 // default post header style
 export const styles = StyleSheet.create({
   postHeader: {
-    width: "100%",
+    flex: 1,
     paddingHorizontal: 15,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -35,7 +35,6 @@ export const styles = StyleSheet.create({
   },
   labelView: {
     backgroundColor: STYLES.$COLORS.PRIMARY,
-    marginLeft: 10,
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 2,
@@ -52,12 +51,10 @@ export const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   topRightView: {
-    width: "16%",
     flexDirection: "row",
     justifyContent: "flex-end",
   },
   topRightViewIfPinned: {
-    width: "16%",
     flexDirection: "row",
     justifyContent: "space-between",
   },

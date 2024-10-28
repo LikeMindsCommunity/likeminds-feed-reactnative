@@ -29,12 +29,18 @@ import {
   AUTO_PLAY_POST_VIDEO,
   CLEAR_FEED,
   UNIVERSAL_FEED_REFRESH_SUCCESS,
+  HIDE_POST,
+  HIDE_POST_SUCCESS,
+  HIDE_POST_FAILED,
+  HIDE_POST_STATE,
+  UNIVERSAL_TOPICS_FEED_SUCCESS,
 } from "../types/types";
 import { Client } from "../../client";
 import {
   DeletePostRequest,
   GetFeedRequest,
   GetReportTagsRequest,
+  HidePostRequest,
   LikePostRequest,
   PinPostRequest,
   PostReportRequest,
@@ -52,6 +58,26 @@ export const getFeed = (payload: GetFeedRequest, showLoader: boolean) => () => {
         types: [
           UNIVERSAL_FEED_DATA,
           UNIVERSAL_FEED_SUCCESS,
+          UNIVERSAL_FEED_FAILED,
+        ],
+        showLoader: showLoader,
+      },
+    };
+  } catch (error) {
+    Alert.alert(`${error}`);
+  }
+};
+
+export const getTopicsFeed = (payload: GetFeedRequest, showLoader: boolean) => () => {
+  try {
+    return {
+      type: UNIVERSAL_TOPICS_FEED_SUCCESS,
+      [CALL_API]: {
+        func: Client.myClient.getFeed(payload),
+        body: payload,
+        types: [
+          UNIVERSAL_FEED_DATA,
+          UNIVERSAL_TOPICS_FEED_SUCCESS,
           UNIVERSAL_FEED_FAILED,
         ],
         showLoader: showLoader,
@@ -126,6 +152,17 @@ export const likePostStateHandler = (payload: string) => () => {
   }
 };
 
+export const hidePostStateHandler = (payload: string) => () => {
+  try {
+    return {
+      type: HIDE_POST_STATE,
+      body: payload,
+    };
+  } catch (error) {
+    Alert.alert(`${error}`);
+  }
+};
+
 // save post API action
 export const savePost =
   (payload: SavePostRequest, showLoader: boolean) => () => {
@@ -166,6 +203,24 @@ export const getReportTags =
           func: Client.myClient.getReportTags(payload),
           body: payload,
           types: [REPORT_TAGS_DATA, REPORT_TAGS_SUCCESS, REPORT_TAGS_FAILED],
+          showLoader: showLoader,
+        },
+      };
+    } catch (error) {
+      Alert.alert(`${error}`);
+    }
+  };
+
+// hide/unhide post
+export const hidePost =
+  (payload: HidePostRequest, showLoader: boolean) => () => {
+    try {
+      return {
+        type: HIDE_POST_SUCCESS,
+        [CALL_API]: {
+          func: Client.myClient.hidePost(payload),
+          body: payload,
+          types: [HIDE_POST, HIDE_POST_SUCCESS, HIDE_POST_FAILED],
           showLoader: showLoader,
         },
       };

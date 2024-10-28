@@ -24,13 +24,20 @@ import { LMToast } from "../components";
 import { CallBack } from "../callBacks/callBackClass";
 import { Client } from "../client";
 import { CommunityConfigs } from "../communityConfigs";
+import { updateVariables } from "../constants/Strings";
 import {
   VideoCallback,
   VideoCarouselCallback,
 } from "../components/LMMedia/LMVideo/types";
 
+interface LMFeedContextProps {
+  myClient: LMFeedClient;
+  videoCallback?: VideoCallback;
+  videoCarouselCallback?: VideoCarouselCallback;
+}
+
 // Create a context for LMFeedProvider
-const LMFeedContext = createContext<LMFeedClient | undefined>(undefined);
+const LMFeedContext = createContext<LMFeedContextProps | undefined>(undefined);
 
 // Create a hook to use the LMFeedContext
 export const useLMFeed = () => {
@@ -57,6 +64,16 @@ export const LMFeedProvider = ({
   const dispatch = useAppDispatch();
   const showToast = useAppSelector((state) => state.loader.isToast);
 
+  const callGetCommunityConfigurations = async () => {
+    const response = await myClient?.getCommunityConfigurations();
+    CommunityConfigs.setCommunityConfigs(
+      /* @ts-ignore */
+      response?.data?.communityConfigurations
+    );
+    /*@ts-ignore*/
+    updateVariables(response?.data?.communityConfigurations);
+  };
+
   useEffect(() => {
     //setting client in Client class
     Client.setMyClient(myClient);
@@ -79,6 +96,7 @@ export const LMFeedProvider = ({
         // calling getMemberState API
         await dispatch(getMemberState());
       }
+      await callGetCommunityConfigurations();
       setIsInitiated(true);
     };
 
@@ -105,6 +123,7 @@ export const LMFeedProvider = ({
           initiateResponse?.accessToken,
           initiateResponse?.refreshToken
         );
+        await callGetCommunityConfigurations();
         setIsInitiated(true);
       }
     }
@@ -116,22 +135,7 @@ export const LMFeedProvider = ({
     }
   }, [accessToken, refreshToken]);
 
-  useEffect(() => {
-    const callGetCommunityConfigurations = async () => {
-      const response = await myClient?.getCommunityConfigurations();
-      CommunityConfigs.setCommunityConfigs(
-        /* @ts-ignore */
-        response?.data?.communityConfigurations
-      );
-    };
-    if (isInitiated) callGetCommunityConfigurations();
-  }, [isInitiated]);
-
-  const contextValues: {
-    myClient: LMFeedClient;
-    videoCallback?: VideoCallback;
-    videoCarouselCallback?: VideoCarouselCallback;
-  } = {
+  const contextValues: LMFeedContextProps = {
     myClient: myClient,
     videoCallback: videoCallback,
     videoCarouselCallback: videoCarouselCallback,

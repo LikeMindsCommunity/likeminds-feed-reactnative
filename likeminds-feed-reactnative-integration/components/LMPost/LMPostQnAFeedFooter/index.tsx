@@ -7,12 +7,14 @@ import { Events } from "../../../enums/Events";
 import { Keys } from "../../../enums/Keys";
 import STYLES from "../../../constants/Styles";
 import { styles } from "../LMPostFooter/styles";
+import { CommunityConfigs } from "../../../communityConfigs";
+import pluralizeOrCapitalize from "../../../utils/variables";
+import { WordAction } from "../../../enums/Variables";
 
 const LMPostQnAFeedFooter = React.memo(() => {
   const { post, footerProps }: LMPostContextValues = useLMPostContext();
   const postListStyle = STYLES.$POST_LIST_STYLE;
   const footerStyle: any = postListStyle?.footer;
-
   const [liked, setLiked] = useState(post?.isLiked);
   const [likeCount, setLikeCount] = useState(post?.likesCount);
   const showBookMarkIcon =
@@ -119,9 +121,9 @@ const LMPostQnAFeedFooter = React.memo(() => {
             text={{
               children: likeCount
                 ? likeCount > 1
-                  ? `Upvote · ${likeCount}`
-                  : `Upvote · ${likeCount}`
-                : "Upvote",
+                  ? `${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.likeEntityVariable?.entityName ?? "like", WordAction.firstLetterCapitalPlural)} · ${likeCount}`
+                  : `${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.likeEntityVariable?.entityName ?? "like", WordAction.firstLetterCapitalSingular)} · ${likeCount}`
+                : `${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.likeEntityVariable?.entityName ?? "like", WordAction.firstLetterCapitalSingular)}`,
               textStyle: footerStyle?.likeTextButton?.text
                 ? footerStyle?.likeTextButton.text
                 : {
@@ -165,7 +167,7 @@ const LMPostQnAFeedFooter = React.memo(() => {
                 ? post?.commentsCount > 1
                   ? `${post?.commentsCount}`
                   : `${post?.commentsCount}`
-                : "Answer",
+                : `${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.comment ?? "comment", WordAction.firstLetterCapitalSingular)}`,
             textStyle: footerStyle?.commentButton?.text
               ? footerStyle?.commentButton.text
               : {

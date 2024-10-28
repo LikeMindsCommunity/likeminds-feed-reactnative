@@ -2,6 +2,7 @@ import React from "react";
 import {
   PostDetailContextProvider,
   UniversalFeedContextProvider,
+  useLMPostContext,
 } from "../context";
 import { PostDetail } from "../screens/postDetail";
 import LMPostQnAFeedFooter from "../components/LMPost/LMPostQnAFeedFooter";
@@ -18,3 +19,5 @@ const LMQnAPostDetailScreen = ({ navigation, route }: any) => {
 };
 
 export default LMQnAPostDetailScreen;
+
+
