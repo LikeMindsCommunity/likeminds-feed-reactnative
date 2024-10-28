@@ -138,7 +138,7 @@ const LMFilterTopics = () => {
     getTopicsFeed(
       GetFeedRequest.builder()
         .setPage(1)
-        .setPageSize(10)
+        .setPageSize(20)
         .setTopicIds(topics?.length > 0 && topics[0] != "0" ? topics : [])
         .build(),
       false
