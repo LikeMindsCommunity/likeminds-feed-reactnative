@@ -269,7 +269,6 @@ const App = () => {
             callbackClass={callbackClass}>
             <NavigationContainer ref={navigationRef} independent={true}>
               <Stack.Navigator screenOptions={{headerShown: false}}>
-                <Stack.Screen name={UNIVERSAL_FEED} component={FeedWrapper} />
                 <Stack.Screen
                   name={UNIVERSAL_FEED}
                   component={LMSocialFeedScreen}
