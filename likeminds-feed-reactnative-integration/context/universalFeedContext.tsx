@@ -124,6 +124,7 @@ export const UniversalFeedContextProvider = ({
   const accessToken = useAppSelector((state) => state.login.accessToken);
   const memberData = useAppSelector((state) => state.login.member);
   const memberRight = useAppSelector((state) => state.login.memberRights);
+  const selectedTopics = useAppSelector((state) => state.feed.selectedTopicsForUniversalFeedScreen)
   const [postUploading, setPostUploading] = useState(false);
   const [feedPageNumber, setFeedPageNumber] = useState(1);
   const [showCreatePost, setShowCreatePost] = useState(true);
@@ -170,9 +171,10 @@ export const UniversalFeedContextProvider = ({
     setRefreshing(true);
     setLocalRefresh(true);
     // calling getFeed API
+    const topicIds = selectedTopics?.length > 0 && selectedTopics[0] != "0" ? selectedTopics : [];
     await dispatch(
       refreshFeed(
-        GetFeedRequest.builder().setPage(1).setPageSize(20).build(),
+        GetFeedRequest.builder().setPage(1).setPageSize(20).setTopicIds(topicIds).build(),
         false
       )
     );
