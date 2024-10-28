@@ -51,8 +51,8 @@ const CreateScreen = () => {
       postContentText,
       topics,
       poll,
-      {text: 'custom widget is working'},
       isAnonymous,
+      {text: 'custom widget is working'},
     );
     console.log('after post click');
   };

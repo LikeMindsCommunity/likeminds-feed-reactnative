@@ -165,8 +165,8 @@ export interface CreatePostContextValues {
     content: string,
     topics: string[],
     poll: any,
-    metaData?: any,
-    isAnonymous?: boolean
+    isAnonymous?: boolean,
+    metaData?: any
   ) => void;
   handleScreenBackPress: () => void;
   handleHeadingInputChange: (event: string) => void;
@@ -384,8 +384,8 @@ export const CreatePostContextProvider = ({
     content: string,
     topics: string[],
     poll: any,
-    metaData?: any,
-    isAnonymous: boolean = false
+    isAnonymous: boolean = false,
+    metaData?: any
   ) => {
     const isConnected = await NetworkUtil.isNetworkAvailable();
     if (isConnected) {
@@ -400,7 +400,7 @@ export const CreatePostContextProvider = ({
               topics: topics,
               poll: poll,
               metaData: metaData,
-              isAnonymous
+              isAnonymous,
             })
           );
       dispatch({ type: CLEAR_POLL });
@@ -523,8 +523,8 @@ export const CreatePostContextProvider = ({
   };
 
   const handleOnAnonymousPostClicked = () => {
-    setAnonymousPost((val) => !val)
-  }
+    setAnonymousPost((val) => !val);
+  };
 
   // function edits poll attachment
   const editPollAttachment = () => {
@@ -900,7 +900,7 @@ export const CreatePostContextProvider = ({
     setShowTopics,
     setMappedTopics,
     anonymousPost,
-    handleOnAnonymousPostClicked
+    handleOnAnonymousPostClicked,
   };
 
   return (
