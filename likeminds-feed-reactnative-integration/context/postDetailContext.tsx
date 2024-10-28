@@ -481,6 +481,7 @@ export const PostDetailContextProvider = ({
     setDeleteModal(visible);
   };
 
+  // this function handles the functionality of hiding a post
   const handleHidePost = async (postId) => {
     try {
       const isPostHidden = (postDetail as LMPostViewData)?.menuItems?.find((menuItem) => menuItem.id == 13);

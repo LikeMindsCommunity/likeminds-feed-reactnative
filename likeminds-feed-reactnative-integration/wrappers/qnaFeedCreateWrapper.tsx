@@ -54,7 +54,7 @@ const CreateScreen = () => {
       postContentText,
       topics,
       poll,
-      null,
+      {},
       isAnonymous
     );
     console.log('after post click');
@@ -89,6 +89,7 @@ const CreateScreen = () => {
       onPollEditClicked={customPollEditClicked}
       onPollClearClicked={customPollClearClicked}
       handleOnAnonymousPostClickedProp={customClick}
+      onPostClickProp={customHandleCreatePost}
       >
       {/* screen header section*/}
       <LMCreatePostHeader />
