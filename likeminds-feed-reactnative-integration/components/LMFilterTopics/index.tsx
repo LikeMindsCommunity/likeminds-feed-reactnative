@@ -30,7 +30,8 @@ const LMFilterTopics = () => {
     navigation,
     getNotificationsCount,
     setIsAnyMatchingPost,
-    setFeedPageNumber
+    setFeedPageNumber,
+    setIsPaginationStopped
   }: UniversalFeedContextValues = useUniversalFeedContext();
   const myClient = Client.myClient;
   const [showTopics, setShowTopics] = useState(false);
@@ -97,6 +98,7 @@ const LMFilterTopics = () => {
       body: { topics: filteredTopics },
     }); // Update the state with the new array
     setFeedPageNumber(1);
+    setIsPaginationStopped(false);
     await callTopicsFeed(filteredTopics)
   };
 
@@ -284,7 +286,8 @@ const LMFilterTopics = () => {
                   type: SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
                   body: { topics: [] },
                 });
-                setFeedPageNumber(1)
+                setFeedPageNumber(1);
+                setIsPaginationStopped(false);
                 await callTopicsFeed([]);
               }}
             >

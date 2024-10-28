@@ -99,6 +99,8 @@ export interface UniversalFeedContextValues {
   setIsAnyMatchingPost: Dispatch<SetStateAction<boolean>>;
   feedPageNumber: number;
   setFeedPageNumber: Dispatch<SetStateAction<number>>;
+  isPaginationStopped: boolean;
+  setIsPaginationStopped: Dispatch<SetStateAction<boolean>>
 }
 
 const UniversalFeedContext = createContext<
@@ -127,6 +129,7 @@ export const UniversalFeedContextProvider = ({
   const selectedTopics = useAppSelector((state) => state.feed.selectedTopicsForUniversalFeedScreen)
   const [postUploading, setPostUploading] = useState(false);
   const [feedPageNumber, setFeedPageNumber] = useState(1);
+  const [isPaginationStopped, setIsPaginationStopped] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(true);
   const [isAnyMatchingPost, setIsAnyMatchingPost] = useState(false);
   const {
@@ -613,7 +616,9 @@ export const UniversalFeedContextProvider = ({
     isAnyMatchingPost,
     setIsAnyMatchingPost,
     feedPageNumber,
-    setFeedPageNumber
+    setFeedPageNumber,
+    isPaginationStopped,
+    setIsPaginationStopped
   };
 
   return (

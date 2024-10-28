@@ -161,9 +161,8 @@ export const PostListContextProvider = ({
   const [showReportModal, setShowReportModal] = useState(false);
   const [feedFetching, setFeedFetching] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isPaginationStopped, setIsPaginationStopped] = useState(false);
   const loaderStyle = STYLES.$LOADER_STYLE
-  const { localRefresh, feedPageNumber, setFeedPageNumber } = useUniversalFeedContext();
+  const { localRefresh, feedPageNumber, setFeedPageNumber, isPaginationStopped, setIsPaginationStopped } = useUniversalFeedContext();
 
   const PAGE_SIZE = 20;
   const [postInViewport, setPostInViewport] = useState("");
@@ -187,7 +186,7 @@ export const PostListContextProvider = ({
       pageSize: PAGE_SIZE,
     };
 
-    const topicIds = topics?.length > 0 && topics[0] != "0" ? topics : []
+    const topicIds = topics?.length > 0 && topics[0] != "0" ? topics : [];
     // calling getFeed API
     const getFeedResponse = await dispatch(
       getFeed(
