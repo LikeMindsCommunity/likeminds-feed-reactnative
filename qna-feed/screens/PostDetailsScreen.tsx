@@ -12,7 +12,7 @@ const PostDetailsScreen = ({ navigation, route }: any) => {
     <UniversalFeedContextProvider navigation={navigation} route={route}>
       <PostDetailContextProvider navigation={navigation} route={route}>
         {/* @ts-ignore */}
-        <PostDetail isHeadingEnabled={true} lmPostCustomFooter={<LMPostQnAFeedFooter />} customWidgetPostView={<CustomPost />}/>
+        <PostDetail isHeadingEnabled={true} lmPostCustomFooter={<LMPostQnAFeedFooter />} />
       </PostDetailContextProvider>
     </UniversalFeedContextProvider>
   );

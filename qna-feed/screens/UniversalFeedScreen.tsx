@@ -39,7 +39,6 @@ const Feed = () => {
         <PostsList
           items={mappedTopics}
           lmPostCustomFooter={<LMPostQnAFeedFooter />}
-          customWidgetPostView={<CustomPost />}
         />
         <LMCreatePostButton />
       </UniversalFeed>
