@@ -18,18 +18,22 @@ import { useNavigation } from "@react-navigation/native";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { useUniversalFeedContext } from "../../context/universalFeedContext";
 import {
+  CLEAR_FEED,
   CLEAR_SELECTED_TOPICS,
   CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
   SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
   SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
   SET_TOPICS,
 } from "../../store/types/types";
+import { getFeed, getTopicsFeed } from "../../store/actions/feed";
+import { GetFeedRequest } from "@likeminds.community/feed-rn";
 import { useCreatePostContext } from "../../context";
 
 const TopicFeed = () => {
   const navigation = useNavigation<StackNavigationProp<any>>();
   let routes = navigation.getState()?.routes;
   let previousRoute = routes[routes?.length - 2];
+  const { setFeedPageNumber } = useUniversalFeedContext()
 
   const topicsStyle: any = STYLES.$TOPICS_STYLE;
 
@@ -52,6 +56,7 @@ const TopicFeed = () => {
   const [searchedTopics, setSearchedTopics] = useState([] as any);
   const [searchPage, setSearchPage] = useState(1);
   const [newTopics, setNewTopics] = useState([] as any);
+  const [stopPagination, setStopPagination] = useState(false);
   let sortedTopics: any = [];
   let sortedTopicsFromUniversalFeed: any = [];
 
@@ -160,6 +165,18 @@ const TopicFeed = () => {
         type: SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
         body,
       });
+      setFeedPageNumber(1);
+      setTimeout(async () => await dispatch(
+        getTopicsFeed(
+          GetFeedRequest.builder()
+            .setPage(1)
+            .setPageSize(20)
+            .setTopicIds(newTopics?.length > 0 && newTopics[0] != "0" ? newTopics : [])
+            .build(),
+          false
+        )
+      ),100);
+  
     } else if (previousRoute?.name === "CreatePost") {
       // clearing selected topics for create screen to allow deselecting and updating topics
       dispatch({
@@ -407,7 +424,7 @@ const TopicFeed = () => {
       search: search,
       searchType: "name",
       page: newPage,
-      pageSize: 10,
+      pageSize: 50,
     };
     const response = await myClient?.getTopics(payload);
     return response?.data;
@@ -418,6 +435,9 @@ const TopicFeed = () => {
     const res = await updateData(newPage);
     if (res) {
       const topicsResponse: any = res?.topics;
+      if (topicsResponse?.length == 0) {
+        setStopPagination(true);
+      }
       if (topicsResponse && topicsResponse?.length > 0) {
         const topicsObject = {};
         topicsResponse.forEach((topic) => {
@@ -449,9 +469,7 @@ const TopicFeed = () => {
     if (!isLoading) {
       const arr = topics;
       if (
-        arr?.length % 10 === 0 &&
-        arr?.length > 0 &&
-        arr?.length === 10 * page
+        !stopPagination
       ) {
         const newPage = page + 1;
         loadData(newPage);
