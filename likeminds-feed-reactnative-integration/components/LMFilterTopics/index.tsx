@@ -20,6 +20,8 @@ import { TOPIC_FEED } from "../../constants/screenNames";
 import { CommunityConfigs } from "../../communityConfigs";
 import { WordAction } from "../../enums/Variables";
 import pluralizeOrCapitalize from "../../utils/variables";
+import { GetFeedRequest } from "@likeminds.community/feed-rn";
+import { getTopicsFeed } from "../../store/actions/feed";
 
 const LMFilterTopics = () => {
   const dispatch = useAppDispatch();
@@ -27,7 +29,8 @@ const LMFilterTopics = () => {
     feedData,
     navigation,
     getNotificationsCount,
-    setIsAnyMatchingPost
+    setIsAnyMatchingPost,
+    setFeedPageNumber
   }: UniversalFeedContextValues = useUniversalFeedContext();
   const myClient = Client.myClient;
   const [showTopics, setShowTopics] = useState(false);
@@ -81,7 +84,7 @@ const LMFilterTopics = () => {
     return navigation.navigate(TOPIC_FEED);
   };
 
-  const removeItem = (index: any) => {
+  const removeItem = async (index: any) => {
     const newItems = [...mappedTopics]; // Create a copy of the array
     const filteredTopics = selectedTopics?.filter(topic =>  topic != (newItems[index])?.id);
     newItems.splice(index, 1); // Remove the item at the specified index
@@ -93,6 +96,8 @@ const LMFilterTopics = () => {
       type: SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
       body: { topics: filteredTopics },
     }); // Update the state with the new array
+    setFeedPageNumber(1);
+    await callTopicsFeed(filteredTopics)
   };
 
   const getTopics = async () => {
@@ -128,6 +133,17 @@ const LMFilterTopics = () => {
       });
     }
   };
+
+  const callTopicsFeed = async (topics) => await dispatch(
+    getTopicsFeed(
+      GetFeedRequest.builder()
+        .setPage(1)
+        .setPageSize(10)
+        .setTopicIds(topics?.length > 0 && topics[0] != "0" ? topics : [])
+        .build(),
+      false
+    )
+  );
 
   useEffect(() => {
     getTopics();
@@ -259,7 +275,7 @@ const LMFilterTopics = () => {
             }}
           >
             <TouchableOpacity
-              onPress={() => {
+              onPress={async () => {
                 dispatch({
                   type: MAPPED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
                   body: { topics: [] },
@@ -268,6 +284,8 @@ const LMFilterTopics = () => {
                   type: SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
                   body: { topics: [] },
                 });
+                setFeedPageNumber(1)
+                await callTopicsFeed([]);
               }}
             >
               <Text

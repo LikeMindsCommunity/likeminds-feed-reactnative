@@ -97,6 +97,8 @@ export interface UniversalFeedContextValues {
   submitPoll: any;
   isAnyMatchingPost: boolean;
   setIsAnyMatchingPost: Dispatch<SetStateAction<boolean>>;
+  feedPageNumber: number;
+  setFeedPageNumber: Dispatch<SetStateAction<number>>;
 }
 
 const UniversalFeedContext = createContext<
@@ -123,6 +125,7 @@ export const UniversalFeedContextProvider = ({
   const memberData = useAppSelector((state) => state.login.member);
   const memberRight = useAppSelector((state) => state.login.memberRights);
   const [postUploading, setPostUploading] = useState(false);
+  const [feedPageNumber, setFeedPageNumber] = useState(1);
   const [showCreatePost, setShowCreatePost] = useState(true);
   const [isAnyMatchingPost, setIsAnyMatchingPost] = useState(false);
   const {
@@ -606,7 +609,9 @@ export const UniversalFeedContextProvider = ({
     setSelectedPollOptions,
     submitPoll,
     isAnyMatchingPost,
-    setIsAnyMatchingPost
+    setIsAnyMatchingPost,
+    feedPageNumber,
+    setFeedPageNumber
   };
 
   return (

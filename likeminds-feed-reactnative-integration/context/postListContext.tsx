@@ -13,6 +13,7 @@ import { useAppDispatch, useAppSelector } from "../store/store";
 import {
   autoPlayPostVideo,
   getFeed,
+  getTopicsFeed,
   hidePost,
   likePost,
   likePostStateHandler,
@@ -152,7 +153,7 @@ export const PostListContextProvider = ({
   const feedData = useAppSelector((state) => state.feed.feed);
   const accessToken = useAppSelector((state) => state.login.accessToken);
   const showLoader = useAppSelector((state) => state.loader.count);
-  const [feedPageNumber, setFeedPageNumber] = useState(1);
+  const topics = useAppSelector((state) => state.feed.selectedTopicsForUniversalFeedScreen);
   const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
   const [showActionListModal, setShowActionListModal] = useState(false);
   const [selectedMenuItemPostId, setSelectedMenuItemPostId] = useState("");
@@ -162,7 +163,7 @@ export const PostListContextProvider = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isPaginationStopped, setIsPaginationStopped] = useState(false);
   const loaderStyle = STYLES.$LOADER_STYLE
-  const { localRefresh } = useUniversalFeedContext();
+  const { localRefresh, feedPageNumber, setFeedPageNumber } = useUniversalFeedContext();
 
   const PAGE_SIZE = 20;
   const [postInViewport, setPostInViewport] = useState("");
@@ -186,12 +187,14 @@ export const PostListContextProvider = ({
       pageSize: PAGE_SIZE,
     };
 
+    const topicIds = topics?.length > 0 && topics[0] != "0" ? topics : []
     // calling getFeed API
     const getFeedResponse = await dispatch(
       getFeed(
         GetFeedRequest.builder()
           .setPage(payload.page)
           .setPageSize(payload.pageSize)
+          .setTopicIds(topicIds)
           .build(),
         false
       )
@@ -310,6 +313,7 @@ export const PostListContextProvider = ({
       fetchFeed(initialPage);
     }
   }, [accessToken]);
+
 
   // this function closes the post action list modal
   const closePostActionListModal = () => {
