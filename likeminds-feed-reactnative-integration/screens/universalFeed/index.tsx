@@ -25,6 +25,7 @@ interface UniversalFeedProps {
   onTapLikeCountProps?: (id: string) => void;
   handleDeletePostProps?: (visible: boolean, postId: string) => void;
   handleReportPostProps?: (postId: string) => void;
+  handleHidePostProp?: (postId: string) => void,
   newPostButtonClickProps?: () => void;
   onOverlayMenuClickProp?: (
     event: {
@@ -38,6 +39,7 @@ interface UniversalFeedProps {
   onSubmitButtonClicked?: any;
   onAddPollOptionsClicked?: any;
   onPollOptionClicked?: any;
+  hideTopicsView?: boolean;
 }
 
 interface UniversalFeedComponentProps {
@@ -56,6 +58,7 @@ const UniversalFeed = ({
   onTapLikeCountProps,
   handleDeletePostProps,
   handleReportPostProps,
+  handleHidePostProp,
   newPostButtonClickProps,
   onOverlayMenuClickProp,
   onTapNotificationBellProp,
@@ -65,6 +68,7 @@ const UniversalFeed = ({
   onPollOptionClicked,
   isHeadingEnabled = false,
   isTopResponse = false,
+  hideTopicsView = false
 }: UniversalFeedProps) => {
   return (
     <PollCustomisableMethodsContextProvider
@@ -79,6 +83,7 @@ const UniversalFeed = ({
         selectPinPostProp={selectPinPostProp}
         onSelectCommentCountProp={onSelectCommentCountProp}
         onTapLikeCountProps={onTapLikeCountProps}
+        handleHidePostProp={handleHidePostProp}
         handleDeletePostProps={handleDeletePostProps}
         handleReportPostProps={handleReportPostProps}
         newPostButtonClickProps={newPostButtonClickProps}
@@ -87,6 +92,7 @@ const UniversalFeed = ({
         onSharePostClicked={onSharePostClicked}
         isHeadingEnabled={isHeadingEnabled}
         isTopResponse={isTopResponse}
+        hideTopicsView={hideTopicsView}
       >
         <UniversalFeedComponent children={children} />
       </UniversalFeedCustomisableMethodsContextProvider>

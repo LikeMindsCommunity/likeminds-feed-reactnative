@@ -37,6 +37,10 @@ import {
   MAPPED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
   SET_NOTIFICATION_COUNT,
   SET_FLOW_TO_POST_DETAIL_SCREEN,
+  HIDE_POST_STATE,
+  CLEAR_SELECTED_TOPICS,
+  CLEAR_FEED,
+  UNIVERSAL_TOPICS_FEED_SUCCESS,
 } from "../types/types";
 import { LMPostViewData } from "../../models";
 import Styles from "../../constants/Styles";
@@ -123,6 +127,23 @@ export const feedReducer = (state = initialState, action) => {
       const { color } = action.body;
       return { ...state, statusBarStyle: color };
     }
+    case UNIVERSAL_TOPICS_FEED_SUCCESS: {
+      const { users = {}, topics } = action.body;
+      let feedData = state.feed;
+      let usersData = state.users;
+      // model converter function
+      const post = convertUniversalFeedPosts(action.body);
+      // this handles pagination and appends new post data with previous data
+      feedData = [...post];
+      // this appends the new users data with previous data
+      usersData = { ...usersData, ...users };
+      return {
+        ...state,
+        feed: feedData,
+        users: usersData,
+        topics: {...state.topics, ...topics}
+      };
+    }
     case SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN: {
       const { topics = {} } = action.body;
       return {
@@ -158,7 +179,7 @@ export const feedReducer = (state = initialState, action) => {
     }
     case SET_TOPICS: {
       const { topics = {} } = action.body;
-      return { ...state, topics: topics };
+      return { ...state, topics: {...state.topics, ...topics} };
     }
     case MAPPED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN: {
       const { topics = {} } = action.body;
@@ -167,8 +188,14 @@ export const feedReducer = (state = initialState, action) => {
         mappedTopics: topics,
       };
     }
+    case CLEAR_SELECTED_TOPICS: {
+      return {
+        ...state,
+        selectedTopicsForUniversalFeedScreen: []
+      }
+    }
     case UNIVERSAL_FEED_SUCCESS: {
-      const { users = {} } = action.body;
+      const { users = {}, topics } = action.body;
       let feedData = state.feed;
       let usersData = state.users;
       // model converter function
@@ -181,6 +208,7 @@ export const feedReducer = (state = initialState, action) => {
         ...state,
         feed: feedData,
         users: usersData,
+        topics: {...state.topics, ...topics}
       };
     }
     case UNIVERSAL_FEED_REFRESH_SUCCESS: {
@@ -315,6 +343,26 @@ export const feedReducer = (state = initialState, action) => {
           item.commentsCount = item?.commentsCount - 1;
         }
       });
+      return { ...state };
+    }
+    case HIDE_POST_STATE: {
+      const feed = state.feed;
+      const { postId, title } = action.body
+      const postIndex = feed.findIndex((post) => post.id == postId);
+
+      if(postIndex != -1) {
+        feed[postIndex].isHidden = !(feed[postIndex])?.isHidden;
+        (feed[postIndex])?.menuItems?.forEach((menuItem) => {
+          if(menuItem?.id == 12){
+            menuItem.id = 13;
+            menuItem.title = title
+          }else if(menuItem?.id == 13){
+            menuItem.id = 12;
+            menuItem.title = title
+          }
+        })
+      }
+
       return { ...state };
     }
     case AUTO_PLAY_POST_VIDEO: {

@@ -5,6 +5,9 @@ import { LMProfilePicture } from "../../../uiComponents";
 import { nameInitials, timeStamp } from "../../../utils";
 import STYLES from "../../../constants/Styles";
 import MoreLessComponent from "../LMPostText";
+import pluralizeOrCapitalize from "../../../utils/variables";
+import { WordAction } from "../../../enums/Variables";
+import { CommunityConfigs } from "../../../communityConfigs";
 
 const LMPostTopResponse = () => {
   const [truncatedText, setTruncatedText] = useState("");
@@ -49,7 +52,7 @@ const LMPostTopResponse = () => {
               postListStyle?.postContent?.postTopResponse?.heading,
             ]}
           >
-            {"Top Response"}
+            {`Top ${pluralizeOrCapitalize(CommunityConfigs?.getCommunityConfigs("feed_metadata")?.value?.comment ?? "comment", WordAction.firstLetterCapitalSingular)}`}
           </Text>
           <View style={{ flexDirection: "row", gap: 10 }}>
             <LMProfilePicture

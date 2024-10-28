@@ -9,6 +9,7 @@ import {
 import {
   CLEAR_SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
   MAPPED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
+  SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
   SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
   SET_TOPICS,
 } from "../../store/types/types";
@@ -16,6 +17,11 @@ import Layout from "../../constants/Layout";
 import STYLES from "../../constants/Styles";
 import { styles } from "../../screens/universalFeed/styles";
 import { TOPIC_FEED } from "../../constants/screenNames";
+import { CommunityConfigs } from "../../communityConfigs";
+import { WordAction } from "../../enums/Variables";
+import pluralizeOrCapitalize from "../../utils/variables";
+import { GetFeedRequest } from "@likeminds.community/feed-rn";
+import { getTopicsFeed } from "../../store/actions/feed";
 
 const LMFilterTopics = () => {
   const dispatch = useAppDispatch();
@@ -23,10 +29,14 @@ const LMFilterTopics = () => {
     feedData,
     navigation,
     getNotificationsCount,
+    setIsAnyMatchingPost,
+    setFeedPageNumber,
+    setIsPaginationStopped
   }: UniversalFeedContextValues = useUniversalFeedContext();
   const myClient = Client.myClient;
   const [showTopics, setShowTopics] = useState(false);
   const topicsStyle = STYLES.$TOPICS_STYLE;
+  const [topicsPage, setTopicsPage] = useState(1);
 
   const selectedTopics = useAppSelector(
     (state) => state.feed.selectedTopicsForUniversalFeedScreen
@@ -75,13 +85,21 @@ const LMFilterTopics = () => {
     return navigation.navigate(TOPIC_FEED);
   };
 
-  const removeItem = (index: any) => {
+  const removeItem = async (index: any) => {
     const newItems = [...mappedTopics]; // Create a copy of the array
+    const filteredTopics = selectedTopics?.filter(topic =>  topic != (newItems[index])?.id);
     newItems.splice(index, 1); // Remove the item at the specified index
     dispatch({
       type: MAPPED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
       body: { topics: newItems },
     }); // Update the state with the new array
+    dispatch({
+      type: SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
+      body: { topics: filteredTopics },
+    }); // Update the state with the new array
+    setFeedPageNumber(1);
+    setIsPaginationStopped(false);
+    await callTopicsFeed(filteredTopics)
   };
 
   const getTopics = async () => {
@@ -89,14 +107,14 @@ const LMFilterTopics = () => {
       isEnabled: null,
       search: "",
       searchType: "name",
-      page: 1,
+      page: topicsPage,
       pageSize: 10,
     } as any);
-    const topics: any = apiRes?.data?.topics;
-    if (topics && topics?.length > 0) {
+    const topicsResponse: any = apiRes?.data?.topics;
+    if (topicsResponse && topicsResponse?.length > 0) {
       setShowTopics(true);
       const topicsObject = {};
-      topics.forEach((topic) => {
+      topicsResponse.forEach((topic) => {
         topicsObject[topic.id] = {
           allParentIds: topic.allParentIds,
           isEnabled: topic.isEnabled,
@@ -118,9 +136,20 @@ const LMFilterTopics = () => {
     }
   };
 
+  const callTopicsFeed = async (topics) => await dispatch(
+    getTopicsFeed(
+      GetFeedRequest.builder()
+        .setPage(1)
+        .setPageSize(20)
+        .setTopicIds(topics?.length > 0 && topics[0] != "0" ? topics : [])
+        .build(),
+      false
+    )
+  );
+
   useEffect(() => {
     getTopics();
-  }, [showTopics]);
+  }, [showTopics, topicsPage]);
 
   const [isAnyMatchFound, setIsAnyMatchFound] = useState(true);
 
@@ -143,10 +172,35 @@ const LMFilterTopics = () => {
     // If no match is found and topics are present, set the flag to false
     if (!isTopicMatched && mappedTopics?.length > 0) {
       setIsAnyMatchFound(false);
+      setIsAnyMatchingPost(false)
     } else if (mappedTopics?.length === 0) {
       setIsAnyMatchFound(true);
+      setIsAnyMatchingPost(true);
     }
-  }, [mappedTopics, feedData]);
+  }, [mappedTopics, feedData, topics]);
+
+
+  useEffect(() => {
+    let isTopicMissing = false; // Initialize as false
+
+    // Loop through the items
+    for (const item of feedData) {
+      // Check if the item's topic matches any name in the topics array
+      if (
+        item?.topics?.some((topicId) => {
+          return topics[topicId] == undefined
+        })
+      ) {
+        isTopicMissing = true; // Set to true if any match is found
+        break; // Exit loop once a match is found
+      }
+    }
+
+    if (isTopicMissing) {
+      setTopicsPage(previousPage => previousPage + 1);
+    }
+  }, [topics, feedData]);
+
   return (
     <View
       style={{
@@ -223,11 +277,18 @@ const LMFilterTopics = () => {
             }}
           >
             <TouchableOpacity
-              onPress={() => {
+              onPress={async () => {
                 dispatch({
                   type: MAPPED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
                   body: { topics: [] },
                 });
+                dispatch({
+                  type: SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
+                  body: { topics: [] },
+                });
+                setFeedPageNumber(1);
+                setIsPaginationStopped(false);
+                await callTopicsFeed([]);
               }}
             >
               <Text
@@ -302,7 +363,7 @@ const LMFilterTopics = () => {
       {/* posts list section */}
       {!isAnyMatchFound ? (
         <View style={[styles.justifyCenter]}>
-          <Text style={styles.title}>No matching post found</Text>
+          <Text style={styles.title}>No matching {pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.post ?? "post",WordAction.allSmallSingular)} found</Text>
         </View>
       ) : (
         <></>

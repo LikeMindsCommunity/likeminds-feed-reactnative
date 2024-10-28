@@ -21,6 +21,7 @@ import {
   POLL_ENDED_WARNING,
   POLL_SUBMITTED_SUCCESSFULLY,
   POST_UPLOADED,
+  POST_UPLOADED_ANONYMOUSLY,
   POST_UPLOAD_INPROGRESS,
   RIGHT_CREATE_POST,
   STATE_ADMIN,
@@ -94,6 +95,12 @@ export interface UniversalFeedContextValues {
   addPollOption: any;
   setSelectedPollOptions: any;
   submitPoll: any;
+  isAnyMatchingPost: boolean;
+  setIsAnyMatchingPost: Dispatch<SetStateAction<boolean>>;
+  feedPageNumber: number;
+  setFeedPageNumber: Dispatch<SetStateAction<number>>;
+  isPaginationStopped: boolean;
+  setIsPaginationStopped: Dispatch<SetStateAction<boolean>>
 }
 
 const UniversalFeedContext = createContext<
@@ -119,10 +126,21 @@ export const UniversalFeedContextProvider = ({
   const accessToken = useAppSelector((state) => state.login.accessToken);
   const memberData = useAppSelector((state) => state.login.member);
   const memberRight = useAppSelector((state) => state.login.memberRights);
+  const selectedTopics = useAppSelector((state) => state.feed.selectedTopicsForUniversalFeedScreen)
   const [postUploading, setPostUploading] = useState(false);
+  const [feedPageNumber, setFeedPageNumber] = useState(1);
+  const [isPaginationStopped, setIsPaginationStopped] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(true);
-  const { mediaAttachmemnts, linkAttachments, postContent, heading, topics } =
-    useAppSelector((state) => state.createPost);
+  const [isAnyMatchingPost, setIsAnyMatchingPost] = useState(false);
+  const {
+    mediaAttachmemnts,
+    linkAttachments,
+    postContent,
+    heading,
+    topics,
+    metaData,
+    isAnonymous
+  } = useAppSelector((state) => state.createPost);
   const poll = useAppSelector((state) => state.createPost.poll);
   const unreadNotificationCount = useAppSelector(
     (state) => state.notification.activitiesCount
@@ -156,9 +174,10 @@ export const UniversalFeedContextProvider = ({
     setRefreshing(true);
     setLocalRefresh(true);
     // calling getFeed API
+    const topicIds = selectedTopics?.length > 0 && selectedTopics[0] != "0" ? selectedTopics : [];
     await dispatch(
       refreshFeed(
-        GetFeedRequest.builder().setPage(1).setPageSize(20).build(),
+        GetFeedRequest.builder().setPage(1).setPageSize(20).setTopicIds(topicIds).build(),
         false
       )
     );
@@ -224,18 +243,26 @@ export const UniversalFeedContextProvider = ({
     if (Object.keys(poll).length > 0) {
       let updatedPollAttachment = convertPollMetaData(poll);
       pollAttachment = [...pollAttachment, updatedPollAttachment];
+
     }
+    const attachments = Object.keys(metaData).length > 0 ? [
+      ...updatedAttachments,
+      ...linkAttachments,
+      ...pollAttachment,
+      ...[{ attachmentType: 5, attachmentMeta: { meta: metaData } }]
+    ] : [
+      ...updatedAttachments,
+      ...linkAttachments,
+      ...pollAttachment
+    ]
     const addPostResponse = await dispatch(
       addPost(
         AddPostRequest.builder()
-          .setAttachments([
-            ...updatedAttachments,
-            ...linkAttachments,
-            ...pollAttachment,
-          ])
+          .setAttachments(attachments)
           .setText(postContentText)
           .setHeading(headingText)
           .setTopicIds(topics)
+          .setIsAnonymous(isAnonymous ?? false)
           .build(),
         false
       )
@@ -255,7 +282,7 @@ export const UniversalFeedContextProvider = ({
       dispatch(
         showToastMessage({
           isToast: true,
-          message: POST_UPLOADED,
+          message: isAnonymous ? POST_UPLOADED_ANONYMOUSLY : POST_UPLOADED,
         })
       );
     }
@@ -306,6 +333,7 @@ export const UniversalFeedContextProvider = ({
       (mediaAttachmemnts.length > 0 ||
         linkAttachments.length > 0 ||
         postContent !== "" ||
+        heading !== "" ||
         topics?.length > 0 ||
         Object.keys(poll).length > 0) &&
       route.name === UNIVERSAL_FEED
@@ -585,6 +613,12 @@ export const UniversalFeedContextProvider = ({
     addPollOption,
     setSelectedPollOptions,
     submitPoll,
+    isAnyMatchingPost,
+    setIsAnyMatchingPost,
+    feedPageNumber,
+    setFeedPageNumber,
+    isPaginationStopped,
+    setIsPaginationStopped
   };
 
   return (

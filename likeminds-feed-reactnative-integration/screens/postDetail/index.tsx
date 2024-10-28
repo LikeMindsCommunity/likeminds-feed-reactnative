@@ -72,6 +72,9 @@ import {
   SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
 } from "../../store/types/types";
 import STYLES from "../../constants/Styles";
+import pluralizeOrCapitalize from "../../utils/variables";
+import { CommunityConfigs } from "../../communityConfigs";
+import { WordAction } from "../..//enums/Variables";
 
 interface PostDetailProps {
   children?: React.ReactNode;
@@ -109,6 +112,8 @@ interface PostDetailProps {
   isHeadingEnabled?: boolean;
   isTopResponse?: boolean;
   lmPostCustomFooter?: ReactNode;
+  customWidgetPostView?: ReactNode;
+  hideTopicsView?: boolean;
 }
 
 const PostDetail = ({
@@ -131,6 +136,8 @@ const PostDetail = ({
   isHeadingEnabled,
   isTopResponse,
   lmPostCustomFooter,
+  customWidgetPostView,
+  hideTopicsView = false
 }: PostDetailProps) => {
   return (
     <PollCustomisableMethodsContextProvider
@@ -152,6 +159,8 @@ const PostDetail = ({
         isHeadingEnabled={isHeadingEnabled}
         isTopResponse={isTopResponse}
         lmPostCustomFooter={lmPostCustomFooter}
+        hideTopicsView={hideTopicsView}
+        customWidgetPostView={customWidgetPostView}
       >
         <PostDetailComponent />
       </PostDetailCustomisableMethodsContextProvider>
@@ -247,6 +256,8 @@ const PostDetailComponent = React.memo(() => {
     isHeadingEnabled,
     isTopResponse,
     lmPostCustomFooter,
+    hideTopicsView,
+    customWidgetPostView,
   } = usePostDetailCustomisableMethodsContext();
   const postHeaderStyle: any = postListStyle?.header;
   const customScreenHeader: any = postDetailStyle?.screenHeader;
@@ -295,6 +306,8 @@ const PostDetailComponent = React.memo(() => {
         isHeadingEnabled={isHeadingEnabled}
         isTopResponse={isTopResponse}
         customFooter={lmPostCustomFooter}
+        hideTopicsView={hideTopicsView ?? false}
+        customWidgetPostView={customWidgetPostView}
         // header props
         headerProps={{
           onOverlayMenuClick: (event) =>
@@ -384,15 +397,15 @@ const PostDetailComponent = React.memo(() => {
               : true
           }
           heading={
-            customScreenHeader?.heading ? customScreenHeader?.heading : "Post"
+            customScreenHeader?.heading ? customScreenHeader?.heading : (pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.post ?? "post",WordAction.firstLetterCapitalSingular))
           }
           subHeading={
             customScreenHeader?.subHeading
               ? customScreenHeader?.subHeading
               : postDetail?.id
               ? postDetail?.commentsCount > 1
-                ? `${postDetail?.commentsCount} comments`
-                : `${postDetail?.commentsCount} comment`
+                ? `${postDetail?.commentsCount} ${(pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.comment ?? "comment",WordAction.firstLetterCapitalPlural))}`
+                : `${postDetail?.commentsCount} ${(pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.comment ?? "comment",WordAction.firstLetterCapitalSingular))}`
               : ""
           }
           onBackPress={() => {
@@ -473,8 +486,8 @@ const PostDetailComponent = React.memo(() => {
                               ]}
                             >
                               {postDetail.commentsCount > 1
-                                ? `${postDetail.commentsCount} Comments`
-                                : `${postDetail.commentsCount} Comment`}
+                                ? `${postDetail.commentsCount} ${(pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.comment ?? "comment",WordAction.firstLetterCapitalPlural))}`
+                                : `${postDetail.commentsCount} ${(pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.comment ?? "comment",WordAction.firstLetterCapitalSingular))}`}
                             </Text>
                           )}
                         </>
@@ -555,7 +568,7 @@ const PostDetailComponent = React.memo(() => {
                                         fontFamily: STYLES.$FONT_TYPES.MEDIUM,
                                       }}
                                     >
-                                      {VIEW_MORE_TEXT}
+                                      View more {(pluralizeOrCapitalize((CommunityConfigs.getCommunityConfigs("feed_metadata"))?.value.comment ?? "comment",WordAction.firstLetterCapitalPlural))}
                                     </Text>
                                   ),
                                   textStyle: customCommentItemStyle
@@ -645,7 +658,7 @@ const PostDetailComponent = React.memo(() => {
                               postDetailStyle?.noCommentHeadingTextStyle,
                             ]}
                           >
-                            No comment found
+                            No {(pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.comment ?? "comment",WordAction.firstLetterCapitalSingular))} found
                           </Text>
                           <Text
                             style={[
@@ -653,7 +666,7 @@ const PostDetailComponent = React.memo(() => {
                               postDetailStyle?.noCommentSubHeadingTextStyle,
                             ]}
                           >
-                            Be the first one to comment
+                            Be the first one to create a {(pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.comment ?? "comment",WordAction.firstLetterCapitalSingular))}
                           </Text>
                         </View>
                       }
@@ -866,7 +879,7 @@ const PostDetailComponent = React.memo(() => {
                 fontFamily: STYLES.$FONT_TYPES.LIGHT,
               }}
             >
-              Deleted Post
+              Deleted {pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.post ?? "post",WordAction.allSmallSingular)}
             </Text>
           </View>
         ) : null}
@@ -903,7 +916,7 @@ const PostDetailComponent = React.memo(() => {
               placeholderText={
                 customCommentTextInput?.placeholderText
                   ? customCommentTextInput?.placeholderText
-                  : "Write a comment"
+                  : `Write a ${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.comment ?? "comment",WordAction.allSmallSingular)}`
               }
               placeholderTextColor={
                 customCommentTextInput?.placeholderTextColor
@@ -994,7 +1007,7 @@ const PostDetailComponent = React.memo(() => {
               placeholderText={
                 customCommentTextInput?.placeholderText
                   ? customCommentTextInput?.placeholderText
-                  : "Write a comment"
+                  : `Write a ${(pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.comment ?? "comment",WordAction.firstLetterCapitalSingular))}`
               }
               placeholderTextColor={
                 customCommentTextInput?.placeholderTextColor
@@ -1058,7 +1071,7 @@ const PostDetailComponent = React.memo(() => {
             !showLoader && (
               <View style={styles.textContainer}>
                 <Text style={styles.disabledText}>
-                  You don't have permission to comment
+                  You don't have permission to {(pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.comment ?? "comment",WordAction.firstLetterCapitalSingular))}
                 </Text>
               </View>
             )

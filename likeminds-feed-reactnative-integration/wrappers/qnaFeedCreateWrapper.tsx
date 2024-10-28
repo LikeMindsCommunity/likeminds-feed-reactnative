@@ -1,19 +1,62 @@
 import React from "react";
+import { View } from "react-native";
 import {
+  CreatePost,
   CreatePostContextProvider,
   UniversalFeedContextProvider,
-} from "../context";
-import { CreatePost } from "../screens/createPost";
+  useCreatePostContext,
+} from "../index";
+import {
+  LMCreatePostAttachmentSelection,
+  LMCreatePostHeader,
+  LMCreatePostHeading,
+  LMCreatePostMedia,
+  LMCreatePostTextInput,
+  LMCreatePostTopics,
+  LMCreatePostUIRender,
+  LMCreatePostUserTagging,
+  LMUserProfileSection,
+} from "../index";
 
-const QnAFeedCreateWrapper = ({ navigation, route }) => {
+const CreateScreen = () => {
   return (
-    <UniversalFeedContextProvider navigation={navigation} route={route}>
-      <CreatePostContextProvider navigation={navigation} route={route}>
-        {/* @ts-ignore */}
-        <CreatePost isHeadingEnabled={true} />
-      </CreatePostContextProvider>
-    </UniversalFeedContextProvider>
+    <CreatePost isHeadingEnabled={true} isAnonymousPostAllowed={true}>
+      {/* screen header section*/}
+      <LMCreatePostHeader />
+
+      {/* handles the UI to be rendered for edit post and create post */}
+      <LMCreatePostUIRender>
+        {/* user profile section */}
+        <LMUserProfileSection />
+
+        {/* post topics section */}
+        <LMCreatePostTopics />
+
+        {/* post heading section */}
+        <LMCreatePostHeading />
+
+        {/* text input field */}
+        <LMCreatePostTextInput />
+
+        {/* users tagging list */}
+        <LMCreatePostUserTagging />
+
+        {/* selected media section */}
+        <LMCreatePostMedia />
+      </LMCreatePostUIRender>
+
+      {/* selection options section */}
+      <LMCreatePostAttachmentSelection />
+    </CreatePost>
   );
 };
 
-export default QnAFeedCreateWrapper;
+export default function QnAFeedCreateWrapper({ navigation, route }) {
+  return (
+    <UniversalFeedContextProvider navigation={navigation} route={route}>
+      <CreatePostContextProvider navigation={navigation} route={route}>
+        <CreateScreen />
+      </CreatePostContextProvider>
+    </UniversalFeedContextProvider>
+  );
+}

@@ -18,16 +18,22 @@ import { useNavigation } from "@react-navigation/native";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { useUniversalFeedContext } from "../../context/universalFeedContext";
 import {
+  CLEAR_FEED,
   CLEAR_SELECTED_TOPICS,
+  CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
   SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
   SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
+  SET_TOPICS,
 } from "../../store/types/types";
+import { getFeed, getTopicsFeed } from "../../store/actions/feed";
+import { GetFeedRequest } from "@likeminds.community/feed-rn";
 import { useCreatePostContext } from "../../context";
 
 const TopicFeed = () => {
   const navigation = useNavigation<StackNavigationProp<any>>();
   let routes = navigation.getState()?.routes;
   let previousRoute = routes[routes?.length - 2];
+  const { setFeedPageNumber, setIsPaginationStopped } = useUniversalFeedContext()
 
   const topicsStyle: any = STYLES.$TOPICS_STYLE;
 
@@ -50,6 +56,7 @@ const TopicFeed = () => {
   const [searchedTopics, setSearchedTopics] = useState([] as any);
   const [searchPage, setSearchPage] = useState(1);
   const [newTopics, setNewTopics] = useState([] as any);
+  const [stopPagination, setStopPagination] = useState(false);
   let sortedTopics: any = [];
   let sortedTopicsFromUniversalFeed: any = [];
 
@@ -63,6 +70,7 @@ const TopicFeed = () => {
     (state) => state.createPost.selectedTopics
   );
   const allTopics = useAppSelector((state) => state.feed.topics);
+  
   const selectedTopicsFromUniversalFeedScreen = useAppSelector(
     (state) => state.feed.selectedTopicsFromUniversalFeedScreen
   );
@@ -157,13 +165,27 @@ const TopicFeed = () => {
         type: SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
         body,
       });
+      setFeedPageNumber(1);
+      setIsPaginationStopped(false);
+      setTimeout(async () => await dispatch(
+        getTopicsFeed(
+          GetFeedRequest.builder()
+            .setPage(1)
+            .setPageSize(20)
+            .setTopicIds(newTopics?.length > 0 && newTopics[0] != "0" ? newTopics : [])
+            .build(),
+          false
+        )
+      ),100);
+  
     } else if (previousRoute?.name === "CreatePost") {
+      // clearing selected topics for create screen to allow deselecting and updating topics
+      dispatch({
+        type: CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN
+      })
       await dispatch({
         type: SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
         body: { topics: newTopics },
-      });
-      await dispatch({
-        type: CLEAR_SELECTED_TOPICS,
       });
     }
     navigation.goBack();
@@ -327,6 +349,31 @@ const TopicFeed = () => {
         pageSize: 10,
       } as any);
       const response = apiResponse?.data;
+
+      const topicsResponse: any = response?.topics;
+      if (topicsResponse && topicsResponse?.length > 0) {
+        const topicsObject = {};
+        topicsResponse.forEach((topic) => {
+          topicsObject[topic.id] = {
+            allParentIds: topic.allParentIds,
+            isEnabled: topic.isEnabled,
+            isSearchable: topic.isSearchable,
+            level: topic.level,
+            name: topic.name,
+            numberOfPosts: topic.numberOfPosts,
+            parentId: topic.parentId,
+            parentName: topic.parentName,
+            priority: topic.priority,
+            totalChildCount: topic.totalChildCount,
+            widgetId: topic.widgetId,
+          };
+        });
+        dispatch({
+          type: SET_TOPICS,
+          body: { topics: topicsObject},
+        });
+      }
+
       setTopics((topics: any) => [...topics, ...response?.topics]);
       setPage(2);
     }
@@ -378,7 +425,7 @@ const TopicFeed = () => {
       search: search,
       searchType: "name",
       page: newPage,
-      pageSize: 10,
+      pageSize: 50,
     };
     const response = await myClient?.getTopics(payload);
     return response?.data;
@@ -388,6 +435,32 @@ const TopicFeed = () => {
     setIsLoading(true);
     const res = await updateData(newPage);
     if (res) {
+      const topicsResponse: any = res?.topics;
+      if (topicsResponse?.length == 0) {
+        setStopPagination(true);
+      }
+      if (topicsResponse && topicsResponse?.length > 0) {
+        const topicsObject = {};
+        topicsResponse.forEach((topic) => {
+          topicsObject[topic.id] = {
+            allParentIds: topic.allParentIds,
+            isEnabled: topic.isEnabled,
+            isSearchable: topic.isSearchable,
+            level: topic.level,
+            name: topic.name,
+            numberOfPosts: topic.numberOfPosts,
+            parentId: topic.parentId,
+            parentName: topic.parentName,
+            priority: topic.priority,
+            totalChildCount: topic.totalChildCount,
+            widgetId: topic.widgetId,
+            };
+          });
+          dispatch({
+            type: SET_TOPICS,
+            body: { topics: topicsObject },
+          });
+        }
       setTopics([...topics, ...res?.topics]);
       setIsLoading(false);
     }
@@ -397,9 +470,7 @@ const TopicFeed = () => {
     if (!isLoading) {
       const arr = topics;
       if (
-        arr?.length % 10 === 0 &&
-        arr?.length > 0 &&
-        arr?.length === 10 * page
+        !stopPagination
       ) {
         const newPage = page + 1;
         loadData(newPage);
@@ -436,10 +507,22 @@ const TopicFeed = () => {
     );
   };
 
+  function getUniqueObjectsById(topics : any[]) {
+    if(!Array.isArray(topics)) return []
+    const seen = new Set(); // To track unique ids
+    return topics.filter(topic => {
+      if (!topic?.id || seen.has(topic?.id)) {
+        return false; // Ignore if id is missing or already seen
+      }
+      seen.add(topic?.id); // Add id to the set
+      return true; // Keep the object
+    });
+  }
+
   return (
     <View style={styles.page}>
       <FlatList
-        data={topics}
+        data={getUniqueObjectsById(topics)}
         renderItem={({ item }: any) => {
           return (
             <>

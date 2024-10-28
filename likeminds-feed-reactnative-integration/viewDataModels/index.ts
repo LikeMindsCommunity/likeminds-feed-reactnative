@@ -79,6 +79,8 @@ export function convertToLMPostViewData(
     isPinned: post.isPinned,
     isSaved: post.isSaved,
     likesCount: post.likesCount,
+    isAnonymous: post.isAnonymous,
+    isHidden: post.isHidden,
     menuItems: convertToLMMenuItemsViewData(post.menuItems),
     replies: post?.replies
       ? convertToLMCommentViewData(post.id, post.replies, user)

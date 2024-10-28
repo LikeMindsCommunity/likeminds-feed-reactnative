@@ -54,7 +54,7 @@ const LMVideo = React.memo(
   }: LMVideoProps) => {
     const LMFeedProvider = useLMFeed();
     const videoCallback = LMFeedProvider?.videoCallback;
-    
+
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [playingStatus, setPlayingStatus] = useState(true);
@@ -197,7 +197,7 @@ const LMVideo = React.memo(
                   : mute
               }
             />
-          ) : (
+          ) : videoCallback ? (
             videoCallback({
               paused:
                 flowFromCarouselScreen && currentVideoId === postId
@@ -248,7 +248,7 @@ const LMVideo = React.memo(
                 },
               ]),
             })
-          )}
+          ) : null}
         </>
         {/* this renders the cancel button */}
         {showCancel && (

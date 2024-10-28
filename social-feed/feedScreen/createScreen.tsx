@@ -1,7 +1,19 @@
 import React from 'react';
+import {View} from 'react-native';
 import {
   CreatePost,
   useCreatePostContext,
+} from '@likeminds.community/feed-rn-core';
+import {
+  LMCreatePostAttachmentSelection,
+  LMCreatePostHeader,
+  LMCreatePostHeading,
+  LMCreatePostMedia,
+  LMCreatePostTextInput,
+  LMCreatePostTopics,
+  LMCreatePostUIRender,
+  LMCreatePostUserTagging,
+  LMUserProfileSection,
 } from '@likeminds.community/feed-rn-core';
 
 const CreateScreen = () => {
@@ -38,6 +50,7 @@ const CreateScreen = () => {
       postContentText,
       topics,
       poll,
+      {text: 'custom widget is working'},
     );
     console.log('after post click');
   };
@@ -77,8 +90,34 @@ const CreateScreen = () => {
       }
       handleScreenBackPressProp={() => customBackHandler()}
       onPollEditClicked={customPollEditClicked}
-      onPollClearClicked={customPollClearClicked}
-    />
+      onPollClearClicked={customPollClearClicked}>
+      {/* screen header section*/}
+      <LMCreatePostHeader />
+
+      {/* handles the UI to be rendered for edit post and create post */}
+      <LMCreatePostUIRender>
+        {/* user profile section */}
+        <LMUserProfileSection />
+
+        {/* post topics section */}
+        <LMCreatePostTopics />
+
+        {/* post heading section */}
+        <LMCreatePostHeading />
+
+        {/* text input field */}
+        <LMCreatePostTextInput />
+
+        {/* users tagging list */}
+        <LMCreatePostUserTagging />
+
+        {/* selected media section */}
+        <LMCreatePostMedia />
+      </LMCreatePostUIRender>
+
+      {/* selection options section */}
+      <LMCreatePostAttachmentSelection />
+    </CreatePost>
   );
 };
 

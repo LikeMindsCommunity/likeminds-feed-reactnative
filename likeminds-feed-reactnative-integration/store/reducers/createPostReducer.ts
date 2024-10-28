@@ -2,6 +2,7 @@ import {
   ADD_SELECTED_TOPICS,
   CLEAR_POLL,
   CLEAR_SELECTED_TOPICS,
+  CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
   DECODE_URL_SUCCESS,
   SET_DISABLED_TOPICS,
   SET_POLL,
@@ -14,13 +15,15 @@ export interface CreatePostReducerState {
   mediaAttachmemnts: [];
   linkAttachments: [];
   postContent: "";
-  heading: "",
+  heading: "";
   topics: [];
   poll: {};
   selectedTopics: [];
   disbaledTopics: [];
   predefinedTopics: [];
   pollAttachment: {};
+  metaData: {};
+  isAnonymous: boolean;
 }
 
 export const initialState: CreatePostReducerState = {
@@ -35,6 +38,8 @@ export const initialState: CreatePostReducerState = {
   disbaledTopics: [],
   predefinedTopics: [],
   pollAttachment: {}, // for local preview of poll data
+  metaData: {}, // meta data for custom widget
+  isAnonymous: false
 };
 
 export function createPostReducer(state = initialState, action) {
@@ -45,6 +50,12 @@ export function createPostReducer(state = initialState, action) {
         ...state,
         selectedTopics: topics,
       };
+    }
+    case CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN: {
+      return {
+        ...state,
+        selectedTopics: []
+      }
     }
     case SET_PREDEFINED_TOPICS: {
       const { topics = {} } = action.body;
@@ -88,6 +99,8 @@ export function createPostReducer(state = initialState, action) {
         heading = "",
         topics = [],
         poll = {},
+        metaData = {},
+        isAnonymous = false
       } = action.body;
       return {
         ...state,
@@ -97,6 +110,8 @@ export function createPostReducer(state = initialState, action) {
         heading: heading,
         topics: topics,
         poll: poll,
+        metaData: metaData,
+        isAnonymous: isAnonymous
       };
     }
     default:
