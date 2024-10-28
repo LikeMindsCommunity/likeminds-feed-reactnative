@@ -195,7 +195,7 @@ const PostsListComponent = ({
     >
       {/* posts list section */}
       {!feedFetching ? (
-        feedData?.length > 0 && isAnyMatchingPost ? (
+        feedData?.length > 0 ? (
           <FlatList
             ref={listRef}
             refreshing={refreshing}
