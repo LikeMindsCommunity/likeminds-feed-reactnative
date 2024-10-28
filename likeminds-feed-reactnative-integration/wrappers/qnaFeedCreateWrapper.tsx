@@ -26,6 +26,7 @@ const CreateScreen = () => {
     handleScreenBackPress,
     removePollAttachment,
     editPollAttachment,
+    handleOnAnonymousPostClicked
   } = useCreatePostContext();
 
   const customHandleDocumentProp = () => {
@@ -53,7 +54,7 @@ const CreateScreen = () => {
       postContentText,
       topics,
       poll,
-      {text: 'custom widget is working'},
+      null,
       isAnonymous
     );
     console.log('after post click');
@@ -73,32 +74,22 @@ const CreateScreen = () => {
     removePollAttachment();
     console.log('after clear poll  click');
   };
+  const customClick = () => {
+    console.log("before")
+    handleOnAnonymousPostClicked();
+    console.log("after")
+  }
   return (
     <CreatePost
       isHeadingEnabled={true}
       isAnonymousPostAllowed={true}
       handleDocumentProp={() => customHandleDocumentProp()}
       handleGalleryProp={type => customHandleGalleryProp(type)}
-      onPostClickProp={(
-        allAttachment,
-        formattedLinkAttachments,
-        postContentText,
-        topics,
-        poll,
-        isAnonymous
-      ) =>
-        customHandleCreatePost(
-          allAttachment,
-          formattedLinkAttachments,
-          postContentText,
-          topics,
-          poll,
-          isAnonymous
-        )
-      }
       handleScreenBackPressProp={() => customBackHandler()}
       onPollEditClicked={customPollEditClicked}
-      onPollClearClicked={customPollClearClicked}>
+      onPollClearClicked={customPollClearClicked}
+      handleOnAnonymousPostClickedProp={customClick}
+      >
       {/* screen header section*/}
       <LMCreatePostHeader />
 
