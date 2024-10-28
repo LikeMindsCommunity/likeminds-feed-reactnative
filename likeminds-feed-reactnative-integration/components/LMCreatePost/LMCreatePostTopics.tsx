@@ -15,6 +15,7 @@ import pluralizeOrCapitalize from "../../utils/variables";
 import { WordAction } from "../../enums/Variables";
 import { CommunityConfigs } from "../../communityConfigs";
 import { TOPIC_FEED } from "../../constants/screenNames";
+import LMCheckbox from "../../uiComponents/LMCheckBox";
 
 const LMCreatePostTopics = () => {
   const dispatch = useAppDispatch();
@@ -144,7 +145,7 @@ const LMCreatePostTopics = () => {
   return (
     <>
       {isAnonymousPostAllowed && !postToEdit ? <View style={{ marginTop: Layout.normalize(30), marginHorizontal: 15, flexDirection: 'row', flex: 1 }}>
-        <CheckBox label={(hintTextForAnonymous as string)?.length > 0 ? hintTextForAnonymous : `Share this as an anonymous ${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.post ?? "post",WordAction.allSmallSingular)}`}
+        <LMCheckbox label={(hintTextForAnonymous as string)?.length > 0 ? hintTextForAnonymous : `Share this as an anonymous ${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.post ?? "post",WordAction.allSmallSingular)}`}
           isChecked={anonymousPost}
           onPress={handleOnAnonymousPostClickedProp ? handleOnAnonymousPostClickedProp : handleOnAnonymousPostClicked} />
       </View> : <></>}
@@ -259,31 +260,3 @@ const LMCreatePostTopics = () => {
 };
 
 export default LMCreatePostTopics;
-
-function CheckBox({ isChecked, onPress, label }: any) {
-  return (
-    <TouchableOpacity onPress={onPress} style={{ flexDirection: 'row', gap: 8, justifyContent: 'center', alignItems: 'center' }}>
-      <View style={{
-        borderWidth: 1, borderColor: isChecked ? STYLES.$COLORS.PRIMARY : "#D0D5DD",
-        height: 18, width: 18, justifyContent: 'center',
-        alignItems: 'center', borderRadius: 3,
-        backgroundColor: isChecked ? "#D0D5DD" : STYLES.$COLORS.WHITE
-      }}>
-
-        {isChecked ? <LMIcon
-          assetPath={require("../../assets/images/white_tick3x.png")}
-          color={STYLES.$COLORS.PRIMARY}
-          height={12}
-          width={12}
-        /> : <></>}
-
-      </View>
-      <Text numberOfLines={2} style={{
-        maxWidth: Layout.normalize(320),
-        color: STYLES.$IS_DARK_THEME ? STYLES.$COLORS.WHITE_TEXT_COLOR : STYLES.$COLORS.BLACK
-      }}>
-        {label}
-      </Text>
-    </TouchableOpacity>
-  )
-}
