@@ -30,7 +30,7 @@ export const styles = StyleSheet.create({
     marginVertical: 8,
     fontSize: 16,
     elevation: 0,
-    maxHeight: 220,
+    maxHeight: Layout.normalize(145),
   },
   addMoreButtonView: {
     width: "35%",

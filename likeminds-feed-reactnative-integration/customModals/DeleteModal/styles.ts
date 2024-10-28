@@ -103,9 +103,7 @@ const styles = StyleSheet.create({
   filterText: {
     fontSize: STYLES.$FONT_SIZES.LARGE,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
-    color: STYLES.$IS_DARK_THEME
-      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
-      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+    color: "white",
   },
   asteriskTextStyle: {
     color: "red",

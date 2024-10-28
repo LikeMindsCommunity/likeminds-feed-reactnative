@@ -44,11 +44,13 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-evenly",
     marginLeft: 0,
+    maxWidth: layout.normalize(80),
   },
   defaultCommentView: {
     borderWidth: 0,
     alignItems: "center",
     marginLeft: 5,
+    maxWidth: layout.normalize(100),
   },
   buttonWithoutBorder: {
     borderWidth: 0,

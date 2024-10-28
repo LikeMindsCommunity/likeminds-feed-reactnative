@@ -41,7 +41,7 @@ const Feed = () => {
           lmPostCustomFooter={<LMPostQnAFeedFooter />}
           customWidgetPostView={<CustomPost />}
         />
-        <LMCreatePostButton customText="ASK QUESTION" />
+        <LMCreatePostButton />
       </UniversalFeed>
     </View>
   );
