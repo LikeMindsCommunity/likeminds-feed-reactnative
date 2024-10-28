@@ -279,7 +279,7 @@ const App = () => {
                 />
                 <Stack.Screen
                   name={CREATE_POST}
-                  component={CreateWrapper}
+                  component={LMSocialFeedCreateScreen}
                 />
                 <Stack.Screen
                   name={POST_LIKES_LIST}
