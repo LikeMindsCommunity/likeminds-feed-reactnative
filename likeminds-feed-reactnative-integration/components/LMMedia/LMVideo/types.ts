@@ -43,11 +43,11 @@ interface VideoCallbackProps {
   ref: MutableRefObject<any>;
   muted: boolean;
   repeat: boolean;
-  resizeMode: "cover" | "contain" | "stretch" | "center";
+  resizeMode: "cover" | "contain" | "stretch" | "none";
   playWhenInactive: boolean;
   playInBackground: boolean;
   ignoreSilentSwitch: "obey" | "ignore";
-  onLoad: () => void;
+  onLoad: (data: any) => void;
   setLoading: (loading: boolean) => void;
   style: StyleProp<ViewStyle>;
 }
@@ -55,9 +55,9 @@ interface VideoCallbackProps {
 // Callback function types for each
 
 export interface VideoCarouselCallback {
-  (props: VideoCarouselCallbackProps): void;
+  (props: VideoCarouselCallbackProps): React.ReactNode;
 }
 
 export interface VideoCallback {
-  (props: VideoCallbackProps): void;
+  (props: VideoCallbackProps): React.ReactNode;
 }

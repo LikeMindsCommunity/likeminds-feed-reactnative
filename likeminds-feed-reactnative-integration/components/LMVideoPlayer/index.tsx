@@ -95,6 +95,7 @@ function LMVideoPlayer({ url, setDisableGesture }) {
             />
           </View>
         )}
+
         {RNVideo ? (
           <RNVideo
             paused={paused}
@@ -102,7 +103,7 @@ function LMVideoPlayer({ url, setDisableGesture }) {
               uri: url,
             }}
             ref={ref}
-            onProgress={(value) => {
+            onProgress={(value: any) => {
               setProgress(value);
             }}
             style={styles.videoPlayer}
@@ -115,7 +116,7 @@ function LMVideoPlayer({ url, setDisableGesture }) {
             }}
             onError={(err) => console.log("err", err)}
           />
-        ) : (
+        ) : videoCarouselCallback ? (
           videoCarouselCallback({
             paused: paused,
             source: url,
@@ -124,7 +125,7 @@ function LMVideoPlayer({ url, setDisableGesture }) {
             muted: mute,
             setPaused,
           })
-        )}
+        ) : null}
         {clicked && (
           <TouchableOpacity
             style={{

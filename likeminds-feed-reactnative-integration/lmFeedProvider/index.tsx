@@ -30,8 +30,14 @@ import {
   VideoCarouselCallback,
 } from "../components/LMMedia/LMVideo/types";
 
+interface LMFeedContextProps {
+  myClient: LMFeedClient;
+  videoCallback?: VideoCallback;
+  videoCarouselCallback?: VideoCarouselCallback;
+}
+
 // Create a context for LMFeedProvider
-const LMFeedContext = createContext<LMFeedClient | undefined>(undefined);
+const LMFeedContext = createContext<LMFeedContextProps | undefined>(undefined);
 
 // Create a hook to use the LMFeedContext
 export const useLMFeed = () => {
@@ -65,7 +71,7 @@ export const LMFeedProvider = ({
       response?.data?.communityConfigurations
     );
     /*@ts-ignore*/
-    updateVariables(response?.data?.communityConfigurations)
+    updateVariables(response?.data?.communityConfigurations);
   };
 
   useEffect(() => {
@@ -89,9 +95,8 @@ export const LMFeedProvider = ({
       if (validateResponse !== undefined && validateResponse !== null) {
         // calling getMemberState API
         await dispatch(getMemberState());
-        
       }
-      await callGetCommunityConfigurations()
+      await callGetCommunityConfigurations();
       setIsInitiated(true);
     };
 
@@ -118,7 +123,7 @@ export const LMFeedProvider = ({
           initiateResponse?.accessToken,
           initiateResponse?.refreshToken
         );
-        await callGetCommunityConfigurations()
+        await callGetCommunityConfigurations();
         setIsInitiated(true);
       }
     }
@@ -130,12 +135,7 @@ export const LMFeedProvider = ({
     }
   }, [accessToken, refreshToken]);
 
-
-  const contextValues: {
-    myClient: LMFeedClient;
-    videoCallback?: VideoCallback;
-    videoCarouselCallback?: VideoCarouselCallback;
-  } = {
+  const contextValues: LMFeedContextProps = {
     myClient: myClient,
     videoCallback: videoCallback,
     videoCarouselCallback: videoCarouselCallback,
