@@ -19,7 +19,7 @@ export interface CreatePostCallbacksContextProps {
   hideTopicsViewCreate?: boolean;
   hideTopicsViewEdit?: boolean;
   isAnonymousPostAllowed?: boolean;
-  handleOnAnonymousPostClickedProp?: (isAnonymous: Boolean) => void;
+  handleOnAnonymousPostClickedProp?: () => void;
   hintTextForAnonymous?: string
 }
 
@@ -40,7 +40,7 @@ export interface CreatePostCustomisableMethodsContext {
   hideTopicsViewCreate?: boolean;
   hideTopicsViewEdit?: boolean;
   isAnonymousPostAllowed?: boolean;
-  handleOnAnonymousPostClickedProp?: (isAnonymous: Boolean) => void;
+  handleOnAnonymousPostClickedProp?: () => void;
   hintTextForAnonymous?: string
 }
 
