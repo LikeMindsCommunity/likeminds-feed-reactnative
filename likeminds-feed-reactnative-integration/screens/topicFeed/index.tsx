@@ -33,7 +33,7 @@ const TopicFeed = () => {
   const navigation = useNavigation<StackNavigationProp<any>>();
   let routes = navigation.getState()?.routes;
   let previousRoute = routes[routes?.length - 2];
-  const { setFeedPageNumber } = useUniversalFeedContext()
+  const { setFeedPageNumber, setIsPaginationStopped } = useUniversalFeedContext()
 
   const topicsStyle: any = STYLES.$TOPICS_STYLE;
 
@@ -166,6 +166,7 @@ const TopicFeed = () => {
         body,
       });
       setFeedPageNumber(1);
+      setIsPaginationStopped(false);
       setTimeout(async () => await dispatch(
         getTopicsFeed(
           GetFeedRequest.builder()
