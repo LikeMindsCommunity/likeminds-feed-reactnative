@@ -61,6 +61,7 @@ const LMCreatePostHeader = () => {
         allAttachment,
         formattedLinkAttachments,
         postContentText,
+        heading,
         predefinedTopics?.length > 0 ? [...predefinedTopics] : idValuesArray,
         poll,
         anonymousPost
@@ -69,6 +70,7 @@ const LMCreatePostHeader = () => {
         allAttachment,
         formattedLinkAttachments,
         postContentText,
+        heading,
         predefinedTopics?.length > 0 ? [...predefinedTopics] : idValuesArray,
         poll,
         anonymousPost,
