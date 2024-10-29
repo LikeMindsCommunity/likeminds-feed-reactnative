@@ -16,11 +16,12 @@ import {
   LMCreatePostUIRender,
   LMCreatePostUserTagging,
   LMUserProfileSection,
+  LMCreatePostAnonymousCheckbox
 } from "../index";
 
 const CreateScreen = () => {
   return (
-    <CreatePost isHeadingEnabled={true} isAnonymousPostAllowed={true}>
+    <CreatePost isHeadingEnabled={true} isAnonymousPostAllowed={true} >
       {/* screen header section*/}
       <LMCreatePostHeader />
 
@@ -28,6 +29,9 @@ const CreateScreen = () => {
       <LMCreatePostUIRender>
         {/* user profile section */}
         <LMUserProfileSection />
+
+        {/* Anonymous post checkbox */}
+        <LMCreatePostAnonymousCheckbox/>
 
         {/* post topics section */}
         <LMCreatePostTopics />
