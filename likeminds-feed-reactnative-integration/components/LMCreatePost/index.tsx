@@ -7,6 +7,7 @@ import LMCreatePostTopics from "./LMCreatePostTopics";
 import LMCreatePostUIRender from "./LMCreatePostUIRender";
 import LMCreatePostUserTagging from "./LMCreatePostUserTagging";
 import LMUserProfileSection from "./LMUserProfileSection";
+import LMCreatePostAnonymousCheckbox from "./LMCreatePostAnonymousCheckbox"
 export {
   LMCreatePostHeader,
   LMCreatePostAttachmentSelection,
@@ -17,4 +18,5 @@ export {
   LMCreatePostUIRender,
   LMCreatePostUserTagging,
   LMUserProfileSection,
+  LMCreatePostAnonymousCheckbox
 };

@@ -245,7 +245,7 @@ export const UniversalFeedContextProvider = ({
       pollAttachment = [...pollAttachment, updatedPollAttachment];
 
     }
-    const attachments = Object.keys(metaData).length > 0 ? [
+    const attachments = Object.keys(metaData)?.length > 0 ? [
       ...updatedAttachments,
       ...linkAttachments,
       ...pollAttachment,

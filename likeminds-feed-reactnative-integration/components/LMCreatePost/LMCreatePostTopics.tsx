@@ -10,12 +10,7 @@ import { Client } from "../../client";
 import STYLES from "../../constants/Styles";
 import { styles } from "../../screens/createPost/styles";
 import Layout from "../../constants/Layout";
-import { LMIcon } from "../../uiComponents";
-import pluralizeOrCapitalize from "../../utils/variables";
-import { WordAction } from "../../enums/Variables";
-import { CommunityConfigs } from "../../communityConfigs";
 import { TOPIC_FEED } from "../../constants/screenNames";
-import LMCheckbox from "../../uiComponents/LMCheckBox";
 
 const LMCreatePostTopics = () => {
   const dispatch = useAppDispatch();
@@ -35,14 +30,10 @@ const LMCreatePostTopics = () => {
     setShowTopics,
     setMappedTopics,
     postToEdit,
-    anonymousPost,
-    handleOnAnonymousPostClicked,
-    postDetail,
-    setAnonymousPost
   }: CreatePostContextValues = useCreatePostContext();
 
 
-  const { hideTopicsViewCreate, hideTopicsViewEdit, hintTextForAnonymous, isAnonymousPostAllowed, handleOnAnonymousPostClickedProp } = useCreatePostCustomisableMethodsContext();
+  const { hideTopicsViewCreate, hideTopicsViewEdit} = useCreatePostCustomisableMethodsContext();
 
   const shouldHideTopicsView = (postToEdit && hideTopicsViewEdit) ? true : (postToEdit == undefined && hideTopicsViewCreate) ? true : false
 
@@ -88,11 +79,6 @@ const LMCreatePostTopics = () => {
     return topic && !topic.isEnabled; // Check if isEnabled is false
   };
 
-  useEffect(() => {
-    if(postDetail) {
-      setAnonymousPost(postDetail.isAnonymous)
-    }
-  }, [postDetail])
 
   useEffect(() => {
     // Create a new state array named mappedTopics
@@ -144,12 +130,6 @@ const LMCreatePostTopics = () => {
   }, [selectedTopics, topicsSelected, topics]);
   return (
     <>
-      {isAnonymousPostAllowed && !postToEdit ? <View style={{ marginTop: Layout.normalize(30), marginHorizontal: 15, flexDirection: 'row', flex: 1 }}>
-        <LMCheckbox label={(hintTextForAnonymous as string)?.length > 0 ? hintTextForAnonymous : `Share this as an anonymous ${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.post ?? "post",WordAction.allSmallSingular)}`}
-          isChecked={anonymousPost}
-          onPress={handleOnAnonymousPostClickedProp ? handleOnAnonymousPostClickedProp : handleOnAnonymousPostClicked} />
-      </View> : <></>}
-      
       {mappedTopics.length > 0 &&
       showTopics && !shouldHideTopicsView &&
       !(predefinedTopics.length > 0) ? (

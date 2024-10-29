@@ -10,6 +10,7 @@ export interface CreatePostCallbacksContextProps {
     allMedia: Array<LMAttachmentViewData>,
     linkData: Array<LMAttachmentViewData>,
     content: string,
+    heading: string,
     topics: string[],
     poll: any,
     isAnonymous?: boolean
@@ -31,6 +32,7 @@ export interface CreatePostCustomisableMethodsContext {
     allMedia: Array<LMAttachmentViewData>,
     linkData: Array<LMAttachmentViewData>,
     content: string,
+    heading: string,
     topics: string[],
     poll: any,
     isAnonymous?: boolean
