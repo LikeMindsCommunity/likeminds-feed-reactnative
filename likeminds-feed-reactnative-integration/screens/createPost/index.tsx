@@ -38,6 +38,7 @@ interface CreatePostProps {
     allMedia: Array<LMAttachmentViewData>,
     linkData: Array<LMAttachmentViewData>,
     content: string,
+    heading: string,
     topics: string[],
     poll: any,
     isAnonymous?: boolean
