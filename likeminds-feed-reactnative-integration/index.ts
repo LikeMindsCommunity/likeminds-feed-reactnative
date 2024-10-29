@@ -77,6 +77,7 @@ import {
   LMCreatePostUIRender,
   LMCreatePostUserTagging,
   LMUserProfileSection,
+  LMCreatePostAnonymousCheckbox
 } from "./components/LMCreatePost";
 import Layout from "./constants/Layout";
 
@@ -150,5 +151,6 @@ export {
   LMCreatePostUserTagging,
   LMCreatePostMedia,
   LMCreatePostAttachmentSelection,
+  LMCreatePostAnonymousCheckbox,
   Layout,
 };
