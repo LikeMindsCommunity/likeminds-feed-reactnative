@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   FlatList,
   RefreshControl,
@@ -51,6 +51,7 @@ import STYLES from "../../constants/Styles";
 import { CommunityConfigs } from "../../communityConfigs";
 import { WordAction } from "../../enums/Variables";
 import pluralizeOrCapitalize from "../../utils/variables";
+import { useIsFocused } from "@react-navigation/native";
 
 const PostsList = ({
   route,
@@ -75,13 +76,15 @@ const PostsListComponent = ({
   customWidgetPostView,
 }: any) => {
   const dispatch = useAppDispatch();
+  const isFocused = useIsFocused();
+  const [index, setIndex] = useState(0);
   const {
     listRef,
     refreshing,
     onRefresh,
     localRefresh,
     keyExtractor,
-    isAnyMatchingPost
+    isAnyMatchingPost,
   }: UniversalFeedContextValues = useUniversalFeedContext();
   const {
     navigation,
@@ -163,9 +166,7 @@ const PostsListComponent = ({
         : handleDeletePost(true);
     }
     if (itemId === HIDE_POST_MENU_ITEM || itemId === UNHIDE_POST_MENU_ITEM) {
-      handleHidePostProp
-      ? handleHidePostProp(postId)
-      : handleHidePost(postId)
+      handleHidePostProp ? handleHidePostProp(postId) : handleHidePost(postId);
     }
 
     if (itemId === EDIT_POST_MENU_ITEM) {
@@ -184,6 +185,143 @@ const PostsListComponent = ({
   };
   const currentVideoId = useAppSelector((state) => state.feed.currentIdOfVideo);
 
+  const renderItem = useCallback(
+    ({ item, index }: { item: LMPostViewData; index: number }) => {
+      // Check if the item's topic matches any name in the topics array
+      const isTopicMatched =
+        item?.topics?.length > 0 &&
+        topics.length > 0 &&
+        item?.topics?.some((topicId) =>
+          topics.some((topic) => topic.id === topicId)
+        );
+
+      if (isTopicMatched || topics.length === 0) {
+        return (
+          <>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={{
+                backgroundColor: STYLES.$IS_DARK_THEME
+                  ? STYLES.$BACKGROUND_COLORS.DARK
+                  : STYLES.$BACKGROUND_COLORS.LIGHT,
+              }}
+              onPress={() => {
+                dispatch(clearPostDetail() as any);
+                dispatch({
+                  type: SET_FLOW_TO_POST_DETAIL_SCREEN,
+                  body: { flowToPostDetailScreen: true },
+                });
+                navigation.navigate(POST_DETAIL, [
+                  item?.id,
+                  NAVIGATED_FROM_POST,
+                ]);
+              }}
+              key={item?.id}
+            >
+              <LMPost
+                isHeadingEnabled={isHeadingEnabled}
+                isTopResponse={isTopResponse}
+                post={item}
+                isFocused={isFocused}
+                // header props
+                headerProps={{
+                  postMenu: {
+                    modalPosition: modalPosition,
+                    modalVisible: showActionListModal,
+                    onCloseModal: closePostActionListModal,
+                    onSelected: (postId, itemId) => {
+                      onMenuItemSelect(postId, itemId, item?.isPinned);
+                    },
+                  },
+                  onOverlayMenuClick: (event) => {
+                    onOverlayMenuClickProp
+                      ? onOverlayMenuClickProp(event, item?.menuItems, item?.id)
+                      : onOverlayMenuClick(event, item?.id);
+                  },
+                }}
+                // footer props
+                footerProps={{
+                  likeIconButton: {
+                    onTap: () => {
+                      postLikeHandlerProp
+                        ? postLikeHandlerProp(item?.id)
+                        : postLikeHandler(item?.id);
+                    },
+                  },
+                  saveButton: {
+                    onTap: () => {
+                      savePostHandlerProp
+                        ? savePostHandlerProp(item?.id, item?.isSaved)
+                        : savePostHandler(item?.id, item?.isSaved);
+                    },
+                  },
+                  likeTextButton: {
+                    onTap: () => {
+                      onTapLikeCountProps
+                        ? onTapLikeCountProps(item?.id)
+                        : onTapLikeCount(item?.id);
+                    },
+                  },
+                  commentButton: {
+                    onTap: () => {
+                      onSelectCommentCountProp
+                        ? onSelectCommentCountProp(item?.id)
+                        : onTapCommentCount(item?.id);
+                    },
+                  },
+                  shareButton: {
+                    onTap: () => {
+                      onSharePostClicked ? onSharePostClicked(item?.id) : {};
+                    },
+                  },
+                }}
+                customFooter={lmPostCustomFooter}
+                customWidgetPostView={customWidgetPostView}
+                hideTopicsView={hideTopicsView ?? false}
+              />
+            </TouchableOpacity>
+            {!postListStyle.shouldHideSeparator &&
+            index != feedData.length - 1 ? (
+              <View
+                style={{
+                  height: 11,
+                  backgroundColor: STYLES.$IS_DARK_THEME
+                    ? STYLES.$SEPARATOR_COLORS.DARK
+                    : STYLES.$SEPARATOR_COLORS.LIGHT,
+                }}
+              />
+            ) : null}
+          </>
+        );
+      } else {
+        return null;
+      }
+    },
+    [
+      topics,
+      isHeadingEnabled,
+      isTopResponse,
+      lmPostCustomFooter,
+      customWidgetPostView,
+      hideTopicsView,
+    ]
+  );
+
+  useEffect(() => {
+    if (isFocused) {
+      listRef?.current?.scrollToIndex({
+        animated: false,
+        index: index,
+      });
+    }
+  }, [isFocused]);
+
+  const handleScrollToIndexFailed = (info) => {
+    setTimeout(() => {
+      listRef.current?.scrollToIndex({ index: info.index, animated: false });
+    }, 500); // Retry after a short delay
+  };
+
   return (
     <View
       style={{
@@ -194,170 +332,73 @@ const PostsListComponent = ({
       }}
     >
       {/* posts list section */}
-      {!feedFetching ? (
-        feedData?.length > 0 ? (
-          <FlatList
-            ref={listRef}
-            refreshing={refreshing}
-            style={postListStyle?.listStyle}
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
-            data={feedData}
-            renderItem={({ item, index }: { item: LMPostViewData, index: number }) => {
-              // Log the item before rendering
-
-              // Check if the item's topic matches any name in the topics array
-              const isTopicMatched =
-                item?.topics?.length > 0 &&
-                topics.length > 0 &&
-                item?.topics?.some((topicId) =>
-                  topics.some((topic) => topic.id === topicId)
-                );
-
-              if (isTopicMatched || topics.length === 0) {
-                return (
-                  <>
-                    <TouchableOpacity
-                      activeOpacity={0.8}
-                      style={{
-                        backgroundColor: STYLES.$IS_DARK_THEME
-                          ? STYLES.$BACKGROUND_COLORS.DARK
-                          : STYLES.$BACKGROUND_COLORS.LIGHT,
-                      }}
-                      onPress={() => {
-                        dispatch(clearPostDetail() as any);
-                        dispatch({
-                          type: SET_FLOW_TO_POST_DETAIL_SCREEN,
-                          body: { flowToPostDetailScreen: true },
-                        });
-                        navigation.navigate(POST_DETAIL, [
-                          item?.id,
-                          NAVIGATED_FROM_POST,
-                        ]);
-                      }}
-                      key={item?.id}
-                    >
-                      <LMPost
-                        isHeadingEnabled={isHeadingEnabled}
-                        isTopResponse={isTopResponse}
-                        post={item}
-                        // header props
-                        headerProps={{
-                          postMenu: {
-                            modalPosition: modalPosition,
-                            modalVisible: showActionListModal,
-                            onCloseModal: closePostActionListModal,
-                            onSelected: (postId, itemId) => {
-                              onMenuItemSelect(postId, itemId, item?.isPinned);
-                            },
-                          },
-                          onOverlayMenuClick: (event) => {
-                            onOverlayMenuClickProp
-                              ? onOverlayMenuClickProp(
-                                  event,
-                                  item?.menuItems,
-                                  item?.id
-                                )
-                              : onOverlayMenuClick(event, item?.id);
-                          },
-                        }}
-                        // footer props
-                        footerProps={{
-                          likeIconButton: {
-                            onTap: () => {
-                              postLikeHandlerProp
-                                ? postLikeHandlerProp(item?.id)
-                                : postLikeHandler(item?.id);
-                            },
-                          },
-                          saveButton: {
-                            onTap: () => {
-                              savePostHandlerProp
-                                ? savePostHandlerProp(item?.id, item?.isSaved)
-                                : savePostHandler(item?.id, item?.isSaved);
-                            },
-                          },
-                          likeTextButton: {
-                            onTap: () => {
-                              onTapLikeCountProps
-                                ? onTapLikeCountProps(item?.id)
-                                : onTapLikeCount(item?.id);
-                            },
-                          },
-                          commentButton: {
-                            onTap: () => {
-                              onSelectCommentCountProp
-                                ? onSelectCommentCountProp(item?.id)
-                                : onTapCommentCount(item?.id);
-                            },
-                          },
-                          shareButton: {
-                            onTap: () => {
-                              onSharePostClicked
-                                ? onSharePostClicked(item?.id)
-                                : {};
-                            },
-                          },
-                        }}
-                        customFooter={lmPostCustomFooter}
-                        customWidgetPostView={customWidgetPostView}
-                        hideTopicsView={hideTopicsView ?? false}
-                      />
-                    </TouchableOpacity>
-                    {!postListStyle.shouldHideSeparator && index != feedData.length - 1 ? (
-                    <View
-                      style={{
-                        height: 11,
-                        backgroundColor: STYLES.$IS_DARK_THEME
-                          ? STYLES.$SEPARATOR_COLORS.DARK
-                          : STYLES.$SEPARATOR_COLORS.LIGHT,
-                      }}
-                    />
-                  ) : null}
-                  </>
-                );
-              } else {
-                return null;
-              }
-            }}
-            onEndReachedThreshold={0.3}
-            onEndReached={handleLoadMore}
-            keyExtractor={(item) => {
-              return item?.id?.toString();
-            }}
-            ListFooterComponent={renderLoader}
-            onViewableItemsChanged={({ changed, viewableItems }) => {
-              if (changed) {
-                if (viewableItems) {
-                  setPostInViewport(viewableItems?.[0]?.item?.id);
+      {isFocused ? (
+        <>
+          {!feedFetching ? (
+            feedData?.length > 0 ? (
+              <FlatList
+                ref={listRef}
+                refreshing={refreshing}
+                style={postListStyle?.listStyle}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                  />
                 }
-              }
-            }}
-            viewabilityConfig={{ viewAreaCoveragePercentThreshold: 60 }}
-          />
-        ) : (
-          <View style={[styles.noDataView, postListStyle?.noPostView]}>
-            <Text
-              style={[
-                {
-                  color: STYLES.$IS_DARK_THEME
-                    ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
-                    : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
-                  fontFamily: STYLES.$FONT_TYPES.LIGHT,
-                },
-                postListStyle?.noPostText,
-              ]}
-            >
-              No {pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.post ?? "post",WordAction.firstLetterCapitalSingular)}
-            </Text>
-          </View>
-        )
-      ) : (
-        <View style={styles.loaderView}>
-          {!localRefresh && <LMLoader {...loaderStyle?.loader} />}
-        </View>
-      )}
+                data={feedData}
+                renderItem={renderItem}
+                onEndReachedThreshold={0.3}
+                onEndReached={handleLoadMore}
+                removeClippedSubviews={true}
+                onScrollToIndexFailed={handleScrollToIndexFailed}
+                keyExtractor={(item) => {
+                  return item?.id?.toString();
+                }}
+                ListFooterComponent={renderLoader}
+                onViewableItemsChanged={({ changed, viewableItems }) => {
+                  if (changed) {
+                    if (viewableItems) {
+                      setPostInViewport(viewableItems?.[0]?.item?.id);
+                      setIndex(
+                        feedData.findIndex((item) => {
+                          return item?.id === viewableItems?.[0]?.item?.id;
+                        })
+                      );
+                    }
+                  }
+                }}
+                viewabilityConfig={{ viewAreaCoveragePercentThreshold: 60 }}
+              />
+            ) : (
+              <View style={[styles.noDataView, postListStyle?.noPostView]}>
+                <Text
+                  style={[
+                    {
+                      color: STYLES.$IS_DARK_THEME
+                        ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+                        : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+                      fontFamily: STYLES.$FONT_TYPES.LIGHT,
+                    },
+                    postListStyle?.noPostText,
+                  ]}
+                >
+                  No{" "}
+                  {pluralizeOrCapitalize(
+                    CommunityConfigs?.getCommunityConfigs("feed_metadata")
+                      ?.value?.post ?? "post",
+                    WordAction.firstLetterCapitalSingular
+                  )}
+                </Text>
+              </View>
+            )
+          ) : (
+            <View style={styles.loaderView}>
+              {!localRefresh && <LMLoader {...loaderStyle?.loader} />}
+            </View>
+          )}
+        </>
+      ) : null}
 
       {/* delete post modal */}
       {showDeleteModal && (

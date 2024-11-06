@@ -28,7 +28,8 @@ import STYLES from "../../../constants/Styles";
 import LMPostPollView from "../../LMPoll/LMPostPollView";
 
 const LMPostMedia = React.memo(() => {
-  const { post, mediaProps }: LMPostContextValues = useLMPostContext();
+  const { post, mediaProps, isFocused }: LMPostContextValues =
+    useLMPostContext();
   const postListStyle = STYLES.$POST_LIST_STYLE;
   const customPostMediaStyle: any = postListStyle?.media;
 
@@ -90,9 +91,11 @@ const LMPostMedia = React.memo(() => {
           >
             <LMVideo
               videoUrl={
-                post?.attachments
-                  ? post?.attachments[0]?.attachmentMeta.url
+                isFocused
+                  ? post?.attachments
                     ? post?.attachments[0]?.attachmentMeta.url
+                      ? post?.attachments[0]?.attachmentMeta.url
+                      : ""
                     : ""
                   : ""
               }
@@ -213,7 +216,7 @@ const LMPostMedia = React.memo(() => {
               (item) => item?.attachmentType === VIDEO_ATTACHMENT_TYPE
             ) && (
               <LMVideo
-                videoUrl={getUrl(VIDEO_ATTACHMENT_TYPE)}
+                videoUrl={isFocused ? getUrl(VIDEO_ATTACHMENT_TYPE) : ""}
                 postId={post?.id}
                 {...customPostMediaStyle?.video}
                 autoPlay={

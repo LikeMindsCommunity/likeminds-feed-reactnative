@@ -18,6 +18,7 @@ interface LMPostContextProps {
   customFooter?: ReactNode;
   hideTopicsView?: boolean;
   customWidgetPostView?: ReactNode;
+  isFocused?: boolean;
 }
 
 export interface LMPostContextValues {
@@ -33,6 +34,7 @@ export interface LMPostContextValues {
   customFooter?: ReactNode;
   hideTopicsView?: boolean;
   customWidgetPostView?: ReactNode;
+  isFocused?: boolean;
 }
 
 const LMPostContext = createContext<LMPostContextValues | undefined>(undefined);
@@ -60,6 +62,7 @@ export const LMPostContextProvider = ({
   hideTopicsView = false,
   customFooter,
   customWidgetPostView,
+  isFocused,
 }: LMPostContextProps) => {
   const contextValues: LMPostContextValues = {
     navigation,
@@ -73,7 +76,8 @@ export const LMPostContextProvider = ({
     isTopResponse,
     customFooter,
     hideTopicsView,
-    customWidgetPostView
+    customWidgetPostView,
+    isFocused,
   };
 
   return (

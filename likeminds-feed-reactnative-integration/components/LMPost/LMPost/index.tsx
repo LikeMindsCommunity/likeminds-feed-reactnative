@@ -26,6 +26,7 @@ const LMPost = ({
   customFooter,
   hideTopicsView = false,
   customWidgetPostView,
+  isFocused
 }: any) => {
   return (
     <LMPostContextProvider
@@ -40,6 +41,7 @@ const LMPost = ({
       customFooter={customFooter}
       hideTopicsView={hideTopicsView}
       customWidgetPostView={customWidgetPostView}
+      isFocused={isFocused}
     >
       <LMPostComponent />
     </LMPostContextProvider>
@@ -52,7 +54,7 @@ const LMPostComponent = React.memo(() => {
     isTopResponse,
     customFooter,
     customWidgetPostView,
-    hideTopicsView
+    hideTopicsView,
   } = useLMPostContext();
   const allTopics = useAppSelector((state) => state.feed.topics);
   const postListStyle = STYLES.$POST_LIST_STYLE;
