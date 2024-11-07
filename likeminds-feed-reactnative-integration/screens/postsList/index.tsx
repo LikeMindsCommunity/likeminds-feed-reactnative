@@ -60,7 +60,6 @@ const PostsList = ({
   lmPostCustomFooter,
   customWidgetPostView,
 }: any) => {
-  const { navigation }: UniversalFeedContextValues = useUniversalFeedContext();
   return (
     <PostsListComponent
       topics={items}
@@ -83,8 +82,6 @@ const PostsListComponent = ({
     refreshing,
     onRefresh,
     localRefresh,
-    keyExtractor,
-    isAnyMatchingPost,
   }: UniversalFeedContextValues = useUniversalFeedContext();
   const {
     navigation,
@@ -222,7 +219,6 @@ const PostsListComponent = ({
                 isHeadingEnabled={isHeadingEnabled}
                 isTopResponse={isTopResponse}
                 post={item}
-                isFocused={isFocused}
                 // header props
                 headerProps={{
                   postMenu: {

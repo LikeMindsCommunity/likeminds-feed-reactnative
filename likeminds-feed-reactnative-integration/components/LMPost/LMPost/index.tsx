@@ -26,7 +26,6 @@ const LMPost = ({
   customFooter,
   hideTopicsView = false,
   customWidgetPostView,
-  isFocused
 }: any) => {
   return (
     <LMPostContextProvider
@@ -41,7 +40,6 @@ const LMPost = ({
       customFooter={customFooter}
       hideTopicsView={hideTopicsView}
       customWidgetPostView={customWidgetPostView}
-      isFocused={isFocused}
     >
       <LMPostComponent />
     </LMPostContextProvider>

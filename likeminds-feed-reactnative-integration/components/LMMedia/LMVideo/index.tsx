@@ -6,6 +6,7 @@ import {
   TouchableWithoutFeedback,
   Image,
   Dimensions,
+  Platform
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 // @ts-ignore the lib do not have TS declarations yet
@@ -149,11 +150,17 @@ const LMVideo = React.memo(
                 setLoading(false);
               }}
               onError={() => setError(true)}
-              repeat={looping ? looping : true}
+              repeat={Platform.OS === 'ios' ? looping ? looping : true : false}
               resizeMode={boxFit ? boxFit : defaultStyles.videoStyle.resizeMode}
               playWhenInactive={false}
               playInBackground={false}
               ignoreSilentSwitch="obey"
+              bufferConfig={{
+                minBufferMs: 2500,
+                maxBufferMs: 5000,
+                bufferForPlaybackMs: 2500,
+                bufferForPlaybackAfterRebufferMs: 2500,
+              }}
               /* @ts-ignore */
               style={StyleSheet.flatten([
                 videoStyle,
