@@ -75,7 +75,6 @@ const PostsListComponent = ({
   customWidgetPostView,
 }: any) => {
   const dispatch = useAppDispatch();
-  const isFocused = useIsFocused();
   const [index, setIndex] = useState(0);
   const {
     listRef,
@@ -303,21 +302,6 @@ const PostsListComponent = ({
     ]
   );
 
-  useEffect(() => {
-    if (isFocused) {
-      listRef?.current?.scrollToIndex({
-        animated: false,
-        index: index,
-      });
-    }
-  }, [isFocused]);
-
-  const handleScrollToIndexFailed = (info) => {
-    setTimeout(() => {
-      listRef.current?.scrollToIndex({ index: info.index, animated: false });
-    }, 500); // Retry after a short delay
-  };
-
   return (
     <View
       style={{
@@ -328,73 +312,67 @@ const PostsListComponent = ({
       }}
     >
       {/* posts list section */}
-      {isFocused ? (
-        <>
-          {!feedFetching ? (
-            feedData?.length > 0 ? (
-              <FlatList
-                ref={listRef}
-                refreshing={refreshing}
-                style={postListStyle?.listStyle}
-                refreshControl={
-                  <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
-                  />
-                }
-                data={feedData}
-                renderItem={renderItem}
-                onEndReachedThreshold={0.3}
-                onEndReached={handleLoadMore}
-                removeClippedSubviews={true}
-                onScrollToIndexFailed={handleScrollToIndexFailed}
-                keyExtractor={(item) => {
-                  return item?.id?.toString();
-                }}
-                ListFooterComponent={renderLoader}
-                onViewableItemsChanged={({ changed, viewableItems }) => {
-                  if (changed) {
-                    if (viewableItems) {
-                      setPostInViewport(viewableItems?.[0]?.item?.id);
-                      setIndex(
-                        feedData.findIndex((item) => {
-                          return item?.id === viewableItems?.[0]?.item?.id;
-                        })
-                      );
-                    }
+      <>
+        {!feedFetching ? (
+          feedData?.length > 0 ? (
+            <FlatList
+              ref={listRef}
+              refreshing={refreshing}
+              style={postListStyle?.listStyle}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+              data={feedData}
+              renderItem={renderItem}
+              onEndReachedThreshold={0.3}
+              onEndReached={handleLoadMore}
+              removeClippedSubviews={true}
+              keyExtractor={(item) => {
+                return item?.id?.toString();
+              }}
+              ListFooterComponent={renderLoader}
+              onViewableItemsChanged={({ changed, viewableItems }) => {
+                if (changed) {
+                  if (viewableItems) {
+                    setPostInViewport(viewableItems?.[0]?.item?.id);
+                    setIndex(
+                      feedData.findIndex((item) => {
+                        return item?.id === viewableItems?.[0]?.item?.id;
+                      })
+                    );
                   }
-                }}
-                viewabilityConfig={{ viewAreaCoveragePercentThreshold: 60 }}
-              />
-            ) : (
-              <View style={[styles.noDataView, postListStyle?.noPostView]}>
-                <Text
-                  style={[
-                    {
-                      color: STYLES.$IS_DARK_THEME
-                        ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
-                        : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
-                      fontFamily: STYLES.$FONT_TYPES.LIGHT,
-                    },
-                    postListStyle?.noPostText,
-                  ]}
-                >
-                  No{" "}
-                  {pluralizeOrCapitalize(
-                    CommunityConfigs?.getCommunityConfigs("feed_metadata")
-                      ?.value?.post ?? "post",
-                    WordAction.firstLetterCapitalSingular
-                  )}
-                </Text>
-              </View>
-            )
+                }
+              }}
+              viewabilityConfig={{ viewAreaCoveragePercentThreshold: 60 }}
+            />
           ) : (
-            <View style={styles.loaderView}>
-              {!localRefresh && <LMLoader {...loaderStyle?.loader} />}
+            <View style={[styles.noDataView, postListStyle?.noPostView]}>
+              <Text
+                style={[
+                  {
+                    color: STYLES.$IS_DARK_THEME
+                      ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
+                      : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+                    fontFamily: STYLES.$FONT_TYPES.LIGHT,
+                  },
+                  postListStyle?.noPostText,
+                ]}
+              >
+                No{" "}
+                {pluralizeOrCapitalize(
+                  CommunityConfigs?.getCommunityConfigs("feed_metadata")?.value
+                    ?.post ?? "post",
+                  WordAction.firstLetterCapitalSingular
+                )}
+              </Text>
             </View>
-          )}
-        </>
-      ) : null}
+          )
+        ) : (
+          <View style={styles.loaderView}>
+            {!localRefresh && <LMLoader {...loaderStyle?.loader} />}
+          </View>
+        )}
+      </>
 
       {/* delete post modal */}
       {showDeleteModal && (

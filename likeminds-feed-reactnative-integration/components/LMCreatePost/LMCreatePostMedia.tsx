@@ -3,12 +3,12 @@ import React from "react";
 import { LMPostPollView } from "../LMPoll";
 import LMLoader from "../LMLoader";
 import {
-  LMCarousel,
+  LMCreatePostCarousel,
   LMDocument,
   LMImage,
   LMLinkPreview,
-  LMVideo,
 } from "../LMMedia";
+import LMCreatePostVideo from '../LMMedia/LMCreatePostVideo'
 import {
   CreatePostContextValues,
   useCreatePostContext,
@@ -112,7 +112,7 @@ const LMCreatePostMedia = () => {
           </View>
         ) : formattedMediaAttachments ? (
           formattedMediaAttachments?.length > 1 ? (
-            <LMCarousel
+            <LMCreatePostCarousel
               {...postMediaStyle?.carousel}
               attachments={formattedMediaAttachments}
               post={{
@@ -155,7 +155,7 @@ const LMCreatePostMedia = () => {
               {/* single video selected section  */}
               {formattedMediaAttachments[0]?.attachmentType ===
                 VIDEO_ATTACHMENT_TYPE && (
-                <LMVideo
+                <LMCreatePostVideo
                   {...postMediaStyle?.video}
                   videoUrl={`${formattedMediaAttachments[0]?.attachmentMeta.url}`}
                   showCancel={
