@@ -4,7 +4,6 @@ import Layout from "../../constants/Layout";
 
 export const styles = StyleSheet.create({
   mainContainer: {
-    height: "100%",
     flex: 1,
   },
   uploadingPostContentView: { flexDirection: "row", alignItems: "center" },
@@ -35,7 +34,7 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 25,
     position: "absolute",
-    top: Layout.window.height - 100,
+    bottom: Layout.normalize(40),
     right: 20,
     shadowOpacity: 0.5,
     shadowRadius: 4,

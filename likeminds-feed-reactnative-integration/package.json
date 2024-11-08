@@ -1,6 +1,6 @@
 {
   "name": "@likeminds.community/feed-rn-core",
-  "version": "1.10.1",
+  "version": "1.10.2",
   "description": "LikeMinds ReactNative Core SDK for feed",
   "scripts": {
     "android": "react-native run-android",
@@ -52,7 +52,8 @@
     "react-native-video": ">=5.2.1",
     "@types/react-native-video": ">=5.0.14",
     "typescript": ">=5.0.4",
-    "@react-native-async-storage/async-storage": ">=1.23.1"
+    "@react-native-async-storage/async-storage": ">=1.23.1",
+    "react-native-compressor": ">=1.9.0"
   },
   "peerDependenciesMeta": {
     "react-native-video": {

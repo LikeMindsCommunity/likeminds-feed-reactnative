@@ -77,6 +77,7 @@ import { Keys } from "../enums/Keys";
 import { CommunityConfigs } from "../communityConfigs";
 import { CREATE_POLL_SCREEN } from "../constants/screenNames";
 import STYLES from "../constants/Styles";
+import { Video, getVideoMetaData } from "react-native-compressor";
 
 interface CreatePostContextProps {
   children?: ReactNode;
@@ -243,27 +244,28 @@ export const CreatePostContextProvider = ({
     ? STYLES?.$CREATE_POST_STYLE?.headingMaxWords
     : 200;
 
-  // function handles the selection of images and videos
-  const setSelectedImageVideo = (type: string) => {
-    setShowSelecting(true);
-    selectImageVideo(type)?.then((res) => {
-      if (res?.didCancel) {
-        setShowSelecting(false);
-        dispatch({
-          type: SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
-          body: { reportModalStatus: false },
-        });
-      } else {
+    const selectImageVideoMethod = async (type) => {
+      try {
+        const res = await selectImageVideo(type);
+        
+        if (res?.didCancel) {
+          setShowSelecting(false);
+          dispatch({
+            type: SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
+            body: { reportModalStatus: false },
+          });
+          return;
+        }
+    
         const mediaWithSizeCheck: any = [];
         const communityConfigs = CommunityConfigs.communityConfigs;
-        /* @ts-ignore */
         const mediaLimitsObject = communityConfigs.find(
           (obj) => obj.type === "media_limits"
         );
         const maxImageSize = mediaLimitsObject?.value?.maxImageSize * 1000;
         const maxVideoSize = mediaLimitsObject?.value?.maxVideoSize * 1000;
-
-        // checks the size of media
+    
+        // Check the size of each media
         if (res?.assets) {
           for (const media of res.assets) {
             if (
@@ -285,34 +287,45 @@ export const CreatePostContextProvider = ({
                         "<x>",
                         maxImageSize
                           ? Math.round(maxImageSize / 1000000)?.toString()
-                          : Math.round(
-                              MAX_IMAGE_FILE_SIZE / 1000000
-                            )?.toString()
+                          : Math.round(MAX_IMAGE_FILE_SIZE / 1000000)?.toString()
                       )
                     : media?.type?.includes("video")
                     ? FILE_UPLOAD_VIDEO_SIZE_VALIDATION.replace(
                         "<x>",
                         maxVideoSize
                           ? Math.round(maxVideoSize / 1000000)?.toString()
-                          : Math.round(
-                              MAX_VIDEO_FILE_SIZE / 1000000
-                            )?.toString()
+                          : Math.round(MAX_VIDEO_FILE_SIZE / 1000000)?.toString()
                       )
                     : FILE_UPLOAD_SIZE_VALIDATION,
                 })
               );
             } else {
-              mediaWithSizeCheck.push(media);
+              if (media?.type?.includes("image")) {
+                mediaWithSizeCheck.push(media);
+              } else {
+                const uri = await Video.compress(media?.uri);
+                const response = await getVideoMetaData(uri);
+                const convertedMedia = {
+                  duration: response.duration,
+                  fileName: media.fileName,
+                  fileSize: response.size,
+                  height: response.height,
+                  originalPath: null,
+                  type: media.type,
+                  uri: uri,
+                  width: response.width,
+                };
+
+                mediaWithSizeCheck.push(convertedMedia);
+              }
             }
           }
         }
-        const selectedImagesVideos =
-          convertImageVideoMetaData(mediaWithSizeCheck);
-        // checks ths count of the media
-        if (
-          selectedImagesVideos.length + formattedMediaAttachments.length >
-          10
-        ) {
+    
+        const selectedImagesVideos = convertImageVideoMetaData(mediaWithSizeCheck);
+    
+        // Check the count of media
+        if (selectedImagesVideos.length + formattedMediaAttachments.length > 10) {
           setFormattedMediaAttachments([...formattedMediaAttachments]);
           setShowSelecting(false);
           dispatch({
@@ -326,14 +339,7 @@ export const CreatePostContextProvider = ({
             })
           );
         } else {
-          if (
-            selectedImagesVideos.length > 0 ||
-            formattedMediaAttachments.length > 0
-          ) {
-            setShowOptions(false);
-          } else {
-            setShowOptions(true);
-          }
+          setShowOptions(selectedImagesVideos.length === 0 && formattedMediaAttachments.length === 0);
           setShowSelecting(false);
           dispatch({
             type: SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
@@ -344,38 +350,40 @@ export const CreatePostContextProvider = ({
             ...selectedImagesVideos,
           ]);
         }
-
-        // To fire analytics event
+    
+        // Fire analytics events
         let imageCount = 0;
         let videoCount = 0;
-        for (let i = 0; i < selectedImagesVideos.length; i++) {
-          if (
-            selectedImagesVideos[i].attachmentType === IMAGE_ATTACHMENT_TYPE
-          ) {
+        for (const media of selectedImagesVideos) {
+          if (media.attachmentType === IMAGE_ATTACHMENT_TYPE) {
             imageCount++;
-          } else if (
-            selectedImagesVideos[i].attachmentType === VIDEO_ATTACHMENT_TYPE
-          ) {
+          } else if (media.attachmentType === VIDEO_ATTACHMENT_TYPE) {
             videoCount++;
           }
         }
-
-        // sends image attached event if imageCount > 0
+    
         if (imageCount > 0) {
           LMFeedAnalytics.track(
             Events.IMAGE_ATTACHED_TO_POST,
-            new Map<string, string>([[Keys.IMAGE_COUNT, `${imageCount}`]])
+            new Map([[Keys.IMAGE_COUNT, `${imageCount}`]])
           );
         }
-        // sends image attached event if videoCount > 0
         if (videoCount > 0) {
           LMFeedAnalytics.track(
             Events.VIDEO_ATTACHED_TO_POST,
-            new Map<string, string>([[Keys.VIDEO_COUNT, `${videoCount}`]])
+            new Map([[Keys.VIDEO_COUNT, `${videoCount}`]])
           );
         }
+    
+      } catch (error) {
+        console.error("An error occurred:", error);
       }
-    });
+    };
+
+  // function handles the selection of images and videos
+  const setSelectedImageVideo = async (type: string) => {
+    setShowSelecting(true);
+    await selectImageVideoMethod(type)
   };
 
   // this handles the functionality of creating or editing post
@@ -464,7 +472,7 @@ export const CreatePostContextProvider = ({
 
   // function handles the permission for image/video selection
   const handleGallery = async (type: string) => {
-    setSelectedImageVideo(type);
+    await setSelectedImageVideo(type);
     // if (Platform.OS === "ios") {
     //   setSelectedImageVideo(type);
     // } else {

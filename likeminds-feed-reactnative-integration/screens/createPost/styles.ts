@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
     backgroundColor: STYLES.$IS_DARK_THEME
       ? STYLES.$BACKGROUND_COLORS.DARK
       : STYLES.$BACKGROUND_COLORS.LIGHT,
-    height: layout.window.height,
+    flex: 1,
   },
   profileContainer: {
     flexDirection: "row",

@@ -6,6 +6,7 @@ import {
   TouchableWithoutFeedback,
   Image,
   Dimensions,
+  Platform,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 // @ts-ignore the lib do not have TS declarations yet
@@ -25,6 +26,7 @@ import {
 } from "../../../constants/screenNames";
 import RNVideo from "../../../optionalDependencies/Video";
 import { useLMFeed } from "../../../lmFeedProvider";
+import { useIsFocused } from "@react-navigation/native";
 
 const LMVideo = React.memo(
   ({
@@ -53,6 +55,7 @@ const LMVideo = React.memo(
     showPlayPause,
   }: LMVideoProps) => {
     const LMFeedProvider = useLMFeed();
+    const isFocused = useIsFocused();
     const videoCallback = LMFeedProvider?.videoCallback;
 
     const [loading, setLoading] = useState(true);
@@ -149,11 +152,19 @@ const LMVideo = React.memo(
                 setLoading(false);
               }}
               onError={() => setError(true)}
-              repeat={looping ? looping : true}
+              repeat={
+                Platform.OS === "ios" ? (looping ? looping : true) : false
+              }
               resizeMode={boxFit ? boxFit : defaultStyles.videoStyle.resizeMode}
               playWhenInactive={false}
               playInBackground={false}
               ignoreSilentSwitch="obey"
+              bufferConfig={{
+                minBufferMs: 2500,
+                maxBufferMs: 5000,
+                bufferForPlaybackMs: 2500,
+                bufferForPlaybackAfterRebufferMs: 2500,
+              }}
               /* @ts-ignore */
               style={StyleSheet.flatten([
                 videoStyle,
@@ -163,7 +174,46 @@ const LMVideo = React.memo(
                 },
               ])}
               paused={
-                flowFromCarouselScreen && currentVideoId === postId
+                isFocused
+                  ? flowFromCarouselScreen && currentVideoId === postId
+                    ? false
+                    : flowToCreatePostScreen
+                    ? true
+                    : pauseStatus === true &&
+                      previousRoute?.name === UNIVERSAL_FEED &&
+                      currentRoute?.name !== CREATE_POST
+                    ? pauseStatus
+                    : videoInFeed
+                    ? autoPlay
+                      ? currentVideoId === postId
+                        ? videoInCarousel
+                          ? currentVideoInCarousel === videoUrl
+                            ? false
+                            : true
+                          : false
+                        : true
+                      : playingStatus
+                    : autoPlay
+                    ? videoInCarousel
+                      ? currentVideoInCarousel === videoUrl
+                        ? false
+                        : true
+                      : false
+                    : playingStatus
+                  : true
+              } // handles the auto play/pause functionality
+              muted={
+                isReportModalOpened ||
+                flowToCarouselScreen ||
+                flowToPostDetailScreen
+                  ? true
+                  : mute
+              }
+            />
+          ) : videoCallback ? (
+            videoCallback({
+              paused: isFocused
+                ? flowFromCarouselScreen && currentVideoId === postId
                   ? false
                   : flowToCreatePostScreen
                   ? true
@@ -188,43 +238,7 @@ const LMVideo = React.memo(
                       : true
                     : false
                   : playingStatus
-              } // handles the auto play/pause functionality
-              muted={
-                isReportModalOpened ||
-                flowToCarouselScreen ||
-                flowToPostDetailScreen
-                  ? true
-                  : mute
-              }
-            />
-          ) : videoCallback ? (
-            videoCallback({
-              paused:
-                flowFromCarouselScreen && currentVideoId === postId
-                  ? false
-                  : flowToCreatePostScreen
-                  ? true
-                  : pauseStatus === true &&
-                    previousRoute?.name === UNIVERSAL_FEED &&
-                    currentRoute?.name !== CREATE_POST
-                  ? pauseStatus
-                  : videoInFeed
-                  ? autoPlay
-                    ? currentVideoId === postId
-                      ? videoInCarousel
-                        ? currentVideoInCarousel === videoUrl
-                          ? false
-                          : true
-                        : false
-                      : true
-                    : playingStatus
-                  : autoPlay
-                  ? videoInCarousel
-                    ? currentVideoInCarousel === videoUrl
-                      ? false
-                      : true
-                    : false
-                  : playingStatus,
+                : true,
               source: videoUrl,
               ref: player,
               muted:

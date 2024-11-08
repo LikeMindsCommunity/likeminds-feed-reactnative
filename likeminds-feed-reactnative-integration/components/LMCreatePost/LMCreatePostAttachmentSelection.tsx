@@ -50,7 +50,6 @@ const LMCreatePostAttachmentSelection = () => {
     handlePoll,
     handleGallery,
   }: CreatePostContextValues = useCreatePostContext();
-
   const myClient = Client.myClient;
   const [showTopics, setShowTopics] = useState(false);
   const route: any = useRoute();
