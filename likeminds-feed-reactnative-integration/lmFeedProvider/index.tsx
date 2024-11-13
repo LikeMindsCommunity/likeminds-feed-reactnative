@@ -140,6 +140,7 @@ export const LMFeedProvider = ({
         (isUserOnboardingRequired ?
           InitiateUserRequest.builder()
             .setUserName(onBoardingUserName ? onBoardingUserName : "")
+            .setImageUrl(imageUrl ? imageUrl : "")
             .setApiKey(apiKey ? apiKey : "")
             .setUUID(userUniqueId ? userUniqueId : "")
             .build() :

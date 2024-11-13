@@ -58,7 +58,9 @@ export default function UserOnboardingComponent({
             screenTitle={screenTitle}
             screenSubtitle={screenSubtitle}
             ctaButtonText={ctaButtonText}
-
+            editCtaButtonText={editScreenButtonText}
+            editScreenSubtitle={editScreenSubtitle}
+            editScreenTitle={editScreenTitle}
         >
             <UserOnboardingScreen />
         </UserOnboardingCallbacksContextProvider>
@@ -73,7 +75,7 @@ function UserOnboardingScreen() {
     } = useLMFeed();
     const { onCTAButtonClicked, onPickProfileImageClicked, name, setName,
         imageUrl, setImageUrl, profileImage, disableSubmitButton, setDisableSubmitButton,
-        loading, memberData, isUserOnboardingDone, setIsUserOnboardingDone
+        loading, memberData, isUserOnboardingDone, setIsUserOnboardingDone, setMemberData
     } = useUserOnboardingContext();
     const {
         userNameMaxCharacterLimit,
@@ -81,36 +83,41 @@ function UserOnboardingScreen() {
         screenTitle,
         ctaButtonText,
         onCTAButtonClickedProp,
-        onPickProfileImageClickedProp
+        onPickProfileImageClickedProp,
+        editCtaButtonText,
+        editScreenSubtitle,
+        editScreenTitle
     } = useUserOnboardingCallbacksContext();
 
     const isEditing = useMemo(() => {
         if (((route.params as any)?.action) == "EDIT_PROFILE") {
             return true;
         }
-    },
-        [withAPIKeySecurity]);
+    }, [withAPIKeySecurity]);
 
     
     useLayoutEffect(() => {
         (async () => {
             const response = await callIsUserOnboardingDone();
-            setIsUserOnboardingDone(response)
+            setIsUserOnboardingDone(response);
         })()
     }, [])
+
 
     useLayoutEffect(() => {
         (async () => {
             if (isEditing) {
                 const response = await Client.myClient?.getMemberState();
-                console.log(response);
+                setMemberData(response?.data);
+                setName(response?.data?.member?.name);
+                setImageUrl(response?.data?.member?.imageUrl)
             }
         })()
-    }, [withAPIKeySecurity])
+    }, [withAPIKeySecurity, isEditing])
 
     useEffect(() => {
         console.log("running efect", isInitiated)
-        if (isInitiated) {
+        if (isInitiated && !isEditing) {
             console.log("inside here")
             setTimeout(() => navigation.dispatch(
                 StackActions.replace(UNIVERSAL_FEED)
@@ -137,33 +144,13 @@ function UserOnboardingScreen() {
     }, [profileImage])
 
 
-
-    useEffect(() => {
-        const unsubscribe = BackHandler.addEventListener('hardwareBackPress', () => {
-            if (!onBoardUser) {
-                navigation.goBack();
-                return false;
-            } else {
-                return true;
-            }
-        })
-        return () => unsubscribe.remove()
-    }, [onBoardUser])
-
-    useLayoutEffect(() => {
-        if (isEditing && Object.keys(memberData as any)?.length > 0) {
-            setImageUrl((memberData as any)?.imageUrl);
-            setName((memberData as any)?.name)
-        }
-    }, [memberData])
-
-
     useLayoutEffect(() => {
         if ((isUserOnboardingRequired == false || isUserOnboardingRequired == undefined)) {
             return;
         }
         navigation.setOptions({
-            headerShown: isUserOnboardingDone ? false : true,
+            headerShown: isEditing ? true : (!isUserOnboardingDone),
+            animationEnabled: isEditing ? true : (!isUserOnboardingDone),
             header: () => <LMHeader
                 heading={isEditing ? "Profile" : "Community"}
                 showBackArrow={isEditing}
@@ -176,12 +163,11 @@ function UserOnboardingScreen() {
                 }}
             />
         })
-    }, [])
+    }, [isUserOnboardingDone])
 
     const onBoardingScreenStyles = STYLES.$USER_ONBOARDING_SCREEN_STYLES;
 
-    console.log(isInitiated)
-    if ((isUserOnboardingRequired == false || isUserOnboardingRequired == undefined) || isUserOnboardingDone ) {
+    if (((isUserOnboardingRequired == false || isUserOnboardingRequired == undefined) || isUserOnboardingDone) && !isEditing ) {
         return (
             <View style={{
                 flex: 1,
@@ -206,15 +192,14 @@ function UserOnboardingScreen() {
                         fontWeight: '500',
                         color: STYLES.$IS_DARK_THEME ? STYLES.$COLORS.WHITE_TEXT_COLOR : '#333333'
                     }}>
-                        {screenTitle ? screenTitle : "Create Your Community Profile"}
+                        {isEditing ? (editScreenTitle ? editScreenTitle : "Edit Profile") :(screenTitle ? screenTitle : "Create Your Community Profile")}
                     </LMText>
                     <LMText textStyle={{
                         fontSize: 16,
                         color: STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
                         textAlign: "center",
                     }}>
-                        {screenSubtitle ? screenSubtitle :
-                            "Set up your profile to join the community. Please provide your name and profile picture."}
+                        {isEditing ? (editScreenSubtitle ? editScreenSubtitle : "Edit Profile") :(screenSubtitle ? screenSubtitle : "Set up your profile to join the community. Please provide your name and profile picture.")}
                     </LMText>
                 </View>
                 <View style={{
@@ -305,7 +290,7 @@ function UserOnboardingScreen() {
                     }}
                     onTap={!disableSubmitButton && !loading ? (onCTAButtonClicked) : () => { }} text={{
                         children: loading ? <LMLoader color="white" size={"small"} /> :
-                            <LMText textStyle={{ fontSize: 20, color: STYLES.$IS_DARK_THEME ? STYLES.$COLORS.WHITE : STYLES.$COLORS.WHITE, fontWeight: '600', }}>{ctaButtonText ? ctaButtonText : "Continue"}</LMText>
+                            <LMText textStyle={{ fontSize: 20, color: STYLES.$IS_DARK_THEME ? STYLES.$COLORS.WHITE : STYLES.$COLORS.WHITE, fontWeight: '600', }}>{isEditing ? (editCtaButtonText ? editCtaButtonText : "Edit") :(ctaButtonText ? ctaButtonText : "Continue")}</LMText>
                     }} />
             </View>
         </View>
