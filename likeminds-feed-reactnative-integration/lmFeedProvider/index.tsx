@@ -95,7 +95,6 @@ export const LMFeedProvider = ({
   const callIsUserOnboardingDone = async () => {
     try {
       let isUserSet: any = await Client.myClient?.getIsUserOnboardingDone();
-      console.log(isUserSet)
       if (isUserSet?.data == null) return false;
       return isUserSet.data
     } catch (error) {
@@ -118,10 +117,8 @@ export const LMFeedProvider = ({
     if (validateResponse !== undefined && validateResponse !== null) {
       // calling getMemberState API
       if (isUserOnboardingRequired && !isUserOnboarded) {
-        console.log("USER NOT ONBOARDED");
         setOnboardUser(true);
       } else {
-        console.log("USER ONBOARDED")
         await dispatch(getMemberState());
         await callGetCommunityConfigurations();
         setIsInitiated(true);
@@ -155,7 +152,6 @@ export const LMFeedProvider = ({
     );
     if (initiateResponse !== undefined && initiateResponse !== null) {
       // calling getMemberState API
-      console.log("inside respones true initiate")
       await dispatch(getMemberState());
       await myClient.setTokens(
         initiateResponse?.accessToken,
@@ -181,11 +177,9 @@ export const LMFeedProvider = ({
         const isUserOnboarded = await callIsUserOnboardingDone();
 
         if (accessToken && refreshToken) {
-          console.log("FLOW WITH API KEY SECURITY")
           setWithAPIKeySecurity(true);
           callValidateApi(accessToken, refreshToken, isUserOnboarded);
         } else if (apiKey && userUniqueId) {
-          console.log("FLOW WITHOUT API KEY SECURITY")
           setWithAPIKeySecurity(false);
           setOnboardUser(true);
         }

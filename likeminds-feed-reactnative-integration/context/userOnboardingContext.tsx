@@ -91,8 +91,6 @@ export default function UserOnboardingContextProvider({
     const [profileImage, setProfileImage] = useState<Asset | null | undefined>();
     const [imageUrl, setImageUrl] = useState("");
 
-    console.log(withAPIKeySecurity, isInitiated, userUniqueId)
-
     async function onCTAButtonClicked() {
         setLoading(true);
         let uploadResponse: any = null
@@ -107,7 +105,6 @@ export default function UserOnboardingContextProvider({
                     userName: name,
                     name
                 });
-                console.log(res);
                 await Client.myClient?.setIsUserOnboardingDone(true);
                 await dispatch(getMemberState());
                 setLoading(false);
@@ -115,7 +112,6 @@ export default function UserOnboardingContextProvider({
                 navigation.goBack();
             } else {
                 if(withAPIKeySecurity) {
-                    console.log("WITH API KEY SECURITY")
                     const res = await Client.myClient?.editProfile({
                         imageUrl: uploadResponse?.Location ? uploadResponse?.Location : "",
                         userUniqueId: userUniqueId ? userUniqueId : "",
@@ -129,7 +125,6 @@ export default function UserOnboardingContextProvider({
                     setLoading(false);
                     setOnboardUser(false);
                 } else {
-                    console.log("NON API KEY SECURITY")
                     await callInitiateAPI(name, uploadResponse?.Location ? uploadResponse?.Location : "");
                     await Client.myClient?.setIsUserOnboardingDone(true);
                     setLoading(false);
@@ -172,7 +167,6 @@ export default function UserOnboardingContextProvider({
                 }
             }
         } catch (error) {
-            console.log("inher ")
         }
     }
 
@@ -185,7 +179,6 @@ export default function UserOnboardingContextProvider({
                 `files/profile/${uuid}/${formattedMedia?.name}-${Date.now()}`);
             return url;
         } catch (error) {
-            console.log("hereee inside",error);
             setLoading(false);
             return null;
         }

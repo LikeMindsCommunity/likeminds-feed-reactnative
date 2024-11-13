@@ -116,9 +116,7 @@ function UserOnboardingScreen() {
     }, [withAPIKeySecurity, isEditing])
 
     useEffect(() => {
-        console.log("running efect", isInitiated)
         if (isInitiated && !isEditing) {
-            console.log("inside here")
             setTimeout(() => navigation.dispatch(
                 StackActions.replace(UNIVERSAL_FEED)
             ), 0);
