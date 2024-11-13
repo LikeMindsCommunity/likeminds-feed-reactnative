@@ -15,6 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import { USER_ONBOARDING_SCREEN } from "../../constants/screenNames";
 import { nameInitials } from "../../utils";
 import { LMProfilePicture } from "../../uiComponents";
+import { useLMFeed } from "../../lmFeedProvider";
 
 const LMUniversalFeedHeader = () => {
   const {
@@ -22,6 +23,7 @@ const LMUniversalFeedHeader = () => {
     onTapNotificationBell,
     memberData
   }: UniversalFeedContextValues = useUniversalFeedContext();
+  const {isUserOnboardingRequired} = useLMFeed()
   const navigation = useNavigation();
   const universalFeedStyle = STYLES.$UNIVERSAL_FEED_STYLE;
   const { onTapNotificationBellProp } =
@@ -89,9 +91,10 @@ const LMUniversalFeedHeader = () => {
               )}
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => navigation.navigate(USER_ONBOARDING_SCREEN, {
+            // @ts-ignore
+              onPress={ isUserOnboardingRequired ? () => navigation.navigate(USER_ONBOARDING_SCREEN, {
                 action: "EDIT_PROFILE"
-              })}
+              }) : () => {}}
             >
               {(memberData as any)?.imageUrl ? <LMProfilePicture
               size={34}
