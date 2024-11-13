@@ -51,7 +51,7 @@ export interface userOnboardingContextValues {
     memberData?: Object,
     isUserOnboardingDone: boolean;
     setIsUserOnboardingDone: React.Dispatch<React.SetStateAction<boolean>>;
-    setMemberData?: React.Dispatch<React.SetStateAction<any>>;
+    setMemberData: React.Dispatch<React.SetStateAction<any>>;
     setLoading: React.Dispatch<React.SetStateAction<boolean>>;
     setProfileImage: React.Dispatch<React.SetStateAction<Asset | null | undefined>>;
     disableSubmitButton: boolean;
@@ -125,6 +125,7 @@ export default function UserOnboardingContextProvider({
                     await Client.myClient?.setIsUserOnboardingDone(true);
                     await dispatch(getMemberState());
                     await callGetCommunityConfigurations();
+                    setIsInitiated(true);
                     setLoading(false);
                     setOnboardUser(false);
                 } else {
@@ -158,7 +159,7 @@ export default function UserOnboardingContextProvider({
 
     const onPickProfileImageClicked = async () => {
         try {
-            const res = await selectImageVideo("image", 1);
+            const res = await selectImageVideo("photo", 1);
             if (res?.assets) {
                 if ((res?.assets[0])?.fileSize && (res?.assets[0])?.fileSize < 5242880) {
                     setProfileImage(res.assets[0] ?? null)

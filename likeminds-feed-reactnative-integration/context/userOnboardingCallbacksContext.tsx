@@ -50,10 +50,10 @@ export default function UserOnboardingCallbacksContextProvider({
     userNameMaxCharacterLimit = 50,
     screenTitle,
     screenSubtitle,
-    ctaButtonText = "continue",
+    ctaButtonText = "Continue",
     editScreenTitle,
     editScreenSubtitle,
-    editCtaButtonText = "continue"
+    editCtaButtonText = "Edit"
 }: userOnboardingCallbacksContextProps) {
     const value: userOnboardingCallbacksContextValues = {
         onCTAButtonClickedProp,
