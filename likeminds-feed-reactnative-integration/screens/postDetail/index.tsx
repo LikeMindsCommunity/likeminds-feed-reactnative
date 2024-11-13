@@ -856,7 +856,7 @@ const PostDetailComponent = React.memo(() => {
                   ListFooterComponent={
                     isLoading ? (
                       <View style={styles.taggingLoaderView}>
-                        <LMLoader size={15} />
+                        <LMLoader size={"small"} />
                       </View>
                     ) : null
                   }

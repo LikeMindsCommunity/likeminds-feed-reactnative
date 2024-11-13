@@ -107,7 +107,7 @@ const LMCreatePostMedia = () => {
         {/* multi media selection section */}
         {showSelecting ? (
           <View style={styles.selectingMediaView}>
-            <LMLoader size={10} />
+            <LMLoader size={"small"} />
             <Text style={styles.selectingMediaText}>Fetching Media</Text>
           </View>
         ) : formattedMediaAttachments ? (
