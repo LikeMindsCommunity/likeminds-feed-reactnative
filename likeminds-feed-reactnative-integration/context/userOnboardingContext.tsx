@@ -22,6 +22,7 @@ import { Client } from "../client";
 import { getMemberState } from "../store/actions/login";
 import { BackHandler } from "react-native";
 import { useLMFeed } from "../lmFeedProvider";
+import { REFRESH_FROM_ONBOARDING_SCREEN } from "../store/types/types";
 
 interface userOnboardingContextProps {
     children?: ReactNode;
@@ -110,6 +111,10 @@ export default function UserOnboardingContextProvider({
                 setLoading(false);
                 setOnboardUser(false);
                 navigation.goBack();
+                dispatch({
+                    type: REFRESH_FROM_ONBOARDING_SCREEN,
+                    body: {refresh: true}
+                })
             } else {
                 if(withAPIKeySecurity) {
                     const res = await Client.myClient?.editProfile({
