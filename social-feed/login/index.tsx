@@ -36,7 +36,7 @@ const FetchKeyInputScreen: React.FC<ChildProps> = ({isTrue, setIsTrue}) => {
   };
 
   useEffect(() => {
-    if (userUniqueID && userName && apiKey && isButtonClicked) {
+    if (userUniqueID && apiKey && isButtonClicked) {
       return setIsTrue(!isTrue);
     }
   }, [isButtonClicked]);
@@ -63,11 +63,11 @@ const FetchKeyInputScreen: React.FC<ChildProps> = ({isTrue, setIsTrue}) => {
 
     saveLoginData();
 
-    userUniqueID && userName && apiKey
+    userUniqueID && apiKey
       ? setIsButtonClicked(true)
       : setIsButtonClicked(false);
 
-    if (userUniqueID && userName && apiKey) {
+    if (userUniqueID && apiKey) {
       Keyboard.dismiss();
     }
   };
@@ -98,13 +98,13 @@ const FetchKeyInputScreen: React.FC<ChildProps> = ({isTrue, setIsTrue}) => {
       <TouchableOpacity
         style={{
           backgroundColor:
-            userUniqueID && userName && apiKey
+            userUniqueID && apiKey
               ? STYLES.$COLORS.SECONDARY
               : 'grey',
           padding: 10,
           borderRadius: 10,
         }}
-        onPress={userUniqueID && userName && apiKey ? handleButtonPress : null}>
+        onPress={userUniqueID && apiKey ? handleButtonPress : null}>
         <Text
           style={{
             color: STYLES.$COLORS.TERTIARY,

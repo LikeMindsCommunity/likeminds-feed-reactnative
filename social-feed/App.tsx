@@ -59,6 +59,7 @@ import FetchKeyInputScreen from './login';
 import {
   CREATE_POLL_SCREEN,
   POLL_RESULT,
+  USER_ONBOARDING_SCREEN,
 } from '@likeminds.community/feed-rn-core/constants/screenNames';
 import {initiateAPI} from './registerDeviceApi';
 import {carouselScreenStyle, createPollStyle, pollStyle} from './styles';
@@ -66,6 +67,9 @@ import CreatePollScreenWrapper from './feedScreen/createPollScreenWrapper';
 import {LMFeedClient, InitiateUserRequest} from '@likeminds.community/feed-rn';
 import {LoginSchemaRO} from './login/loginSchemaRO';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import UserOnboardingScreen from '@likeminds.community/feed-rn-core/screens/userOnboardingScreen';
+import { LMuserOnboardingScreen } from '@likeminds.community/feed-rn-core/wrappers';
+import STYLES from '@likeminds.community/feed-rn-core/constants/Styles';
 
 class CustomCallbacks implements LMFeedCallbacks, LMCarouselScreenCallbacks {
   onEventTriggered(eventName: string, eventProperties?: Map<string, string>) {
@@ -259,16 +263,25 @@ const App = () => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{flex: 1}}>
       <GestureHandlerRootView style={{flex: 1}}>
-        {userName && userUniqueID && apiKey && myClient ? (
+        <NavigationContainer ref={navigationRef} independent={true}>
+        {apiKey && myClient ? (
           <LMOverlayProvider
             myClient={myClient}
             apiKey={apiKey}
             userName={userName}
             userUniqueId={userUniqueID}
             lmFeedInterface={lmFeedInterface}
-            callbackClass={callbackClass}>
-            <NavigationContainer ref={navigationRef} independent={true}>
+            callbackClass={callbackClass}
+            isUserOnboardingRequired={true}
+            >
               <Stack.Navigator screenOptions={{headerShown: false}}>
+              <Stack.Screen
+                name={USER_ONBOARDING_SCREEN}
+                component={LMuserOnboardingScreen}
+                options={{
+                  headerShown: false
+                }}
+                />
                 <Stack.Screen
                   name={UNIVERSAL_FEED}
                   component={LMSocialFeedScreen}
@@ -311,11 +324,11 @@ const App = () => {
                   component={LMCreatePollScreen}
                 />
               </Stack.Navigator>
-            </NavigationContainer>
           </LMOverlayProvider>
         ) : !userName && !userUniqueID && !apiKey ? (
           <FetchKeyInputScreen isTrue={isTrue} setIsTrue={setIsTrue} />
         ) : null}
+        </NavigationContainer>
       </GestureHandlerRootView>
     </KeyboardAvoidingView>
   );
