@@ -184,7 +184,7 @@ function UserOnboardingScreen() {
                     STYLES.$BACKGROUND_COLORS.LIGHT
         }}>
             <View>
-                <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 10 }}>
+                <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 10, gap: 8 }}>
                     <LMText textStyle={{
                         fontSize: 20,
                         fontWeight: '500',
@@ -193,15 +193,15 @@ function UserOnboardingScreen() {
                         {isEditing ? (editScreenTitle ? editScreenTitle : "Edit Profile") :(screenTitle ? screenTitle : "Create Your Community Profile")}
                     </LMText>
                     <LMText textStyle={{
-                        fontSize: 16,
+                        fontSize: 14,
                         color: STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
                         textAlign: "center",
                     }}>
-                        {isEditing ? (editScreenSubtitle ? editScreenSubtitle : "Edit Profile") :(screenSubtitle ? screenSubtitle : "Set up your profile to join the community. Please provide your name and profile picture.")}
+                        {isEditing ? (editScreenSubtitle ? editScreenSubtitle : "Edit profile picture") :(screenSubtitle ? screenSubtitle : "Set up your profile to join the community. Please provide your name and profile picture.")}
                     </LMText>
                 </View>
                 <View style={{
-                    height: 120, width: 120, marginTop: 10, alignItems: 'center', justifyContent: 'center',
+                    height: 120, width: 120, marginTop: 14, alignItems: 'center', justifyContent: 'center',
                     borderWidth: 1.5, borderRadius: 100, borderColor: '#9b9b9b', alignSelf: 'center',
                     backgroundColor: imageUrl ? "black" : STYLES.$COLORS.WHITE
                 }}>
@@ -239,7 +239,7 @@ function UserOnboardingScreen() {
                         />
                     </TouchableOpacity>
                 </View>
-                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 10, marginBottom: 15 }}>
                     <LMText textStyle={{
                         fontSize: 14,
                         fontWeight: '800'
@@ -250,7 +250,7 @@ function UserOnboardingScreen() {
                         fontSize: 14,
                         color: STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
                     }}>
-                        Allowed maximum file size 5 Mb
+                        Allowed maximum file size 5 MB
                     </LMText>
                 </View>
             </View>
@@ -266,8 +266,10 @@ function UserOnboardingScreen() {
                             borderColor: '#9b9b9b',
                             borderWidth: 1,
                             margin: 0,
-                            paddingVertical: 0
+                            paddingVertical: 0,
+                            paddingHorizontal: 8,
                         }}
+                        maxLength={userNameMaxCharacterLimit}
                         inputText={name}
                     />
                     <View>

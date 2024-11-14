@@ -8,7 +8,7 @@ import LMQnAFeedScreen from "./qnaFeedScreenWrapper";
 import LMTopicFeedScreen from "./topicFeedScreenWrapper";
 import LMQnAPostDetailScreen from "./qnaFeedPostDetailWrapper"
 import LMSocialFeedScreen from './socialFeedScreenWrapper'
-import LMuserOnboardingScreen from "./userOnboardingScreenWrapper";
+import LMUserOnboardingScreen from "./userOnboardingScreenWrapper";
 
 export {
   LMSocialFeedPostDetailScreen,
@@ -21,5 +21,5 @@ export {
   LMQnAFeedScreen,
   LMTopicFeedScreen,
   LMSocialFeedScreen,
-  LMuserOnboardingScreen
+  LMUserOnboardingScreen
 };

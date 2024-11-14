@@ -39,6 +39,7 @@ import {
   NotificationFeedContextProvider,
   useNotificationFeedContext,
   CreatePollContextProvider,
+  UserOnboardingContextProvider
 } from "./context";
 import getNotification, { getRoute } from "./notification";
 import { LMFeedAnalytics } from "./analytics/LMFeedAnalytics";
@@ -65,6 +66,7 @@ import {
   LMQnAFeedScreen,
   LMTopicFeedScreen,
   LMSocialFeedScreen,
+  LMUserOnboardingScreen
 } from "./wrappers";
 import LMFeedTheme from "./constants/Styles";
 import {
@@ -123,6 +125,7 @@ export {
   TopicFeed,
   CarouselScreen,
   NotificationFeedContextProvider,
+  UserOnboardingContextProvider,
   getRoute,
   getNotification,
   LMFeedAnalytics,
@@ -151,6 +154,7 @@ export {
   LMCreatePostUserTagging,
   LMCreatePostMedia,
   LMCreatePostAttachmentSelection,
+  LMUserOnboardingScreen,
   LMCreatePostAnonymousCheckbox,
   Layout,
 };

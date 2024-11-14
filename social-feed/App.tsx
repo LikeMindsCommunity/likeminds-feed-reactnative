@@ -23,6 +23,7 @@ import {
   LMNotificationScreen,
   LMTopicFeedScreen,
   LMSocialFeedScreen,
+  LMUserOnboardingScreen,
 } from '@likeminds.community/feed-rn-core';
 import LMSocialFeedCreateScreen from '@likeminds.community/feed-rn-core/wrappers/socialFeedCreateWrapper';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -68,7 +69,6 @@ import {LMFeedClient, InitiateUserRequest} from '@likeminds.community/feed-rn';
 import {LoginSchemaRO} from './login/loginSchemaRO';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import UserOnboardingScreen from '@likeminds.community/feed-rn-core/screens/userOnboardingScreen';
-import { LMuserOnboardingScreen } from '@likeminds.community/feed-rn-core/wrappers';
 import STYLES from '@likeminds.community/feed-rn-core/constants/Styles';
 
 class CustomCallbacks implements LMFeedCallbacks, LMCarouselScreenCallbacks {
@@ -277,7 +277,7 @@ const App = () => {
               <Stack.Navigator screenOptions={{headerShown: false}}>
               <Stack.Screen
                 name={USER_ONBOARDING_SCREEN}
-                component={LMuserOnboardingScreen}
+                component={LMUserOnboardingScreen}
                 options={{
                   headerShown: false
                 }}
