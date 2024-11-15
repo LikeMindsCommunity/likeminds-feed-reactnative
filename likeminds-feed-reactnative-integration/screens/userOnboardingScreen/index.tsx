@@ -378,7 +378,7 @@ function UserOnboardingScreen() {
                                 {
                                     elevation: 0,
                                     borderColor: '#9b9b9b',
-                                    height: Layout.normalize(40),
+                                    height: Layout.normalize(45),
                                     borderWidth: 1,
                                     margin: 0,
                                     paddingVertical: 0,
