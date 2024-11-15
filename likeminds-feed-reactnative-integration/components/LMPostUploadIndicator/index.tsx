@@ -54,8 +54,8 @@ const LMPostUploadIndicator = () => {
           <LMLoader
             size={
               Platform.OS === "ios"
-                ? "small"
-                : "small"
+                ? STYLES.$LMLoaderSizeiOS
+                : STYLES.$LMLoaderSizeAndroid
             }
           />
         </View>

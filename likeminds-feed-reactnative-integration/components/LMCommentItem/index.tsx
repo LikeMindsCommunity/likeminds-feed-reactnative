@@ -508,7 +508,7 @@ const LMCommentItem = React.memo(
                       </>
                     ) : (
                       <View style={styles.loaderView}>
-                        <LMLoader size={"small"} />
+                        <LMLoader size={10} />
                       </View>
                     )}
                   </>

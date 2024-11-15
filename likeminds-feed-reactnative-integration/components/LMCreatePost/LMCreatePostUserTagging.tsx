@@ -135,7 +135,7 @@ const LMCreatePostUserTagging = () => {
             ListFooterComponent={
               isLoading ? (
                 <View style={styles.taggingLoaderView}>
-                  <LMLoader size={"small"} />
+                  <LMLoader size={15} />
                 </View>
               ) : null
             }
