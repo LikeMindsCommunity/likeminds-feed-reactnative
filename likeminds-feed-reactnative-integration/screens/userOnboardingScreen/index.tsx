@@ -119,10 +119,16 @@ function UserOnboardingScreen() {
     }, [withAPIKeySecurity, isEditing])
 
     useLayoutEffect(() => {
-        if(isUserOnboardingDone) {
-            // validate API will be call internally regardless
-            callInitiateAPI(undefined, undefined, true);
-        }
+        (async () => {
+            if (isUserOnboardingDone && !isInitiated) {
+                const {accessToken, refreshToken} = await Client.myClient.getTokens();
+                console.log(accessToken, refreshToken)
+                if(accessToken && refreshToken) {
+                    // validate API will be call internally regardless
+                    callInitiateAPI(undefined, undefined, true);
+                }
+            }
+        })()
     }, [isUserOnboardingDone,withAPIKeySecurity])
 
     useEffect(() => {
@@ -313,7 +319,9 @@ function UserOnboardingScreen() {
                     onTap={!disableSubmitButton && !loading ? (onCTAButtonClicked) : () => { }} text={{
                         children: loading ?
                         <View style={{flex:1, justifyContent:'center', alignItems: 'center'}}>
-                            <LMLoader color="white" size={"small"} style={{
+                            <LMLoader color="white" size={
+                                Platform.OS == 'ios' ? STYLES.$LMLoaderSizeiOS : STYLES.$LMLoaderSizeAndroid
+                            } style={{
                                 top: Platform.OS == 'ios' ? 2 : 0
                             }}  /> 
                         </View>
