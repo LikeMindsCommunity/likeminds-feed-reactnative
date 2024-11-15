@@ -179,7 +179,7 @@ export default function UserOnboardingContextProvider({
                 } else {
                     dispatch({
                         type: SHOW_TOAST,
-                        body: { isToast: true, message: "Image should be less then 5 MB" },
+                        body: { isToast: true, message: "Image should be less than 5 MB" },
                     })
                 }
             }
