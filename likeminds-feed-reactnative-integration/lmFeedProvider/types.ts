@@ -495,4 +495,13 @@ export interface UserOnboardingStylesProps {
   userProfilePictureImageStyles?: ImageStyle;
   ctaButtonStyle?: ViewStyle;
   pickImageIconStyles?: LMIconProps;
+  headerTitleTextStyle?: TextStyle;
+  titleTextStyle?: TextStyle;
+  addPicturePromptTextStyle?: TextStyle;
+  maxPictureSizePromptTextStyle?: TextStyle;
+  userNameTextBoxLabelStyle?: TextStyle;
+  subtitleTextStyle?: TextStyle;
+  ctaButtonTextStyle?: TextStyle;
+  disableCtaButtonTextStyle?: TextStyle;
+  disableCtaButtonStyle?: ViewStyle;
 }

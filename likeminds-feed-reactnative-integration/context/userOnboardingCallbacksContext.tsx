@@ -9,24 +9,34 @@ interface userOnboardingCallbacksContextProps {
     onCTAButtonClickedProp?: () => void;
     onPickProfileImageClickedProp?: () => void;
     userNameMaxCharacterLimit?: number;
-    screenTitle?: string;
-    screenSubtitle?: string;
-    ctaButtonText?: string;
+    createScreenTitle?: string;
+    createScreenSubtitle?: string;
+    createScreenHeaderTitle?: string;
+    createScreenCtaButtonText?: string;
     editScreenTitle?: string;
     editScreenSubtitle?: string;
-    editCtaButtonText?: string;
+    editScreenCtaButtonText?: string;
+    editScreenHeaderTitle?: string;
+    addPicturePrompt?: string;
+    maxPictureSizePrompt?: string;
+    userNameInputBoxLabel?: string;
 }
 
 export interface userOnboardingCallbacksContextValues {
     onCTAButtonClickedProp?: () => void;
     onPickProfileImageClickedProp?: () => void;
     userNameMaxCharacterLimit: number;
-    screenTitle?: string;
-    screenSubtitle?: string;
-    ctaButtonText?: string;
+    createScreenTitle?: string;
+    createScreenSubtitle?: string;
+    createScreenCtaButtonText?: string;
+    createScreenHeaderTitle?: string;
     editScreenTitle?: string;
     editScreenSubtitle?: string;
-    editCtaButtonText?: string;
+    editScreenCtaButtonText?: string;
+    editScreenHeaderTitle?: string;
+    addPicturePrompt?: string;
+    maxPictureSizePrompt?: string;
+    userNameInputBoxLabel?: string;
 }
 
 const UserOnboardingCallbacksContext = createContext<userOnboardingCallbacksContextValues | undefined>(
@@ -48,23 +58,34 @@ export default function UserOnboardingCallbacksContextProvider({
     onCTAButtonClickedProp,
     onPickProfileImageClickedProp,
     userNameMaxCharacterLimit = 50,
-    screenTitle,
-    screenSubtitle,
-    ctaButtonText = "Continue",
+    createScreenTitle,
+    createScreenHeaderTitle,
+    createScreenSubtitle,
+    createScreenCtaButtonText = "Continue",
     editScreenTitle,
     editScreenSubtitle,
-    editCtaButtonText = "Edit"
+    editScreenCtaButtonText = "Edit",
+    editScreenHeaderTitle = "Profile",
+    addPicturePrompt,
+    maxPictureSizePrompt,
+    userNameInputBoxLabel
+    
 }: userOnboardingCallbacksContextProps) {
     const value: userOnboardingCallbacksContextValues = {
         onCTAButtonClickedProp,
         onPickProfileImageClickedProp,
         userNameMaxCharacterLimit,
-        screenTitle,
-        screenSubtitle,
-        ctaButtonText,
+        createScreenTitle,
+        createScreenSubtitle,
+        createScreenCtaButtonText,
         editScreenTitle,
         editScreenSubtitle,
-        editCtaButtonText,
+        editScreenHeaderTitle,
+        editScreenCtaButtonText,
+        addPicturePrompt,
+        maxPictureSizePrompt,
+        createScreenHeaderTitle,
+        userNameInputBoxLabel
     }
     return (
         <UserOnboardingCallbacksContext.Provider value={value}>

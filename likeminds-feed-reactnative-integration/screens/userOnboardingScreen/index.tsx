@@ -12,6 +12,7 @@ import {
     Keyboard,
     Pressable,
     SafeAreaView,
+    StyleSheet
 } from "react-native";
 import React, { ReactNode, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Layout from "../../constants/Layout";
@@ -32,36 +33,51 @@ interface userOnboardingCallbacksContextProps {
     onCTAButtonClickedProp?: () => void;
     onPickProfileImageClickedProp?: () => void;
     userNameMaxCharacterLimit?: number;
-    screenTitle?: string;
-    screenSubtitle?: string;
-    ctaButtonText?: string;
+    createScreenTitle?: string;
+    createScreenSubtitle?: string;
+    createScreenCtaButtonText?: string;
+    createScreenHeaderTitle?: string;
     editScreenTitle?: string;
     editScreenSubtitle?: string;
-    editScreenButtonText?: string;
+    editScreenCtaButtonText?: string;
+    editScreenHeaderTitle?: string;
+    addPicturePrompt?: string;
+    maxPictureSizePrompt?: string;
+    userNameInputBoxLabel?: string;
 }
 
 export default function UserOnboardingComponent({
     onCTAButtonClickedProp,
     onPickProfileImageClickedProp,
     userNameMaxCharacterLimit,
-    screenTitle,
-    screenSubtitle,
-    ctaButtonText,
-    editScreenButtonText,
+    createScreenTitle,
+    createScreenSubtitle,
+    createScreenCtaButtonText,
+    createScreenHeaderTitle,
+    editScreenCtaButtonText,
     editScreenSubtitle,
-    editScreenTitle
+    editScreenTitle,
+    editScreenHeaderTitle,
+    addPicturePrompt,
+    maxPictureSizePrompt,
+    userNameInputBoxLabel,
 }: userOnboardingCallbacksContextProps) {
     return (
         <UserOnboardingCallbacksContextProvider
             onCTAButtonClickedProp={onCTAButtonClickedProp}
             onPickProfileImageClickedProp={onPickProfileImageClickedProp}
             userNameMaxCharacterLimit={userNameMaxCharacterLimit}
-            screenTitle={screenTitle}
-            screenSubtitle={screenSubtitle}
-            ctaButtonText={ctaButtonText}
-            editCtaButtonText={editScreenButtonText}
+            createScreenCtaButtonText={createScreenCtaButtonText}
+            createScreenHeaderTitle={createScreenHeaderTitle}
+            createScreenSubtitle={createScreenSubtitle}
+            createScreenTitle={createScreenTitle}
             editScreenSubtitle={editScreenSubtitle}
             editScreenTitle={editScreenTitle}
+            editScreenHeaderTitle={editScreenHeaderTitle}
+            editScreenCtaButtonText={editScreenCtaButtonText}
+            addPicturePrompt={addPicturePrompt}
+            maxPictureSizePrompt={maxPictureSizePrompt}
+            userNameInputBoxLabel={userNameInputBoxLabel}
         >
             <UserOnboardingScreen />
         </UserOnboardingCallbacksContextProvider>
@@ -81,16 +97,22 @@ function UserOnboardingScreen() {
     } = useUserOnboardingContext();
     const {
         userNameMaxCharacterLimit,
-        screenSubtitle,
-        screenTitle,
-        ctaButtonText,
+        createScreenCtaButtonText,
+        createScreenTitle,
+        createScreenHeaderTitle,
+        createScreenSubtitle,
         onCTAButtonClickedProp,
         onPickProfileImageClickedProp,
-        editCtaButtonText,
+        editScreenCtaButtonText,
         editScreenSubtitle,
-        editScreenTitle
+        editScreenTitle,
+        editScreenHeaderTitle,
+        addPicturePrompt,
+        maxPictureSizePrompt,
+        userNameInputBoxLabel
     } = useUserOnboardingCallbacksContext();
 
+    const onBoardingScreenStyles = STYLES.$USER_ONBOARDING_SCREEN_STYLES;
     const isEditing = useMemo(() => {
         if (((route.params as any)?.action) == "EDIT_PROFILE") {
             return true;
@@ -98,7 +120,7 @@ function UserOnboardingScreen() {
         return false;
     }, [withAPIKeySecurity, isInitiated]);
 
-    
+
     useLayoutEffect(() => {
         (async () => {
             const response = await callIsUserOnboardingDone();
@@ -121,10 +143,10 @@ function UserOnboardingScreen() {
     useLayoutEffect(() => {
         (async () => {
             if (isUserOnboardingDone && !isInitiated) {
-                const {accessToken, refreshToken} = await Client.myClient.getTokens();
+                const { accessToken, refreshToken } = await Client.myClient.getTokens();
                 const isOnboarded = await callIsUserOnboardingDone()
                 console.log(accessToken, refreshToken)
-                if(accessToken && refreshToken && isOnboarded) {
+                if (accessToken && refreshToken && isOnboarded) {
                     // validate API will be call internally regardless
                     callInitiateAPI(undefined, undefined, true);
                 } else {
@@ -132,7 +154,7 @@ function UserOnboardingScreen() {
                 }
             }
         })()
-    }, [isUserOnboardingDone,withAPIKeySecurity])
+    }, [isUserOnboardingDone, withAPIKeySecurity])
 
     useEffect(() => {
         if (isInitiated && !isEditing) {
@@ -168,26 +190,30 @@ function UserOnboardingScreen() {
         navigation.setOptions({
             headerShown: isEditing ? true : (!isUserOnboardingDone),
             animationEnabled: isEditing ? true : (!isUserOnboardingDone),
-            header: () => 
-            <SafeAreaView>
-                <LMHeader
-                    heading={isEditing ? "Profile" : "Community"}
-                    showBackArrow={isEditing}
-                    headingTextStyle={{
-                        fontSize: 18,
-                        fontWeight: '300'
-                    }}
-                    onBackPress={() => {
-                        navigation.goBack()
-                    }}
-                />
-            </SafeAreaView>
+            header: () =>
+                <SafeAreaView>
+                    <LMHeader
+                        heading={isEditing ? (editScreenHeaderTitle ? editScreenHeaderTitle : "Profile") : (createScreenHeaderTitle ? createScreenHeaderTitle : "Community")}
+                        showBackArrow={isEditing}
+                        headingTextStyle={
+                            StyleSheet.flatten([
+                                {
+                                    fontSize: 18,
+                                    fontWeight: '300'
+                                },
+                                onBoardingScreenStyles.headerTitleTextStyle
+                            ])
+                        }
+                        onBackPress={() => {
+                            navigation.goBack()
+                        }}
+                    />
+                </SafeAreaView>
         })
     }, [isUserOnboardingDone, isInitiated])
 
-    const onBoardingScreenStyles = STYLES.$USER_ONBOARDING_SCREEN_STYLES;
 
-    if (((isUserOnboardingRequired == false || isUserOnboardingRequired == undefined) || isUserOnboardingDone) && !isEditing ) {
+    if (((isUserOnboardingRequired == false || isUserOnboardingRequired == undefined) || isUserOnboardingDone) && !isEditing) {
         return (
             <View style={{
                 flex: 1,
@@ -201,40 +227,50 @@ function UserOnboardingScreen() {
 
     return (
         <Pressable
-        onPress={Keyboard.dismiss}
-         style={{
-            flex: 1, backgroundColor:
-                STYLES.$IS_DARK_THEME ? STYLES.$BACKGROUND_COLORS.DARK :
-                    STYLES.$BACKGROUND_COLORS.LIGHT
-        }}>
+            onPress={Keyboard.dismiss}
+            style={{
+                flex: 1, backgroundColor:
+                    STYLES.$IS_DARK_THEME ? STYLES.$BACKGROUND_COLORS.DARK :
+                        STYLES.$BACKGROUND_COLORS.LIGHT
+            }}>
             <View>
                 <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 10, gap: 8 }}>
-                    <LMText textStyle={{
-                        fontSize: 20,
-                        fontWeight: '500',
-                        color: STYLES.$IS_DARK_THEME ? STYLES.$COLORS.WHITE_TEXT_COLOR : '#333333'
-                    }}>
-                        {isEditing ? (editScreenTitle ? editScreenTitle : "Edit Profile") :(screenTitle ? screenTitle : "Create Your Community Profile")}
+                    <LMText textStyle={StyleSheet.flatten([
+                        {
+                            fontSize: 20,
+                            fontWeight: '500',
+                            color: STYLES.$IS_DARK_THEME ? STYLES.$COLORS.WHITE_TEXT_COLOR : '#333333'
+                        },
+                        onBoardingScreenStyles.titleTextStyle
+                    ])}>
+                        {isEditing ? (editScreenTitle ? editScreenTitle : "Edit Profile") : (createScreenTitle ? createScreenTitle : "Create Your Community Profile")}
                     </LMText>
-                    <LMText textStyle={{
-                        fontSize: 14,
-                        color: STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
-                        textAlign: "center",
-                    }}>
-                        {isEditing ? (editScreenSubtitle ? editScreenSubtitle : "Edit profile picture") :(screenSubtitle ? screenSubtitle : "Set up your profile to join the community. Please provide your name and profile picture.")}
+                    <LMText textStyle={StyleSheet.flatten([
+                        {
+                            fontSize: 14,
+                            color: STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
+                            textAlign: "center",
+                            marginHorizontal: Layout.normalize(10)
+                        },
+                        onBoardingScreenStyles.subtitleTextStyle
+                    ])}>
+                        {isEditing ? (editScreenSubtitle ? editScreenSubtitle : "Edit profile picture") : (createScreenSubtitle ? createScreenSubtitle : "Set up your profile to join the community. Please provide your name and profile picture.")}
                     </LMText>
                 </View>
                 <View style={{
                     height: 120, width: 120, marginTop: 14, alignItems: 'center', justifyContent: 'center',
                     borderWidth: 1.5, borderRadius: 100, borderColor: '#9b9b9b', alignSelf: 'center',
-                    backgroundColor: imageUrl ? "black" : STYLES.$COLORS.WHITE
+                    backgroundColor: imageUrl ? "black" : ( STYLES.$IS_DARK_THEME ? STYLES.$COLORS.BLACK : STYLES.$COLORS.WHITE)
                 }}>
                     {imageUrl?.length > 0 ?
                         <Image
                             source={{ uri: imageUrl }}
                             style={
-                                    { width: Layout.normalize(120), height: Layout.normalize(120), borderRadius: 100, resizeMode: 'cover', ...(onBoardingScreenStyles?.userProfilePictureImageStyles) }
-                            } /> :
+                                StyleSheet.flatten([
+                                    { width: Layout.normalize(120), height: Layout.normalize(120), borderRadius: 100, resizeMode: 'cover' },
+                                    (onBoardingScreenStyles?.userProfilePictureImageStyles)
+                                ])}
+                        /> :
                         <LMIcon
                             assetPath={require("../../assets/images/user_3x.png")}
                             height={50} width={50}
@@ -242,56 +278,82 @@ function UserOnboardingScreen() {
                     <TouchableOpacity
                         onPress={onPickProfileImageClickedProp ? onPickProfileImageClickedProp : onPickProfileImageClicked}
                         style={
-                            {
-                                position: 'absolute', top: Layout.normalize(75),
-                                left: Layout.normalize(90),
-                                backgroundColor: STYLES.$COLORS.PRIMARY,
-                                padding: 6,
-                                borderRadius: 20,
-                                elevation: 3,
-                                ...(onBoardingScreenStyles?.pickImageButtonStyles)
-                            }
+                            StyleSheet.flatten([
+                                {
+                                    position: 'absolute', top: Layout.normalize(75),
+                                    left: Layout.normalize(90),
+                                    backgroundColor: STYLES.$COLORS.PRIMARY,
+                                    padding: 6,
+                                    borderRadius: 20,
+                                    elevation: 3
+                                },
+                                (onBoardingScreenStyles?.pickImageButtonStyles)
+                            ])
                         }>
                         <LMIcon
                             assetPath={onBoardingScreenStyles?.pickImageIconStyles?.assetPath ? onBoardingScreenStyles?.pickImageIconStyles?.assetPath :
-                                require("../../assets/images/camera_3x.png")
+                                (isEditing ? require("../../assets/images/edit_profile3x.png") : require("../../assets/images/camera_3x.png"))
                             }
-                            height={onBoardingScreenStyles?.pickImageIconStyles?.height ? onBoardingScreenStyles?.pickImageIconStyles?.height : Layout.normalize(18)}
-                            width={onBoardingScreenStyles?.pickImageIconStyles?.width ? onBoardingScreenStyles?.pickImageIconStyles?.width : Layout.normalize(18)}
-                            {...(onBoardingScreenStyles.pickImageIconStyles)}
+                            height={onBoardingScreenStyles?.pickImageIconStyles?.height ? onBoardingScreenStyles?.pickImageIconStyles?.height : Layout.normalize(15)}
+                            width={onBoardingScreenStyles?.pickImageIconStyles?.width ? onBoardingScreenStyles?.pickImageIconStyles?.width : Layout.normalize(15)}
+                            color={onBoardingScreenStyles.pickImageIconStyles?.color ?? "white"}
+                            iconStyle={onBoardingScreenStyles.pickImageIconStyles?.iconStyle ?? {}}
+                            boxFit={onBoardingScreenStyles.pickImageIconStyles?.boxFit}
+                            boxStyle={onBoardingScreenStyles.pickImageIconStyles?.boxStyle ?? {}}
                         />
                     </TouchableOpacity>
                 </View>
                 <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 10, marginBottom: 15 }}>
-                    <LMText textStyle={{
-                        fontSize: 14,
-                        fontWeight: '800'
-                    }}>
-                        Add profile picture
+                    <LMText textStyle={StyleSheet.flatten([
+                        {
+                            fontSize: 14,
+                            fontWeight: '800'
+                        },
+                        onBoardingScreenStyles.addPicturePromptTextStyle
+                    ])}>
+                        {addPicturePrompt ? addPicturePrompt : "Add profile picture"}
                     </LMText>
-                    <LMText textStyle={{
-                        fontSize: 14,
-                        color: STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
-                    }}>
-                        Allowed maximum file size 5 MB
+                    <LMText textStyle={StyleSheet.flatten([
+                        {
+                            fontSize: 14,
+                            fontWeight: '800'
+                        },
+                        onBoardingScreenStyles.maxPictureSizePromptTextStyle
+                    ])}>
+                        {maxPictureSizePrompt ? maxPictureSizePrompt : "Allowed maximum file size 5 MB"}
                     </LMText>
                 </View>
             </View>
             <View>
                 <View style={{ marginHorizontal: Layout.normalize(12), gap: 6 }}>
-                    <LMText textStyle={{ fontWeight: '700', left: 3 }}>Enter your name<LMText textStyle={{ fontWeight: '800', color: 'red' }}> *</LMText></LMText>
+                    <LMText textStyle={
+                        StyleSheet.flatten([
+                            { fontWeight: '700', left: 3 },
+                            onBoardingScreenStyles.userNameTextBoxLabelStyle
+                        ])
+                    }>{userNameInputBoxLabel ? userNameInputBoxLabel : "Enter your name"}<LMText textStyle={StyleSheet.flatten([
+                        { fontWeight: '800', color: "red" },
+                        onBoardingScreenStyles.userNameTextBoxLabelStyle
+                    ])}> *</LMText></LMText>
                     <LMInputText
                         onType={setName}
-                        textValueStyle={{ fontSize: 18, ...(onBoardingScreenStyles?.userNameInputBoxStyle?.textValueStyle) }}
-                        inputTextStyle={{
-                            elevation: 0,
-                            borderColor: '#9b9b9b',
-                            borderWidth: 1,
-                            margin: 0,
-                            paddingVertical: 0,
-                            paddingHorizontal: 8,
-                            ...(onBoardingScreenStyles?.userNameInputBoxStyle?.inputTextStyle)
-                        }}
+                        textValueStyle={StyleSheet.flatten([
+                            { fontSize: 18 },
+                            onBoardingScreenStyles?.userNameInputBoxStyle?.textValueStyle
+                        ])}
+                        inputTextStyle={
+                            StyleSheet.flatten([
+                                {
+                                    elevation: 0,
+                                    borderColor: '#9b9b9b',
+                                    borderWidth: 1,
+                                    margin: 0,
+                                    paddingVertical: 0,
+                                    paddingHorizontal: 8,
+                                },
+                                (onBoardingScreenStyles?.userNameInputBoxStyle?.inputTextStyle)
+                            ])
+                        }
                         multilineField={(onBoardingScreenStyles?.userNameInputBoxStyle?.multilineField) ?? false}
                         placeholderTextColor={((onBoardingScreenStyles?.userNameInputBoxStyle?.placeholderTextColor ?? "black"))}
                         rightIcon={(onBoardingScreenStyles?.userNameInputBoxStyle?.rightIcon)}
@@ -310,22 +372,31 @@ function UserOnboardingScreen() {
             <View style={{ width: '100%', position: "absolute", bottom: Platform.OS === 'ios' ? Layout.normalize(20) : Layout.normalize(45), alignItems: 'center', justifyContent: 'center' }}>
                 <LMButton
                     isClickable={!disableSubmitButton || !loading}
-                    buttonStyle={{
-                        borderColor: STYLES.$IS_DARK_THEME ? "black" : 'white', width: Layout.normalize(130), height: Layout.normalize(40),
-                        backgroundColor: !disableSubmitButton ? STYLES.$COLORS.PRIMARY : STYLES.$COLORS.LIGHT_GREY, borderRadius: 20,
-                        ...(onBoardingScreenStyles?.ctaButtonStyle)
-                    }}
+                    buttonStyle={
+                        StyleSheet.flatten([
+                            {
+                                borderColor: STYLES.$IS_DARK_THEME ? "black" : 'white', width: Layout.normalize(130), height: Layout.normalize(40),
+                                backgroundColor: !disableSubmitButton ? STYLES.$COLORS.PRIMARY : STYLES.$COLORS.LIGHT_GREY, borderRadius: 20
+                            },
+                            disableSubmitButton ? (onBoardingScreenStyles?.disableCtaButtonStyle) : (onBoardingScreenStyles?.ctaButtonStyle)
+                        ])
+                    }
                     onTap={!disableSubmitButton && !loading ? (onCTAButtonClickedProp ? onCTAButtonClickedProp : onCTAButtonClicked) : () => { }} text={{
                         children: loading ?
-                        <View style={{flex:1, justifyContent:'center', alignItems: 'center'}}>
-                            <LMLoader color="white" size={
-                                Platform.OS == 'ios' ? STYLES.$LMLoaderSizeiOS : STYLES.$LMLoaderSizeAndroid
-                            } style={{
-                                top: Platform.OS == 'ios' ? 2 : 0
-                            }}  /> 
-                        </View>
-                        :
-                            <LMText textStyle={{ fontSize: 20, color: STYLES.$IS_DARK_THEME ? STYLES.$COLORS.WHITE : STYLES.$COLORS.WHITE, fontWeight: '600', }}>{isEditing ? (editCtaButtonText ? editCtaButtonText : "Edit") :(ctaButtonText ? ctaButtonText : "Continue")}</LMText>
+                            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                <LMLoader color="white" size={
+                                    Platform.OS == 'ios' ? STYLES.$LMLoaderSizeiOS : STYLES.$LMLoaderSizeAndroid
+                                } style={{
+                                    top: Platform.OS == 'ios' ? 2 : 0
+                                }} />
+                            </View>
+                            :
+                            <LMText textStyle={
+                                StyleSheet.flatten([
+                                    { fontSize: 20, color: STYLES.$IS_DARK_THEME ? STYLES.$COLORS.WHITE : STYLES.$COLORS.WHITE, fontWeight: '600' },
+                                    disableSubmitButton ? (onBoardingScreenStyles.disableCtaButtonTextStyle) : (onBoardingScreenStyles.ctaButtonTextStyle)
+                                ])
+                            }>{isEditing ? (editScreenCtaButtonText ? editScreenCtaButtonText : "Edit") : (createScreenCtaButtonText ? createScreenCtaButtonText : "Continue")}</LMText>
                     }} />
             </View>
         </Pressable>
