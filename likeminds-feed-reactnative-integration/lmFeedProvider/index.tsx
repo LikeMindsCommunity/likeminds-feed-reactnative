@@ -45,7 +45,7 @@ interface LMFeedContextProps {
   setOnboardUser: React.Dispatch<React.SetStateAction<boolean>>;
   withAPIKeySecurity?: boolean;
   setWithAPIKeySecurity?: React.Dispatch<React.SetStateAction<boolean>>;
-  callInitiateAPI: (onBoardingUserName?: string, imageUrl?: string) => void;
+  callInitiateAPI: (onBoardingUserName?: string, imageUrl?: string, isUserOnboarded?: boolean) => void;
   callGetCommunityConfigurations: () => void;
   callIsUserOnboardingDone: () => Promise<boolean>;
 
@@ -126,10 +126,10 @@ export const LMFeedProvider = ({
     }
   };
 
-  async function callInitiateAPI(onBoardingUserName?: string, imageUrl?: string) {
+  async function callInitiateAPI(onBoardingUserName?: string, imageUrl?: string, isUserOnboarded: boolean = false) {
     const { accessToken, refreshToken } = await myClient?.getTokens();
     if (accessToken && refreshToken) {
-      callValidateApi(accessToken, refreshToken);
+      callValidateApi(accessToken, refreshToken, isUserOnboarded);
       return;
     }
     const initiateResponse: any = await dispatch(
@@ -173,16 +173,15 @@ export const LMFeedProvider = ({
 
     (async () => {
       if (isUserOnboardingRequired) {
-        const { accessToken, refreshToken } = await myClient?.getTokens();
         const isUserOnboarded = await callIsUserOnboardingDone();
 
-        if (accessToken && refreshToken) {
-          setWithAPIKeySecurity(true);
-          callValidateApi(accessToken, refreshToken, isUserOnboarded);
-        } else if (apiKey && userUniqueId) {
+        if (apiKey && userUniqueId) {
           setWithAPIKeySecurity(false);
           setOnboardUser(true);
-        }
+        } else if (accessToken && refreshToken) {
+          setWithAPIKeySecurity(true);
+          callValidateApi(accessToken, refreshToken, isUserOnboarded);
+        }  
       }
       else if (apiKey && userName && userUniqueId) {
         callInitiateAPI();

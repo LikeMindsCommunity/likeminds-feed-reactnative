@@ -130,7 +130,7 @@ export default function UserOnboardingContextProvider({
                     setLoading(false);
                     setOnboardUser(false);
                 } else {
-                    await callInitiateAPI(name, uploadResponse?.Location ? uploadResponse?.Location : "");
+                    await callInitiateAPI(name, uploadResponse?.Location ? uploadResponse?.Location : "", true);
                     await Client.myClient?.setIsUserOnboardingDone(true);
                     setLoading(false);
                     setOnboardUser(false);

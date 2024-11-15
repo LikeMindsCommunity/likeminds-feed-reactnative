@@ -11,6 +11,7 @@ import {
     KeyboardAvoidingView,
     Keyboard,
     Pressable,
+    SafeAreaView,
 } from "react-native";
 import React, { ReactNode, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Layout from "../../constants/Layout";
@@ -71,7 +72,8 @@ function UserOnboardingScreen() {
     const navigation = useNavigation();
     const route = useRoute();
     const dispatch = useAppDispatch();
-    const { onBoardUser, withAPIKeySecurity, isInitiated, isUserOnboardingRequired, callIsUserOnboardingDone
+    const { onBoardUser, withAPIKeySecurity, isInitiated, isUserOnboardingRequired, callIsUserOnboardingDone,
+        callInitiateAPI
     } = useLMFeed();
     const { onCTAButtonClicked, onPickProfileImageClicked, name, setName,
         imageUrl, setImageUrl, profileImage, disableSubmitButton, setDisableSubmitButton,
@@ -93,7 +95,8 @@ function UserOnboardingScreen() {
         if (((route.params as any)?.action) == "EDIT_PROFILE") {
             return true;
         }
-    }, [withAPIKeySecurity]);
+        return false;
+    }, [withAPIKeySecurity, isInitiated]);
 
     
     useLayoutEffect(() => {
@@ -114,6 +117,13 @@ function UserOnboardingScreen() {
             }
         })()
     }, [withAPIKeySecurity, isEditing])
+
+    useLayoutEffect(() => {
+        if(isUserOnboardingDone) {
+            // validate API will be call internally regardless
+            callInitiateAPI(undefined, undefined, true);
+        }
+    }, [isUserOnboardingDone,withAPIKeySecurity])
 
     useEffect(() => {
         if (isInitiated && !isEditing) {
@@ -149,19 +159,22 @@ function UserOnboardingScreen() {
         navigation.setOptions({
             headerShown: isEditing ? true : (!isUserOnboardingDone),
             animationEnabled: isEditing ? true : (!isUserOnboardingDone),
-            header: () => <LMHeader
-                heading={isEditing ? "Profile" : "Community"}
-                showBackArrow={isEditing}
-                headingTextStyle={{
-                    fontSize: 18,
-                    fontWeight: '300'
-                }}
-                onBackPress={() => {
-                    navigation.goBack()
-                }}
-            />
+            header: () => 
+            <SafeAreaView>
+                <LMHeader
+                    heading={isEditing ? "Profile" : "Community"}
+                    showBackArrow={isEditing}
+                    headingTextStyle={{
+                        fontSize: 18,
+                        fontWeight: '300'
+                    }}
+                    onBackPress={() => {
+                        navigation.goBack()
+                    }}
+                />
+            </SafeAreaView>
         })
-    }, [isUserOnboardingDone])
+    }, [isUserOnboardingDone, isInitiated])
 
     const onBoardingScreenStyles = STYLES.$USER_ONBOARDING_SCREEN_STYLES;
 
@@ -178,7 +191,9 @@ function UserOnboardingScreen() {
     }
 
     return (
-        <View style={{
+        <Pressable
+        onPress={Keyboard.dismiss}
+         style={{
             flex: 1, backgroundColor:
                 STYLES.$IS_DARK_THEME ? STYLES.$BACKGROUND_COLORS.DARK :
                     STYLES.$BACKGROUND_COLORS.LIGHT
@@ -210,7 +225,7 @@ function UserOnboardingScreen() {
                             source={{ uri: imageUrl }}
                             style={
                                 onBoardingScreenStyles?.userProfilePictureImageStyles ? onBoardingScreenStyles?.userProfilePictureImageStyles :
-                                    { width: 120, height: 120, borderRadius: 100, resizeMode: 'cover' }
+                                    { width: Layout.normalize(120), height: Layout.normalize(120), borderRadius: 100, resizeMode: 'cover' }
                             } /> :
                         <LMIcon
                             assetPath={require("../../assets/images/user_3x.png")}
@@ -220,7 +235,7 @@ function UserOnboardingScreen() {
                         onPress={onPickProfileImageClickedProp ? onPickProfileImageClickedProp : onPickProfileImageClicked}
                         style={
                             {
-                                position: 'absolute', top: Layout.normalize(70),
+                                position: 'absolute', top: Layout.normalize(75),
                                 left: Layout.normalize(90),
                                 backgroundColor: STYLES.$COLORS.PRIMARY,
                                 padding: 6,
@@ -233,8 +248,8 @@ function UserOnboardingScreen() {
                             assetPath={onBoardingScreenStyles?.pickImageIconStyles?.assetPath ? onBoardingScreenStyles?.pickImageIconStyles?.assetPath :
                                 require("../../assets/images/camera_3x.png")
                             }
-                            height={onBoardingScreenStyles?.pickImageIconStyles?.height ? onBoardingScreenStyles?.pickImageIconStyles?.height : 18}
-                            width={onBoardingScreenStyles?.pickImageIconStyles?.width ? onBoardingScreenStyles?.pickImageIconStyles?.width : 18}
+                            height={onBoardingScreenStyles?.pickImageIconStyles?.height ? onBoardingScreenStyles?.pickImageIconStyles?.height : Layout.normalize(18)}
+                            width={onBoardingScreenStyles?.pickImageIconStyles?.width ? onBoardingScreenStyles?.pickImageIconStyles?.width : Layout.normalize(18)}
                             {...(onBoardingScreenStyles.pickImageIconStyles)}
                         />
                     </TouchableOpacity>
@@ -259,7 +274,7 @@ function UserOnboardingScreen() {
                     <LMText textStyle={{ fontWeight: '700', left: 3 }}>Enter your name<LMText textStyle={{ fontWeight: '800', color: 'red' }}> *</LMText></LMText>
                     <LMInputText
                         onType={setName}
-                        textValueStyle={{ fontSize: 18 }}
+                        textValueStyle={{ fontSize: 18, ...(onBoardingScreenStyles?.userNameInputBoxStyle?.textValueStyle) }}
                         inputTextStyle={{
                             height: Layout.normalize(50),
                             elevation: 0,
@@ -268,7 +283,14 @@ function UserOnboardingScreen() {
                             margin: 0,
                             paddingVertical: 0,
                             paddingHorizontal: 8,
+                            ...(onBoardingScreenStyles?.userNameInputBoxStyle?.inputTextStyle)
                         }}
+                        multiline={(onBoardingScreenStyles?.userNameInputBoxStyle?.multilineField ?? false)}
+                        placeholder={onBoardingScreenStyles?.userNameInputBoxStyle?.placeholderText ?? ""}
+                        placeholderTextColor={onBoardingScreenStyles?.userNameInputBoxStyle?.placeholderTextColor ?? 
+                            STYLES.$IS_DARK_THEME ? "white" : "black"
+                        }
+                        rightIcon={(onBoardingScreenStyles?.userNameInputBoxStyle?.rightIcon)}
                         maxLength={userNameMaxCharacterLimit}
                         inputText={name}
                     />
@@ -280,7 +302,7 @@ function UserOnboardingScreen() {
                     </View>
                 </View>
             </View>
-            <View style={{ width: '100%', position: "absolute", bottom: 50, alignItems: 'center', justifyContent: 'center' }}>
+            <View style={{ width: '100%', position: "absolute", bottom: Platform.OS === 'ios' ? Layout.normalize(20) : Layout.normalize(45), alignItems: 'center', justifyContent: 'center' }}>
                 <LMButton
                     isClickable={!disableSubmitButton || !loading}
                     buttonStyle={{
@@ -289,10 +311,16 @@ function UserOnboardingScreen() {
                         ...(onBoardingScreenStyles?.ctaButtonStyle)
                     }}
                     onTap={!disableSubmitButton && !loading ? (onCTAButtonClicked) : () => { }} text={{
-                        children: loading ? <LMLoader color="white" size={"small"} /> :
+                        children: loading ?
+                        <View style={{flex:1, justifyContent:'center', alignItems: 'center'}}>
+                            <LMLoader color="white" size={"small"} style={{
+                                top: Platform.OS == 'ios' ? 2 : 0
+                            }}  /> 
+                        </View>
+                        :
                             <LMText textStyle={{ fontSize: 20, color: STYLES.$IS_DARK_THEME ? STYLES.$COLORS.WHITE : STYLES.$COLORS.WHITE, fontWeight: '600', }}>{isEditing ? (editCtaButtonText ? editCtaButtonText : "Edit") :(ctaButtonText ? ctaButtonText : "Continue")}</LMText>
                     }} />
             </View>
-        </View>
+        </Pressable>
     )
 }
