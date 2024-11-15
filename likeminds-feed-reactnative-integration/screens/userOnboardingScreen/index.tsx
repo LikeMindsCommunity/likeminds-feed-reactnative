@@ -112,6 +112,37 @@ function UserOnboardingScreen() {
         userNameInputBoxLabel
     } = useUserOnboardingCallbacksContext();
 
+    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+    useLayoutEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            () => {
+                setKeyboardVisible(true); // or some other action
+            }
+        );
+        const keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            () => {
+                setKeyboardVisible(false); // or some other action
+            }
+        );
+
+        return () => {
+            keyboardDidHideListener.remove();
+            keyboardDidShowListener.remove();
+        };
+    }, []);
+
+
+    const ref = useRef<any>();
+
+    useEffect(() => {
+        if (isKeyboardVisible) {
+            ref?.current?.scrollToEnd();
+        }
+    }, [isKeyboardVisible])
+
+
     const onBoardingScreenStyles = STYLES.$USER_ONBOARDING_SCREEN_STYLES;
     const isEditing = useMemo(() => {
         if (((route.params as any)?.action) == "EDIT_PROFILE") {
@@ -226,8 +257,9 @@ function UserOnboardingScreen() {
     }
 
     return (
-        <Pressable
-            onPress={Keyboard.dismiss}
+        <ScrollView
+            ref={ref}
+            contentContainerStyle={{ flexGrow: 1 }}
             style={{
                 flex: 1, backgroundColor:
                     STYLES.$IS_DARK_THEME ? STYLES.$BACKGROUND_COLORS.DARK :
@@ -260,7 +292,7 @@ function UserOnboardingScreen() {
                 <View style={{
                     height: 120, width: 120, marginTop: 14, alignItems: 'center', justifyContent: 'center',
                     borderWidth: 1.5, borderRadius: 100, borderColor: '#9b9b9b', alignSelf: 'center',
-                    backgroundColor: imageUrl ? "black" : ( STYLES.$IS_DARK_THEME ? STYLES.$COLORS.BLACK : STYLES.$COLORS.WHITE)
+                    backgroundColor: imageUrl ? "black" : (STYLES.$IS_DARK_THEME ? STYLES.$COLORS.BLACK : STYLES.$COLORS.WHITE)
                 }}>
                     {imageUrl?.length > 0 ?
                         <Image
@@ -346,6 +378,7 @@ function UserOnboardingScreen() {
                                 {
                                     elevation: 0,
                                     borderColor: '#9b9b9b',
+                                    height: Layout.normalize(40),
                                     borderWidth: 1,
                                     margin: 0,
                                     paddingVertical: 0,
@@ -369,7 +402,10 @@ function UserOnboardingScreen() {
                     </View>
                 </View>
             </View>
-            <View style={{ width: '100%', position: "absolute", bottom: Platform.OS === 'ios' ? Layout.normalize(20) : Layout.normalize(45), alignItems: 'center', justifyContent: 'center' }}>
+            <View style={{
+                alignItems: 'center', justifyContent: "flex-end",
+                flex: 1, marginVertical: 25
+            }}>
                 <LMButton
                     isClickable={!disableSubmitButton || !loading}
                     buttonStyle={
@@ -399,6 +435,6 @@ function UserOnboardingScreen() {
                             }>{isEditing ? (editScreenCtaButtonText ? editScreenCtaButtonText : "Edit") : (createScreenCtaButtonText ? createScreenCtaButtonText : "Continue")}</LMText>
                     }} />
             </View>
-        </Pressable>
+        </ScrollView>
     )
 }
