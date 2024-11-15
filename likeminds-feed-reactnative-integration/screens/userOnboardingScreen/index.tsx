@@ -319,7 +319,7 @@ function UserOnboardingScreen() {
                         backgroundColor: !disableSubmitButton ? STYLES.$COLORS.PRIMARY : STYLES.$COLORS.LIGHT_GREY, borderRadius: 20,
                         ...(onBoardingScreenStyles?.ctaButtonStyle)
                     }}
-                    onTap={!disableSubmitButton && !loading ? (onCTAButtonClicked) : () => { }} text={{
+                    onTap={!disableSubmitButton && !loading ? (onCTAButtonClickedProp ? onCTAButtonClickedProp : onCTAButtonClicked) : () => { }} text={{
                         children: loading ?
                         <View style={{flex:1, justifyContent:'center', alignItems: 'center'}}>
                             <LMLoader color="white" size={

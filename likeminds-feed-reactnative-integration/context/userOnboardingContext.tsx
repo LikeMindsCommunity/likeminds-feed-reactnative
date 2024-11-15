@@ -167,8 +167,15 @@ export default function UserOnboardingContextProvider({
             const res = await selectImageVideo("photo", 1);
             if (res?.assets) {
                 if ((res?.assets[0])?.fileSize && (res?.assets[0])?.fileSize < 5242880) {
-                    setProfileImage(res.assets[0] ?? null)
-                    setImageUrl((res.assets[0])?.uri as string);
+                    if((res?.assets[0]).type == "image/png" || (res?.assets[0]).type == "image/jpeg") {
+                        setProfileImage(res.assets[0] ?? null)
+                        setImageUrl((res.assets[0])?.uri as string);
+                    } else {
+                        dispatch({
+                            type: SHOW_TOAST,
+                            body: { isToast: true, message: "Only PNG or JPEG format is allowed" },
+                        })
+                    }
                 } else {
                     dispatch({
                         type: SHOW_TOAST,
