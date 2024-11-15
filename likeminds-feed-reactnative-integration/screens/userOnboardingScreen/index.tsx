@@ -233,8 +233,7 @@ function UserOnboardingScreen() {
                         <Image
                             source={{ uri: imageUrl }}
                             style={
-                                onBoardingScreenStyles?.userProfilePictureImageStyles ? onBoardingScreenStyles?.userProfilePictureImageStyles :
-                                    { width: Layout.normalize(120), height: Layout.normalize(120), borderRadius: 100, resizeMode: 'cover' }
+                                    { width: Layout.normalize(120), height: Layout.normalize(120), borderRadius: 100, resizeMode: 'cover', ...(onBoardingScreenStyles?.userProfilePictureImageStyles) }
                             } /> :
                         <LMIcon
                             assetPath={require("../../assets/images/user_3x.png")}
@@ -285,7 +284,6 @@ function UserOnboardingScreen() {
                         onType={setName}
                         textValueStyle={{ fontSize: 18, ...(onBoardingScreenStyles?.userNameInputBoxStyle?.textValueStyle) }}
                         inputTextStyle={{
-                            height: Layout.normalize(50),
                             elevation: 0,
                             borderColor: '#9b9b9b',
                             borderWidth: 1,
@@ -294,13 +292,11 @@ function UserOnboardingScreen() {
                             paddingHorizontal: 8,
                             ...(onBoardingScreenStyles?.userNameInputBoxStyle?.inputTextStyle)
                         }}
-                        multiline={(onBoardingScreenStyles?.userNameInputBoxStyle?.multilineField ?? false)}
-                        placeholder={onBoardingScreenStyles?.userNameInputBoxStyle?.placeholderText ?? ""}
-                        placeholderTextColor={onBoardingScreenStyles?.userNameInputBoxStyle?.placeholderTextColor ?? 
-                            STYLES.$IS_DARK_THEME ? "white" : "black"
-                        }
+                        multilineField={(onBoardingScreenStyles?.userNameInputBoxStyle?.multilineField) ?? false}
+                        placeholderTextColor={((onBoardingScreenStyles?.userNameInputBoxStyle?.placeholderTextColor ?? "black"))}
                         rightIcon={(onBoardingScreenStyles?.userNameInputBoxStyle?.rightIcon)}
                         maxLength={userNameMaxCharacterLimit}
+                        placeholderText={(onBoardingScreenStyles?.userNameInputBoxStyle?.placeholderText ?? "")}
                         inputText={name}
                     />
                     <View>
