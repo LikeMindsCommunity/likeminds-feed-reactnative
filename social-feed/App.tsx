@@ -279,7 +279,7 @@ const App = () => {
                 name={USER_ONBOARDING_SCREEN}
                 component={LMUserOnboardingScreen}
                 options={{
-                  headerShown: false
+                  headerShown: false,
                 }}
                 />
                 <Stack.Screen
@@ -326,7 +326,7 @@ const App = () => {
               </Stack.Navigator>
           </LMOverlayProvider>
         ) : !userName && !userUniqueID && !apiKey ? (
-          <FetchKeyInputScreen isTrue={isTrue} setIsTrue={setIsTrue} />
+          <FetchKeyInputScreen isUserOnboardingRequired={true} isTrue={isTrue} setIsTrue={setIsTrue} />
         ) : null}
         </NavigationContainer>
       </GestureHandlerRootView>
