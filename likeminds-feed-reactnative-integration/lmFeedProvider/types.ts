@@ -482,7 +482,15 @@ export interface LMFeedProviderProps {
 }
 
 export interface UserOnboardingStylesProps {
-  userNameInputBoxStyle?: ViewStyle;
+  userNameInputBoxStyle?: {
+    inputTextStyle?: any;
+    placeholderText?: string;
+    placeholderTextColor?: string;
+    rightIcon?: LMButtonProps;
+    textValueStyle?: TextStyle;
+    mentionTextStyle?: TextStyle;
+    multilineField?: boolean;
+  };
   pickImageButtonStyles?: ViewStyle;
   userProfilePictureImageStyles?: ImageStyle;
   ctaButtonStyle?: ViewStyle;
