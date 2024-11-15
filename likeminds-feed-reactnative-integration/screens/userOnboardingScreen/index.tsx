@@ -122,9 +122,13 @@ function UserOnboardingScreen() {
         (async () => {
             if (isUserOnboardingDone && !isInitiated) {
                 const {accessToken, refreshToken} = await Client.myClient.getTokens();
-                if(accessToken && refreshToken) {
+                const isOnboarded = await callIsUserOnboardingDone()
+                console.log(accessToken, refreshToken)
+                if(accessToken && refreshToken && isOnboarded) {
                     // validate API will be call internally regardless
                     callInitiateAPI(undefined, undefined, true);
+                } else {
+                    setIsUserOnboardingDone(false);
                 }
             }
         })()
