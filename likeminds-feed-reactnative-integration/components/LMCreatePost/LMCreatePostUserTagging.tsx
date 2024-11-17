@@ -118,7 +118,7 @@ const LMCreatePostUserTagging = () => {
                           styles.taggingListText,
                           postDetailStyle?.userTaggingListStyle
                             ?.userTagNameStyle,
-                        ] as TextStyle
+                        ] as unknown as TextStyle
                       }
                     />
                   </View>

@@ -17,6 +17,7 @@ export const LMOverlayProvider: any = ({
   callbackClass,
   videoCallback,
   videoCarouselCallback,
+  isUserOnboardingRequired = false,
 }: // Create a prop for passing LMCoreCallbacks
 LMOverlayProviderProps) => {
   useEffect(() => {
@@ -36,6 +37,7 @@ LMOverlayProviderProps) => {
         lmFeedInterface={lmFeedInterface}
         videoCallback={videoCallback}
         videoCarouselCallback={videoCarouselCallback}
+        isUserOnboardingRequired={isUserOnboardingRequired}
         // add a prop for adding lmcorecallbacks
       >
         <View style={styles.flexStyling}>{children}</View>

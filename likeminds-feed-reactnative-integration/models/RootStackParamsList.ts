@@ -8,4 +8,5 @@ export type RootStackParamList = {
   NotificationList: undefined;
   CreatePollScreen: any;
   PollResult: any;
+  UserOnboardingScreen: any;
 };

@@ -15,4 +15,5 @@ export interface LMOverlayProviderProps {
   callbackClass: LMCoreCallbacks;
   videoCallback?: VideoCallback;
   videoCarouselCallback?: VideoCarouselCallback;
+  isUserOnboardingRequired?: boolean;
 }

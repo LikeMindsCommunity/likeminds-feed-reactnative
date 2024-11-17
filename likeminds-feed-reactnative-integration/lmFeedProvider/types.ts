@@ -1,7 +1,7 @@
 import React from "react";
 import { LMFeedClient } from "@likeminds.community/feed-rn";
 import { ViewStyle, TextStyle, ImageProps, ImageStyle } from "react-native";
-import { LMHeaderProps, LMLoaderProps } from "../components";
+import { LMHeaderProps, LMImageProps, LMLoaderProps } from "../components";
 import {
   LMButtonProps,
   LMIconProps,
@@ -478,4 +478,30 @@ export interface LMFeedProviderProps {
   lmFeedInterface?: any;
   videoCallback?: VideoCallback;
   videoCarouselCallback?: VideoCarouselCallback;
+  isUserOnboardingRequired?: boolean;
+}
+
+export interface UserOnboardingStylesProps {
+  userNameInputBoxStyle?: {
+    inputTextStyle?: any;
+    placeholderText?: string;
+    placeholderTextColor?: string;
+    rightIcon?: LMButtonProps;
+    textValueStyle?: TextStyle;
+    mentionTextStyle?: TextStyle;
+    multilineField?: boolean;
+  };
+  pickImageButtonStyles?: ViewStyle;
+  userProfilePictureImageStyles?: ImageStyle;
+  ctaButtonStyle?: ViewStyle;
+  pickImageIconStyles?: LMIconProps;
+  headerTitleTextStyle?: TextStyle;
+  titleTextStyle?: TextStyle;
+  addPicturePromptTextStyle?: TextStyle;
+  maxPictureSizePromptTextStyle?: TextStyle;
+  userNameTextBoxLabelStyle?: TextStyle;
+  subtitleTextStyle?: TextStyle;
+  ctaButtonTextStyle?: TextStyle;
+  disableCtaButtonTextStyle?: TextStyle;
+  disableCtaButtonStyle?: ViewStyle;
 }

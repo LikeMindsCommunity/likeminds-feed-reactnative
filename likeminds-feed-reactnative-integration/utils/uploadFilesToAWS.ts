@@ -29,12 +29,13 @@ function uriToBlob(uri: string): Promise<Blob> {
 export const uploadFilesToAWS = async (
   media: LMAttachmentMetaViewData,
   userUniqueId: string,
-  url: string
+  url: string,
+  path?: string
 ) => {
   const blob = await uriToBlob(url);
   const mediaObject = getAWS()
     .upload({
-      Key: `files/post/${userUniqueId}/${media.name}`,
+      Key: path ? path : `files/post/${userUniqueId}/${media.name}`,
       Bucket: `${S3_BUCKET}`,
       Body: blob,
       ACL: "public-read-write",
