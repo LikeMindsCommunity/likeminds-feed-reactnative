@@ -2,10 +2,10 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import DocumentPicker from 'react-native-document-picker';
 
 //select Images and videoes From Gallery
-export const selectImageVideo = async (type: string) => {
+export const selectImageVideo = async (type: string, limit: number = 0) => {
   const options = {
     mediaType: type,
-    selectionLimit: 0,
+    selectionLimit: limit ?? 0,
   };
   return await launchImageLibrary(options as any, async (response: any) => {
     if (response?.didCancel) {

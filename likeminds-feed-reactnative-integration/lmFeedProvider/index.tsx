@@ -29,11 +29,26 @@ import {
   VideoCallback,
   VideoCarouselCallback,
 } from "../components/LMMedia/LMVideo/types";
+import { useNavigation } from "@react-navigation/native";
+import { USER_ONBOARDING_SCREEN } from "../constants/screenNames";
 
 interface LMFeedContextProps {
   myClient: LMFeedClient;
   videoCallback?: VideoCallback;
   videoCarouselCallback?: VideoCarouselCallback;
+  onBoardUser: boolean;
+  isUserOnboardingRequired?: boolean;
+  apiKey?: string;
+  userUniqueId?: string;
+  isInitiated: boolean;
+  setIsInitiated: React.Dispatch<React.SetStateAction<boolean>>;
+  setOnboardUser: React.Dispatch<React.SetStateAction<boolean>>;
+  withAPIKeySecurity?: boolean;
+  setWithAPIKeySecurity?: React.Dispatch<React.SetStateAction<boolean>>;
+  callInitiateAPI: (onBoardingUserName?: string, imageUrl?: string, isUserOnboarded?: boolean) => void;
+  callGetCommunityConfigurations: () => void;
+  callIsUserOnboardingDone: () => Promise<boolean>;
+
 }
 
 // Create a context for LMFeedProvider
@@ -59,8 +74,11 @@ export const LMFeedProvider = ({
   lmFeedInterface,
   videoCallback,
   videoCarouselCallback,
+  isUserOnboardingRequired = false
 }: LMFeedProviderProps): React.JSX.Element => {
   const [isInitiated, setIsInitiated] = useState(false);
+  const [onBoardUser, setOnboardUser] = useState(false);
+  const [withAPIKeySecurity, setWithAPIKeySecurity] = useState(false);
   const dispatch = useAppDispatch();
   const showToast = useAppSelector((state) => state.loader.isToast);
 
@@ -74,6 +92,77 @@ export const LMFeedProvider = ({
     updateVariables(response?.data?.communityConfigurations);
   };
 
+  const callIsUserOnboardingDone = async () => {
+    try {
+      let isUserSet: any = await Client.myClient?.getIsUserOnboardingDone();
+      if (isUserSet?.data == null) return false;
+      return isUserSet.data
+    } catch (error) {
+      return false;
+    }
+  }
+
+  const callValidateApi = async (accessToken, refreshToken, isUserOnboarded = false) => {
+    const validateResponse = await dispatch(
+      validateUser(
+        ValidateUserRequest.builder()
+          .setAccessToken(accessToken)
+          .setRefreshToken(refreshToken)
+          .build(),
+        true
+      )
+    );
+
+
+    if (validateResponse !== undefined && validateResponse !== null) {
+      // calling getMemberState API
+      if (isUserOnboardingRequired && !isUserOnboarded) {
+        setOnboardUser(true);
+      } else {
+        await dispatch(getMemberState());
+        await callGetCommunityConfigurations();
+        setIsInitiated(true);
+      }
+    }
+  };
+
+  async function callInitiateAPI(onBoardingUserName?: string, imageUrl?: string, isUserOnboarded: boolean = false) {
+    const { accessToken, refreshToken } = await myClient?.getTokens();
+    if (accessToken && refreshToken) {
+      callValidateApi(accessToken, refreshToken, isUserOnboarded);
+      return;
+    }
+    const initiateResponse: any = await dispatch(
+      initiateUser(
+        (isUserOnboardingRequired ?
+          InitiateUserRequest.builder()
+            .setUserName(onBoardingUserName ? onBoardingUserName : "")
+            .setImageUrl(imageUrl ? imageUrl : "")
+            .setApiKey(apiKey ? apiKey : "")
+            .setUUID(userUniqueId ? userUniqueId : "")
+            .build() :
+          InitiateUserRequest.builder()
+            .setUserName(userName ? userName : "")
+            .setApiKey(apiKey ? apiKey : "")
+            .setUUID(userUniqueId ? userUniqueId : "")
+            .build()
+        ),
+        true
+      )
+    );
+    if (initiateResponse !== undefined && initiateResponse !== null) {
+      // calling getMemberState API
+      await dispatch(getMemberState());
+      await myClient.setTokens(
+        initiateResponse?.accessToken,
+        initiateResponse?.refreshToken
+      );
+      await callGetCommunityConfigurations();
+      setIsInitiated(true);
+    }
+  }
+
+
   useEffect(() => {
     //setting client in Client class
     Client.setMyClient(myClient);
@@ -81,67 +170,50 @@ export const LMFeedProvider = ({
       CallBack.setLMFeedInterface(lmFeedInterface);
     }
     // storing myClient followed by community details
-    const callValidateApi = async (accessToken, refreshToken) => {
-      const validateResponse = await dispatch(
-        validateUser(
-          ValidateUserRequest.builder()
-            .setAccessToken(accessToken)
-            .setRefreshToken(refreshToken)
-            .build(),
-          true
-        )
-      );
 
-      if (validateResponse !== undefined && validateResponse !== null) {
-        // calling getMemberState API
-        await dispatch(getMemberState());
+    (async () => {
+      if (isUserOnboardingRequired) {
+        const isUserOnboarded = await callIsUserOnboardingDone();
+
+        if (apiKey && userUniqueId) {
+          setWithAPIKeySecurity(false);
+          setOnboardUser(true);
+        } else if (accessToken && refreshToken) {
+          setWithAPIKeySecurity(true);
+          callValidateApi(accessToken, refreshToken, isUserOnboarded);
+        }  
       }
-      await callGetCommunityConfigurations();
-      setIsInitiated(true);
-    };
-
-    async function callInitiateAPI() {
-      const { accessToken, refreshToken } = await myClient?.getTokens();
-      if (accessToken && refreshToken) {
+      else if (apiKey && userName && userUniqueId) {
+        callInitiateAPI();
+      } else if (accessToken && refreshToken) {
         callValidateApi(accessToken, refreshToken);
-        return;
       }
-      const initiateResponse: any = await dispatch(
-        initiateUser(
-          InitiateUserRequest.builder()
-            .setUserName(userName ? userName : "")
-            .setApiKey(apiKey ? apiKey : "")
-            .setUUID(userUniqueId ? userUniqueId : "")
-            .build(),
-          true
-        )
-      );
-      if (initiateResponse !== undefined && initiateResponse !== null) {
-        // calling getMemberState API
-        await dispatch(getMemberState());
-        await myClient.setTokens(
-          initiateResponse?.accessToken,
-          initiateResponse?.refreshToken
-        );
-        await callGetCommunityConfigurations();
-        setIsInitiated(true);
-      }
-    }
-
-    if (apiKey && userName && userUniqueId) {
-      callInitiateAPI();
-    } else if (accessToken && refreshToken) {
-      callValidateApi(accessToken, refreshToken);
-    }
+    })()
   }, [accessToken, refreshToken]);
+
 
   const contextValues: LMFeedContextProps = {
     myClient: myClient,
     videoCallback: videoCallback,
     videoCarouselCallback: videoCarouselCallback,
+    onBoardUser,
+    isUserOnboardingRequired,
+    isInitiated,
+    withAPIKeySecurity,
+    apiKey,
+    userUniqueId,
+
+
+    setOnboardUser,
+    setIsInitiated,
+    setWithAPIKeySecurity,
+    callInitiateAPI,
+    callGetCommunityConfigurations,
+    callIsUserOnboardingDone
   };
 
-  return isInitiated ? (
+
+  return isInitiated || (isUserOnboardingRequired && onBoardUser) ? (
     <LMFeedContext.Provider value={contextValues}>
       <View style={styles.flexStyling}>{children}</View>
       {showToast && <LMToast />}

@@ -41,6 +41,7 @@ import {
   CLEAR_SELECTED_TOPICS,
   CLEAR_FEED,
   UNIVERSAL_TOPICS_FEED_SUCCESS,
+  REFRESH_FROM_ONBOARDING_SCREEN,
 } from "../types/types";
 import { LMPostViewData } from "../../models";
 import Styles from "../../constants/Styles";
@@ -64,6 +65,7 @@ export interface FeedReducerState {
   flowToCarouselScreen: boolean;
   notificationCount: number;
   flowToPostDetailScreen: boolean;
+  refreshScreenFromOnboardingScreen: boolean;
 }
 
 export const initialState: FeedReducerState = {
@@ -87,10 +89,15 @@ export const initialState: FeedReducerState = {
   flowToCarouselScreen: false,
   notificationCount: 0,
   flowToPostDetailScreen: false,
+  refreshScreenFromOnboardingScreen: false,
 };
 
 export const feedReducer = (state = initialState, action) => {
   switch (action.type) {
+    case REFRESH_FROM_ONBOARDING_SCREEN: {
+      const { refresh } = action.body;
+      return {...state, refreshScreenFromOnboardingScreen: refresh }
+    }
     case SET_FLOW_TO_POST_DETAIL_SCREEN: {
       const { flowToPostDetailScreen } = action.body;
       return { ...state, flowToPostDetailScreen: flowToPostDetailScreen };

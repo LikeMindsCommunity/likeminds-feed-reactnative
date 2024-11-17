@@ -12,6 +12,7 @@ import {
   PostListStyleProps,
   TopicsStyle,
   UniversalFeedStyleProps,
+  UserOnboardingStylesProps,
 } from "../lmFeedProvider/types";
 
 interface FontTypes {
@@ -169,6 +170,7 @@ export class LMFeedTheme {
   public $TOPICS_STYLE: TopicsStyle;
   public $CAROUSEL_SCREEN_STYLE: CarouselScreenStyle;
   public $CREATE_POLL_STYLE: CreatePollStyle;
+  public $USER_ONBOARDING_SCREEN_STYLES: UserOnboardingStylesProps
 
   constructor({
     hue = 244,
@@ -288,6 +290,7 @@ export class LMFeedTheme {
     this.$TOPICS_STYLE = {};
     this.$CAROUSEL_SCREEN_STYLE = {};
     this.$CREATE_POLL_STYLE = {};
+    this.$USER_ONBOARDING_SCREEN_STYLES = {};
   }
 
   public setTheme(themeProps: StylesProps) {
@@ -395,6 +398,12 @@ export class LMFeedTheme {
   public setCreatePollStyles(createPollStyles: CreatePollStyle) {
     this.$CREATE_POLL_STYLE = {
       ...createPollStyles,
+    };
+  }
+
+  public setOnBoardingScreenStyles(onBoardingStyles: UserOnboardingStylesProps) {
+    this.$USER_ONBOARDING_SCREEN_STYLES = {
+      ...onBoardingStyles,
     };
   }
 }

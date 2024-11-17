@@ -62,6 +62,8 @@ import {
   NotificationFeedCustomisableMethodsContext,
   useNotificationFeedCustomisableMethodsContext,
 } from "./notificationFeedCallbacksContext";
+import UserOnboardingContextProvider from "./userOnboardingContext";
+import UserOnboardingCallbacksContextProvider from "./userOnboardingCallbacksContext"
 export {
   UniversalFeedContextProvider,
   UniversalFeedContextValues,
@@ -101,4 +103,6 @@ export {
   useNotificationFeedCustomisableMethodsContext,
   useCreatePollContext,
   CreatePollContextProvider,
+  UserOnboardingContextProvider,
+  UserOnboardingCallbacksContextProvider
 };

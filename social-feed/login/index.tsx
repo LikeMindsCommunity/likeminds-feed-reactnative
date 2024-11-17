@@ -18,9 +18,10 @@ import { LoginSchemaRO } from './loginSchemaRO';
 interface ChildProps {
   isTrue: boolean;
   setIsTrue: (isTrue: boolean) => void;
+  isUserOnboardingRequired?: boolean;
 }
 
-const FetchKeyInputScreen: React.FC<ChildProps> = ({isTrue, setIsTrue}) => {
+const FetchKeyInputScreen: React.FC<ChildProps> = ({isTrue, setIsTrue, isUserOnboardingRequired = false}) => {
   const [userUniqueID, setUserUniqueID] = useState('');
   const [userName, setUserName] = useState('');
   const [apiKey, setApiKey] = useState('');
@@ -36,7 +37,7 @@ const FetchKeyInputScreen: React.FC<ChildProps> = ({isTrue, setIsTrue}) => {
   };
 
   useEffect(() => {
-    if (userUniqueID && userName && apiKey && isButtonClicked) {
+    if (userUniqueID && apiKey && isButtonClicked && (isUserOnboardingRequired ? true : userName?.length > 0 )) {
       return setIsTrue(!isTrue);
     }
   }, [isButtonClicked]);
@@ -63,11 +64,11 @@ const FetchKeyInputScreen: React.FC<ChildProps> = ({isTrue, setIsTrue}) => {
 
     saveLoginData();
 
-    userUniqueID && userName && apiKey
+    userUniqueID && apiKey && (isUserOnboardingRequired ? true : userName?.length > 0 )
       ? setIsButtonClicked(true)
       : setIsButtonClicked(false);
 
-    if (userUniqueID && userName && apiKey) {
+    if (userUniqueID && apiKey && (isUserOnboardingRequired ? true : userName?.length > 0 )) {
       Keyboard.dismiss();
     }
   };
@@ -98,13 +99,13 @@ const FetchKeyInputScreen: React.FC<ChildProps> = ({isTrue, setIsTrue}) => {
       <TouchableOpacity
         style={{
           backgroundColor:
-            userUniqueID && userName && apiKey
+            userUniqueID && apiKey && ((isUserOnboardingRequired ? true : userName?.length > 0 ))
               ? STYLES.$COLORS.SECONDARY
               : 'grey',
           padding: 10,
           borderRadius: 10,
         }}
-        onPress={userUniqueID && userName && apiKey ? handleButtonPress : null}>
+        onPress={userUniqueID && apiKey && (isUserOnboardingRequired ? true : userName?.length > 0 ) ? handleButtonPress : null}>
         <Text
           style={{
             color: STYLES.$COLORS.TERTIARY,

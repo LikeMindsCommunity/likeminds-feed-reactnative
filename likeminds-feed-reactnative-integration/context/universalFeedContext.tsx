@@ -50,6 +50,7 @@ import { SHOW_TOAST } from "../store/types/loader";
 import { Client } from "../client";
 import { PollMultiSelectState, PollType } from "../enums/Poll";
 import {
+  REFRESH_FROM_ONBOARDING_SCREEN,
   SET_FLOW_TO_CREATE_POST_SCREEN,
   SET_PAUSED_STATUS,
 } from "../store/types/types";
@@ -181,6 +182,10 @@ export const UniversalFeedContextProvider = ({
         false
       )
     );
+    dispatch({
+      type: REFRESH_FROM_ONBOARDING_SCREEN,
+      body: {refresh: false}
+    })
     setLocalRefresh(false);
     setRefreshing(false);
   };

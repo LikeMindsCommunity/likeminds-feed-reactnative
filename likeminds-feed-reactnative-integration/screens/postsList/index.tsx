@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import {
   FlatList,
   RefreshControl,
@@ -76,6 +76,7 @@ const PostsListComponent = ({
 }: any) => {
   const dispatch = useAppDispatch();
   const [index, setIndex] = useState(0);
+  const refreshFromOnboardingScreen = useAppSelector(state => state.feed.refreshScreenFromOnboardingScreen);
   const {
     listRef,
     refreshing,
@@ -302,6 +303,13 @@ const PostsListComponent = ({
     ]
   );
 
+  useEffect(() => {
+    if(refreshFromOnboardingScreen) {
+      onRefresh();
+    }
+  }, [refreshFromOnboardingScreen])
+
+
   return (
     <View
       style={{
@@ -320,7 +328,7 @@ const PostsListComponent = ({
               refreshing={refreshing}
               style={postListStyle?.listStyle}
               refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                <RefreshControl refreshing={refreshing || refreshFromOnboardingScreen} onRefresh={onRefresh} />
               }
               data={feedData}
               renderItem={renderItem}
