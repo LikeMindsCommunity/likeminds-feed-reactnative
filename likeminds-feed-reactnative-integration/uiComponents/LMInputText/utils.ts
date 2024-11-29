@@ -653,6 +653,16 @@ function detectMentions(input: string) {
   return matches;
 }
 
+function clipString(str) {
+  // Check if the string length is greater than 9
+  if (str.length > 9) {
+    // Return the clipped string with ellipsis
+    return str.slice(0, 7) + '...';
+  }
+  // If the string is 9 characters or less, return it as is
+  return str;
+}
+
 export {
   mentionRegEx,
   defaultMentionTextStyle,
@@ -668,4 +678,5 @@ export {
   replaceMentionValues,
   convertToMentionValues,
   detectMentions,
+  clipString
 };

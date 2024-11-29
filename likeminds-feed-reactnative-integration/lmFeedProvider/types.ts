@@ -479,6 +479,7 @@ export interface LMFeedProviderProps {
   videoCallback?: VideoCallback;
   videoCarouselCallback?: VideoCarouselCallback;
   isUserOnboardingRequired?: boolean;
+  handleOnBoardingUserGestureBackPress?: () => void;
 }
 
 export interface UserOnboardingStylesProps {
