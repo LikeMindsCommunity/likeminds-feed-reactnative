@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 7,
-    paddingTop: 12,
+    paddingVertical: 10,
   },
   alignRow: {
     flexDirection: "row",
@@ -50,7 +50,7 @@ export const styles = StyleSheet.create({
     borderWidth: 0,
     alignItems: "center",
     marginLeft: 5,
-    maxWidth: layout.normalize(100),
+    maxWidth: layout.normalize(150),
   },
   buttonWithoutBorder: {
     borderWidth: 0,

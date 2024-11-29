@@ -83,16 +83,16 @@ const LMPostFooter = React.memo(() => {
                 : undefined,
               height: footerStyle?.likeIconButton?.icon?.height
                 ? footerStyle?.likeIconButton.icon.height
-                : 20.5,
+                : 20,
               width: footerStyle?.likeIconButton?.icon?.width
                 ? footerStyle?.likeIconButton.icon.width
-                : 20.5,
+                : 20,
               boxFit: footerStyle?.likeIconButton?.icon?.boxFit,
               boxStyle: footerStyle?.likeIconButton?.icon?.boxStyle,
             }}
             buttonStyle={StyleSheet.flatten([
               styles.defaultLikeIconView,
-              { padding: 8, paddingBottom: 15 },
+              { padding: 8 },
               footerStyle?.likeIconButton?.buttonStyle,
             ])}
             isClickable={footerStyle?.likeIconButton?.isClickable}
@@ -113,9 +113,27 @@ const LMPostFooter = React.memo(() => {
             text={{
               children: likeCount
                 ? likeCount > 1
-                  ? clipString(`${likeCount} ${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata")).value?.likeEntityVariable?.entityName ?? "like",WordAction.firstLetterCapitalPlural)}`)
-                  : clipString(`${likeCount} ${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.likeEntityVariable?.entityName ?? "like",WordAction.firstLetterCapitalSingular)}`)
-                : clipString(`${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.likeEntityVariable?.entityName ?? "like",WordAction.firstLetterCapitalSingular)}`),
+                  ? clipString(
+                      `${likeCount} ${pluralizeOrCapitalize(
+                        CommunityConfigs?.getCommunityConfigs("feed_metadata")
+                          .value?.likeEntityVariable?.entityName ?? "like",
+                        WordAction.firstLetterCapitalPlural
+                      )}`
+                    )
+                  : clipString(
+                      `${likeCount} ${pluralizeOrCapitalize(
+                        CommunityConfigs?.getCommunityConfigs("feed_metadata")
+                          ?.value?.likeEntityVariable?.entityName ?? "like",
+                        WordAction.firstLetterCapitalSingular
+                      )}`
+                    )
+                : clipString(
+                    `${pluralizeOrCapitalize(
+                      CommunityConfigs?.getCommunityConfigs("feed_metadata")
+                        ?.value?.likeEntityVariable?.entityName ?? "like",
+                      WordAction.firstLetterCapitalSingular
+                    )}`
+                  ),
               textStyle: footerStyle?.likeTextButton?.text
                 ? footerStyle?.likeTextButton.text
                 : {
@@ -130,7 +148,6 @@ const LMPostFooter = React.memo(() => {
             }}
             buttonStyle={StyleSheet.flatten([
               footerStyle?.likeTextButton?.buttonStyle,
-              { paddingBottom: 15 },
               styles.defaultLikeTextView,
             ])}
             isClickable={footerStyle?.likeTextButton?.isClickable}
@@ -149,9 +166,27 @@ const LMPostFooter = React.memo(() => {
               children:
                 post?.commentsCount > 0
                   ? post?.commentsCount > 1
-                    ? clipString(`${post?.commentsCount} ${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.comment ?? "comment",WordAction.firstLetterCapitalPlural)}`)
-                    : clipString(`${post?.commentsCount} ${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.comment ?? "comment",WordAction.firstLetterCapitalSingular)}`)
-                  : clipString(`Add ${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.comment ?? "comment",WordAction.firstLetterCapitalSingular)}`),
+                    ? clipString(
+                        `${post?.commentsCount} ${pluralizeOrCapitalize(
+                          CommunityConfigs?.getCommunityConfigs("feed_metadata")
+                            ?.value?.comment ?? "comment",
+                          WordAction.firstLetterCapitalPlural
+                        )}`
+                      )
+                    : clipString(
+                        `${post?.commentsCount} ${pluralizeOrCapitalize(
+                          CommunityConfigs?.getCommunityConfigs("feed_metadata")
+                            ?.value?.comment ?? "comment",
+                          WordAction.firstLetterCapitalSingular
+                        )}`
+                      )
+                  : clipString(
+                      `Add ${pluralizeOrCapitalize(
+                        CommunityConfigs?.getCommunityConfigs("feed_metadata")
+                          ?.value?.comment ?? "comment",
+                        WordAction.firstLetterCapitalSingular
+                      )}`
+                    ),
               textStyle: footerStyle?.commentButton?.text
                 ? footerStyle?.commentButton.text
                 : {
@@ -185,7 +220,7 @@ const LMPostFooter = React.memo(() => {
             }}
             placement={footerStyle?.commentButton?.placement}
             buttonStyle={StyleSheet.flatten([
-              { padding: 8, paddingBottom: 15 },
+              { padding: 8 },
               styles.defaultCommentView,
               footerStyle?.commentButton?.buttonStyle,
             ])}
@@ -228,17 +263,17 @@ const LMPostFooter = React.memo(() => {
                 : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
               height: footerStyle?.saveButton?.icon?.height
                 ? footerStyle?.saveButton.icon.height
-                : 18,
+                : 20,
               width: footerStyle?.saveButton?.icon?.width
                 ? footerStyle?.saveButton.icon.width
-                : 18,
+                : 20,
               boxFit: footerStyle?.saveButton?.icon?.boxFit,
               boxStyle: footerStyle?.saveButton?.icon?.boxStyle,
             }}
             placement={footerStyle?.saveButton?.placement}
             buttonStyle={StyleSheet.flatten([
               styles.buttonWithoutBorder,
-              { padding: 8, paddingBottom: 15 },
+              { padding: 8 },
               footerStyle?.saveButton?.buttonStyle,
             ])}
             isClickable={footerStyle?.saveButton?.isClickable}
@@ -267,10 +302,10 @@ const LMPostFooter = React.memo(() => {
                 : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
               height: footerStyle?.shareButton?.icon?.height
                 ? footerStyle?.shareButton.icon.height
-                : 18,
+                : 20,
               width: footerStyle?.shareButton?.icon?.width
                 ? footerStyle?.shareButton.icon.width
-                : 18,
+                : 20,
               boxFit: footerStyle?.shareButton?.icon?.boxFit,
               boxStyle: footerStyle?.shareButton?.icon?.boxStyle,
             }}
@@ -279,7 +314,7 @@ const LMPostFooter = React.memo(() => {
             activeText={footerStyle?.shareButton?.activeText}
             buttonStyle={StyleSheet.flatten([
               styles.buttonWithoutBorder,
-              { padding: 8, paddingBottom: 15 },
+              { padding: 8 },
               footerStyle?.shareButton?.buttonStyle,
             ])}
             isClickable={footerStyle?.shareButton?.isClickable}
