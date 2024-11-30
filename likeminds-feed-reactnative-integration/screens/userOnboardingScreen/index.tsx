@@ -259,6 +259,7 @@ function UserOnboardingScreen() {
     return (
         <ScrollView
             ref={ref}
+            keyboardShouldPersistTaps={"always"}
             contentContainerStyle={{ flexGrow: 1 }}
             style={{
                 flex: 1, backgroundColor:

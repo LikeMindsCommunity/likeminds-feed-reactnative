@@ -18,6 +18,7 @@ export const LMOverlayProvider: any = ({
   videoCallback,
   videoCarouselCallback,
   isUserOnboardingRequired = false,
+  handleOnBoardingUserGestureBackPress,
 }: // Create a prop for passing LMCoreCallbacks
 LMOverlayProviderProps) => {
   useEffect(() => {
@@ -38,6 +39,9 @@ LMOverlayProviderProps) => {
         videoCallback={videoCallback}
         videoCarouselCallback={videoCarouselCallback}
         isUserOnboardingRequired={isUserOnboardingRequired}
+        handleOnBoardingUserGestureBackPress={
+          handleOnBoardingUserGestureBackPress
+        }
         // add a prop for adding lmcorecallbacks
       >
         <View style={styles.flexStyling}>{children}</View>

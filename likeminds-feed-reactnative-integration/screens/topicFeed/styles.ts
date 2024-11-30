@@ -94,7 +94,7 @@ export const styles = StyleSheet.create({
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
   },
   selected: {
-    backgroundColor: "#5046E5",
+    backgroundColor: STYLES.$COLORS.PRIMARY,
     height: Layout.normalize(25),
     width: Layout.normalize(25),
     display: "flex",
@@ -113,7 +113,7 @@ export const styles = StyleSheet.create({
     height: Layout.normalize(60),
     width: Layout.normalize(60),
     borderRadius: Layout.normalize(50),
-    backgroundColor: "#5046E5",
+    backgroundColor: STYLES.$COLORS.PRIMARY,
     position: "absolute",
     right: Layout.normalize(15),
     bottom: Layout.normalize(30),

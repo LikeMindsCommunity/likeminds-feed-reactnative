@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
+  StyleSheet,
   Text,
   TextInput,
   TextStyle,
@@ -566,7 +567,10 @@ const TopicFeed = () => {
                 </View>
                 <View>
                   {newTopics.includes(item?.id) ? (
-                    <View style={styles.selected}>
+                    <View style={StyleSheet.flatten([
+                      styles.selected,
+                      topicsStyle?.tickIconContainerStyle
+                      ])}>
                       <Image
                         source={require("../../assets/images/white_tick3x.png")}
                         style={[

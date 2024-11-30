@@ -43,6 +43,7 @@ interface LMFeedContextProps {
   isInitiated: boolean;
   setIsInitiated: React.Dispatch<React.SetStateAction<boolean>>;
   setOnboardUser: React.Dispatch<React.SetStateAction<boolean>>;
+  handleOnBoardingUserGestureBackPress?: () => void;
   withAPIKeySecurity?: boolean;
   setWithAPIKeySecurity?: React.Dispatch<React.SetStateAction<boolean>>;
   callInitiateAPI: (onBoardingUserName?: string, imageUrl?: string, isUserOnboarded?: boolean) => void;
@@ -74,7 +75,8 @@ export const LMFeedProvider = ({
   lmFeedInterface,
   videoCallback,
   videoCarouselCallback,
-  isUserOnboardingRequired = false
+  isUserOnboardingRequired = false,
+  handleOnBoardingUserGestureBackPress,
 }: LMFeedProviderProps): React.JSX.Element => {
   const [isInitiated, setIsInitiated] = useState(false);
   const [onBoardUser, setOnboardUser] = useState(false);
@@ -209,7 +211,8 @@ export const LMFeedProvider = ({
     setWithAPIKeySecurity,
     callInitiateAPI,
     callGetCommunityConfigurations,
-    callIsUserOnboardingDone
+    callIsUserOnboardingDone,
+    handleOnBoardingUserGestureBackPress
   };
 
 
