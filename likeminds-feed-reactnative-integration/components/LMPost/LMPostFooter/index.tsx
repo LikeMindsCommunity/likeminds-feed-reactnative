@@ -167,26 +167,26 @@ const LMPostFooter = React.memo(() => {
               children:
                 post?.commentsCount > 0
                   ? post?.commentsCount > 1
-                    ? (
+                    ? clipString(
                         `${post?.commentsCount} ${pluralizeOrCapitalize(
                           CommunityConfigs?.getCommunityConfigs("feed_metadata")
                             ?.value?.comment ?? "comment",
                           WordAction.firstLetterCapitalPlural
-                        )}`
+                        )}`, 12
                       )
-                    : (
+                    : clipString(
                         `${post?.commentsCount} ${pluralizeOrCapitalize(
                           CommunityConfigs?.getCommunityConfigs("feed_metadata")
                             ?.value?.comment ?? "comment",
                           WordAction.firstLetterCapitalSingular
-                        )}`
+                        )}`, 12
                       )
-                  : (
+                  : clipString(
                       `Add ${pluralizeOrCapitalize(
                         CommunityConfigs?.getCommunityConfigs("feed_metadata")
                           ?.value?.comment ?? "comment",
                         WordAction.firstLetterCapitalSingular
-                      )}`
+                      )}`, 12
                     ),
               textStyle: footerStyle?.commentButton?.text
                 ? footerStyle?.commentButton.text
