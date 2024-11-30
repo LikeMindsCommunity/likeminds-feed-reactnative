@@ -655,9 +655,9 @@ function detectMentions(input: string) {
 
 function clipString(str, limit: number = 9) {
   // Check if the string length is greater than 9
-  if (str.length > limit) {
+  if (str.length > (limit)) {
     // Return the clipped string with ellipsis
-    return str.slice(0, 7) + '...';
+    return str.slice(0, limit - 3) + '...';
   }
   // If the string is 9 characters or less, return it as is
   return str;
