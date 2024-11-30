@@ -44,7 +44,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-evenly",
     marginLeft: 0,
-    maxWidth: layout.normalize(80),
+    maxWidth: layout.normalize(100),
   },
   defaultCommentView: {
     borderWidth: 0,

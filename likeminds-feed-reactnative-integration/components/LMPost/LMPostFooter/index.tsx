@@ -11,6 +11,7 @@ import { CommunityConfigs } from "../../../communityConfigs";
 import { WordAction } from "../../../enums/Variables";
 import pluralizeOrCapitalize from "../../../utils/variables";
 import { clipString } from "../../../uiComponents/LMInputText/utils";
+import Layout from "../../../constants/Layout";
 
 const LMPostFooter = React.memo(() => {
   const { post, footerProps }: LMPostContextValues = useLMPostContext();
@@ -113,21 +114,21 @@ const LMPostFooter = React.memo(() => {
             text={{
               children: likeCount
                 ? likeCount > 1
-                  ? clipString(
+                  ? (
                       `${likeCount} ${pluralizeOrCapitalize(
                         CommunityConfigs?.getCommunityConfigs("feed_metadata")
                           .value?.likeEntityVariable?.entityName ?? "like",
                         WordAction.firstLetterCapitalPlural
                       )}`
                     )
-                  : clipString(
+                  : (
                       `${likeCount} ${pluralizeOrCapitalize(
                         CommunityConfigs?.getCommunityConfigs("feed_metadata")
                           ?.value?.likeEntityVariable?.entityName ?? "like",
                         WordAction.firstLetterCapitalSingular
                       )}`
                     )
-                : clipString(
+                : (
                     `${pluralizeOrCapitalize(
                       CommunityConfigs?.getCommunityConfigs("feed_metadata")
                         ?.value?.likeEntityVariable?.entityName ?? "like",
@@ -143,7 +144,7 @@ const LMPostFooter = React.memo(() => {
                       ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
                       : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
                     textAlign: "left",
-                    width: 55,
+                    width: Layout.normalize(60),
                   },
             }}
             buttonStyle={StyleSheet.flatten([
@@ -166,21 +167,21 @@ const LMPostFooter = React.memo(() => {
               children:
                 post?.commentsCount > 0
                   ? post?.commentsCount > 1
-                    ? clipString(
+                    ? (
                         `${post?.commentsCount} ${pluralizeOrCapitalize(
                           CommunityConfigs?.getCommunityConfigs("feed_metadata")
                             ?.value?.comment ?? "comment",
                           WordAction.firstLetterCapitalPlural
                         )}`
                       )
-                    : clipString(
+                    : (
                         `${post?.commentsCount} ${pluralizeOrCapitalize(
                           CommunityConfigs?.getCommunityConfigs("feed_metadata")
                             ?.value?.comment ?? "comment",
                           WordAction.firstLetterCapitalSingular
                         )}`
                       )
-                  : clipString(
+                  : (
                       `Add ${pluralizeOrCapitalize(
                         CommunityConfigs?.getCommunityConfigs("feed_metadata")
                           ?.value?.comment ?? "comment",
