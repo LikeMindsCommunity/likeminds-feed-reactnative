@@ -383,6 +383,7 @@ export interface TopicsStyle {
   crossIconStyle?: ImageStyle;
   plusIconStyle?: ImageStyle;
   tickIconStyle?: ImageStyle;
+  tickIconContainerStyle?: ViewStyle;
   nextArrowStyle?: ImageStyle;
   arrowDownStyle?: ImageStyle;
 }
