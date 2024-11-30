@@ -383,6 +383,7 @@ export interface TopicsStyle {
   crossIconStyle?: ImageStyle;
   plusIconStyle?: ImageStyle;
   tickIconStyle?: ImageStyle;
+  tickIconContainerStyle?: ViewStyle;
   nextArrowStyle?: ImageStyle;
   arrowDownStyle?: ImageStyle;
 }
@@ -479,6 +480,7 @@ export interface LMFeedProviderProps {
   videoCallback?: VideoCallback;
   videoCarouselCallback?: VideoCarouselCallback;
   isUserOnboardingRequired?: boolean;
+  handleOnBoardingUserGestureBackPress?: () => void;
 }
 
 export interface UserOnboardingStylesProps {

@@ -1,6 +1,6 @@
 {
   "name": "@likeminds.community/feed-rn-core",
-  "version": "1.11.0",
+  "version": "1.11.1",
   "description": "LikeMinds ReactNative Core SDK for feed",
   "scripts": {
     "android": "react-native run-android",
@@ -18,13 +18,14 @@
   "homepage": "https://likeminds.community/",
   "license": "ISC",
   "dependencies": {
-    "@likeminds.community/feed-rn": "1.3.4",
+    "@likeminds.community/feed-rn": "1.3.5",
     "aws-sdk": "2.1548.0",
     "diff": "5.1.0",
     "lodash": "4.17.21"
   },
   "peerDependencies": {
     "@notifee/react-native": ">=7.8.2",
+    "@react-native-async-storage/async-storage": ">=1.23.1",
     "@react-native-community/datetimepicker": ">=7.4.1",
     "@react-native-community/netinfo": ">=11.3.0",
     "@react-native-firebase/app": ">=19.1.2",
@@ -38,6 +39,11 @@
     "react-native-document-picker": ">=9.1.0",
     "react-native-gesture-handler": ">=2.14.0",
     "react-native-image-picker": ">=7.1.0",
+    "react-native-image-zoom-viewer": ">=3.0.1",
+    "react-native-safe-area-context": ">=4.8.2",
+    "react-native-screens": ">=3.29.0",
+    "react-native-swiper-flatlist": ">=3.2.3",
+    "react-native-video": ">=5.2.1",
     "react-native-pager-view": ">=6.1.4",
     "react-native-tab-view": ">=3.5.0",
     "react-native-toast-message": ">=2.2.0",
@@ -45,14 +51,8 @@
     "react-native-create-thumbnail": ">=1.6.4",
     "react-native-dotenv": ">=3.4.9",
     "react-native-file-viewer": ">=2.1.5",
-    "react-native-image-zoom-viewer": ">=3.0.1",
-    "react-native-safe-area-context": ">=4.8.2",
-    "react-native-screens": ">=3.29.0",
-    "react-native-swiper-flatlist": ">=3.2.3",
-    "react-native-video": ">=5.2.1",
     "@types/react-native-video": ">=5.0.14",
     "typescript": ">=5.0.4",
-    "@react-native-async-storage/async-storage": ">=1.23.1",
     "react-native-compressor": ">=1.9.0"
   },
   "peerDependenciesMeta": {

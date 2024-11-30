@@ -1,7 +1,10 @@
 import React from "react";
 import { LMFeedClient } from "@likeminds.community/feed-rn";
 import { LMCoreCallbacks } from "../setupFeed";
-import { VideoCallback, VideoCarouselCallback } from "../components/LMMedia/LMVideo/types";
+import {
+  VideoCallback,
+  VideoCarouselCallback,
+} from "../components/LMMedia/LMVideo/types";
 
 export interface LMOverlayProviderProps {
   myClient: LMFeedClient;
@@ -16,4 +19,5 @@ export interface LMOverlayProviderProps {
   videoCallback?: VideoCallback;
   videoCarouselCallback?: VideoCarouselCallback;
   isUserOnboardingRequired?: boolean;
+  handleOnBoardingUserGestureBackPress?: () => void;
 }
