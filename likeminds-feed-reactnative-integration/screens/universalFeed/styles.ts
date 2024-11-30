@@ -56,7 +56,6 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 15,
-    paddingVertical: 10,
     alignItems: "center",
     backgroundColor: STYLES.$IS_DARK_THEME
       ? STYLES.$BACKGROUND_COLORS.DARK
