@@ -114,21 +114,21 @@ const LMPostFooter = React.memo(() => {
             text={{
               children: likeCount
                 ? likeCount > 1
-                  ? (
+                  ? clipString(
                       `${likeCount} ${pluralizeOrCapitalize(
                         CommunityConfigs?.getCommunityConfigs("feed_metadata")
                           .value?.likeEntityVariable?.entityName ?? "like",
                         WordAction.firstLetterCapitalPlural
                       )}`
                     )
-                  : (
+                  : clipString(
                       `${likeCount} ${pluralizeOrCapitalize(
                         CommunityConfigs?.getCommunityConfigs("feed_metadata")
                           ?.value?.likeEntityVariable?.entityName ?? "like",
                         WordAction.firstLetterCapitalSingular
                       )}`
                     )
-                : (
+                : clipString(
                     `${pluralizeOrCapitalize(
                       CommunityConfigs?.getCommunityConfigs("feed_metadata")
                         ?.value?.likeEntityVariable?.entityName ?? "like",
@@ -144,7 +144,7 @@ const LMPostFooter = React.memo(() => {
                       ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
                       : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT,
                     textAlign: "left",
-                    width: Layout.normalize(60),
+                    maxWidth: Layout.normalize(100),
                   },
             }}
             buttonStyle={StyleSheet.flatten([
@@ -327,3 +327,4 @@ const LMPostFooter = React.memo(() => {
 });
 
 export default LMPostFooter;
+

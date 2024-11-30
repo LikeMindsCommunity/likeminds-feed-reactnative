@@ -50,7 +50,7 @@ export const styles = StyleSheet.create({
     borderWidth: 0,
     alignItems: "center",
     marginLeft: 5,
-    maxWidth: layout.normalize(150),
+    maxWidth: layout.normalize(180),
   },
   buttonWithoutBorder: {
     borderWidth: 0,
