@@ -19,16 +19,9 @@
   "license": "ISC",
   "dependencies": {
     "@likeminds.community/feed-rn": "1.3.5",
-    "@react-native-community/slider": "^4.5.5",
     "aws-sdk": "2.1548.0",
     "diff": "5.1.0",
-    "lodash": "4.17.21",
-    "react-native-create-thumbnail": "^2.0.0",
-    "react-native-dotenv": "^3.4.11",
-    "react-native-file-viewer": "^2.1.5",
-    "react-native-pager-view": "^6.6.0",
-    "react-native-tab-view": "^4.0.5",
-    "react-native-toast-message": "^2.2.1"
+    "lodash": "4.17.21"
   },
   "peerDependencies": {
     "@notifee/react-native": ">=7.8.2",
@@ -41,10 +34,8 @@
     "@react-navigation/native": ">=6.1.7",
     "@react-navigation/native-stack": ">=6.9.18",
     "@react-navigation/stack": ">=6.3.20",
-    "@types/react-native-video": ">=5.0.14",
     "react": ">=18.2.0",
     "react-native": ">=0.71.1",
-    "react-native-compressor": ">=1.9.0",
     "react-native-document-picker": ">=9.1.0",
     "react-native-gesture-handler": ">=2.14.0",
     "react-native-image-picker": ">=7.1.0",
@@ -53,7 +44,16 @@
     "react-native-screens": ">=3.29.0",
     "react-native-swiper-flatlist": ">=3.2.3",
     "react-native-video": ">=5.2.1",
-    "typescript": ">=5.0.4"
+    "react-native-pager-view": ">=6.1.4",
+    "react-native-tab-view": ">=3.5.0",
+    "react-native-toast-message": ">=2.2.0",
+    "@react-native-community/slider": ">=4.4.3",
+    "react-native-create-thumbnail": ">=1.6.4",
+    "react-native-dotenv": ">=3.4.9",
+    "react-native-file-viewer": ">=2.1.5",
+    "@types/react-native-video": ">=5.0.14",
+    "typescript": ">=5.0.4",
+    "react-native-compressor": ">=1.9.0"
   },
   "peerDependenciesMeta": {
     "react-native-video": {
