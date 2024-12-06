@@ -22,6 +22,7 @@ const LMUserProfileSection = () => {
               {nameInitials(memberData.name)}
             </Text>
           ),
+          textStyle: postHeaderStyle?.profilePicture?.fallbackTextStyle,
         }}
         imageUrl={memberData.imageUrl}
       />

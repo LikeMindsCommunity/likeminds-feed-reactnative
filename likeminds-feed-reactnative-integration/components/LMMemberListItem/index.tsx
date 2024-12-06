@@ -18,7 +18,7 @@ const LMMemberListItem = React.memo(
     //creating profile picture props as per customization
     const updatedProfilePictureProps = {
       fallbackText: {
-        textStyle: profilePictureProps?.fallbackText?.textStyle,
+        textStyle: profilePictureProps?.fallbackTextStyle,
         children: (
           <Text style={{ fontFamily: STYLES.$FONT_TYPES.MEDIUM }}>
             {nameInitials(likes.user.name)}

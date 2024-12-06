@@ -94,6 +94,7 @@ const LMCreatePostUserTagging = () => {
                           {nameInitials(item?.name)}
                         </Text>
                       ),
+                      textStyle: postHeaderStyle?.profilePicture?.fallbackTextStyle,
                     }}
                     fallbackTextBoxStyle={[
                       styles.taggingListProfileBoxStyle,

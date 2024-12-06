@@ -26,6 +26,7 @@ const LMUniversalFeedHeader = () => {
   const {isUserOnboardingRequired} = useLMFeed()
   const navigation = useNavigation();
   const universalFeedStyle = STYLES.$UNIVERSAL_FEED_STYLE;
+  const postHeaderStyle = STYLES.$POST_LIST_STYLE.header
   const { onTapNotificationBellProp } =
     useUniversalFeedCustomisableMethodsContext();
 
@@ -102,8 +103,10 @@ const LMUniversalFeedHeader = () => {
               fallbackText={{}}
               /> :
                 <LMProfilePicture
+                  {...postHeaderStyle?.profilePicture}
                   fallbackText={{
                     children: nameInitials((memberData as any)?.name),
+                    textStyle: postHeaderStyle?.profilePicture?.fallbackTextStyle,
                   }}
                   size={33}
                 />
