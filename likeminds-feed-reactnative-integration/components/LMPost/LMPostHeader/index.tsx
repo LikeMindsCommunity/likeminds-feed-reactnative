@@ -41,13 +41,16 @@ const LMPostHeader = React.memo(() => {
       <TouchableOpacity
         activeOpacity={0.8}
         onPress={
-          !(post?.isAnonymous && post?.uuid == "lm-anonymous-user") ?
-          () => customPostHeaderStyle?.onTap(post?.user)
-          : undefined
+          !(post?.isAnonymous && post?.uuid == "lm-anonymous-user")
+            ? () =>
+                customPostHeaderStyle?.onTap
+                  ? customPostHeaderStyle?.onTap(post?.user)
+                  : null
+            : undefined
         }
-        style={{flex:0.9}}
+        style={{ flex: 0.9 }}
       >
-        <View style={{...styles.alignRow}}>
+        <View style={{ ...styles.alignRow }}>
           <LMProfilePicture
             fallbackText={{
               children: nameInitials(post?.user?.name),
@@ -56,9 +59,9 @@ const LMPostHeader = React.memo(() => {
             }}
             imageUrl={post?.user?.imageUrl}
             onTap={
-              !(post?.isAnonymous && post?.uuid == "lm-anonymous-user") ?
-              customPostHeaderStyle?.profilePicture?.onTap
-              : undefined
+              !(post?.isAnonymous && post?.uuid == "lm-anonymous-user")
+                ? customPostHeaderStyle?.profilePicture?.onTap
+                : undefined
             }
             size={customPostHeaderStyle?.profilePicture?.size}
             fallbackTextBoxStyle={
@@ -69,15 +72,17 @@ const LMPostHeader = React.memo(() => {
             }
           />
           {/* author details */}
-          <View style={{...styles.autherDetailView, flexWrap: 'wrap', flex: 1}}>
+          <View
+            style={{ ...styles.autherDetailView, flexWrap: "wrap", flex: 1 }}
+          >
             {/* author heading */}
-            <View style={{...styles.alignRow, flexWrap: 'wrap' }}>
+            <View style={{ ...styles.alignRow, flexWrap: "wrap" }}>
               <LMText
                 selectable={false}
                 textStyle={StyleSheet.flatten([
                   styles.postAuthorName,
                   customPostHeaderStyle?.titleText,
-                  [{marginRight: 10}]
+                  [{ marginRight: 10 }],
                 ])}
               >
                 {post?.user?.name}
@@ -147,7 +152,7 @@ const LMPostHeader = React.memo(() => {
         style={[
           styles.topRightView,
           post?.isPinned && styles.topRightViewIfPinned,
-          [{gap: 3}]
+          [{ gap: 3 }],
         ]}
       >
         {/* pin icon section */}
