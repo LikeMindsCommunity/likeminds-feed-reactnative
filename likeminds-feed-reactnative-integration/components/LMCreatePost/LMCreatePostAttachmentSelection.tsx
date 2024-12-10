@@ -46,6 +46,7 @@ const LMCreatePostAttachmentSelection = () => {
   let {
     postToEdit,
     showOptions,
+    showSelecting,
     handleDocument,
     handlePoll,
     handleGallery,
@@ -77,7 +78,7 @@ const LMCreatePostAttachmentSelection = () => {
     useCreatePostCustomisableMethodsContext();
   return (
     <View>
-      {!postToEdit && showOptions && (
+      {!postToEdit && showOptions && !showSelecting && (
         <View
           style={[
             styles.selectionOptionsView,
