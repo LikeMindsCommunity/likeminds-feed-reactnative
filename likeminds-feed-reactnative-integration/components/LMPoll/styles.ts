@@ -134,7 +134,7 @@ export const styles = StyleSheet.create({
   mediumText: {
     fontSize: Layout.normalize(13),
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
-    color: STYLES.$COLORS.FONT_PRIMARY,
+    color: STYLES.$COLORS.PRIMARY,
   },
   mediumText14: {
     fontSize: Layout.normalize(14),
