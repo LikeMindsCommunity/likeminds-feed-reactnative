@@ -153,7 +153,9 @@ export const PostListContextProvider = ({
   const feedData = useAppSelector((state) => state.feed.feed);
   const accessToken = useAppSelector((state) => state.login.accessToken);
   const showLoader = useAppSelector((state) => state.loader.count);
-  const topics = useAppSelector((state) => state.feed.selectedTopicsForUniversalFeedScreen);
+  const topics = useAppSelector(
+    (state) => state.feed.selectedTopicsForUniversalFeedScreen
+  );
   const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
   const [showActionListModal, setShowActionListModal] = useState(false);
   const [selectedMenuItemPostId, setSelectedMenuItemPostId] = useState("");
@@ -161,8 +163,15 @@ export const PostListContextProvider = ({
   const [showReportModal, setShowReportModal] = useState(false);
   const [feedFetching, setFeedFetching] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const loaderStyle = STYLES.$LOADER_STYLE
-  const { localRefresh, feedPageNumber, setFeedPageNumber, isPaginationStopped, setIsPaginationStopped } = useUniversalFeedContext();
+  const loaderStyle = STYLES.$LOADER_STYLE;
+  const {
+    localRefresh,
+    feedPageNumber,
+    setFeedPageNumber,
+    isPaginationStopped,
+    setIsPaginationStopped,
+    predefinedTopics,
+  } = useUniversalFeedContext();
 
   const PAGE_SIZE = 20;
   const [postInViewport, setPostInViewport] = useState("");
@@ -193,7 +202,7 @@ export const PostListContextProvider = ({
         GetFeedRequest.builder()
           .setPage(payload.page)
           .setPageSize(payload.pageSize)
-          .setTopicIds(topicIds)
+          .setTopicIds(predefinedTopics ? predefinedTopics : topicIds)
           .build(),
         false
       )
@@ -313,7 +322,6 @@ export const PostListContextProvider = ({
     }
   }, [accessToken]);
 
-
   // this function closes the post action list modal
   const closePostActionListModal = () => {
     setShowActionListModal(false);
@@ -337,15 +345,15 @@ export const PostListContextProvider = ({
     const payload = {
       postId: id,
     };
-    const post = (feedData as LMPostViewData[])?.find(item => item.id == id)
-    if(post?.isHidden) {
+    const post = (feedData as LMPostViewData[])?.find((item) => item.id == id);
+    if (post?.isHidden) {
       dispatch(
         showToastMessage({
           isToast: true,
           message: "Something went wrong",
         })
       );
-      return undefined
+      return undefined;
     }
     const pinPostResponse = await dispatch(
       pinPost(PinPostRequest.builder().setPostId(payload.postId).build(), false)
@@ -386,23 +394,25 @@ export const PostListContextProvider = ({
       const post = (feedData as LMPostViewData[])?.find(
         (post) => post.id == postId
       );
-      const isPostHidden = post?.menuItems?.find((menuItem) => menuItem.id == 13);
-      await dispatch(hidePost(
-        HidePostRequest.
-        builder()
-        .setPostId(postId)
-        .build(),
-        false
-      ))
+      const isPostHidden = post?.menuItems?.find(
+        (menuItem) => menuItem.id == 13
+      );
+      await dispatch(
+        hidePost(HidePostRequest.builder().setPostId(postId).build(), false)
+      );
       dispatch({
         type: HIDE_POST_STATE,
         body: {
           postId: postId,
-          title: `${isPostHidden ? "Hide" : "Unhide"} This ${pluralizeOrCapitalize(
-            (CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.post ?? "post",
-            WordAction.firstLetterCapitalSingular)}`
-        }
-      })
+          title: `${
+            isPostHidden ? "Hide" : "Unhide"
+          } This ${pluralizeOrCapitalize(
+            CommunityConfigs?.getCommunityConfigs("feed_metadata")?.value
+              ?.post ?? "post",
+            WordAction.firstLetterCapitalSingular
+          )}`,
+        },
+      });
       dispatch({
         type: SHOW_TOAST,
         body: {
@@ -411,9 +421,9 @@ export const PostListContextProvider = ({
         },
       });
     } catch (error) {
-      console.log("error while hiding post")
+      console.log("error while hiding post");
     }
-  }
+  };
 
   // this handles the click on comment count section of footer
   const onTapCommentCount = (postId) => {
