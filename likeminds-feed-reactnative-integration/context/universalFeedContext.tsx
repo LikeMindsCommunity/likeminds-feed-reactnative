@@ -64,6 +64,7 @@ interface UniversalFeedContextProps {
     params: Array<string>;
     path: undefined;
   };
+  predefinedTopics?: string[];
 }
 
 export interface UniversalFeedContextValues {
@@ -101,7 +102,8 @@ export interface UniversalFeedContextValues {
   feedPageNumber: number;
   setFeedPageNumber: Dispatch<SetStateAction<number>>;
   isPaginationStopped: boolean;
-  setIsPaginationStopped: Dispatch<SetStateAction<boolean>>
+  setIsPaginationStopped: Dispatch<SetStateAction<boolean>>;
+  predefinedTopics?: string[];
 }
 
 const UniversalFeedContext = createContext<
@@ -121,13 +123,16 @@ export const useUniversalFeedContext = () => {
 export const UniversalFeedContextProvider = ({
   children,
   navigation,
+  predefinedTopics,
 }: UniversalFeedContextProps) => {
   const dispatch = useAppDispatch();
   const feedData = useAppSelector((state) => state.feed.feed);
   const accessToken = useAppSelector((state) => state.login.accessToken);
   const memberData = useAppSelector((state) => state.login.member);
   const memberRight = useAppSelector((state) => state.login.memberRights);
-  const selectedTopics = useAppSelector((state) => state.feed.selectedTopicsForUniversalFeedScreen)
+  const selectedTopics = useAppSelector(
+    (state) => state.feed.selectedTopicsForUniversalFeedScreen
+  );
   const [postUploading, setPostUploading] = useState(false);
   const [feedPageNumber, setFeedPageNumber] = useState(1);
   const [isPaginationStopped, setIsPaginationStopped] = useState(false);
@@ -140,7 +145,7 @@ export const UniversalFeedContextProvider = ({
     heading,
     topics,
     metaData,
-    isAnonymous
+    isAnonymous,
   } = useAppSelector((state) => state.createPost);
   const poll = useAppSelector((state) => state.createPost.poll);
   const unreadNotificationCount = useAppSelector(
@@ -175,17 +180,24 @@ export const UniversalFeedContextProvider = ({
     setRefreshing(true);
     setLocalRefresh(true);
     // calling getFeed API
-    const topicIds = selectedTopics?.length > 0 && selectedTopics[0] != "0" ? selectedTopics : [];
+    const topicIds =
+      selectedTopics?.length > 0 && selectedTopics[0] != "0"
+        ? selectedTopics
+        : [];
     await dispatch(
       refreshFeed(
-        GetFeedRequest.builder().setPage(1).setPageSize(20).setTopicIds(topicIds).build(),
+        GetFeedRequest.builder()
+          .setPage(1)
+          .setPageSize(20)
+          .setTopicIds(predefinedTopics ? predefinedTopics : topicIds)
+          .build(),
         false
       )
     );
     dispatch({
       type: REFRESH_FROM_ONBOARDING_SCREEN,
-      body: {refresh: false}
-    })
+      body: { refresh: false },
+    });
     setLocalRefresh(false);
     setRefreshing(false);
   };
@@ -248,18 +260,16 @@ export const UniversalFeedContextProvider = ({
     if (Object.keys(poll).length > 0) {
       let updatedPollAttachment = convertPollMetaData(poll);
       pollAttachment = [...pollAttachment, updatedPollAttachment];
-
     }
-    const attachments = Object.keys(metaData)?.length > 0 ? [
-      ...updatedAttachments,
-      ...linkAttachments,
-      ...pollAttachment,
-      ...[{ attachmentType: 5, attachmentMeta: { meta: metaData } }]
-    ] : [
-      ...updatedAttachments,
-      ...linkAttachments,
-      ...pollAttachment
-    ]
+    const attachments =
+      Object.keys(metaData)?.length > 0
+        ? [
+            ...updatedAttachments,
+            ...linkAttachments,
+            ...pollAttachment,
+            ...[{ attachmentType: 5, attachmentMeta: { meta: metaData } }],
+          ]
+        : [...updatedAttachments, ...linkAttachments, ...pollAttachment];
     const addPostResponse = await dispatch(
       addPost(
         AddPostRequest.builder()
@@ -623,7 +633,8 @@ export const UniversalFeedContextProvider = ({
     feedPageNumber,
     setFeedPageNumber,
     isPaginationStopped,
-    setIsPaginationStopped
+    setIsPaginationStopped,
+    predefinedTopics,
   };
 
   return (

@@ -70,7 +70,7 @@ const PostsList = ({
 };
 
 const PostsListComponent = ({
-  topics,
+  topics: mappedTopics,
   lmPostCustomFooter,
   customWidgetPostView,
 }: any) => {
@@ -185,6 +185,7 @@ const PostsListComponent = ({
   const renderItem = useCallback(
     ({ item, index }: { item: LMPostViewData; index: number }) => {
       // Check if the item's topic matches any name in the topics array
+      const topics = mappedTopics ? mappedTopics : []
       const isTopicMatched =
         item?.topics?.length > 0 &&
         topics.length > 0 &&
@@ -294,7 +295,7 @@ const PostsListComponent = ({
       }
     },
     [
-      topics,
+      mappedTopics,
       isHeadingEnabled,
       isTopResponse,
       lmPostCustomFooter,

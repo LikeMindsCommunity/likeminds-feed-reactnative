@@ -21,7 +21,6 @@ import { LMPostContent, LMPostFooter, LMPostHeader, LMPostMedia } from "../compo
 import LMPostTopResponse from "../components/LMPost/LMPostTopResponse";
 import LMPostHeading from "../components/LMPost/LMPostHeading";
 const Feed = () => {
-  const mappedTopics = useAppSelector((state: any) => state.feed.mappedTopics);
   const [FCMToken, setFCMToken] = useState("");
 
   /// Setup notifications
@@ -40,7 +39,6 @@ const Feed = () => {
         <LMFilterTopics />
         <LMPostUploadIndicator />
         <PostsList
-          items={mappedTopics}
           lmPostCustomFooter={<LMPostQnAFeedFooter />}
         />
         <LMCreatePostButton customText="ASK QUESTION" />

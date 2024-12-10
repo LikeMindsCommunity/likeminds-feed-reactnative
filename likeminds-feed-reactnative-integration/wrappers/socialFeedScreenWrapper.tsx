@@ -14,7 +14,6 @@ import { PostsList } from "../screens/postsList";
 import LMCreatePostButton from "../components/LMCreatePostButton";
 
 const Feed = () => {
-  const mappedTopics = useAppSelector((state: any) => state.feed.mappedTopics);
   const [FCMToken, setFCMToken] = useState("");
 
   /// Setup notifications
@@ -32,7 +31,7 @@ const Feed = () => {
         <LMUniversalFeedHeader />
         <LMFilterTopics />
         <LMPostUploadIndicator />
-        <PostsList items={mappedTopics} />
+        <PostsList />
         <LMCreatePostButton />
       </UniversalFeed>
     </View>
