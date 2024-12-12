@@ -222,26 +222,28 @@ export const UniversalFeedContextProvider = ({
           await createThumbnail({
             url: item?.attachmentMeta?.url,
             timeStamp: 10000,
-          }).then(async (response) => {
-            const newName =
-              item.attachmentMeta.name &&
-              item.attachmentMeta.name.substring(
-                0,
-                item.attachmentMeta.name.lastIndexOf(".")
-              ) + ".jpeg";
-            const thumbnailMeta = {
-              ...item.attachmentMeta,
-              name: newName,
-              format: "image/jpeg",
-              thumbnailUrl: response?.path,
-            };
-            const thumbnailRes = await uploadFilesToAWS(
-              thumbnailMeta,
-              memberData.userUniqueId,
-              response?.path
-            );
-            item.attachmentMeta.thumbnailUrl = thumbnailRes.Location;
-          });
+          })
+            .then(async (response) => {
+              const newName =
+                item.attachmentMeta.name &&
+                item.attachmentMeta.name.substring(
+                  0,
+                  item.attachmentMeta.name.lastIndexOf(".")
+                ) + ".jpeg";
+              const thumbnailMeta = {
+                ...item.attachmentMeta,
+                name: newName,
+                format: "image/jpeg",
+                thumbnailUrl: response?.path,
+              };
+              const thumbnailRes = await uploadFilesToAWS(
+                thumbnailMeta,
+                memberData.userUniqueId,
+                response?.path
+              );
+              item.attachmentMeta.thumbnailUrl = thumbnailRes.Location;
+            })
+            .catch((res) => {});
         }
         return uploadFilesToAWS(
           item.attachmentMeta,

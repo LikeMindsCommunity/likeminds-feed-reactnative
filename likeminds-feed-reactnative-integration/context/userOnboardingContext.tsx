@@ -195,7 +195,8 @@ export default function UserOnboardingContextProvider({
         if (res?.assets[0]?.fileSize && res?.assets[0]?.fileSize < 5242880) {
           if (
             (res?.assets[0]).type == "image/png" ||
-            (res?.assets[0]).type == "image/jpeg"
+            (res?.assets[0]).type == "image/jpeg" ||
+            (res?.assets[0]).type == "image/jpg"
           ) {
             setProfileImage(res.assets[0] ?? null);
             setImageUrl(res.assets[0]?.uri as string);
