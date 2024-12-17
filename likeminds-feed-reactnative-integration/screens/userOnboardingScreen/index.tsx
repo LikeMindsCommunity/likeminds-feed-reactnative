@@ -226,6 +226,31 @@ function UserOnboardingScreen() {
                     <LMHeader
                         heading={isEditing ? (editScreenHeaderTitle ? editScreenHeaderTitle : "Profile") : (createScreenHeaderTitle ? createScreenHeaderTitle : "Community")}
                         showBackArrow={isEditing}
+                        rightComponent={
+                            <TouchableOpacity
+                            disabled={disableSubmitButton || loading}
+                            style={{opacity: (loading || disableSubmitButton) ? 0.5 : 1}}
+                            onPress={!disableSubmitButton && !loading ? (onCTAButtonClickedProp ? onCTAButtonClickedProp : onCTAButtonClicked) : () => { }}>
+                                <>
+                                {loading ?
+                                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                        <LMLoader color={STYLES.$COLORS.FONT_PRIMARY} size={
+                                            Platform.OS == 'ios' ? STYLES.$LMLoaderSizeiOS : STYLES.$LMLoaderSizeAndroid
+                                        } style={{
+                                            top: Platform.OS == 'ios' ? 2 : 0
+                                        }} />
+                                    </View>
+                                    :
+                                    <LMText textStyle={
+                                        StyleSheet.flatten([
+                                            { fontSize: 16, color: STYLES.$COLORS.FONT_PRIMARY, fontWeight: 'bold', },
+                                            disableSubmitButton ? (onBoardingScreenStyles.disableCtaButtonTextStyle) : (onBoardingScreenStyles.ctaButtonTextStyle)
+                                        ])
+                                    }>{isEditing ? (editScreenCtaButtonText ? editScreenCtaButtonText : "EDIT") : (createScreenCtaButtonText ? createScreenCtaButtonText : "CONTINUE")}</LMText>
+                                }
+                                </>
+                            </TouchableOpacity>
+                        }
                         headingTextStyle={
                             StyleSheet.flatten([
                                 {
@@ -241,7 +266,7 @@ function UserOnboardingScreen() {
                     />
                 </SafeAreaView>
         })
-    }, [isUserOnboardingDone, isInitiated])
+    }, [isUserOnboardingDone, isInitiated, disableSubmitButton, loading])
 
 
     if (((isUserOnboardingRequired == false || isUserOnboardingRequired == undefined) || isUserOnboardingDone) && !isEditing) {
@@ -402,39 +427,6 @@ function UserOnboardingScreen() {
                         }}>{name.length}/{userNameMaxCharacterLimit}</Text>
                     </View>
                 </View>
-            </View>
-            <View style={{
-                alignItems: 'center', justifyContent: "flex-end",
-                flex: 1, marginVertical: 25
-            }}>
-                <LMButton
-                    isClickable={!disableSubmitButton || !loading}
-                    buttonStyle={
-                        StyleSheet.flatten([
-                            {
-                                borderColor: STYLES.$IS_DARK_THEME ? "black" : 'white', width: Layout.normalize(130), height: Layout.normalize(40),
-                                backgroundColor: !disableSubmitButton ? STYLES.$COLORS.PRIMARY : STYLES.$COLORS.LIGHT_GREY, borderRadius: 20
-                            },
-                            disableSubmitButton ? (onBoardingScreenStyles?.disableCtaButtonStyle) : (onBoardingScreenStyles?.ctaButtonStyle)
-                        ])
-                    }
-                    onTap={!disableSubmitButton && !loading ? (onCTAButtonClickedProp ? onCTAButtonClickedProp : onCTAButtonClicked) : () => { }} text={{
-                        children: loading ?
-                            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                <LMLoader color="white" size={
-                                    Platform.OS == 'ios' ? STYLES.$LMLoaderSizeiOS : STYLES.$LMLoaderSizeAndroid
-                                } style={{
-                                    top: Platform.OS == 'ios' ? 2 : 0
-                                }} />
-                            </View>
-                            :
-                            <LMText textStyle={
-                                StyleSheet.flatten([
-                                    { fontSize: 20, color: STYLES.$IS_DARK_THEME ? STYLES.$COLORS.WHITE : STYLES.$COLORS.WHITE, fontWeight: '600' },
-                                    disableSubmitButton ? (onBoardingScreenStyles.disableCtaButtonTextStyle) : (onBoardingScreenStyles.ctaButtonTextStyle)
-                                ])
-                            }>{isEditing ? (editScreenCtaButtonText ? editScreenCtaButtonText : "Edit") : (createScreenCtaButtonText ? createScreenCtaButtonText : "Continue")}</LMText>
-                    }} />
             </View>
         </ScrollView>
     )
