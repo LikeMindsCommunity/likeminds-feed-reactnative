@@ -63,6 +63,7 @@ const LMMemberListItem = React.memo(
             {...updatedNameProps}
             textStyle={StyleSheet.flatten([
               styles.memberName,
+              {maxWidth: '80%'},
               nameProps?.textStyle,
             ])}
           />
