@@ -14,6 +14,7 @@ const styles = StyleSheet.create({
   },
   video: {
     display: "flex",
+    flex: 1,
     justifyContent: "center",
     width: Layout.window.width,
     height:

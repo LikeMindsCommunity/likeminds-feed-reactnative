@@ -6,6 +6,7 @@ import {
   BackHandler,
   ActivityIndicator,
   Platform,
+  SafeAreaView,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { SwiperFlatList } from "react-native-swiper-flatlist";
@@ -32,7 +33,7 @@ import { CallBack } from "../../callBacks/callBackClass";
 const CarouselScreen = ({ navigation, route }: any) => {
   const dispatch = useAppDispatch();
   const { index, dataObject } = route.params;
-  const [disableGesture, setDisableGesture] = useState(false)
+  const [disableGesture, setDisableGesture] = useState(false);
   const data = dataObject?.attachments;
 
   const attachmentsUrls = data?.map((item) => ({
@@ -66,7 +67,7 @@ const CarouselScreen = ({ navigation, route }: any) => {
 
   // Format the date as "DD MMM YYYY" (e.g., "09 May 2024") without dashes
   const dateOptions: Intl.DateTimeFormatOptions = {
-    timeZone: Platform.OS === "ios" ? "Asia/Calcutta" : "Asia/Kolkata",
+    timeZone: "UTC",
     day: "2-digit",
     month: "short",
     year: "numeric",
@@ -77,14 +78,14 @@ const CarouselScreen = ({ navigation, route }: any) => {
 
   // Format the time in 24-hour format as "HH:MM" (e.g., "12:30")
   const timeOptions: Intl.DateTimeFormatOptions = {
-    timeZone: Platform.OS === "ios" ? "Asia/Calcutta" : "Asia/Kolkata",
+    timeZone: "UTC",
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
   };
   const formattedTime: string = date.toLocaleTimeString("en-IN", timeOptions);
 
-  const carouselScreenStyle = STYLES.$CAROUSEL_SCREEN_STYLE
+  const carouselScreenStyle = STYLES.$CAROUSEL_SCREEN_STYLE;
 
   const headerTitle = carouselScreenStyle?.headerTitle;
   const headerSubtitle = carouselScreenStyle?.headerSubtitle;
@@ -144,7 +145,7 @@ const CarouselScreen = ({ navigation, route }: any) => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "black" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
       <View style={styles.header}>
         <View style={styles.headingContainer}>
           <View style={styles.headerElement}>
@@ -245,7 +246,10 @@ const CarouselScreen = ({ navigation, route }: any) => {
                 />
               ) : item?.attachmentType === VIDEO_ATTACHMENT_TYPE &&
                 index === currentIndex ? (
-                <LMVideoPlayer url={item?.attachmentMeta?.url} setDisableGesture={setDisableGesture} />
+                <LMVideoPlayer
+                  url={item?.attachmentMeta?.url}
+                  setDisableGesture={setDisableGesture}
+                />
               ) : item?.attachmentType === VIDEO_ATTACHMENT_TYPE &&
                 index !== currentIndex ? (
                 <Image
@@ -261,7 +265,7 @@ const CarouselScreen = ({ navigation, route }: any) => {
         onViewableItemsChanged={onViewableItemsChanged.current}
         viewabilityConfig={viewabilityConfig.current}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

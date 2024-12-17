@@ -6,7 +6,6 @@ const styles = StyleSheet.create({
   header: {
     display: "flex",
     flex: Platform.OS === "ios" ? 0.1 : 0,
-    top: Platform.OS === "ios" ? 55 : 20,
     justifyContent: "center",
     position: Platform.OS === "ios" ? "relative" : "absolute",
     left: 0,
@@ -25,14 +24,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   headerElement: {
-    backgroundColor: "black",
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: Layout.normalize(10),
     paddingHorizontal: Layout.normalize(10),
     width: "100%",
-    marginTop: Layout.normalize(10),
   },
   image: {
     width: Layout.window.width,
@@ -62,10 +59,6 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    position: "absolute",
-    left: 0,
-    zIndex: 1,
-    flex: 1,
   },
   backBtn: {
     height: Layout.normalize(20),

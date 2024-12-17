@@ -172,86 +172,6 @@ function LMVideoPlayer({ url, setDisableGesture }) {
                 />
               </TouchableOpacity>
             </View>
-            <View
-              style={{
-                width: "100%",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                position: "absolute",
-                bottom: 0,
-                paddingHorizontal: 10, // Combine left and right padding for consistency
-                alignItems: "center",
-              }}
-            >
-              <Text
-                style={{
-                  color: "white",
-                  fontFamily: STYLES.$FONT_TYPES.LIGHT,
-                  ...startTimeStyle,
-                }}
-              >
-                {format(progress.currentTime)}
-              </Text>
-              <Slider
-                style={{ flex: 1, height: 40, marginHorizontal: 5 }} // Use flex to dynamically allocate space
-                minimumValue={0}
-                maximumValue={progress.seekableDuration}
-                minimumTrackTintColor={
-                  minimumTrackTintColor ? minimumTrackTintColor : "#FFFFFF"
-                }
-                maximumTrackTintColor={
-                  maximumTrackTintColor ? maximumTrackTintColor : "#FFFFFF"
-                }
-                step={0}
-                value={progress.currentTime}
-                onValueChange={(x) => {
-                  ref.current.seek(x);
-                }}
-                thumbTintColor={thumbTintColor ? thumbTintColor : "green"}
-              />
-              <Text
-                style={{
-                  color: "white",
-                  marginRight: 10,
-                  fontFamily: STYLES.$FONT_TYPES.LIGHT,
-                  ...endTimeStyle,
-                }}
-              >
-                {format(progress.seekableDuration)}
-              </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  let currentMuteStatus = mute;
-                  setMute(!currentMuteStatus);
-                  dispatch({
-                    type: SET_MUTED_STATE,
-                    body: { mute: !currentMuteStatus },
-                  });
-                }}
-              >
-                <Image
-                  source={
-                    mute
-                      ? isMuteIconLocalPath && muteIconPath
-                        ? muteIconPath
-                        : !isMuteIconLocalPath && muteIconPath
-                        ? { uri: muteIconPath }
-                        : require("../../assets/images/muted.png")
-                      : isUnmuteIconLocalPath && unmuteIconPath
-                      ? unmuteIconPath
-                      : !isUnmuteIconLocalPath && unmuteIconPath
-                      ? { uri: unmuteIconPath }
-                      : require("../../assets/images/unmute.png")
-                  }
-                  style={{
-                    height: 25,
-                    width: 25,
-                    tintColor: "white",
-                    ...(mute ? muteIconStyle : unmuteIconStyle),
-                  }}
-                />
-              </TouchableOpacity>
-            </View>
 
             <View
               style={{
@@ -267,6 +187,89 @@ function LMVideoPlayer({ url, setDisableGesture }) {
             ></View>
           </TouchableOpacity>
         )}
+
+        {clicked ? (
+          <View
+            style={{
+              width: "100%",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              position: "absolute",
+              bottom: 0,
+              paddingHorizontal: 10, // Combine left and right padding for consistency
+              alignItems: "center",
+            }}
+          >
+            <Text
+              style={{
+                color: "white",
+                fontFamily: STYLES.$FONT_TYPES.LIGHT,
+                ...startTimeStyle,
+              }}
+            >
+              {format(progress?.currentTime)}
+            </Text>
+            <Slider
+              style={{ flex: 1, height: 40, marginHorizontal: 5 }} // Use flex to dynamically allocate space
+              minimumValue={0}
+              maximumValue={progress?.seekableDuration}
+              minimumTrackTintColor={
+                minimumTrackTintColor ? minimumTrackTintColor : "#FFFFFF"
+              }
+              maximumTrackTintColor={
+                maximumTrackTintColor ? maximumTrackTintColor : "#FFFFFF"
+              }
+              step={0}
+              value={progress?.currentTime}
+              onValueChange={(x) => {
+                ref.current.seek(x);
+              }}
+              thumbTintColor={thumbTintColor ? thumbTintColor : "green"}
+            />
+            <Text
+              style={{
+                color: "white",
+                marginRight: 10,
+                fontFamily: STYLES.$FONT_TYPES.LIGHT,
+                ...endTimeStyle,
+              }}
+            >
+              {format(progress?.seekableDuration)}
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                let currentMuteStatus = mute;
+                setMute(!currentMuteStatus);
+                dispatch({
+                  type: SET_MUTED_STATE,
+                  body: { mute: !currentMuteStatus },
+                });
+              }}
+            >
+              <Image
+                source={
+                  mute
+                    ? isMuteIconLocalPath && muteIconPath
+                      ? muteIconPath
+                      : !isMuteIconLocalPath && muteIconPath
+                      ? { uri: muteIconPath }
+                      : require("../../assets/images/muted.png")
+                    : isUnmuteIconLocalPath && unmuteIconPath
+                    ? unmuteIconPath
+                    : !isUnmuteIconLocalPath && unmuteIconPath
+                    ? { uri: unmuteIconPath }
+                    : require("../../assets/images/unmute.png")
+                }
+                style={{
+                  height: 25,
+                  width: 25,
+                  tintColor: "white",
+                  ...(mute ? muteIconStyle : unmuteIconStyle),
+                }}
+              />
+            </TouchableOpacity>
+          </View>
+        ) : null}
       </TouchableOpacity>
     </View>
   );

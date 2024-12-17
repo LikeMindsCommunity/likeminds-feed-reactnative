@@ -24,6 +24,7 @@ import {
   POST_UPLOADED_ANONYMOUSLY,
   POST_UPLOAD_INPROGRESS,
   RIGHT_CREATE_POST,
+  SOMETHING_WENT_WRONG,
   STATE_ADMIN,
 } from "../constants/Strings";
 import { RootStackParamList } from "../models/RootStackParamsList";
@@ -222,26 +223,28 @@ export const UniversalFeedContextProvider = ({
           await createThumbnail({
             url: item?.attachmentMeta?.url,
             timeStamp: 10000,
-          }).then(async (response) => {
-            const newName =
-              item.attachmentMeta.name &&
-              item.attachmentMeta.name.substring(
-                0,
-                item.attachmentMeta.name.lastIndexOf(".")
-              ) + ".jpeg";
-            const thumbnailMeta = {
-              ...item.attachmentMeta,
-              name: newName,
-              format: "image/jpeg",
-              thumbnailUrl: response?.path,
-            };
-            const thumbnailRes = await uploadFilesToAWS(
-              thumbnailMeta,
-              memberData.userUniqueId,
-              response?.path
-            );
-            item.attachmentMeta.thumbnailUrl = thumbnailRes.Location;
-          });
+          })
+            .then(async (response) => {
+              const newName =
+                item.attachmentMeta.name &&
+                item.attachmentMeta.name.substring(
+                  0,
+                  item.attachmentMeta.name.lastIndexOf(".")
+                ) + ".jpeg";
+              const thumbnailMeta = {
+                ...item.attachmentMeta,
+                name: newName,
+                format: "image/jpeg",
+                thumbnailUrl: response?.path,
+              };
+              const thumbnailRes = await uploadFilesToAWS(
+                thumbnailMeta,
+                memberData.userUniqueId,
+                response?.path
+              );
+              item.attachmentMeta.thumbnailUrl = thumbnailRes.Location;
+            })
+            .catch((res) => {});
         }
         return uploadFilesToAWS(
           item.attachmentMeta,
@@ -270,7 +273,7 @@ export const UniversalFeedContextProvider = ({
             ...[{ attachmentType: 5, attachmentMeta: { meta: metaData } }],
           ]
         : [...updatedAttachments, ...linkAttachments, ...pollAttachment];
-    const addPostResponse = await dispatch(
+    const addPostResponse: any = await dispatch(
       addPost(
         AddPostRequest.builder()
           .setAttachments(attachments)
@@ -294,6 +297,15 @@ export const UniversalFeedContextProvider = ({
       );
       await onRefresh();
       listRef.current?.scrollToIndex({ animated: true, index: 0 });
+      if(addPostResponse?.name == "Error") {
+        dispatch(
+          showToastMessage({
+            isToast: true,
+            message: SOMETHING_WENT_WRONG,
+          })
+        );
+        return addPostResponse;
+      }
       dispatch(
         showToastMessage({
           isToast: true,
