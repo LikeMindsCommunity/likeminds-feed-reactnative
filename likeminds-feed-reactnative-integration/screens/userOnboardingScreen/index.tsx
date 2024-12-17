@@ -266,7 +266,7 @@ function UserOnboardingScreen() {
                     />
                 </SafeAreaView>
         })
-    }, [isUserOnboardingDone, isInitiated, disableSubmitButton, loading])
+    }, [isUserOnboardingDone, isInitiated, disableSubmitButton, loading, name, setName, profileImage, setImageUrl])
 
 
     if (((isUserOnboardingRequired == false || isUserOnboardingRequired == undefined) || isUserOnboardingDone) && !isEditing) {
