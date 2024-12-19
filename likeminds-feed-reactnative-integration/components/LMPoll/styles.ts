@@ -124,12 +124,12 @@ export const styles = StyleSheet.create({
   font: {
     fontSize: Layout.normalize(16),
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
-    color: STYLES.$COLORS.FONT_PRIMARY,
+    color: STYLES.$COLORS.PRIMARY,
   },
   text: {
     fontSize: Layout.normalize(16),
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
-    color: STYLES.$COLORS.FONT_PRIMARY,
+    color: STYLES.$COLORS.PRIMARY,
   },
   mediumText: {
     fontSize: Layout.normalize(13),
@@ -139,32 +139,32 @@ export const styles = StyleSheet.create({
   mediumText14: {
     fontSize: Layout.normalize(14),
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
-    color: STYLES.$COLORS.FONT_PRIMARY,
+    color: STYLES.$COLORS.PRIMARY,
   },
   boldText: {
     fontSize: Layout.normalize(16),
     fontFamily: STYLES.$FONT_TYPES.BOLD,
-    color: STYLES.$COLORS.FONT_PRIMARY,
+    color: STYLES.$COLORS.PRIMARY,
   },
   mediumBoldText: {
     fontSize: Layout.normalize(16),
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
-    color: STYLES.$COLORS.FONT_PRIMARY,
+    color: STYLES.$COLORS.PRIMARY,
   },
   smallText: {
     fontSize: Layout.normalize(12),
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
-    color: STYLES.$COLORS.FONT_PRIMARY,
+    color: STYLES.$COLORS.PRIMARY,
   },
   smallText10: {
     fontSize: Layout.normalize(10),
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
-    color: STYLES.$COLORS.FONT_PRIMARY,
+    color: STYLES.$COLORS.PRIMARY,
   },
   smallTextMedium: {
     fontSize: Layout.normalize(12),
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
-    color: STYLES.$COLORS.FONT_PRIMARY,
+    color: STYLES.$COLORS.PRIMARY,
   },
   newPollText: {
     color: "black",
@@ -424,7 +424,7 @@ export const styles = StyleSheet.create({
     textTransform: "capitalize",
   },
   headerRightComponentText: {
-    color: STYLES.$COLORS.FONT_PRIMARY,
+    color: STYLES.$COLORS.PRIMARY,
     fontSize: 16,
     fontWeight: "500",
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
