@@ -318,7 +318,7 @@ function UserOnboardingScreen() {
                       {isEditing
                         ? editScreenCtaButtonText
                           ? editScreenCtaButtonText
-                          : "EDIT"
+                          : "DONE"
                         : createScreenCtaButtonText
                         ? createScreenCtaButtonText
                         : "CONTINUE"}
