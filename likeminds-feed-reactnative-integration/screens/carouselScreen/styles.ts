@@ -5,7 +5,6 @@ import Layout from "../../constants/Layout";
 const styles = StyleSheet.create({
   header: {
     display: "flex",
-    flex: Platform.OS === "ios" ? 0.1 : 0,
     justifyContent: "center",
     position: Platform.OS === "ios" ? "relative" : "absolute",
     left: 0,
