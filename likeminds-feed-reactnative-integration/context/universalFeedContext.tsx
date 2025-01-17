@@ -35,6 +35,7 @@ import { LMAttachmentViewData, LMPostViewData } from "../models";
 import {
   CREATE_POST,
   NOTIFICATION_FEED,
+  SEARCH_SCREEN,
   UNIVERSAL_FEED,
 } from "../constants/screenNames";
 import {
@@ -105,6 +106,7 @@ export interface UniversalFeedContextValues {
   isPaginationStopped: boolean;
   setIsPaginationStopped: Dispatch<SetStateAction<boolean>>;
   predefinedTopics?: string[];
+  onSearchIconClick: () => void;
 }
 
 const UniversalFeedContext = createContext<
@@ -610,6 +612,10 @@ export const UniversalFeedContextProvider = ({
     }
   }
 
+  async function onSearchIconClick() {
+    navigation.navigate(SEARCH_SCREEN)
+  }
+
   const contextValues: UniversalFeedContextValues = {
     navigation,
     feedData,
@@ -647,6 +653,7 @@ export const UniversalFeedContextProvider = ({
     isPaginationStopped,
     setIsPaginationStopped,
     predefinedTopics,
+    onSearchIconClick
   };
 
   return (

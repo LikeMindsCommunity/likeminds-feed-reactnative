@@ -61,6 +61,7 @@ export interface PostListStyleProps {
       menuViewStyle?: ViewStyle;
       backdropColor?: string;
     };
+    searchIconStyle?: LMIconProps;
   };
   footer?: {
     showBookMarkIcon?: boolean;
