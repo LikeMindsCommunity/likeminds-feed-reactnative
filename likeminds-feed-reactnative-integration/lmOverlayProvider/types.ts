@@ -20,4 +20,5 @@ export interface LMOverlayProviderProps {
   videoCarouselCallback?: VideoCarouselCallback;
   isUserOnboardingRequired?: boolean;
   handleOnBoardingUserGestureBackPress?: () => void;
+  isPersonalisedFeed?: boolean;
 }

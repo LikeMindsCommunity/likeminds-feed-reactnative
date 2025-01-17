@@ -13,6 +13,7 @@ import { useAppDispatch, useAppSelector } from "../store/store";
 import {
   autoPlayPostVideo,
   getFeed,
+  getPersonalisedFeed,
   getTopicsFeed,
   hidePost,
   likePost,
@@ -24,6 +25,7 @@ import {
 } from "../store/actions/feed";
 import {
   GetFeedRequest,
+  GetPersonalisedFeedRequest,
   HidePostRequest,
   LikePostRequest,
   PinPostRequest,
@@ -68,6 +70,8 @@ import { SHOW_TOAST } from "..//store/types/loader";
 import pluralizeOrCapitalize from "../utils/variables";
 import { WordAction } from "../enums/Variables";
 import { CommunityConfigs } from "../communityConfigs";
+import { useLMFeed } from "../lmFeedProvider";
+import { Client } from "../client";
 
 interface PostListContextProps {
   children?: ReactNode;
@@ -176,6 +180,7 @@ export const PostListContextProvider = ({
   const PAGE_SIZE = 20;
   const [postInViewport, setPostInViewport] = useState("");
   const isFocus = useIsFocused();
+  const { isPersonalisedFeed } = useLMFeed();
 
   // handles the auto play/pause of video in viewport
   useEffect(() => {
@@ -196,19 +201,42 @@ export const PostListContextProvider = ({
     };
 
     const topicIds = topics?.length > 0 && topics[0] != "0" ? topics : [];
-    // calling getFeed API
-    const getFeedResponse = await dispatch(
-      getFeed(
-        GetFeedRequest.builder()
-          .setPage(payload.page)
-          .setPageSize(payload.pageSize)
-          .setTopicIds(predefinedTopics ? predefinedTopics : topicIds)
-          .build(),
-        false
-      )
-    );
-    setFeedFetching(false);
-    return getFeedResponse;
+
+    if (isPersonalisedFeed) {
+      // calling personalised API
+      try {
+        const getPersonalisedResponse = await dispatch(
+          getPersonalisedFeed(
+            GetPersonalisedFeedRequest.builder()
+              .setPage(payload.page)
+              .setPageSize(payload.pageSize)
+              .setShouldRecompute(true)
+              .setShouldReorder(true)
+              .build(),
+            false
+          )
+        );
+        setFeedFetching(false);
+        return getPersonalisedResponse;
+      } catch (error) {
+        setFeedFetching(false);
+        return;
+      }
+    } else {
+      // calling getFeed API
+      const getFeedResponse = await dispatch(
+        getFeed(
+          GetFeedRequest.builder()
+            .setPage(payload.page)
+            .setPageSize(payload.pageSize)
+            .setTopicIds(predefinedTopics ? predefinedTopics : topicIds)
+            .build(),
+          false
+        )
+      );
+      setFeedFetching(false);
+      return getFeedResponse;
+    }
   };
 
   const loadData = async (newPage: number) => {
