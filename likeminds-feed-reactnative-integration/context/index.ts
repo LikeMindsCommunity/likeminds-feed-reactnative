@@ -64,6 +64,7 @@ import {
 } from "./notificationFeedCallbacksContext";
 import UserOnboardingContextProvider from "./userOnboardingContext";
 import UserOnboardingCallbacksContextProvider from "./userOnboardingCallbacksContext"
+import SearchPostContextProvider from "./searchScreenContext";
 export {
   UniversalFeedContextProvider,
   UniversalFeedContextValues,
@@ -104,5 +105,6 @@ export {
   useCreatePollContext,
   CreatePollContextProvider,
   UserOnboardingContextProvider,
-  UserOnboardingCallbacksContextProvider
+  UserOnboardingCallbacksContextProvider,
+  SearchPostContextProvider
 };
