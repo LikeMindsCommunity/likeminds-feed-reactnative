@@ -1,4 +1,5 @@
 import {
+  convertSingleFeedPost,
   convertToLMPostViewData,
   convertUniversalFeedPosts,
 } from "../../viewDataModels";
@@ -44,6 +45,7 @@ import {
   REFRESH_FROM_ONBOARDING_SCREEN,
   PERSONALISED_FEED_SUCCESS,
   PERSONALISED_FEED_REFRESH_SUCCESS,
+  CREATE_POST_SUCCESS,
 } from "../types/types";
 import { LMPostViewData } from "../../models";
 import Styles from "../../constants/Styles";
@@ -411,6 +413,15 @@ export const feedReducer = (state = initialState, action) => {
     }
     case AUTO_PLAY_POST_VIDEO: {
       return { ...state, autoPlayVideoPostId: action.body };
+    }
+    case CREATE_POST_SUCCESS: {
+      // model converter function
+      const post = convertSingleFeedPost(action.body);
+      if (post) {
+        return { ...state, feed: [post, ...state.feed] };
+      } else {
+        return state;
+      }
     }
     default:
       return state;

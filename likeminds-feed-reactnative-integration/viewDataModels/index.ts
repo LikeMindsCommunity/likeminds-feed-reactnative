@@ -56,6 +56,24 @@ export function convertUniversalFeedPosts(data: any): LMPostViewData[] {
 }
 
 /**
+ * @param data: [GetPostResponse]
+ * @returns list of [LMPostViewData]
+ */
+export function convertSingleFeedPost(data: any): LMPostViewData {
+  const postData = data.post ? data.post : [];
+  const userData = data.users;
+  const widgetData = data.widgets;
+  const filteredComments = data.filteredComments;
+
+  return convertToLMPostViewData(
+    postData,
+    userData,
+    widgetData,
+    filteredComments
+  );
+}
+
+/**
  * @param post: [Post]
  * @param user: [Map] of String to User
  * @returns LMPostViewData

@@ -16,6 +16,7 @@ import {
   AddPostRequest,
   GetFeedRequest,
   GetPersonalisedFeedRequest,
+  PostSeenRequest,
 } from "@likeminds.community/feed-rn";
 import {
   autoPlayPostVideo,
@@ -114,6 +115,7 @@ export interface UniversalFeedContextValues {
   isPaginationStopped: boolean;
   setIsPaginationStopped: Dispatch<SetStateAction<boolean>>;
   predefinedTopics?: string[];
+  postSeen: () => void;
 }
 
 const UniversalFeedContext = createContext<
@@ -197,7 +199,7 @@ export const UniversalFeedContextProvider = ({
         : [];
 
     if (isPersonalisedFeed) {
-      await dispatch(
+      const getPersonalisedResponse = await dispatch(
         refreshPersonalisedFeed(
           GetPersonalisedFeedRequest.builder()
             .setPage(1)
@@ -208,18 +210,26 @@ export const UniversalFeedContextProvider = ({
           false
         )
       );
+
+      const firstPost = getPersonalisedResponse?.posts
+        ? getPersonalisedResponse?.posts[0]?.id
+        : [];
+      const secondPost = getPersonalisedResponse?.posts
+        ? getPersonalisedResponse?.posts[1]?.id
+        : [];
+      await postSeen([firstPost, secondPost]);
     } else {
+      await dispatch(
+        refreshFeed(
+          GetFeedRequest.builder()
+            .setPage(1)
+            .setPageSize(20)
+            .setTopicIds(predefinedTopics ? predefinedTopics : topicIds)
+            .build(),
+          false
+        )
+      );
     }
-    await dispatch(
-      refreshFeed(
-        GetFeedRequest.builder()
-          .setPage(1)
-          .setPageSize(20)
-          .setTopicIds(predefinedTopics ? predefinedTopics : topicIds)
-          .build(),
-        false
-      )
-    );
     dispatch({
       type: REFRESH_FROM_ONBOARDING_SCREEN,
       body: { refresh: false },
@@ -320,7 +330,6 @@ export const UniversalFeedContextProvider = ({
           topics: [],
         })
       );
-      await onRefresh();
       listRef.current?.scrollToIndex({ animated: true, index: 0 });
       if (addPostResponse?.name == "Error") {
         dispatch(
@@ -635,6 +644,27 @@ export const UniversalFeedContextProvider = ({
     }
   }
 
+  // Function to send seenPost to the backend
+  const postSeen = async (initialPosts: string[] = []) => {
+    try {
+      const savedSeenPost = await Client.myClient.getSeenPost();
+      const seenPostToSend = savedSeenPost
+        ? [...JSON.parse(savedSeenPost), ...initialPosts]
+        : [...initialPosts];
+
+      if (seenPostToSend.length > 0) {
+        // Simulate API call
+        await Client.myClient.postSeen(
+          PostSeenRequest.builder().setPostIds(seenPostToSend).build()
+        );
+        // Clear local storage on success
+        await Client.myClient.clearSeenPost();
+      }
+    } catch (error) {
+      console.error("Error sending seenPost:", error);
+    }
+  };
+
   const contextValues: UniversalFeedContextValues = {
     navigation,
     feedData,
@@ -672,6 +702,7 @@ export const UniversalFeedContextProvider = ({
     isPaginationStopped,
     setIsPaginationStopped,
     predefinedTopics,
+    postSeen,
   };
 
   return (

@@ -8,6 +8,7 @@ import React, {
   useState,
   JSX,
   useLayoutEffect,
+  useRef,
 } from "react";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import {
@@ -29,6 +30,7 @@ import {
   HidePostRequest,
   LikePostRequest,
   PinPostRequest,
+  PostSeenRequest,
   SavePostRequest,
 } from "@likeminds.community/feed-rn";
 import _ from "lodash";
@@ -87,6 +89,10 @@ interface PostListContextProps {
   };
 }
 
+interface MutableRefObject<T> {
+  current: T;
+}
+
 export interface PostListContextValues {
   navigation: NativeStackNavigationProp<
     RootStackParamList,
@@ -133,6 +139,8 @@ export interface PostListContextValues {
     },
     postId: string
   ) => void;
+  saveSeenPost: () => void;
+  seenPost: MutableRefObject<Set<string>>;
 }
 
 const PostListContext = createContext<PostListContextValues | undefined>(
@@ -175,12 +183,14 @@ export const PostListContextProvider = ({
     isPaginationStopped,
     setIsPaginationStopped,
     predefinedTopics,
+    postSeen,
   } = useUniversalFeedContext();
 
   const PAGE_SIZE = 20;
   const [postInViewport, setPostInViewport] = useState("");
   const isFocus = useIsFocused();
   const { isPersonalisedFeed } = useLMFeed();
+  const seenPost = useRef<Set<string>>(new Set());
 
   // handles the auto play/pause of video in viewport
   useEffect(() => {
@@ -216,6 +226,13 @@ export const PostListContextProvider = ({
             false
           )
         );
+        const firstPost = getPersonalisedResponse?.posts
+          ? getPersonalisedResponse?.posts[0]?.id
+          : [];
+        const secondPost = getPersonalisedResponse?.posts
+          ? getPersonalisedResponse?.posts[1]?.id
+          : [];
+        await postSeen([firstPost, secondPost]);
         setFeedFetching(false);
         return getPersonalisedResponse;
       } catch (error) {
@@ -483,6 +500,15 @@ export const PostListContextProvider = ({
     ) : null;
   };
 
+  // Function to save seenPost locally
+  const saveSeenPost = async () => {
+    try {
+      await Client.myClient.setSeenPost([...seenPost.current]);
+    } catch (error) {
+      console.error("Error saving seenPost:", error);
+    }
+  };
+
   const contextValues: PostListContextValues = {
     navigation,
     feedData,
@@ -521,6 +547,8 @@ export const PostListContextProvider = ({
     setModalPosition,
     postInViewport,
     setPostInViewport,
+    seenPost,
+    saveSeenPost,
   };
 
   return (
