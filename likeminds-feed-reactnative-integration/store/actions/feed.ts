@@ -34,11 +34,16 @@ import {
   HIDE_POST_FAILED,
   HIDE_POST_STATE,
   UNIVERSAL_TOPICS_FEED_SUCCESS,
+  PERSONALISED_FEED_SUCCESS,
+  PERSONALISED_FEED_DATA,
+  PERSONALISED_FEED_FAILED,
+  PERSONALISED_FEED_REFRESH_SUCCESS,
 } from "../types/types";
 import { Client } from "../../client";
 import {
   DeletePostRequest,
   GetFeedRequest,
+  GetPersonalisedFeedRequest,
   GetReportTagsRequest,
   HidePostRequest,
   LikePostRequest,
@@ -59,6 +64,27 @@ export const getFeed = (payload: GetFeedRequest, showLoader: boolean) => () => {
           UNIVERSAL_FEED_DATA,
           UNIVERSAL_FEED_SUCCESS,
           UNIVERSAL_FEED_FAILED,
+        ],
+        showLoader: showLoader,
+      },
+    };
+  } catch (error) {
+    Alert.alert(`${error}`);
+  }
+};
+
+// get personalised feed API action
+export const getPersonalisedFeed = (payload: GetPersonalisedFeedRequest, showLoader: boolean) => () => {
+  try {
+    return {
+      type: PERSONALISED_FEED_SUCCESS,
+      [CALL_API]: {
+        func: Client.myClient.getPersonalisedFeed(payload),
+        body: payload,
+        types: [
+          PERSONALISED_FEED_DATA,
+          PERSONALISED_FEED_SUCCESS,
+          PERSONALISED_FEED_FAILED,
         ],
         showLoader: showLoader,
       },
@@ -101,6 +127,28 @@ export const refreshFeed =
             UNIVERSAL_FEED_DATA,
             UNIVERSAL_FEED_REFRESH_SUCCESS,
             UNIVERSAL_FEED_FAILED,
+          ],
+          showLoader: showLoader,
+        },
+      };
+    } catch (error) {
+      Alert.alert(`${error}`);
+    }
+  };
+
+// refresh feed API action
+export const refreshPersonalisedFeed =
+  (payload: GetPersonalisedFeedRequest, showLoader: boolean) => () => {
+    try {
+      return {
+        type: PERSONALISED_FEED_REFRESH_SUCCESS,
+        [CALL_API]: {
+          func: Client.myClient.getPersonalisedFeed(payload),
+          body: payload,
+          types: [
+            PERSONALISED_FEED_DATA,
+            PERSONALISED_FEED_REFRESH_SUCCESS,
+            PERSONALISED_FEED_FAILED,
           ],
           showLoader: showLoader,
         },

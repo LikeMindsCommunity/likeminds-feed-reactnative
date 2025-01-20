@@ -964,7 +964,7 @@ const PostDetailComponent = React.memo(() => {
               multilineField={
                 customCommentTextInput?.multilineField != undefined
                   ? customCommentTextInput?.multilineField
-                  : false
+                  : true
               }
               partTypes={[
                 {
@@ -1055,7 +1055,7 @@ const PostDetailComponent = React.memo(() => {
               multilineField={
                 customCommentTextInput?.multilineField != undefined
                   ? customCommentTextInput?.multilineField
-                  : false
+                  : true
               }
               partTypes={[
                 {
