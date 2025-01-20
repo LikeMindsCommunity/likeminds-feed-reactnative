@@ -423,6 +423,23 @@ export const feedReducer = (state = initialState, action) => {
         return state;
       }
     }
+    case POST_DATA_SUCCESS: {
+      // model converter function
+      const post = convertSingleFeedPost(action.body);
+      const feed = state.feed.map((item) =>
+        item?.id === post?.id
+          ? {
+              ...item,
+              ...post,
+            }
+          : item
+      );
+      if (post) {
+        return { ...state, feed: feed };
+      } else {
+        return state;
+      }
+    }
     default:
       return state;
   }
