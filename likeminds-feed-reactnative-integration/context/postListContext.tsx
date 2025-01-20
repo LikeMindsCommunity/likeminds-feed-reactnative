@@ -63,7 +63,7 @@ import Layout from "../constants/Layout";
 import STYLES from "../constants/Styles";
 import { useUniversalFeedContext } from "../context/universalFeedContext";
 import { useIsFocused } from "@react-navigation/native";
-import { HIDE_POST_STATE, SET_CURRENT_ID_OF_VIDEO } from "../store/types/types";
+import { CLEAR_SEARCH, HIDE_POST_STATE, SET_CURRENT_ID_OF_VIDEO } from "../store/types/types";
 import { SHOW_TOAST } from "..//store/types/loader";
 import pluralizeOrCapitalize from "../utils/variables";
 import { WordAction } from "../enums/Variables";
@@ -176,6 +176,14 @@ export const PostListContextProvider = ({
   const PAGE_SIZE = 20;
   const [postInViewport, setPostInViewport] = useState("");
   const isFocus = useIsFocused();
+
+  useEffect(() => {
+    if (isFocus) {
+      dispatch({
+        type: CLEAR_SEARCH
+      })
+    }
+  }, [isFocus])
 
   // handles the auto play/pause of video in viewport
   useEffect(() => {
