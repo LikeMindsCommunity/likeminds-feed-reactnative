@@ -72,6 +72,7 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import UserOnboardingScreen from '@likeminds.community/feed-rn-core/screens/userOnboardingScreen';
 import STYLES from '@likeminds.community/feed-rn-core/constants/Styles';
 import { LMFeedSearchScreen } from '@likeminds.community/feed-rn-core/screens';
+import LMFeedSearchScreenWrapper from '@likeminds.community/feed-rn-core/wrappers/LMFeedSearchScreenWrapper';
 
 class CustomCallbacks implements LMFeedCallbacks, LMCarouselScreenCallbacks {
   onEventTriggered(eventName: string, eventProperties?: Map<string, string>) {
@@ -327,7 +328,7 @@ const App = () => {
                 />
                 <Stack.Screen
                   name={SEARCH_SCREEN}
-                  component={LMFeedSearchScreen}
+                  component={LMFeedSearchScreenWrapper}
                 />
               </Stack.Navigator>
           </LMOverlayProvider>
