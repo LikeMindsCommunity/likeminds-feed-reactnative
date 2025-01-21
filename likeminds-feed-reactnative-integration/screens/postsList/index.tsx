@@ -58,6 +58,7 @@ import { WordAction } from "../../enums/Variables";
 import pluralizeOrCapitalize from "../../utils/variables";
 import { useIsFocused } from "@react-navigation/native";
 import { useLMFeed } from "../../lmFeedProvider";
+import { debounce } from "../../utils/debounce";
 
 const PostsList = ({
   route,
@@ -337,6 +338,11 @@ const PostsListComponent = ({
     }
   };
 
+  // debouced on momentum scroll end
+  const debouncedOnMomentumScrollEnd = async ({ nativeEvent }) => {
+    debounce(onMomentumScrollEnd({ nativeEvent }), 5000);
+  };
+
   return (
     <View
       style={{
@@ -378,7 +384,7 @@ const PostsListComponent = ({
                 }
               }}
               viewabilityConfig={{ viewAreaCoveragePercentThreshold: 60 }}
-              onMomentumScrollEnd={onMomentumScrollEnd}
+              onMomentumScrollEnd={debouncedOnMomentumScrollEnd}
             />
           ) : (
             <View style={[styles.noDataView, postListStyle?.noPostView]}>
