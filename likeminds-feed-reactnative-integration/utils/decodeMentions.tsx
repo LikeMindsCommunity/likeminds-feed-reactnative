@@ -62,7 +62,8 @@ function detectLinks(message: string, isLongPress?: boolean) {
 const decode = (
   text: string | undefined,
   enableClick: boolean,
-  isLongPress?: boolean
+  isLongPress?: boolean,
+  highlight: string = ""
 ) => {
   if (!text) {
     return;
@@ -81,7 +82,15 @@ const decode = (
           }
         }
       } else {
-        arr.push({ key: matchResult, route: null });
+        if (highlight?.length > 0) {
+          const highlightRegex = new RegExp(`(${highlight})`, "i");
+          const highlightParts = matchResult?.split(highlightRegex);
+          for (const highlightPart of highlightParts) {
+            arr.push({ key: highlightPart, route: null });
+          }
+        } else {
+          arr.push({ key: matchResult, route: null });
+        }
       }
     }
 
@@ -89,7 +98,7 @@ const decode = (
       <Text style={{ fontFamily: STYLES.$FONT_TYPES.LIGHT }}>
         {arr.map((val, index) => (
           <Text
-            style={{ fontFamily: STYLES.$FONT_TYPES.LIGHT }}
+            style={{ fontFamily: STYLES.$FONT_TYPES.LIGHT, backgroundColor: highlight?.toLowerCase() == val?.key?.toLowerCase() ? 'yellow' : 'white' }}
             key={val.key + index}
           >
             {/* key should be unique so we are passing `val(abc) + index(number) = abc2` to make it unique */}

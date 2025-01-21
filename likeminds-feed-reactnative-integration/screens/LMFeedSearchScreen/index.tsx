@@ -3,15 +3,14 @@ import React, { useCallback, useLayoutEffect } from 'react'
 import STYLES from "../../constants/Styles"
 import { LMHeader, LMLoader, LMPost } from '../../components'
 import { LMIcon, LMInputText, LMText } from '../../uiComponents'
-import { SearchPostContextProvider } from '../../context'
 import { LMPostViewData } from '../../models'
-import { 
-DELETE_POST_MENU_ITEM, EDIT_POST_MENU_ITEM,
-HIDE_POST_MENU_ITEM, NAVIGATED_FROM_POST,
-PIN_POST_MENU_ITEM, POST_TYPE,
-REPORT_POST_MENU_ITEM, UNHIDE_POST_MENU_ITEM,
-UNPIN_POST_MENU_ITEM
- } from '../../constants/Strings'
+import {
+    DELETE_POST_MENU_ITEM, EDIT_POST_MENU_ITEM,
+    HIDE_POST_MENU_ITEM, NAVIGATED_FROM_POST,
+    PIN_POST_MENU_ITEM, POST_TYPE,
+    REPORT_POST_MENU_ITEM, UNHIDE_POST_MENU_ITEM,
+    UNPIN_POST_MENU_ITEM
+} from '../../constants/Strings'
 import { Events } from '../../enums/Events'
 import { LMFeedAnalytics } from '../../analytics/LMFeedAnalytics'
 import { Keys } from '../../enums/Keys'
@@ -28,9 +27,7 @@ import { SearchedPostListContextValues, useSearchedPostListContext } from '../..
 
 const LMFeedSearchScreen = ({ navigation, route }) => {
     return (
-        <SearchPostContextProvider navigation={navigation} route={route}>
-            <LMFeedSearchScreenComponent navigation={navigation} route={route} />
-        </SearchPostContextProvider>
+        <LMFeedSearchScreenComponent navigation={navigation} route={route} />
     )
 }
 
@@ -66,7 +63,7 @@ const LMFeedSearchScreenComponent = ({ navigation, route }) => {
         searchPostQuery,
         setSearchPostQuery,
         onBackArrowPress,
-        onCrossPress
+        onCrossPress,
     }: SearchedPostListContextValues = useSearchedPostListContext();
     const postListStyle = STYLES.$POST_LIST_STYLE;
     const loaderStyle = STYLES.$LOADER_STYLE;
@@ -165,6 +162,7 @@ const LMFeedSearchScreenComponent = ({ navigation, route }) => {
                         key={item?.id}
                     >
                         <LMPost
+                            highlight={searchPostQuery}
                             isHeadingEnabled={isHeadingEnabled}
                             isTopResponse={isTopResponse}
                             post={item}
@@ -241,7 +239,8 @@ const LMFeedSearchScreenComponent = ({ navigation, route }) => {
             isHeadingEnabled,
             isTopResponse,
             hideTopicsView,
-            searchFeedData
+            searchFeedData,
+            searchPostQuery
         ]
     );
 
@@ -273,46 +272,39 @@ const LMFeedSearchScreenComponent = ({ navigation, route }) => {
                     </View>
                 </View>
             </View>
-            { searchPostQuery?.length > 0 ?
-                feedFetching ? 
-                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                    <LMLoader {...loaderStyle?.loader} />
-                </View> :
-                searchFeedData?.length > 0 ?
-                <View>
-                <FlatList
-                    style={postListStyle?.listStyle}
-                    data={searchFeedData}
-                    extraData={searchFeedData}
-                    renderItem={renderItem}
-                    onEndReachedThreshold={0.9}
-                    onEndReached={handleLoadMore}
-                    removeClippedSubviews={true}
-                    keyExtractor={(item) => {
-                        return item?.id?.toString();
-                    }}
-                    ListFooterComponent={renderLoader}
-                    onViewableItemsChanged={({ changed, viewableItems }) => {
-                        if (changed) {
-                            if (viewableItems) {
-                                setPostInViewport(viewableItems?.[0]?.item?.id);
-                            }
+            <FlatList
+                style={postListStyle?.listStyle}
+                contentContainerStyle={{
+                    flexGrow: 1
+                }}
+                data={searchFeedData}
+                extraData={searchFeedData}
+                renderItem={renderItem}
+                ListEmptyComponent={() => {
+                    if (feedFetching) {
+                        return (
+                            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                <LMLoader {...loaderStyle?.loader} />
+                            </View>
+                        )
+                    }
+                }}
+                onEndReachedThreshold={0.3}
+                onEndReached={handleLoadMore}
+                removeClippedSubviews={true}
+                keyExtractor={(item) => {
+                    return item?.id?.toString();
+                }}
+                ListFooterComponent={renderLoader}
+                onViewableItemsChanged={({ changed, viewableItems }) => {
+                    if (changed) {
+                        if (viewableItems) {
+                            setPostInViewport(viewableItems?.[0]?.item?.id);
                         }
-                    }}
-                    viewabilityConfig={{ viewAreaCoveragePercentThreshold: 60 }}
-                />
-                </View> :
-                <View style={{flex: 1, justifyContent:'center', alignItems: 'center'}}>
-                    <LMText textStyle={{
-                        fontSize: 16
-                    }}>No Matching Posts Found</LMText>
-                </View> :
-                <View style={{flex: 1, justifyContent:'center', alignItems: 'center'}}>
-                    <LMText textStyle={{
-                        fontSize: 16
-                    }}>Search Your Query</LMText>
-                </View>
-            }
+                    }
+                }}
+                viewabilityConfig={{ viewAreaCoveragePercentThreshold: 60 }}
+            />
 
             {/* delete post modal */}
             {showDeleteModal && (

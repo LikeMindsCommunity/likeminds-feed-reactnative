@@ -63,7 +63,6 @@ import { postLikesClear } from "../store/actions/postLikes";
 import { ActivityIndicator, View } from "react-native";
 import Layout from "../constants/Layout";
 import STYLES from "../constants/Styles";
-import { useUniversalFeedContext } from "../context/universalFeedContext";
 import { useIsFocused } from "@react-navigation/native";
 import { CLEAR_SEARCH, HIDE_POST_STATE, SET_CURRENT_ID_OF_VIDEO } from "../store/types/types";
 import { SHOW_TOAST } from "..//store/types/loader";
@@ -76,7 +75,7 @@ interface SearchedPostListContextProps {
     children?: ReactNode;
     navigation: NativeStackNavigationProp<
         RootStackParamList,
-        "PostsList" | "UniversalFeed"
+        "LMFeedSearchScreen"
     >;
     route: {
         key: string;
@@ -89,7 +88,7 @@ interface SearchedPostListContextProps {
 export interface SearchedPostListContextValues {
     navigation: NativeStackNavigationProp<
         RootStackParamList,
-        "PostsList" | "UniversalFeed"
+        "LMFeedSearchScreen"
     >;
     searchFeedData: Array<LMPostViewData>;
     showLoader: number;
@@ -112,7 +111,7 @@ export interface SearchedPostListContextValues {
     setShowActionListModal: Dispatch<SetStateAction<boolean>>;
     setFeedPageNumber?: Dispatch<SetStateAction<number>>;
     setSearchPostQuery: Dispatch<SetStateAction<string>>;
-    searchPostQuery: String;
+    searchPostQuery: string;
     renderLoader: () => JSX.Element | null;
     getPostDetail: () => LMPostViewData;
     handleDeletePost: (visible: boolean) => void;
@@ -317,14 +316,22 @@ export const SearchedPostListContextProvider = ({
             clearTimeout(debounceId);
         }
 
-        if (searchPostQuery?.length == 0) return
+        if (searchPostQuery?.length == 0) {
+            dispatch({
+                type: CLEAR_SEARCH
+            })
+            return;
+        }
 
         let id = setTimeout(() => {
+            dispatch({
+                type: CLEAR_SEARCH
+            })
             setFeedPageNumber(1);
             setIsPaginationStopped(false);
             setIsLoading(false);
             fetchSearchFeed(1);
-        }, 1000)
+        }, 500)
 
         setDebounceId(id);
     }, [searchPostQuery])
@@ -469,8 +476,8 @@ export const SearchedPostListContextProvider = ({
 
     //pagination loader in the footer
     const renderLoader = () => {
-        return isLoading ? (
-            <View style={{ paddingVertical: Layout.normalize(20) }}>
+        return isLoading && searchFeedData?.length > 0 ? (
+            <View style={{ height: Layout.normalize(120) }}>
                 <LMLoader {...loaderStyle?.loader} />
             </View>
         ) : null;
@@ -480,7 +487,6 @@ export const SearchedPostListContextProvider = ({
         navigation,
         searchFeedData,
         showLoader,
-        //feedPageNumber,
         modalPosition,
         showActionListModal,
         selectedMenuItemPostId,
