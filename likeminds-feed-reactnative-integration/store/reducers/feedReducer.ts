@@ -102,42 +102,52 @@ export const feedReducer = (state = initialState, action) => {
       const { refresh } = action.body;
       return { ...state, refreshScreenFromOnboardingScreen: refresh };
     }
+
     case SET_FLOW_TO_POST_DETAIL_SCREEN: {
       const { flowToPostDetailScreen } = action.body;
       return { ...state, flowToPostDetailScreen: flowToPostDetailScreen };
     }
+
     case SET_NOTIFICATION_COUNT: {
       const { notificationCount } = action.body;
       return { ...state, notificationCount: notificationCount };
     }
+
     case SET_FLOW_TO_CAROUSEL_SCREEN: {
       const { flowToCarouselScreen } = action.body;
       return { ...state, flowToCarouselScreen: flowToCarouselScreen };
     }
+
     case SET_FLOW_TO_CREATE_POST_SCREEN: {
       const { flowToCreatePostScreen } = action.body;
       return { ...state, flowToCreatePostScreen: flowToCreatePostScreen };
     }
+
     case SET_REPORT_MODEL_STATUS_IN_POST_DETAIL: {
       const { reportModalStatus } = action.body;
       return { ...state, reportModalOpenedInPostDetail: reportModalStatus };
     }
+
     case SET_CURRENT_ID_OF_VIDEO: {
       const { currentIdOfVideo } = action.body;
       return { ...state, currentIdOfVideo: currentIdOfVideo };
     }
+
     case SET_PAUSED_STATUS: {
       const { paused } = action.body;
       return { ...state, pauseStatus: paused };
     }
+
     case SET_MUTED_STATE: {
       const { mute } = action.body;
       return { ...state, muteStatus: mute };
     }
+
     case STATUS_BAR_STYLE: {
       const { color } = action.body;
       return { ...state, statusBarStyle: color };
     }
+
     case UNIVERSAL_TOPICS_FEED_SUCCESS: {
       const { users = {}, topics } = action.body;
       let feedData = state.feed;
@@ -155,6 +165,7 @@ export const feedReducer = (state = initialState, action) => {
         topics: { ...state.topics, ...topics },
       };
     }
+
     case SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN: {
       const { topics = {} } = action.body;
       return {
@@ -162,12 +173,14 @@ export const feedReducer = (state = initialState, action) => {
         selectedTopicsFromUniversalFeedScreen: topics,
       };
     }
+
     case CLEAR_SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN: {
       return {
         ...state,
         selectedTopicsFromUniversalFeedScreen: [],
       };
     }
+
     case SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN: {
       const { topics = {} } = action.body;
       return {
@@ -175,6 +188,7 @@ export const feedReducer = (state = initialState, action) => {
         selectedTopicsForUniversalFeedScreen: topics,
       };
     }
+
     case SELECTED_TOPICS_FOR_CREATE_POST_SCREEN: {
       const { topics = {} } = action.body;
       return {
@@ -182,16 +196,19 @@ export const feedReducer = (state = initialState, action) => {
         selectedTopicsForCreatePostScreen: topics,
       };
     }
+
     case CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN: {
       return {
         ...state,
         selectedTopicsForCreatePostScreen: [],
       };
     }
+
     case SET_TOPICS: {
       const { topics = {} } = action.body;
       return { ...state, topics: { ...state.topics, ...topics } };
     }
+
     case MAPPED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN: {
       const { topics = {} } = action.body;
       return {
@@ -199,12 +216,14 @@ export const feedReducer = (state = initialState, action) => {
         mappedTopics: topics,
       };
     }
+
     case CLEAR_SELECTED_TOPICS: {
       return {
         ...state,
         selectedTopicsForUniversalFeedScreen: [],
       };
     }
+
     case UNIVERSAL_FEED_SUCCESS: {
       const { users = {}, topics } = action.body;
       let feedData = state.feed;
@@ -222,12 +241,14 @@ export const feedReducer = (state = initialState, action) => {
         topics: { ...state.topics, ...topics },
       };
     }
+
     case UNIVERSAL_FEED_REFRESH_SUCCESS: {
       const { users = {} } = action.body;
       // model converter function
       const post = convertUniversalFeedPosts(action.body);
       return { ...state, feed: post, users: users };
     }
+
     case PERSONALISED_FEED_SUCCESS: {
       const { users = {}, topics } = action.body;
       let feedData = state.feed;
@@ -245,12 +266,14 @@ export const feedReducer = (state = initialState, action) => {
         topics: { ...state.topics, ...topics },
       };
     }
+
     case PERSONALISED_FEED_REFRESH_SUCCESS: {
       const { users = {} } = action.body;
       // model converter function
       const post = convertUniversalFeedPosts(action.body);
       return { ...state, feed: post, users: users };
     }
+
     case DELETE_POST_STATE: {
       const updatedFeed = state.feed;
       // this gets the index of the post that is deleted
@@ -275,10 +298,12 @@ export const feedReducer = (state = initialState, action) => {
       }
       return { ...state, feed: updatedFeed };
     }
+
     case REPORT_TAGS_SUCCESS: {
       const { reportTags = {} } = action.body;
       return { ...state, reportTags: reportTags };
     }
+
     case PIN_POST_STATE: {
       const updatedFeed = state.feed;
       // this gets the index of post that is pinned
@@ -314,6 +339,7 @@ export const feedReducer = (state = initialState, action) => {
 
       return { ...state, feed: updatedFeed };
     }
+
     case LIKE_POST_STATE: {
       const updatedFeed = state.feed;
       // this gets the index of post that is liked
@@ -336,6 +362,7 @@ export const feedReducer = (state = initialState, action) => {
       }
       return { ...state, feed: updatedFeed };
     }
+
     case SAVE_POST_STATE: {
       const updatedFeed = state.feed;
       // this gets the index of post that is saved
@@ -350,6 +377,7 @@ export const feedReducer = (state = initialState, action) => {
 
       return { ...state, feed: updatedFeed };
     }
+
     case EDIT_POST_SUCCESS: {
       const {
         post = {},
@@ -370,6 +398,7 @@ export const feedReducer = (state = initialState, action) => {
       }
       return { ...state, feed: updatedFeed };
     }
+
     case CREATE_COMMENT_SUCCESS: {
       const { comment } = action.body;
       const updatedFeed = state.feed;
@@ -381,6 +410,7 @@ export const feedReducer = (state = initialState, action) => {
       });
       return { ...state };
     }
+
     case DELETE_COMMENT_STATE: {
       const updatedFeed = state.feed;
       // finds the post whose comment is deleted in post detail and manage its comment count
@@ -391,6 +421,7 @@ export const feedReducer = (state = initialState, action) => {
       });
       return { ...state };
     }
+
     case HIDE_POST_STATE: {
       const feed = state.feed;
       const { postId, title } = action.body;
@@ -411,9 +442,11 @@ export const feedReducer = (state = initialState, action) => {
 
       return { ...state };
     }
+
     case AUTO_PLAY_POST_VIDEO: {
       return { ...state, autoPlayVideoPostId: action.body };
     }
+
     case CREATE_POST_SUCCESS: {
       // model converter function
       const post = convertSingleFeedPost(action.body);
@@ -423,6 +456,7 @@ export const feedReducer = (state = initialState, action) => {
         return state;
       }
     }
+
     case POST_DATA_SUCCESS: {
       // model converter function
       const post = convertSingleFeedPost(action.body);

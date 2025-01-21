@@ -35,12 +35,19 @@ import {
   LMUserViewData,
 } from "../models";
 import { LMFilterCommentViewData } from "../models/LMFilterCommentViewData";
+import { LMTopicViewData } from "../models/LMTopicViewData";
 
 /**
  * @param data: [GetFeedResponse]
  * @returns list of [LMPostViewData]
  */
-export function convertUniversalFeedPosts(data: any): LMPostViewData[] {
+export function convertUniversalFeedPosts(data: {
+  posts: Post[];
+  topics: { [key: string]: LMTopicViewData };
+  users: { [key: string]: LMUserViewData };
+  filteredComments: { [key: string]: LMFilterCommentViewData };
+  widgets: any;
+}): LMPostViewData[] {
   const postData = data.posts ? data.posts : [];
   const userData = data.users;
   const widgetData = data.widgets;
@@ -59,8 +66,13 @@ export function convertUniversalFeedPosts(data: any): LMPostViewData[] {
  * @param data: [GetPostResponse]
  * @returns list of [LMPostViewData]
  */
-export function convertSingleFeedPost(data: any): LMPostViewData {
-  const postData = data.post ? data.post : [];
+export function convertSingleFeedPost(data: {
+  post: Post;
+  users: { [key: string]: LMUserViewData };
+  widgets: any;
+  filteredComments: { [key: string]: LMFilterCommentViewData };
+}): LMPostViewData {
+  const postData: Post = data.post;
   const userData = data.users;
   const widgetData = data.widgets;
   const filteredComments = data.filteredComments;
@@ -82,7 +94,7 @@ export function convertToLMPostViewData(
   post: Post,
   user: { [key: string]: LMUserViewData },
   widgets: any,
-  filteredComments: LMFilterCommentViewData
+  filteredComments: { [key: string]: LMFilterCommentViewData }
 ): LMPostViewData {
   const postData: LMPostViewData = {
     id: post.id,
