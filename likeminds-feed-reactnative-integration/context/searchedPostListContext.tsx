@@ -172,7 +172,7 @@ export const SearchedPostListContextProvider = ({
     const searchedPostsData = useAppSelector(state => state.feed.searchedPosts);
     
     const loaderStyle = STYLES.$LOADER_STYLE;
-    const PAGE_SIZE = 5;
+    const PAGE_SIZE = 10;
     const [postInViewport, setPostInViewport] = useState("");
     const isFocus = useIsFocused();
 
@@ -240,7 +240,6 @@ export const SearchedPostListContextProvider = ({
 
     const handleLoadMore = async () => {
           if (!isLoading && !isPaginationStopped && searchPostQuery?.length > 0) {
-            console.log("PAGINATING");
             const newPage = feedPageNumber + 1;
             setFeedPageNumber((page) => {
               return page + 1;
@@ -319,6 +318,7 @@ export const SearchedPostListContextProvider = ({
 
 
     useEffect(() => {
+        setDisplayEmptyComponent(false);
         if (debounceId) {
             clearTimeout(debounceId);
         }
