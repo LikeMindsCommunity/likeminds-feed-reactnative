@@ -1,6 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import { PostListContextProvider, usePostListContext } from '../context'
 import SearchFeed from '../screens/searchFeed'
 import { SearchedPostListContextProvider, useSearchedPostListContext } from '../context/searchedPostListContext'
 
