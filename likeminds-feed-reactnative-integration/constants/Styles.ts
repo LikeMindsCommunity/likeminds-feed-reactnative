@@ -408,7 +408,15 @@ export class LMFeedTheme {
     this.$USER_ONBOARDING_SCREEN_STYLES = {
       ...onBoardingStyles,
     };
+    
   }
+
+  public setSearchFeedStyles(searchFeedStyles: SearchFeedStyleProps) {
+    this.$SEARCH_FEED_STYLES = {
+      ...searchFeedStyles
+    }
+  }
+
 }
 
 export const STYLES = new LMFeedTheme();

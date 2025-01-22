@@ -517,4 +517,8 @@ export interface SearchFeedStyleProps {
   inputBoxStyle?: ViewStyle;
   crossIconStyle?: LMIconProps;
   backIconStyle?: LMIconProps;
+  listEmptyStyle?: {
+    listEmptyTextStyle?: TextStyle;
+    listEmptyImageStyle?: LMIconProps;
+  }
 }
