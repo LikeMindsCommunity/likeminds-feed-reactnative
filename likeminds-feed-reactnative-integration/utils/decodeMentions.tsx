@@ -83,7 +83,7 @@ const decode = (
         }
       } else {
         if (highlight?.length > 0) {
-          const highlightRegex = new RegExp(`(${highlight})`, "i");
+          const highlightRegex = new RegExp(`\\b(${highlight})\\b`, "i");
           const highlightParts = matchResult?.split(highlightRegex);
           for (const highlightPart of highlightParts) {
             arr.push({ key: highlightPart, route: null });
@@ -98,7 +98,7 @@ const decode = (
       <Text style={{ fontFamily: STYLES.$FONT_TYPES.LIGHT }}>
         {arr.map((val, index) => (
           <Text
-            style={{ fontFamily: STYLES.$FONT_TYPES.LIGHT, backgroundColor: highlight?.toLowerCase() == val?.key?.toLowerCase() ? 'yellow' : 'white' }}
+            style={{ fontFamily: STYLES.$FONT_TYPES.LIGHT, fontWeight: val?.key?.toLowerCase() === highlight?.toLowerCase() ? "bold" : '400'  }}
             key={val.key + index}
           >
             {/* key should be unique so we are passing `val(abc) + index(number) = abc2` to make it unique */}
