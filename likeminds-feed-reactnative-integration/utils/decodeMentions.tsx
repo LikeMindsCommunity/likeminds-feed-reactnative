@@ -83,7 +83,7 @@ const decode = (
         }
       } else {
         if (highlight?.length > 0) {
-          const highlightRegex = new RegExp(`\\b(${highlight})\\b`, "i");
+          const highlightRegex = new RegExp(`(${highlight})`, "i");
           const highlightParts = matchResult?.split(highlightRegex);
           for (const highlightPart of highlightParts) {
             arr.push({ key: highlightPart, route: null });
