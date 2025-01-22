@@ -3,6 +3,7 @@ import { LMAttachmentViewData } from "./LMAttachmentViewData";
 import { LMCommentViewData } from "./LMCommentViewData";
 import { LMMenuItemsViewData } from "./LMMenuItemsViewData";
 import { LMUserViewData } from "./LMUserViewData";
+import { LMFilterCommentViewData } from "./LMFilterCommentViewData";
 
 // data model for post ViewData
 export interface LMPostViewData {
@@ -28,5 +29,5 @@ export interface LMPostViewData {
   user: LMUserViewData;
   topics: string[];
   users: { [key: string]: LMUserViewData };
-  filteredComments: FilterComment;
+  filteredComments?: LMFilterCommentViewData;
 }

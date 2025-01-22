@@ -64,7 +64,7 @@ export default function UserOnboardingCallbacksContextProvider({
     createScreenCtaButtonText = "CONTINUE",
     editScreenTitle,
     editScreenSubtitle,
-    editScreenCtaButtonText = "EDIT",
+    editScreenCtaButtonText = "DONE",
     editScreenHeaderTitle = "Profile",
     addPicturePrompt,
     maxPictureSizePrompt,
