@@ -754,7 +754,7 @@ const PostDetailComponent = React.memo(() => {
           </View>
         ) : null}
         {/* input field */}
-        <View style={{ position: "absolute", bottom: 0 }}>
+        <View style={{ position: "absolute", bottom: 0, width: "100%" }}>
           {/* users tagging list */}
           {allTags && isUserTagging ? (
             <View
