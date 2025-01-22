@@ -43,6 +43,10 @@ const LMPostContent = React.memo(() => {
     }
   };
 
+  useEffect(() => {
+    setTruncatedText("");
+  }, [post, highlight])
+
   return (
     <View
       style={StyleSheet.flatten([
