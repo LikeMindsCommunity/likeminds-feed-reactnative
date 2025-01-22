@@ -185,7 +185,7 @@ export const PostListContextProvider = ({
     setIsPaginationStopped,
     predefinedTopics,
     postSeen,
-    personalisedFeed,
+    feedType,
   } = useUniversalFeedContext();
 
   const PAGE_SIZE = 20;
@@ -213,7 +213,7 @@ export const PostListContextProvider = ({
 
     const topicIds = topics?.length > 0 && topics[0] != "0" ? topics : [];
 
-    if (personalisedFeed === FeedType.PERSONALISED_FEED) {
+    if (feedType === FeedType.PERSONALISED_FEED) {
       // calling personalised API
       try {
         const getPersonalisedResponse = await dispatch(

@@ -259,7 +259,7 @@ const App = () => {
                   name={UNIVERSAL_FEED}
                   component={UniversalFeedScreen}
                   initialParams={{
-                    personalisedFeed: FeedType.PERSONALISED_FEED,
+                    feedType: FeedType.UNIVERSAL_FEED,
                   }}
                 />
                 <Stack.Screen

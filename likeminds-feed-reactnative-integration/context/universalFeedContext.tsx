@@ -117,7 +117,7 @@ export interface UniversalFeedContextValues {
   setIsPaginationStopped: Dispatch<SetStateAction<boolean>>;
   predefinedTopics?: string[];
   postSeen: (initialPosts?: string[]) => void;
-  personalisedFeed?: FeedType;
+  feedType?: FeedType;
 }
 
 const UniversalFeedContext = createContext<
@@ -172,8 +172,8 @@ export const UniversalFeedContextProvider = ({
   const [localRefresh, setLocalRefresh] = useState(false);
   const listRef = useRef<FlatList<LMPostViewData>>(null);
   const route = useRoute();
-  const { personalisedFeed } = route.params as {
-    personalisedFeed?: FeedType;
+  const { feedType } = route.params as {
+    feedType?: FeedType;
   };
   const myClient = Client.myClient;
 
@@ -202,7 +202,7 @@ export const UniversalFeedContextProvider = ({
         ? selectedTopics
         : [];
 
-    if (personalisedFeed === FeedType.PERSONALISED_FEED) {
+    if (feedType === FeedType.PERSONALISED_FEED) {
       const getPersonalisedResponse = await dispatch(
         refreshPersonalisedFeed(
           GetPersonalisedFeedRequest.builder()
@@ -700,7 +700,7 @@ export const UniversalFeedContextProvider = ({
     setIsPaginationStopped,
     predefinedTopics,
     postSeen,
-    personalisedFeed,
+    feedType,
   };
 
   return (

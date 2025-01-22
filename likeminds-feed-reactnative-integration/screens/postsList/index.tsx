@@ -87,7 +87,7 @@ const PostsListComponent = ({
     onRefresh,
     localRefresh,
     postSeen,
-    personalisedFeed,
+    feedType,
   }: UniversalFeedContextValues = useUniversalFeedContext();
   const {
     navigation,
@@ -324,7 +324,7 @@ const PostsListComponent = ({
 
   // Detect viewable posts
   const onViewableItemsChanged = ({ viewableItems }) => {
-    if (personalisedFeed === FeedType.PERSONALISED_FEED) {
+    if (feedType === FeedType.PERSONALISED_FEED) {
       if (!hasFetched.current) {
         const visiblePostIds = viewableItems.map((item) => item.item.id);
         postSeen(visiblePostIds);
@@ -337,7 +337,7 @@ const PostsListComponent = ({
 
   // Monitor scroll state
   const onMomentumScrollEnd = async ({ nativeEvent }) => {
-    if (nativeEvent.velocity.y === 0 && personalisedFeed === FeedType.PERSONALISED_FEED) {
+    if (nativeEvent.velocity.y === 0 && feedType === FeedType.PERSONALISED_FEED) {
       await saveSeenPost();
       await postSeen();
     }
