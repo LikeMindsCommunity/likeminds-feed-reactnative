@@ -115,7 +115,8 @@ export interface UniversalFeedContextValues {
   isPaginationStopped: boolean;
   setIsPaginationStopped: Dispatch<SetStateAction<boolean>>;
   predefinedTopics?: string[];
-  postSeen: () => void;
+  postSeen: (initialPosts?: string[]) => void;
+  isPersonalisedFeed?: boolean;
 }
 
 const UniversalFeedContext = createContext<
@@ -170,7 +171,9 @@ export const UniversalFeedContextProvider = ({
   const [localRefresh, setLocalRefresh] = useState(false);
   const listRef = useRef<FlatList<LMPostViewData>>(null);
   const route = useRoute();
-  const { isPersonalisedFeed } = useLMFeed();
+  const { isPersonalisedFeed } = route.params as {
+    isPersonalisedFeed?: boolean;
+  };
   const myClient = Client.myClient;
 
   useEffect(() => {
@@ -210,14 +213,7 @@ export const UniversalFeedContextProvider = ({
           false
         )
       );
-
-      const firstPost = getPersonalisedResponse?.posts
-        ? getPersonalisedResponse?.posts[0]?.id
-        : [];
-      const secondPost = getPersonalisedResponse?.posts
-        ? getPersonalisedResponse?.posts[1]?.id
-        : [];
-      await postSeen([firstPost, secondPost]);
+      await postSeen();
     } else {
       await dispatch(
         refreshFeed(
@@ -703,6 +699,7 @@ export const UniversalFeedContextProvider = ({
     setIsPaginationStopped,
     predefinedTopics,
     postSeen,
+    isPersonalisedFeed,
   };
 
   return (

@@ -1,9 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import {
   FlatList,
   RefreshControl,
@@ -91,6 +86,7 @@ const PostsListComponent = ({
     onRefresh,
     localRefresh,
     postSeen,
+    isPersonalisedFeed,
   }: UniversalFeedContextValues = useUniversalFeedContext();
   const {
     navigation,
@@ -124,7 +120,6 @@ const PostsListComponent = ({
     saveSeenPost,
   }: PostListContextValues = usePostListContext();
 
-  const { isPersonalisedFeed } = useLMFeed();
   const postListStyle = STYLES.$POST_LIST_STYLE;
   const loaderStyle = STYLES.$LOADER_STYLE;
   const {
@@ -143,6 +138,9 @@ const PostsListComponent = ({
     isTopResponse,
     hideTopicsView,
   } = useUniversalFeedCustomisableMethodsContext();
+
+  const hasFetched = useRef(false);
+
   // this function returns the id of the item selected from menu list and handles further functionalities accordingly
   const onMenuItemSelect = (
     postId: string,
@@ -326,7 +324,13 @@ const PostsListComponent = ({
   // Detect viewable posts
   const onViewableItemsChanged = ({ viewableItems }) => {
     if (isPersonalisedFeed) {
-      viewableItems?.forEach((item) => seenPost.current.add(item.item.id));
+      if (!hasFetched.current) {
+        const visiblePostIds = viewableItems.map((item) => item.item.id);
+        postSeen(visiblePostIds);
+        hasFetched.current = true; // Set flag to true after first call
+      } else {
+        viewableItems?.forEach((item) => seenPost.current.add(item.item.id));
+      }
     }
   };
 
@@ -340,7 +344,7 @@ const PostsListComponent = ({
 
   // debouced on momentum scroll end
   const debouncedOnMomentumScrollEnd = async ({ nativeEvent }) => {
-    debounce(onMomentumScrollEnd({ nativeEvent }), 5000);
+    debounce(onMomentumScrollEnd, 5000)({ nativeEvent });
   };
 
   return (

@@ -126,8 +126,8 @@ export function convertToLMPostViewData(
     filteredComments: post?.commentIds
       ? filteredComments.hasOwnProperty(post?.commentIds[0])
         ? filteredComments[post?.commentIds[0]]
-        : {}
-      : {},
+        : undefined
+      : undefined,
   };
   return postData;
 }

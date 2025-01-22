@@ -29,5 +29,5 @@ export interface LMPostViewData {
   user: LMUserViewData;
   topics: string[];
   users: { [key: string]: LMUserViewData };
-  filteredComments: LMFilterCommentViewData | {};
+  filteredComments?: LMFilterCommentViewData;
 }

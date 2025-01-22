@@ -38,7 +38,6 @@ interface LMFeedContextProps {
   videoCarouselCallback?: VideoCarouselCallback;
   onBoardUser: boolean;
   isUserOnboardingRequired?: boolean;
-  isPersonalisedFeed?: boolean;
   apiKey?: string;
   userUniqueId?: string;
   isInitiated: boolean;
@@ -81,7 +80,6 @@ export const LMFeedProvider = ({
   videoCarouselCallback,
   isUserOnboardingRequired = false,
   handleOnBoardingUserGestureBackPress,
-  isPersonalisedFeed = false,
 }: LMFeedProviderProps): React.JSX.Element => {
   const [isInitiated, setIsInitiated] = useState(false);
   const [onBoardUser, setOnboardUser] = useState(false);
@@ -208,7 +206,6 @@ export const LMFeedProvider = ({
     videoCarouselCallback: videoCarouselCallback,
     onBoardUser,
     isUserOnboardingRequired,
-    isPersonalisedFeed,
     isInitiated,
     withAPIKeySecurity,
     apiKey,

@@ -184,12 +184,12 @@ export const PostListContextProvider = ({
     setIsPaginationStopped,
     predefinedTopics,
     postSeen,
+    isPersonalisedFeed,
   } = useUniversalFeedContext();
 
   const PAGE_SIZE = 20;
   const [postInViewport, setPostInViewport] = useState("");
   const isFocus = useIsFocused();
-  const { isPersonalisedFeed } = useLMFeed();
   const seenPost = useRef<Set<string>>(new Set());
 
   // handles the auto play/pause of video in viewport
@@ -220,19 +220,13 @@ export const PostListContextProvider = ({
             GetPersonalisedFeedRequest.builder()
               .setPage(payload.page)
               .setPageSize(payload.pageSize)
-              .setShouldRecompute(true)
-              .setShouldReorder(true)
+              .setShouldRecompute(page <= 1 ? true : false)
+              .setShouldReorder(page <= 1 ? true : false)
               .build(),
             false
           )
         );
-        const firstPost = getPersonalisedResponse?.posts
-          ? getPersonalisedResponse?.posts[0]?.id
-          : [];
-        const secondPost = getPersonalisedResponse?.posts
-          ? getPersonalisedResponse?.posts[1]?.id
-          : [];
-        await postSeen([firstPost, secondPost]);
+        await postSeen();
         setFeedFetching(false);
         return getPersonalisedResponse;
       } catch (error) {
