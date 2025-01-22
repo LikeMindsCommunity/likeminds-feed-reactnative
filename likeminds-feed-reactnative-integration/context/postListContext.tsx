@@ -74,6 +74,7 @@ import { WordAction } from "../enums/Variables";
 import { CommunityConfigs } from "../communityConfigs";
 import { useLMFeed } from "../lmFeedProvider";
 import { Client } from "../client";
+import { FeedType } from "../enums/FeedType";
 
 interface PostListContextProps {
   children?: ReactNode;
@@ -184,7 +185,7 @@ export const PostListContextProvider = ({
     setIsPaginationStopped,
     predefinedTopics,
     postSeen,
-    isPersonalisedFeed,
+    personalisedFeed,
   } = useUniversalFeedContext();
 
   const PAGE_SIZE = 20;
@@ -212,7 +213,7 @@ export const PostListContextProvider = ({
 
     const topicIds = topics?.length > 0 && topics[0] != "0" ? topics : [];
 
-    if (isPersonalisedFeed) {
+    if (personalisedFeed === FeedType.PERSONALISED_FEED) {
       // calling personalised API
       try {
         const getPersonalisedResponse = await dispatch(

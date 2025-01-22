@@ -54,6 +54,7 @@ import pluralizeOrCapitalize from "../../utils/variables";
 import { useIsFocused } from "@react-navigation/native";
 import { useLMFeed } from "../../lmFeedProvider";
 import { debounce } from "../../utils/debounce";
+import { FeedType } from "../../enums/FeedType";
 
 const PostsList = ({
   route,
@@ -86,7 +87,7 @@ const PostsListComponent = ({
     onRefresh,
     localRefresh,
     postSeen,
-    isPersonalisedFeed,
+    personalisedFeed,
   }: UniversalFeedContextValues = useUniversalFeedContext();
   const {
     navigation,
@@ -323,7 +324,7 @@ const PostsListComponent = ({
 
   // Detect viewable posts
   const onViewableItemsChanged = ({ viewableItems }) => {
-    if (isPersonalisedFeed) {
+    if (personalisedFeed === FeedType.PERSONALISED_FEED) {
       if (!hasFetched.current) {
         const visiblePostIds = viewableItems.map((item) => item.item.id);
         postSeen(visiblePostIds);
@@ -336,7 +337,7 @@ const PostsListComponent = ({
 
   // Monitor scroll state
   const onMomentumScrollEnd = async ({ nativeEvent }) => {
-    if (nativeEvent.velocity.y === 0 && isPersonalisedFeed) {
+    if (nativeEvent.velocity.y === 0 && personalisedFeed === FeedType.PERSONALISED_FEED) {
       await saveSeenPost();
       await postSeen();
     }

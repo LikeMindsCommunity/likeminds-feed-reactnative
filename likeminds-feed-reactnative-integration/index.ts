@@ -39,7 +39,7 @@ import {
   NotificationFeedContextProvider,
   useNotificationFeedContext,
   CreatePollContextProvider,
-  UserOnboardingContextProvider
+  UserOnboardingContextProvider,
 } from "./context";
 import getNotification, { getRoute } from "./notification";
 import { LMFeedAnalytics } from "./analytics/LMFeedAnalytics";
@@ -66,7 +66,7 @@ import {
   LMQnAFeedScreen,
   LMTopicFeedScreen,
   LMSocialFeedScreen,
-  LMUserOnboardingScreen
+  LMUserOnboardingScreen,
 } from "./wrappers";
 import LMFeedTheme from "./constants/Styles";
 import {
@@ -79,9 +79,10 @@ import {
   LMCreatePostUIRender,
   LMCreatePostUserTagging,
   LMUserProfileSection,
-  LMCreatePostAnonymousCheckbox
+  LMCreatePostAnonymousCheckbox,
 } from "./components/LMCreatePost";
 import Layout from "./constants/Layout";
+import { FeedType } from "./enums/FeedType";
 
 export {
   LMOverlayProvider,
@@ -157,4 +158,5 @@ export {
   LMUserOnboardingScreen,
   LMCreatePostAnonymousCheckbox,
   Layout,
+  FeedType,
 };
