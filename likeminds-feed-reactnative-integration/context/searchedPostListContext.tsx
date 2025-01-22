@@ -100,6 +100,7 @@ export interface SearchedPostListContextValues {
     showReportModal: boolean;
     feedFetching: boolean;
     postInViewport: string;
+    displayEmptyComponent: boolean;
     onBackArrowPress: () => void;
     onCrossPress: () => void;
     setPostInViewport: Dispatch<SetStateAction<string>>;
@@ -167,6 +168,7 @@ export const SearchedPostListContextProvider = ({
     const [searchPostQuery, setSearchPostQuery] = useState<string>("");
     const [debounceId, setDebounceId] = useState<number | null>(null);
     const [feedPageNumber, setFeedPageNumber] = useState(1);
+    const [displayEmptyComponent, setDisplayEmptyComponent] = useState(false);
     const searchedPostsData = useAppSelector(state => state.feed.searchedPosts);
     
     const loaderStyle = STYLES.$LOADER_STYLE;
@@ -187,9 +189,9 @@ export const SearchedPostListContextProvider = ({
 
     // this functions gets universal feed data
     const fetchSearchFeed = async (page) => {
+        setFeedFetching(true);
         let response;
         if (page == 1) {
-            setFeedFetching(true);
             response = await dispatch(
                 getSearchedPosts(
                     SearchPostsRequest.builder()
@@ -200,6 +202,11 @@ export const SearchedPostListContextProvider = ({
                         .build()
                 )
             )
+            if (response?.posts?.length === 0 || !response?.posts) {
+                setDisplayEmptyComponent(true);    
+            } else {
+                setDisplayEmptyComponent(false);   
+            }
         } else {
             response = await dispatch(
                 getPaginatedSearchedPosts(
@@ -477,7 +484,7 @@ export const SearchedPostListContextProvider = ({
     //pagination loader in the footer
     const renderLoader = () => {
         return isLoading && searchFeedData?.length > 0 ? (
-            <View style={{ height: Layout.normalize(120) }}>
+            <View style={{ height: Layout.normalize(100) }}>
                 <LMLoader {...loaderStyle?.loader} />
             </View>
         ) : null;
@@ -521,7 +528,8 @@ export const SearchedPostListContextProvider = ({
         setModalPosition,
         postInViewport,
         setPostInViewport,
-        setSearchPostQuery
+        setSearchPostQuery,
+        displayEmptyComponent
     };
 
     return (

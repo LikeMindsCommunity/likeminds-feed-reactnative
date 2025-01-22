@@ -1,5 +1,5 @@
 import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity, RefreshControl, FlatList, ActivityIndicator } from 'react-native'
-import React, { useCallback, useLayoutEffect } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react'
 import STYLES from "../../constants/Styles"
 import { LMHeader, LMLoader, LMPost } from '../../components'
 import { LMIcon, LMInputText, LMText } from '../../uiComponents'
@@ -64,8 +64,10 @@ const LMFeedSearchScreenComponent = ({ navigation, route }) => {
         setSearchPostQuery,
         onBackArrowPress,
         onCrossPress,
+        displayEmptyComponent
     }: SearchedPostListContextValues = useSearchedPostListContext();
-    const postListStyle = STYLES.$POST_LIST_STYLE;
+    const postListStyle = STYLES.$SEARCH_FEED_STYLES?.postListStyle;
+    const searchFeedStyles = STYLES.$SEARCH_FEED_STYLES
     const loaderStyle = STYLES.$LOADER_STYLE;
     const {
         postLikeHandlerProp,
@@ -221,7 +223,7 @@ const LMFeedSearchScreenComponent = ({ navigation, route }) => {
                             hideTopicsView={hideTopicsView ?? false}
                         />
                     </TouchableOpacity>
-                    {!postListStyle.shouldHideSeparator &&
+                    {!postListStyle?.shouldHideSeparator &&
                         index != searchFeedData.length - 1 ? (
                         <View
                             style={{
@@ -253,29 +255,48 @@ const LMFeedSearchScreenComponent = ({ navigation, route }) => {
                         <LMIcon
                             height={24}
                             width={24}
+                            color={STYLES.$IS_DARK_THEME ? "white" : "black"}
                             assetPath={require("../../assets/images/backArrow_icon3x.png")}
+                            {...searchFeedStyles?.backIconStyle}
                         />
                     </TouchableOpacity>
                     <View style={styles.flexView}>
-                        <LMInputText textValueStyle={styles.textValueStyle}
+                        <LMInputText textValueStyle={StyleSheet.flatten([
+                            styles.textValueStyle,
+                            {
+                                color: STYLES.$IS_DARK_THEME ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT
+                            },
+                            searchFeedStyles?.searchQueryTextStyle
+                        ])}
                             rightIcon={{
                                 icon: {
                                     assetPath: require("../../assets/images/cross_icon3x.png"),
                                     height: 18,
-                                    width: 18
+                                    width: 18,
+                                    color: STYLES.$IS_DARK_THEME ? "white" : "black",
+                                    ...searchFeedStyles?.crossIconStyle
                                 },
                                 onTap: onCrossPress,
                             }}
-                            inputTextStyle={styles.inputTextStyle}
+                            inputTextStyle={StyleSheet.flatten([
+                                styles.inputTextStyle,
+                                searchFeedStyles?.inputBoxStyle
+                            ])}
                             inputText={searchPostQuery}
-                            onType={setSearchPostQuery} />
+                            onType={setSearchPostQuery}
+                            placeholderText={searchFeedStyles?.placeholderText ? searchFeedStyles?.placeholderText : "Search..."}
+                            placeholderTextColor={searchFeedStyles?.placeholderTextColor ? searchFeedStyles?.placeholderTextColor :
+                                STYLES.$IS_DARK_THEME ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT
+                            }
+                        />
                     </View>
                 </View>
             </View>
             <FlatList
                 style={postListStyle?.listStyle}
                 contentContainerStyle={{
-                    flexGrow: 1
+                    flexGrow: 1,
+                    ...postListStyle?.listContentContainerStyle
                 }}
                 data={searchFeedData}
                 extraData={searchFeedData}
@@ -283,8 +304,17 @@ const LMFeedSearchScreenComponent = ({ navigation, route }) => {
                 ListEmptyComponent={() => {
                     if (feedFetching) {
                         return (
-                            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                 <LMLoader {...loaderStyle?.loader} />
+                            </View>
+                        )
+                    } else if (searchPostQuery?.length > 0 && !feedFetching && searchFeedData?.length == 0) {
+                        return displayEmptyComponent && (
+                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                <LMIcon height={50} width={50} assetPath={require("../../assets/images/nothing3x.png")} />
+                                <Text style={{color: STYLES.$IS_DARK_THEME ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT }}>
+                                    Found no matching posts
+                                </Text>
                             </View>
                         )
                     }
@@ -367,10 +397,10 @@ const styles = StyleSheet.create({
         marginLeft: 12
     },
     flexView: {
-        flex: 1
+        flex: 1,
     },
     textValueStyle: {
-        fontSize: 16
+        fontSize: 16,
     },
     inputTextStyle: {
         height: 40,
