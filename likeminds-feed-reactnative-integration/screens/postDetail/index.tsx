@@ -137,7 +137,7 @@ const PostDetail = ({
   isTopResponse,
   lmPostCustomFooter,
   customWidgetPostView,
-  hideTopicsView = false
+  hideTopicsView = false,
 }: PostDetailProps) => {
   return (
     <PollCustomisableMethodsContextProvider
@@ -397,15 +397,29 @@ const PostDetailComponent = React.memo(() => {
               : true
           }
           heading={
-            customScreenHeader?.heading ? customScreenHeader?.heading : (pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.post ?? "post",WordAction.firstLetterCapitalSingular))
+            customScreenHeader?.heading
+              ? customScreenHeader?.heading
+              : pluralizeOrCapitalize(
+                  CommunityConfigs?.getCommunityConfigs("feed_metadata")?.value
+                    ?.post ?? "post",
+                  WordAction.firstLetterCapitalSingular
+                )
           }
           subHeading={
             customScreenHeader?.subHeading
               ? customScreenHeader?.subHeading
               : postDetail?.id
               ? postDetail?.commentsCount > 1
-                ? `${postDetail?.commentsCount} ${(pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.comment ?? "comment",WordAction.firstLetterCapitalPlural))}`
-                : `${postDetail?.commentsCount} ${(pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.comment ?? "comment",WordAction.firstLetterCapitalSingular))}`
+                ? `${postDetail?.commentsCount} ${pluralizeOrCapitalize(
+                    CommunityConfigs?.getCommunityConfigs("feed_metadata")
+                      ?.value?.comment ?? "comment",
+                    WordAction.firstLetterCapitalPlural
+                  )}`
+                : `${postDetail?.commentsCount} ${pluralizeOrCapitalize(
+                    CommunityConfigs?.getCommunityConfigs("feed_metadata")
+                      ?.value?.comment ?? "comment",
+                    WordAction.firstLetterCapitalSingular
+                  )}`
               : ""
           }
           onBackPress={() => {
@@ -486,8 +500,22 @@ const PostDetailComponent = React.memo(() => {
                               ]}
                             >
                               {postDetail.commentsCount > 1
-                                ? `${postDetail.commentsCount} ${(pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.comment ?? "comment",WordAction.firstLetterCapitalPlural))}`
-                                : `${postDetail.commentsCount} ${(pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.comment ?? "comment",WordAction.firstLetterCapitalSingular))}`}
+                                ? `${
+                                    postDetail.commentsCount
+                                  } ${pluralizeOrCapitalize(
+                                    CommunityConfigs?.getCommunityConfigs(
+                                      "feed_metadata"
+                                    )?.value?.comment ?? "comment",
+                                    WordAction.firstLetterCapitalPlural
+                                  )}`
+                                : `${
+                                    postDetail.commentsCount
+                                  } ${pluralizeOrCapitalize(
+                                    CommunityConfigs?.getCommunityConfigs(
+                                      "feed_metadata"
+                                    )?.value?.comment ?? "comment",
+                                    WordAction.firstLetterCapitalSingular
+                                  )}`}
                             </Text>
                           )}
                         </>
@@ -568,7 +596,13 @@ const PostDetailComponent = React.memo(() => {
                                         fontFamily: STYLES.$FONT_TYPES.MEDIUM,
                                       }}
                                     >
-                                      View more {(pluralizeOrCapitalize((CommunityConfigs.getCommunityConfigs("feed_metadata"))?.value.comment ?? "comment",WordAction.firstLetterCapitalPlural))}
+                                      View more{" "}
+                                      {pluralizeOrCapitalize(
+                                        CommunityConfigs.getCommunityConfigs(
+                                          "feed_metadata"
+                                        )?.value.comment ?? "comment",
+                                        WordAction.firstLetterCapitalPlural
+                                      )}
                                     </Text>
                                   ),
                                   textStyle: customCommentItemStyle
@@ -658,7 +692,14 @@ const PostDetailComponent = React.memo(() => {
                               postDetailStyle?.noCommentHeadingTextStyle,
                             ]}
                           >
-                            No {(pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.comment ?? "comment",WordAction.firstLetterCapitalSingular))} found
+                            No{" "}
+                            {pluralizeOrCapitalize(
+                              CommunityConfigs?.getCommunityConfigs(
+                                "feed_metadata"
+                              )?.value?.comment ?? "comment",
+                              WordAction.firstLetterCapitalSingular
+                            )}{" "}
+                            found
                           </Text>
                           <Text
                             style={[
@@ -666,7 +707,13 @@ const PostDetailComponent = React.memo(() => {
                               postDetailStyle?.noCommentSubHeadingTextStyle,
                             ]}
                           >
-                            Be the first one to create a {(pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.comment ?? "comment",WordAction.firstLetterCapitalSingular))}
+                            Be the first one to create a{" "}
+                            {pluralizeOrCapitalize(
+                              CommunityConfigs?.getCommunityConfigs(
+                                "feed_metadata"
+                              )?.value?.comment ?? "comment",
+                              WordAction.firstLetterCapitalSingular
+                            )}
                           </Text>
                         </View>
                       }
@@ -684,188 +731,6 @@ const PostDetailComponent = React.memo(() => {
                 {!localRefresh && <LMLoader />}
               </View>
             )}
-            {/* replying to username view which renders when the user is adding a reply to a comment */}
-            {replyOnComment.textInputFocus && (
-              <View
-                style={[
-                  styles.replyCommentSection,
-                  {
-                    bottom:
-                      Platform.OS === "android"
-                        ? keyboardIsVisible
-                          ? // navigatedFromComments
-                            //   ? Layout.normalize(89)
-                            //   :
-                            Layout.normalize(89)
-                          : Layout.normalize(64)
-                        : Layout.normalize(64),
-                  },
-                  customReplyingViewStyle?.replyingView,
-                ]}
-              >
-                {customReplyingViewStyle?.replyingText?.children ? (
-                  <LMText {...customReplyingViewStyle?.replyingText} />
-                ) : (
-                  <Text
-                    style={[
-                      styles.lightGreyColorText,
-                      customReplyingViewStyle?.replyingText?.textStyle,
-                    ]}
-                  >
-                    Replying to {replyToUsername}
-                  </Text>
-                )}
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  onPress={() =>
-                    setReplyOnComment({
-                      textInputFocus: false,
-                      commentId: "",
-                    })
-                  }
-                  style={customReplyingViewStyle?.cancelReplyIcon?.boxStyle}
-                >
-                  {customReplyingViewStyle?.cancelReplyIcon?.assetPath ||
-                  customReplyingViewStyle?.cancelReplyIcon?.iconUrl ? (
-                    <LMIcon {...customReplyingViewStyle?.cancelReplyIcon} />
-                  ) : (
-                    <Image
-                      source={require("../../assets/images/close_icon3x.png")}
-                      style={[
-                        customReplyingViewStyle?.cancelReplyIcon?.iconStyle,
-                        {
-                          width: customReplyingViewStyle?.cancelReplyIcon?.width
-                            ? customReplyingViewStyle?.cancelReplyIcon?.width
-                            : styles.crossIconStyle?.width,
-                          height: customReplyingViewStyle?.cancelReplyIcon
-                            ?.height
-                            ? customReplyingViewStyle?.cancelReplyIcon?.height
-                            : styles.crossIconStyle?.height,
-                        },
-                      ]}
-                      tintColor={
-                        customReplyingViewStyle?.cancelReplyIcon?.color
-                          ? customReplyingViewStyle?.cancelReplyIcon?.color
-                          : styles.crossIconStyle?.tintColor
-                      }
-                      resizeMode={
-                        customReplyingViewStyle?.cancelReplyIcon?.boxFit
-                      }
-                    />
-                  )}
-                </TouchableOpacity>
-              </View>
-            )}
-            {/* users tagging list */}
-            {allTags && isUserTagging ? (
-              <View
-                style={[
-                  styles.taggingListView,
-                  {
-                    paddingBottom: replyOnComment.textInputFocus
-                      ? // navigatedFromComments
-                        //   ? Layout.normalize(119)
-                        //   :
-                        Layout.normalize(119)
-                      : keyboardIsVisible
-                      ? // navigatedFromComments
-                        //   ? Layout.normalize(89)
-                        //   :
-                        Layout.normalize(89)
-                      : Layout.normalize(64),
-                    maxHeight: 300,
-                  },
-                  postDetailStyle?.userTaggingListStyle?.taggingListView,
-                ]}
-              >
-                <FlatList
-                  data={[...allTags]}
-                  renderItem={({ item }: { item: LMUserViewData }) => {
-                    return (
-                      <Pressable
-                        onPress={() => {
-                          const uuid = item?.sdkClientInfo?.uuid;
-                          const res = replaceLastMention(
-                            commentToAdd,
-                            taggedUserName,
-                            item?.name,
-                            uuid ? `user_profile/${uuid}` : uuid
-                          );
-                          setCommentToAdd(res);
-                          setAllTags([]);
-                          setIsUserTagging(false);
-                        }}
-                        style={[
-                          styles.taggingListItem,
-                          postDetailStyle?.userTaggingListStyle?.userTagView,
-                        ]}
-                        key={item?.id}
-                      >
-                        <LMProfilePicture
-                          {...postHeaderStyle?.profilePicture}
-                          fallbackText={{
-                            ...postHeaderStyle?.profilePicture?.fallbackText,
-                            children: postHeaderStyle?.profilePicture
-                              ?.fallbackText?.children ? (
-                              postHeaderStyle?.profilePicture?.fallbackText
-                                ?.children
-                            ) : (
-                              <Text
-                                style={{
-                                  fontFamily: STYLES.$FONT_TYPES.MEDIUM,
-                                }}
-                              >
-                                {nameInitials(item?.name)}
-                              </Text>
-                            ),
-                          }}
-                          fallbackTextBoxStyle={[
-                            styles.taggingListProfileBoxStyle,
-                            postHeaderStyle?.profilePicture
-                              ?.fallbackTextBoxStyle,
-                          ]}
-                          size={
-                            postHeaderStyle?.profilePicture?.size
-                              ? postHeaderStyle?.profilePicture?.size
-                              : 40
-                          }
-                        />
-
-                        <View style={styles.taggingListItemTextView}>
-                          <Text
-                            style={[
-                              styles.taggingListText,
-                              postDetailStyle?.userTaggingListStyle
-                                ?.userTagNameStyle,
-                            ]}
-                            numberOfLines={1}
-                          >
-                            {item?.name}
-                          </Text>
-                        </View>
-                      </Pressable>
-                    );
-                  }}
-                  extraData={{
-                    value: [commentToAdd, allTags],
-                  }}
-                  keyboardShouldPersistTaps={"handled"}
-                  onEndReached={handleLoadMore}
-                  onEndReachedThreshold={1}
-                  bounces={false}
-                  ListFooterComponent={
-                    isLoading ? (
-                      <View style={styles.taggingLoaderView}>
-                        <LMLoader size={15} />
-                      </View>
-                    ) : null
-                  }
-                  keyExtractor={(item: any, index) => {
-                    return index?.toString();
-                  }}
-                />
-              </View>
-            ) : null}
           </>
         ) : !showLoader ? (
           <View
@@ -879,204 +744,382 @@ const PostDetailComponent = React.memo(() => {
                 fontFamily: STYLES.$FONT_TYPES.LIGHT,
               }}
             >
-              Deleted {pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.post ?? "post",WordAction.allSmallSingular)}
+              Deleted{" "}
+              {pluralizeOrCapitalize(
+                CommunityConfigs?.getCommunityConfigs("feed_metadata")?.value
+                  ?.post ?? "post",
+                WordAction.allSmallSingular
+              )}
             </Text>
           </View>
         ) : null}
         {/* input field */}
-        {postDetail?.id && !showLoader ? (
-          isCM ? (
-            <LMInputText
-              {...customCommentTextInput}
-              inputText={commentToAdd}
-              onType={handleInputChange}
-              inputTextStyle={[
-                styles.textInputStyle,
+        <View style={{ position: "absolute", bottom: 0 }}>
+          {/* users tagging list */}
+          {allTags && isUserTagging ? (
+            <View
+              style={[
+                styles.taggingListView,
                 {
-                  bottom: keyboardIsVisible
-                    ? // navigatedFromComments
-                      //   ? Layout.normalize(0)
-                      //   :
-                      Layout.normalize(25)
-                    : 0,
+                  bottom: keyboardIsVisible ? Layout.normalize(25) : 0,
+                  maxHeight: 300,
                 },
-                customCommentTextInput?.inputTextStyle,
+                postDetailStyle?.userTaggingListStyle?.taggingListView,
               ]}
-              autoFocus={
-                customCommentTextInput?.autoFocus != undefined
-                  ? customCommentTextInput?.autoFocus
-                  : routeParams
-                  ? true
-                  : keyboardFocusOnReply
-                  ? true
-                  : editCommentFocus
-                  ? true
-                  : commentFocus
-              }
-              placeholderText={
-                customCommentTextInput?.placeholderText
-                  ? customCommentTextInput?.placeholderText
-                  : `Write a ${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.comment ?? "comment",WordAction.allSmallSingular)}`
-              }
-              placeholderTextColor={
-                customCommentTextInput?.placeholderTextColor
-                  ? customCommentTextInput?.placeholderTextColor
-                  : STYLES.$IS_DARK_THEME
-                  ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
-                  : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
-              }
-              inputRef={myRef}
-              rightIcon={{
-                ...customCommentTextInput?.rightIcon,
-                onTap: () => {
-                  customCommentTextInput?.rightIcon?.onTap();
-                  commentToAdd
-                    ? editCommentFocus
-                      ? commentEdit()
-                      : replyOnComment.textInputFocus
-                      ? addNewReplyProp
-                        ? addNewReplyProp(
-                            postDetail?.id,
-                            replyOnComment.commentId
-                          )
-                        : addNewReply(postDetail?.id, replyOnComment.commentId)
-                      : addNewCommentProp
-                      ? addNewCommentProp(postDetail?.id)
-                      : addNewComment(postDetail?.id)
-                    : {};
-                  setAllTags([]);
-                  setIsUserTagging(false);
-                },
-                icon: {
-                  assetPath: require("../../assets/images/send_icon3x.png"),
-                  iconStyle: {
-                    opacity: commentToAdd ? 1 : 0.7,
-                  },
-                  color: STYLES.$COLORS.PRIMARY,
-                  ...customCommentTextInput?.rightIcon?.icon,
-                },
-                isClickable: commentToAdd
-                  ? customCommentTextInput?.rightIcon?.isClickable != undefined
-                    ? customCommentTextInput?.rightIcon?.isClickable
-                    : true
-                  : false,
-              }}
-              multilineField={
-                customCommentTextInput?.multilineField != undefined
-                  ? customCommentTextInput?.multilineField
-                  : true
-              }
-              partTypes={[
-                {
-                  trigger: "@", // Should be a single character like '@' or '#'
-                  textStyle: {
-                    color: "blue",
-                    ...customCommentTextInput?.mentionTextStyle,
-                  }, // The mention style in the input
-                },
+            >
+              <FlatList
+                data={[...allTags]}
+                renderItem={({ item }: { item: LMUserViewData }) => {
+                  return (
+                    <Pressable
+                      onPress={() => {
+                        const uuid = item?.sdkClientInfo?.uuid;
+                        const res = replaceLastMention(
+                          commentToAdd,
+                          taggedUserName,
+                          item?.name,
+                          uuid ? `user_profile/${uuid}` : uuid
+                        );
+                        setCommentToAdd(res);
+                        setAllTags([]);
+                        setIsUserTagging(false);
+                      }}
+                      style={[
+                        styles.taggingListItem,
+                        postDetailStyle?.userTaggingListStyle?.userTagView,
+                      ]}
+                      key={item?.id}
+                    >
+                      <LMProfilePicture
+                        {...postHeaderStyle?.profilePicture}
+                        fallbackText={{
+                          ...postHeaderStyle?.profilePicture?.fallbackText,
+                          children: postHeaderStyle?.profilePicture
+                            ?.fallbackText?.children ? (
+                            postHeaderStyle?.profilePicture?.fallbackText
+                              ?.children
+                          ) : (
+                            <Text
+                              style={{
+                                fontFamily: STYLES.$FONT_TYPES.MEDIUM,
+                              }}
+                            >
+                              {nameInitials(item?.name)}
+                            </Text>
+                          ),
+                        }}
+                        fallbackTextBoxStyle={[
+                          styles.taggingListProfileBoxStyle,
+                          postHeaderStyle?.profilePicture?.fallbackTextBoxStyle,
+                        ]}
+                        size={
+                          postHeaderStyle?.profilePicture?.size
+                            ? postHeaderStyle?.profilePicture?.size
+                            : 40
+                        }
+                      />
+
+                      <View style={styles.taggingListItemTextView}>
+                        <Text
+                          style={[
+                            styles.taggingListText,
+                            postDetailStyle?.userTaggingListStyle
+                              ?.userTagNameStyle,
+                          ]}
+                          numberOfLines={1}
+                        >
+                          {item?.name}
+                        </Text>
+                      </View>
+                    </Pressable>
+                  );
+                }}
+                extraData={{
+                  value: [commentToAdd, allTags],
+                }}
+                keyboardShouldPersistTaps={"handled"}
+                onEndReached={handleLoadMore}
+                onEndReachedThreshold={1}
+                bounces={false}
+                ListFooterComponent={
+                  isLoading ? (
+                    <View style={styles.taggingLoaderView}>
+                      <LMLoader size={15} />
+                    </View>
+                  ) : null
+                }
+                keyExtractor={(item: any, index) => {
+                  return index?.toString();
+                }}
+              />
+            </View>
+          ) : null}
+          {/* replying to username view which renders when the user is adding a reply to a comment */}
+          {replyOnComment.textInputFocus && (
+            <View
+              style={[
+                styles.replyCommentSection,
+                { bottom: keyboardIsVisible ? Layout.normalize(25) : 0 },
+                customReplyingViewStyle?.replyingView,
               ]}
-            />
-          ) : commentingRight?.isSelected ? (
-            <LMInputText
-              {...customCommentTextInput}
-              inputText={commentToAdd}
-              onType={handleInputChange}
-              inputTextStyle={[
-                styles.textInputStyle,
-                {
-                  bottom: keyboardIsVisible
-                    ? // navigatedFromComments
-                      //   ? Layout.normalize(0)
-                      //   :
-                      Layout.normalize(25)
-                    : 0,
-                },
-                customCommentTextInput?.inputTextStyle,
-              ]}
-              autoFocus={
-                customCommentTextInput?.autoFocus != undefined
-                  ? customCommentTextInput?.autoFocus
-                  : routeParams
-                  ? true
-                  : keyboardFocusOnReply
-                  ? true
-                  : editCommentFocus
-                  ? true
-                  : commentFocus
-              }
-              placeholderText={
-                customCommentTextInput?.placeholderText
-                  ? customCommentTextInput?.placeholderText
-                  : `Write a ${(pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.comment ?? "comment",WordAction.firstLetterCapitalSingular))}`
-              }
-              placeholderTextColor={
-                customCommentTextInput?.placeholderTextColor
-                  ? customCommentTextInput?.placeholderTextColor
-                  : STYLES.$IS_DARK_THEME
-                  ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
-                  : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
-              }
-              inputRef={myRef}
-              rightIcon={{
-                ...customCommentTextInput?.rightIcon,
-                onTap: () => {
-                  customCommentTextInput?.rightIcon?.onTap();
-                  commentToAdd
-                    ? editCommentFocus
-                      ? commentEdit()
-                      : replyOnComment.textInputFocus
-                      ? addNewReplyProp
-                        ? addNewReplyProp(
-                            postDetail?.id,
-                            replyOnComment.commentId
-                          )
-                        : addNewReply(postDetail?.id, replyOnComment.commentId)
-                      : addNewCommentProp
-                      ? addNewCommentProp(postDetail?.id)
-                      : addNewComment(postDetail?.id)
-                    : {};
-                  setAllTags([]);
-                  setIsUserTagging(false);
-                },
-                icon: {
-                  assetPath: require("../../assets/images/send_icon3x.png"),
-                  iconStyle: {
-                    opacity: commentToAdd ? 1 : 0.7,
-                  },
-                  color: STYLES.$COLORS.PRIMARY,
-                  ...customCommentTextInput?.rightIcon?.icon,
-                },
-                isClickable: commentToAdd
-                  ? customCommentTextInput?.rightIcon?.isClickable != undefined
-                    ? customCommentTextInput?.rightIcon?.isClickable
-                    : true
-                  : false,
-              }}
-              multilineField={
-                customCommentTextInput?.multilineField != undefined
-                  ? customCommentTextInput?.multilineField
-                  : true
-              }
-              partTypes={[
-                {
-                  trigger: "@", // Should be a single character like '@' or '#'
-                  textStyle: {
-                    color: "blue",
-                    ...customCommentTextInput?.mentionTextStyle,
-                  }, // The mention style in the input
-                },
-              ]}
-            />
-          ) : (
-            !showLoader && (
-              <View style={styles.textContainer}>
-                <Text style={styles.disabledText}>
-                  You don't have permission to {(pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.comment ?? "comment",WordAction.firstLetterCapitalSingular))}
+            >
+              {customReplyingViewStyle?.replyingText?.children ? (
+                <LMText {...customReplyingViewStyle?.replyingText} />
+              ) : (
+                <Text
+                  style={[
+                    styles.lightGreyColorText,
+                    customReplyingViewStyle?.replyingText?.textStyle,
+                  ]}
+                >
+                  Replying to {replyToUsername}
                 </Text>
-              </View>
+              )}
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() =>
+                  setReplyOnComment({
+                    textInputFocus: false,
+                    commentId: "",
+                  })
+                }
+                style={customReplyingViewStyle?.cancelReplyIcon?.boxStyle}
+              >
+                {customReplyingViewStyle?.cancelReplyIcon?.assetPath ||
+                customReplyingViewStyle?.cancelReplyIcon?.iconUrl ? (
+                  <LMIcon {...customReplyingViewStyle?.cancelReplyIcon} />
+                ) : (
+                  <Image
+                    source={require("../../assets/images/close_icon3x.png")}
+                    style={[
+                      customReplyingViewStyle?.cancelReplyIcon?.iconStyle,
+                      {
+                        width: customReplyingViewStyle?.cancelReplyIcon?.width
+                          ? customReplyingViewStyle?.cancelReplyIcon?.width
+                          : styles.crossIconStyle?.width,
+                        height: customReplyingViewStyle?.cancelReplyIcon?.height
+                          ? customReplyingViewStyle?.cancelReplyIcon?.height
+                          : styles.crossIconStyle?.height,
+                      },
+                    ]}
+                    tintColor={
+                      customReplyingViewStyle?.cancelReplyIcon?.color
+                        ? customReplyingViewStyle?.cancelReplyIcon?.color
+                        : styles.crossIconStyle?.tintColor
+                    }
+                    resizeMode={
+                      customReplyingViewStyle?.cancelReplyIcon?.boxFit
+                    }
+                  />
+                )}
+              </TouchableOpacity>
+            </View>
+          )}
+          {postDetail?.id && !showLoader ? (
+            isCM ? (
+              <LMInputText
+                {...customCommentTextInput}
+                inputText={commentToAdd}
+                onType={handleInputChange}
+                inputTextStyle={[
+                  styles.textInputStyle,
+                  {
+                    bottom: keyboardIsVisible ? Layout.normalize(25) : 0,
+                  },
+                  customCommentTextInput?.inputTextStyle,
+                ]}
+                autoFocus={
+                  customCommentTextInput?.autoFocus != undefined
+                    ? customCommentTextInput?.autoFocus
+                    : routeParams
+                    ? true
+                    : keyboardFocusOnReply
+                    ? true
+                    : editCommentFocus
+                    ? true
+                    : commentFocus
+                }
+                placeholderText={
+                  customCommentTextInput?.placeholderText
+                    ? customCommentTextInput?.placeholderText
+                    : `Write a ${pluralizeOrCapitalize(
+                        CommunityConfigs?.getCommunityConfigs("feed_metadata")
+                          ?.value?.comment ?? "comment",
+                        WordAction.allSmallSingular
+                      )}`
+                }
+                placeholderTextColor={
+                  customCommentTextInput?.placeholderTextColor
+                    ? customCommentTextInput?.placeholderTextColor
+                    : STYLES.$IS_DARK_THEME
+                    ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                    : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
+                }
+                inputRef={myRef}
+                rightIcon={{
+                  ...customCommentTextInput?.rightIcon,
+                  onTap: () => {
+                    customCommentTextInput?.rightIcon?.onTap();
+                    commentToAdd
+                      ? editCommentFocus
+                        ? commentEdit()
+                        : replyOnComment.textInputFocus
+                        ? addNewReplyProp
+                          ? addNewReplyProp(
+                              postDetail?.id,
+                              replyOnComment.commentId
+                            )
+                          : addNewReply(
+                              postDetail?.id,
+                              replyOnComment.commentId
+                            )
+                        : addNewCommentProp
+                        ? addNewCommentProp(postDetail?.id)
+                        : addNewComment(postDetail?.id)
+                      : {};
+                    setAllTags([]);
+                    setIsUserTagging(false);
+                  },
+                  icon: {
+                    assetPath: require("../../assets/images/send_icon3x.png"),
+                    iconStyle: {
+                      opacity: commentToAdd ? 1 : 0.7,
+                    },
+                    color: STYLES.$COLORS.PRIMARY,
+                    ...customCommentTextInput?.rightIcon?.icon,
+                  },
+                  isClickable: commentToAdd
+                    ? customCommentTextInput?.rightIcon?.isClickable !=
+                      undefined
+                      ? customCommentTextInput?.rightIcon?.isClickable
+                      : true
+                    : false,
+                }}
+                multilineField={
+                  customCommentTextInput?.multilineField != undefined
+                    ? customCommentTextInput?.multilineField
+                    : true
+                }
+                partTypes={[
+                  {
+                    trigger: "@", // Should be a single character like '@' or '#'
+                    textStyle: {
+                      color: "blue",
+                      ...customCommentTextInput?.mentionTextStyle,
+                    }, // The mention style in the input
+                  },
+                ]}
+              />
+            ) : commentingRight?.isSelected ? (
+              <LMInputText
+                {...customCommentTextInput}
+                inputText={commentToAdd}
+                onType={handleInputChange}
+                inputTextStyle={[
+                  styles.textInputStyle,
+                  {
+                    bottom: keyboardIsVisible ? Layout.normalize(25) : 0,
+                  },
+                  customCommentTextInput?.inputTextStyle,
+                ]}
+                autoFocus={
+                  customCommentTextInput?.autoFocus != undefined
+                    ? customCommentTextInput?.autoFocus
+                    : routeParams
+                    ? true
+                    : keyboardFocusOnReply
+                    ? true
+                    : editCommentFocus
+                    ? true
+                    : commentFocus
+                }
+                placeholderText={
+                  customCommentTextInput?.placeholderText
+                    ? customCommentTextInput?.placeholderText
+                    : `Write a ${pluralizeOrCapitalize(
+                        CommunityConfigs?.getCommunityConfigs("feed_metadata")
+                          ?.value?.comment ?? "comment",
+                        WordAction.firstLetterCapitalSingular
+                      )}`
+                }
+                placeholderTextColor={
+                  customCommentTextInput?.placeholderTextColor
+                    ? customCommentTextInput?.placeholderTextColor
+                    : STYLES.$IS_DARK_THEME
+                    ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                    : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
+                }
+                inputRef={myRef}
+                rightIcon={{
+                  ...customCommentTextInput?.rightIcon,
+                  onTap: () => {
+                    customCommentTextInput?.rightIcon?.onTap();
+                    commentToAdd
+                      ? editCommentFocus
+                        ? commentEdit()
+                        : replyOnComment.textInputFocus
+                        ? addNewReplyProp
+                          ? addNewReplyProp(
+                              postDetail?.id,
+                              replyOnComment.commentId
+                            )
+                          : addNewReply(
+                              postDetail?.id,
+                              replyOnComment.commentId
+                            )
+                        : addNewCommentProp
+                        ? addNewCommentProp(postDetail?.id)
+                        : addNewComment(postDetail?.id)
+                      : {};
+                    setAllTags([]);
+                    setIsUserTagging(false);
+                  },
+                  icon: {
+                    assetPath: require("../../assets/images/send_icon3x.png"),
+                    iconStyle: {
+                      opacity: commentToAdd ? 1 : 0.7,
+                    },
+                    color: STYLES.$COLORS.PRIMARY,
+                    ...customCommentTextInput?.rightIcon?.icon,
+                  },
+                  isClickable: commentToAdd
+                    ? customCommentTextInput?.rightIcon?.isClickable !=
+                      undefined
+                      ? customCommentTextInput?.rightIcon?.isClickable
+                      : true
+                    : false,
+                }}
+                multilineField={
+                  customCommentTextInput?.multilineField != undefined
+                    ? customCommentTextInput?.multilineField
+                    : true
+                }
+                partTypes={[
+                  {
+                    trigger: "@", // Should be a single character like '@' or '#'
+                    textStyle: {
+                      color: "blue",
+                      ...customCommentTextInput?.mentionTextStyle,
+                    }, // The mention style in the input
+                  },
+                ]}
+              />
+            ) : (
+              !showLoader && (
+                <View style={styles.textContainer}>
+                  <Text style={styles.disabledText}>
+                    You don't have permission to{" "}
+                    {pluralizeOrCapitalize(
+                      CommunityConfigs?.getCommunityConfigs("feed_metadata")
+                        ?.value?.comment ?? "comment",
+                      WordAction.firstLetterCapitalSingular
+                    )}
+                  </Text>
+                </View>
+              )
             )
-          )
-        ) : null}
+          ) : null}
+        </View>
       </KeyboardAvoidingView>
 
       {/* delete post modal */}

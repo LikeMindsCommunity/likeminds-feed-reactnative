@@ -36,6 +36,7 @@ import {
 } from "../models";
 import { LMFilterCommentViewData } from "../models/LMFilterCommentViewData";
 import { LMTopicViewData } from "../models/LMTopicViewData";
+import { Widget } from "../models/LMWidgetData";
 
 /**
  * @param data: [GetFeedResponse]
@@ -46,7 +47,7 @@ export function convertUniversalFeedPosts(data: {
   topics: { [key: string]: LMTopicViewData };
   users: { [key: string]: LMUserViewData };
   filteredComments: { [key: string]: LMFilterCommentViewData };
-  widgets: any;
+  widgets: Record<string, Widget>;
 }): LMPostViewData[] {
   const postData = data.posts ? data.posts : [];
   const userData = data.users;
@@ -69,7 +70,7 @@ export function convertUniversalFeedPosts(data: {
 export function convertSingleFeedPost(data: {
   post: Post;
   users: { [key: string]: LMUserViewData };
-  widgets: any;
+  widgets: Record<string, Widget>;
   filteredComments: { [key: string]: LMFilterCommentViewData };
 }): LMPostViewData {
   const postData: Post = data.post;
@@ -93,7 +94,7 @@ export function convertSingleFeedPost(data: {
 export function convertToLMPostViewData(
   post: Post,
   user: { [key: string]: LMUserViewData },
-  widgets: any,
+  widgets: Record<string, Widget>,
   filteredComments: { [key: string]: LMFilterCommentViewData }
 ): LMPostViewData {
   const postData: LMPostViewData = {
@@ -138,7 +139,7 @@ export function convertToLMPostViewData(
  */
 export function convertToLMAttachmentsViewData(
   data: Attachment[],
-  widgets: any
+  widgets: Record<string, Widget>
 ): LMAttachmentViewData[] {
   return data?.map((item: Attachment) => {
     return {
@@ -185,10 +186,10 @@ const calculateDaysToExpiry = (item) => {
 
 /**
  * @param is: string
- * @param widgets: any
+ * @param widgets: Record<string, Widget>
  * @returns any
  */
-export function convertToLMPollViewData(id: string, widgets: any) {
+export function convertToLMPollViewData(id: string, widgets: Record<string, Widget>) {
   const item = widgets[id];
   const pollMetaData: any = {
     id: id,

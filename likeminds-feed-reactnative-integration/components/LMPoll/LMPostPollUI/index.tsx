@@ -283,6 +283,8 @@ const LMPostPollUI = ({
                         ? pollOptionEmptyTextStyles
                         : null,
                     ]}
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
                   >
                     {`${element?.text} \n`}
 
