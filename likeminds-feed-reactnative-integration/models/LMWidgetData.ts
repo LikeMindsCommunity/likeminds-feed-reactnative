@@ -1,7 +1,7 @@
 type LMMetaType = any;
 type MetaDataType = any;
 
-export interface Widget {
+export interface LMFeedWidgetViewData {
   id: string;
   LmMeta?: Record<string, LMMetaType>;
   createdAt: number;

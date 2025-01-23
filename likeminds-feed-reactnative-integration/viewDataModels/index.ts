@@ -36,7 +36,7 @@ import {
 } from "../models";
 import { LMFilterCommentViewData } from "../models/LMFilterCommentViewData";
 import { LMTopicViewData } from "../models/LMTopicViewData";
-import { Widget } from "../models/LMWidgetData";
+import { LMFeedWidgetViewData } from "../models/LMWidgetData";
 
 /**
  * @param data: [GetFeedResponse]
@@ -47,7 +47,7 @@ export function convertUniversalFeedPosts(data: {
   topics: { [key: string]: LMTopicViewData };
   users: { [key: string]: LMUserViewData };
   filteredComments: { [key: string]: LMFilterCommentViewData };
-  widgets: Record<string, Widget>;
+  widgets: Record<string, LMFeedWidgetViewData>;
 }): LMPostViewData[] {
   const postData = data.posts ? data.posts : [];
   const userData = data.users;
@@ -70,7 +70,7 @@ export function convertUniversalFeedPosts(data: {
 export function convertSingleFeedPost(data: {
   post: Post;
   users: { [key: string]: LMUserViewData };
-  widgets: Record<string, Widget>;
+  widgets: Record<string, LMFeedWidgetViewData>;
   filteredComments: { [key: string]: LMFilterCommentViewData };
 }): LMPostViewData {
   const postData: Post = data.post;
@@ -94,7 +94,7 @@ export function convertSingleFeedPost(data: {
 export function convertToLMPostViewData(
   post: Post,
   user: { [key: string]: LMUserViewData },
-  widgets: Record<string, Widget>,
+  widgets: Record<string, LMFeedWidgetViewData>,
   filteredComments: { [key: string]: LMFilterCommentViewData }
 ): LMPostViewData {
   const postData: LMPostViewData = {
@@ -139,7 +139,7 @@ export function convertToLMPostViewData(
  */
 export function convertToLMAttachmentsViewData(
   data: Attachment[],
-  widgets: Record<string, Widget>
+  widgets: Record<string, LMFeedWidgetViewData>
 ): LMAttachmentViewData[] {
   return data?.map((item: Attachment) => {
     return {
@@ -186,10 +186,13 @@ const calculateDaysToExpiry = (item) => {
 
 /**
  * @param is: string
- * @param widgets: Record<string, Widget>
+ * @param widgets: Record<string, LMFeedWidgetViewData>
  * @returns any
  */
-export function convertToLMPollViewData(id: string, widgets: Record<string, Widget>) {
+export function convertToLMPollViewData(
+  id: string,
+  widgets: Record<string, LMFeedWidgetViewData>
+) {
   const item = widgets[id];
   const pollMetaData: any = {
     id: id,
