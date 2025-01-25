@@ -3,7 +3,7 @@ import { LMFeedClient } from "@likeminds.community/feed-rn";
 export const initMyClient = () => {
   const lmFeedClient = LMFeedClient.Builder()
     .setPlatformCode("rn")
-    .setVersionCode(22)
+    .setVersionCode(23)
     .build();
 
   return lmFeedClient;
