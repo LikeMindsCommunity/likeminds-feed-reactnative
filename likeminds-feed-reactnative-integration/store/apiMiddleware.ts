@@ -10,8 +10,12 @@ async function invokeAPI(func: Function, payload: any, name = "") {
 
   const isConnected = await NetworkUtil.isNetworkAvailable();
   if (isConnected) {
-    const response: any = await func;
-    return response;
+    try {
+      const response: any = await func;
+      return response;
+    } catch (error) {
+      return error;
+    }
   } else {
     Alert.alert("", "Please check your internet connection");
   }
@@ -60,7 +64,7 @@ const apiMiddleware = async (next, action) => {
       if (error.message === NETWORK_FAILED) {
         Alert.alert("", "Please check your internet connection");
       } else {
-        throw error.message;
+        return;
       }
     }
   } finally {

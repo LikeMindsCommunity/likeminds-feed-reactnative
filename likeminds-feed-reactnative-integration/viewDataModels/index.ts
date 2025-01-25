@@ -36,6 +36,7 @@ import {
 } from "../models";
 import { LMFilterCommentViewData } from "../models/LMFilterCommentViewData";
 import { LMTopicViewData } from "../models/LMTopicViewData";
+import { LMFeedWidgetViewData } from "../models/LMWidgetData";
 
 /**
  * @param data: [GetFeedResponse]
@@ -46,7 +47,7 @@ export function convertUniversalFeedPosts(data: {
   topics: { [key: string]: LMTopicViewData };
   users: { [key: string]: LMUserViewData };
   filteredComments: { [key: string]: LMFilterCommentViewData };
-  widgets: any;
+  widgets: Record<string, LMFeedWidgetViewData>;
 }): LMPostViewData[] {
   const postData = data.posts ? data.posts : [];
   const userData = data.users;
@@ -69,7 +70,7 @@ export function convertUniversalFeedPosts(data: {
 export function convertSingleFeedPost(data: {
   post: Post;
   users: { [key: string]: LMUserViewData };
-  widgets: any;
+  widgets: Record<string, LMFeedWidgetViewData>;
   filteredComments: { [key: string]: LMFilterCommentViewData };
 }): LMPostViewData {
   const postData: Post = data.post;
@@ -93,7 +94,7 @@ export function convertSingleFeedPost(data: {
 export function convertToLMPostViewData(
   post: Post,
   user: { [key: string]: LMUserViewData },
-  widgets: any,
+  widgets: Record<string, LMFeedWidgetViewData>,
   filteredComments: { [key: string]: LMFilterCommentViewData }
 ): LMPostViewData {
   const postData: LMPostViewData = {
@@ -138,7 +139,7 @@ export function convertToLMPostViewData(
  */
 export function convertToLMAttachmentsViewData(
   data: Attachment[],
-  widgets: any
+  widgets: Record<string, LMFeedWidgetViewData>
 ): LMAttachmentViewData[] {
   return data?.map((item: Attachment) => {
     return {
@@ -185,21 +186,24 @@ const calculateDaysToExpiry = (item) => {
 
 /**
  * @param is: string
- * @param widgets: any
+ * @param widgets: Record<string, LMFeedWidgetViewData>
  * @returns any
  */
-export function convertToLMPollViewData(id: string, widgets: any) {
+export function convertToLMPollViewData(
+  id: string,
+  widgets: Record<string, LMFeedWidgetViewData>
+) {
   const item = widgets[id];
   const pollMetaData: any = {
     id: id,
     title: item?.metadata?.title,
-    options: item?.LmMeta?.options,
+    options: item?.lmMeta?.options,
     allowAddOption: item?.metadata?.allowAddOption,
     expiryTime: item?.metadata?.expiryTime,
     expiryDays: calculateDaysToExpiry(item),
-    toShowResults: item?.LmMeta?.toShowResults,
+    toShowResults: item?.lmMeta?.toShowResults,
     createdAt: item?.createdAt,
-    pollAnswerText: item?.LmMeta?.pollAnswerText,
+    pollAnswerText: item?.lmMeta?.pollAnswerText,
     multipleSelectNumber: item?.metadata?.multipleSelectNumber,
     multipleSelectState: item?.metadata?.multipleSelectState,
     isAnonymous: item?.metadata?.isAnonymous,

@@ -172,9 +172,10 @@ export const UniversalFeedContextProvider = ({
   const [localRefresh, setLocalRefresh] = useState(false);
   const listRef = useRef<FlatList<LMPostViewData>>(null);
   const route = useRoute();
-  const { feedType } = route.params as {
+  const params = route.params as {
     feedType?: FeedType;
   };
+  const feedType = params?.feedType;
   const myClient = Client.myClient;
 
   useEffect(() => {

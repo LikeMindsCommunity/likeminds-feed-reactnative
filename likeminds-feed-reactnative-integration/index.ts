@@ -83,6 +83,8 @@ import {
 } from "./components/LMCreatePost";
 import Layout from "./constants/Layout";
 import { FeedType } from "./enums/FeedType";
+import { Client } from "./client";
+import { STYLES } from "./constants/Styles";
 
 export {
   LMOverlayProvider,
@@ -159,4 +161,6 @@ export {
   LMCreatePostAnonymousCheckbox,
   Layout,
   FeedType,
+  Client,
+  STYLES,
 };

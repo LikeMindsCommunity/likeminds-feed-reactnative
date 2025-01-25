@@ -71,7 +71,7 @@ export const styles = StyleSheet.create({
     marginBottom: 30,
   },
   replyCommentSection: {
-    position: "absolute",
+    position: "relative",
     backgroundColor: STYLES.$IS_DARK_THEME
       ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
       : "#EFEFEF",
@@ -93,16 +93,16 @@ export const styles = StyleSheet.create({
   textInputStyle: {
     margin: 0,
     borderRadius: 0,
-    paddingVertical: 0,
+    paddingVertical: Layout.normalize(5),
     borderColor: STYLES?.$IS_DARK_THEME ? STYLES.$SEPARATOR_COLORS.DARK : STYLES.$SEPARATOR_COLORS.LIGHT,
     borderWidth: 1,
-    height: Layout.normalize(64),
+    maxHeight: Layout.normalize(120),
     paddingHorizontal: 15,
     fontSize: 14,
     color: STYLES.$IS_DARK_THEME
       ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK
       : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
-    position: "absolute",
+    position: "relative",
     bottom: 0,
     width: "100%",
   },
