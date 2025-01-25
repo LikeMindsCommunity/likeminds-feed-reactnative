@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import {
   FlatList,
   RefreshControl,
@@ -52,6 +52,9 @@ import { CommunityConfigs } from "../../communityConfigs";
 import { WordAction } from "../../enums/Variables";
 import pluralizeOrCapitalize from "../../utils/variables";
 import { useIsFocused } from "@react-navigation/native";
+import { useLMFeed } from "../../lmFeedProvider";
+import { debounce } from "../../utils/debounce";
+import { FeedType } from "../../enums/FeedType";
 
 const PostsList = ({
   route,
@@ -75,13 +78,16 @@ const PostsListComponent = ({
   customWidgetPostView,
 }: any) => {
   const dispatch = useAppDispatch();
-  const [index, setIndex] = useState(0);
-  const refreshFromOnboardingScreen = useAppSelector(state => state.feed.refreshScreenFromOnboardingScreen);
+  const refreshFromOnboardingScreen = useAppSelector(
+    (state) => state.feed.refreshScreenFromOnboardingScreen
+  );
   const {
     listRef,
     refreshing,
     onRefresh,
     localRefresh,
+    postSeen,
+    feedType,
   }: UniversalFeedContextValues = useUniversalFeedContext();
   const {
     navigation,
@@ -111,7 +117,10 @@ const PostsListComponent = ({
     onTapLikeCount,
     onOverlayMenuClick,
     setPostInViewport,
+    seenPost,
+    saveSeenPost,
   }: PostListContextValues = usePostListContext();
+
   const postListStyle = STYLES.$POST_LIST_STYLE;
   const loaderStyle = STYLES.$LOADER_STYLE;
   const {
@@ -130,6 +139,9 @@ const PostsListComponent = ({
     isTopResponse,
     hideTopicsView,
   } = useUniversalFeedCustomisableMethodsContext();
+
+  const hasFetched = useRef(false);
+
   // this function returns the id of the item selected from menu list and handles further functionalities accordingly
   const onMenuItemSelect = (
     postId: string,
@@ -185,7 +197,7 @@ const PostsListComponent = ({
   const renderItem = useCallback(
     ({ item, index }: { item: LMPostViewData; index: number }) => {
       // Check if the item's topic matches any name in the topics array
-      const topics = mappedTopics ? mappedTopics : []
+      const topics = mappedTopics ? mappedTopics : [];
       const isTopicMatched =
         item?.topics?.length > 0 &&
         topics.length > 0 &&
@@ -305,11 +317,36 @@ const PostsListComponent = ({
   );
 
   useEffect(() => {
-    if(refreshFromOnboardingScreen) {
+    if (refreshFromOnboardingScreen) {
       onRefresh();
     }
-  }, [refreshFromOnboardingScreen])
+  }, [refreshFromOnboardingScreen]);
 
+  // Detect viewable posts
+  const onViewableItemsChanged = ({ viewableItems }) => {
+    if (feedType === FeedType.PERSONALISED_FEED) {
+      if (!hasFetched.current) {
+        const visiblePostIds = viewableItems.map((item) => item.item.id);
+        postSeen(visiblePostIds);
+        hasFetched.current = true; // Set flag to true after first call
+      } else {
+        viewableItems?.forEach((item) => seenPost.current.add(item.item.id));
+      }
+    }
+  };
+
+  // Monitor scroll state
+  const onMomentumScrollEnd = async ({ nativeEvent }) => {
+    if (nativeEvent.velocity.y === 0 && feedType === FeedType.PERSONALISED_FEED) {
+      await saveSeenPost();
+      await postSeen();
+    }
+  };
+
+  // debouced on momentum scroll end
+  const debouncedOnMomentumScrollEnd = async ({ nativeEvent }) => {
+    debounce(onMomentumScrollEnd, 5000)({ nativeEvent });
+  };
 
   return (
     <View
@@ -329,7 +366,10 @@ const PostsListComponent = ({
               refreshing={refreshing}
               style={postListStyle?.listStyle}
               refreshControl={
-                <RefreshControl refreshing={refreshing || refreshFromOnboardingScreen} onRefresh={onRefresh} />
+                <RefreshControl
+                  refreshing={refreshing || refreshFromOnboardingScreen}
+                  onRefresh={onRefresh}
+                />
               }
               data={feedData}
               renderItem={renderItem}
@@ -344,15 +384,12 @@ const PostsListComponent = ({
                 if (changed) {
                   if (viewableItems) {
                     setPostInViewport(viewableItems?.[0]?.item?.id);
-                    setIndex(
-                      feedData.findIndex((item) => {
-                        return item?.id === viewableItems?.[0]?.item?.id;
-                      })
-                    );
+                    onViewableItemsChanged({ viewableItems });
                   }
                 }
               }}
               viewabilityConfig={{ viewAreaCoveragePercentThreshold: 60 }}
+              onMomentumScrollEnd={debouncedOnMomentumScrollEnd}
             />
           ) : (
             <View style={[styles.noDataView, postListStyle?.noPostView]}>

@@ -52,7 +52,11 @@ const LMPostTopResponse = () => {
               postListStyle?.postContent?.postTopResponse?.heading,
             ]}
           >
-            {`Top ${pluralizeOrCapitalize(CommunityConfigs?.getCommunityConfigs("feed_metadata")?.value?.comment ?? "comment", WordAction.firstLetterCapitalSingular)}`}
+            {`Top ${pluralizeOrCapitalize(
+              CommunityConfigs?.getCommunityConfigs("feed_metadata")?.value
+                ?.comment ?? "comment",
+              WordAction.firstLetterCapitalSingular
+            )}`}
           </Text>
           <View style={{ flexDirection: "row", gap: 10 }}>
             <LMProfilePicture
@@ -115,7 +119,11 @@ const LMPostTopResponse = () => {
                 {truncatedText ? (
                   <MoreLessComponent
                     truncatedText={truncatedText}
-                    fullText={post?.filteredComments?.text}
+                    fullText={
+                      post?.filteredComments?.text
+                        ? post?.filteredComments?.text
+                        : ""
+                    }
                     textStyle={StyleSheet.flatten([
                       {
                         color: STYLES.$IS_DARK_THEME
