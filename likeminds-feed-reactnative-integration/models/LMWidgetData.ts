@@ -3,7 +3,7 @@ type MetaDataType = any;
 
 export interface LMFeedWidgetViewData {
   id: string;
-  LmMeta?: Record<string, LMMetaType>;
+  lmMeta?: Record<string, LMMetaType>;
   createdAt: number;
   metadata: Record<string, MetaDataType>;
   parentEntityId: string;
