@@ -31,7 +31,7 @@ const LMImage = React.memo(
         imageUrl,
         (width, height) => {
           const ScreenWidth = Dimensions.get("window").width;
-          const desiredAspectRatio = width > height ? 1.91 : 0.8;
+          const desiredAspectRatio = width * (1 / height);
           const heightCalculated = ScreenWidth * (1 / desiredAspectRatio);
           setHeightCalculated(heightCalculated);
           setDesiredAspectRatio(desiredAspectRatio);
@@ -61,9 +61,9 @@ const LMImage = React.memo(
             imageStyle,
             {
               height: heightCalculated,
-              resizeMode: boxFit ? boxFit : defaultStyles.imageStyle.resizeMode,
               aspectRatio: aspectRatio ? aspectRatio : desiredAspectRatio,
-            },
+              resizeMode: boxFit ? boxFit : defaultStyles.imageStyle.resizeMode,
+            }
           ])}
         />
         {/* this renders the cancel button */}
