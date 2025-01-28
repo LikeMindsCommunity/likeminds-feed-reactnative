@@ -43,8 +43,8 @@ const SocialFeedCreateWrapper = ({ navigation, route }) => {
             {/* selected media section */}
             <LMCreatePostMedia />
 
-          {/* selection options section */}
-          <LMCreatePostAttachmentSelection />
+            {/* selection options section */}
+            <LMCreatePostAttachmentSelection />
           </LMCreatePostUIRender>
 
         </CreatePost>

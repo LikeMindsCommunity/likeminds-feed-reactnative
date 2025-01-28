@@ -79,7 +79,6 @@ const LMCreatePostAttachmentSelection = () => {
   const { handleDocumentProp, handlePollProp, handleGalleryProp } =
     useCreatePostCustomisableMethodsContext();
 
-  if (false) return null;
   return (
     <View style={{flex: 1, justifyContent: 'flex-end'}}>
       {!postToEdit && showOptions && !showSelecting && (
