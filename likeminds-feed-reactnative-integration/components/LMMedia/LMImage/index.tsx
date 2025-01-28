@@ -31,7 +31,7 @@ const LMImage = React.memo(
         imageUrl,
         (width, height) => {
           const ScreenWidth = Dimensions.get("window").width;
-          const desiredAspectRatio = width * (1 / height);
+          const desiredAspectRatio = width > height ? 1.91 : 0.8;
           const heightCalculated = ScreenWidth * (1 / desiredAspectRatio);
           setHeightCalculated(heightCalculated);
           setDesiredAspectRatio(desiredAspectRatio);
