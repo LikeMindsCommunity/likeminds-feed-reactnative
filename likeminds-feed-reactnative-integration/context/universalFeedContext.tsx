@@ -8,6 +8,7 @@ import React, {
   useState,
   useRef,
   MutableRefObject,
+  useLayoutEffect,
 } from "react";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { mentionToRouteConverter, uploadFilesToAWS } from "../utils";
@@ -59,6 +60,7 @@ import { useRoute } from "@react-navigation/native";
 import { SHOW_TOAST } from "../store/types/loader";
 import { Client } from "../client";
 import { PollMultiSelectState, PollType } from "../enums/Poll";
+import { LMTemporaryPostViewData } from "@likeminds.community/feed-rn/dist/post/models/TemporaryPostViewData";
 import {
   REFRESH_FROM_ONBOARDING_SCREEN,
   SET_FLOW_TO_CREATE_POST_SCREEN,
@@ -96,6 +98,8 @@ export interface UniversalFeedContextValues {
   uploadingMediaAttachmentType: number;
   uploadingMediaAttachment: string;
   unreadNotificationCount: number;
+  temporaryPost?: LMTemporaryPostViewData | null;
+  setTemporaryPost?: Dispatch<SetStateAction<LMTemporaryPostViewData | null>>;
   setLocalRefresh: Dispatch<SetStateAction<boolean>>;
   setRefreshing: Dispatch<SetStateAction<boolean>>;
   setPostUploading: Dispatch<SetStateAction<boolean>>;
@@ -118,6 +122,7 @@ export interface UniversalFeedContextValues {
   predefinedTopics?: string[];
   postSeen: (initialPosts?: string[]) => void;
   feedType?: FeedType;
+  addTemporaryPost: () => void;
 }
 
 const UniversalFeedContext = createContext<
@@ -148,10 +153,12 @@ export const UniversalFeedContextProvider = ({
     (state) => state.feed.selectedTopicsForUniversalFeedScreen
   );
   const [postUploading, setPostUploading] = useState(false);
+
   const [feedPageNumber, setFeedPageNumber] = useState(1);
   const [isPaginationStopped, setIsPaginationStopped] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(true);
   const [isAnyMatchingPost, setIsAnyMatchingPost] = useState(false);
+  const [temporaryPost, setTemporaryPost] = useState<any>();
   const {
     mediaAttachmemnts,
     linkAttachments,
@@ -177,6 +184,17 @@ export const UniversalFeedContextProvider = ({
   };
   const feedType = params?.feedType;
   const myClient = Client.myClient;
+
+  useLayoutEffect(() => {
+    console.log("RUNN EFFECT");
+    (async () => {
+      const response = await Client?.myClient?.getTemporaryPost();
+      const locallyStoredPost = response.getData();
+      if (locallyStoredPost) {
+        setTemporaryPost(locallyStoredPost)
+      }
+    })();
+  }, [])
 
   useEffect(() => {
     if (accessToken) {
@@ -244,6 +262,105 @@ export const UniversalFeedContextProvider = ({
     );
   }, []);
 
+  const addTemporaryPost = async () => {
+    setPostUploading(true);
+    // replace the mentions with route
+    const postContentText = mentionToRouteConverter(temporaryPost?.text ?? "");
+    const headingText = temporaryPost?.heading;
+    const topics = temporaryPost?.topics;
+
+    const mediaAttachmemnts = temporaryPost?.attachments?.filter(item => {
+      return item?.attachmentType == 1 || item?.attachmentType == 2 || item?.attachmentType == 3
+    }) ?? []
+
+    const otherAttachments = temporaryPost?.attachments?.filter(item => {
+      return item?.attachmentType == 4 || item?.attachmentType == 5 || item?.attachmentType == 6
+    }) ?? []
+
+    // upload media to aws
+    const uploadPromises = mediaAttachmemnts?.map(
+      async (item: LMAttachmentViewData) => {
+        if (item?.attachmentType == 2) {
+          await createThumbnail({
+            url: item?.attachmentMeta?.url,
+            timeStamp: 10000,
+          })
+            .then(async (response) => {
+              const newName =
+                item.attachmentMeta.name &&
+                item.attachmentMeta.name.substring(
+                  0,
+                  item.attachmentMeta.name.lastIndexOf(".")
+                ) + ".jpeg";
+              const thumbnailMeta = {
+                ...item.attachmentMeta,
+                name: newName,
+                format: "image/jpeg",
+                thumbnailUrl: response?.path,
+              };
+              const thumbnailRes = await uploadFilesToAWS(
+                thumbnailMeta,
+                memberData.userUniqueId,
+                response?.path
+              );
+              item.attachmentMeta.thumbnailUrl = thumbnailRes.Location;
+            })
+            .catch((res) => { });
+        }
+        return uploadFilesToAWS(
+          item.attachmentMeta,
+          memberData.userUniqueId,
+          item.attachmentMeta?.url
+        ).then((res) => {
+          item.attachmentMeta.url = res.Location;
+          return item; // Return the updated item
+        });
+      }
+    );
+
+    // Wait for all upload operations to complete
+    const updatedAttachments = await Promise.all(uploadPromises ?? []);
+
+    const attachments = [...updatedAttachments, ...otherAttachments];
+
+    const addPostResponse: any = await dispatch(
+      addPost(
+        AddPostRequest.builder()
+          .setAttachments(attachments)
+          .setText(postContentText)
+          .setHeading(headingText)
+          .setTopicIds(topics)
+          .setIsAnonymous(isAnonymous ?? false)
+          .build(),
+        false
+      )
+    );
+    if (addPostResponse !== undefined) {
+      setPostUploading(false);
+      setTemporaryPost(null);
+      await onRefresh();
+      listRef.current?.scrollToIndex({ animated: true, index: 0 });
+      if (addPostResponse?.name == "Error") {
+        dispatch(
+          showToastMessage({
+            isToast: true,
+            message: SOMETHING_WENT_WRONG,
+          })
+        );
+        return addPostResponse;
+      }
+      dispatch(
+        showToastMessage({
+          isToast: true,
+          message: isAnonymous ? POST_UPLOADED_ANONYMOUSLY : POST_UPLOADED,
+        })
+      );
+      await Client?.myClient?.deleteTemporaryPost();
+    }
+    return addPostResponse;
+
+  }
+
   // this function adds a new post
   const postAdd = async () => {
     // replace the mentions with route
@@ -277,7 +394,7 @@ export const UniversalFeedContextProvider = ({
               );
               item.attachmentMeta.thumbnailUrl = thumbnailRes.Location;
             })
-            .catch((res) => {});
+            .catch((res) => { });
         }
         return uploadFilesToAWS(
           item.attachmentMeta,
@@ -300,11 +417,11 @@ export const UniversalFeedContextProvider = ({
     const attachments =
       Object.keys(metaData)?.length > 0
         ? [
-            ...updatedAttachments,
-            ...linkAttachments,
-            ...pollAttachment,
-            ...[{ attachmentType: 5, attachmentMeta: { meta: metaData } }],
-          ]
+          ...updatedAttachments,
+          ...linkAttachments,
+          ...pollAttachment,
+          ...[{ attachmentType: 5, attachmentMeta: { meta: metaData } }],
+        ]
         : [...updatedAttachments, ...linkAttachments, ...pollAttachment];
     const addPostResponse: any = await dispatch(
       addPost(
@@ -320,6 +437,7 @@ export const UniversalFeedContextProvider = ({
     );
     if (addPostResponse !== undefined) {
       setPostUploading(false);
+      Client?.myClient?.deleteTemporaryPost();
       dispatch(
         setUploadAttachments({
           allAttachment: [],
@@ -678,6 +796,8 @@ export const UniversalFeedContextProvider = ({
     listRef,
     mediaAttachmemnts,
     linkAttachments,
+    temporaryPost,
+    setTemporaryPost,
     postContent,
     uploadingMediaAttachmentType,
     uploadingMediaAttachment,
@@ -702,6 +822,7 @@ export const UniversalFeedContextProvider = ({
     predefinedTopics,
     postSeen,
     feedType,
+    addTemporaryPost
   };
 
   return (
