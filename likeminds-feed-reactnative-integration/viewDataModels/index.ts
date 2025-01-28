@@ -37,6 +37,7 @@ import {
 import { LMFilterCommentViewData } from "../models/LMFilterCommentViewData";
 import { LMTopicViewData } from "../models/LMTopicViewData";
 import { LMFeedWidgetViewData } from "../models/LMWidgetData";
+import { LMTemporaryPostViewData } from "@likeminds.community/feed-rn/dist/post/models/TemporaryPostViewData";
 
 /**
  * @param data: [GetFeedResponse]
@@ -558,4 +559,30 @@ export function convertToLMActivityEntityViewData(
     postId: data?.postId,
   };
   return activityEntityData;
+}
+
+export function convertToTemporaryPost(attachment: LMAttachmentViewData[], heading: string, text: string, topics: string[], isAnonymous: boolean = false, isHidden = false): LMTemporaryPostViewData {
+  return {
+    id: `-${Date.now()}`,
+    temporaryId: `-${Date.now()}`,
+    attachments: attachment,
+    commentsCount: 0,
+    communityId: 0,
+    createdAt: Date.now(),
+    heading: heading,
+    isEdited: false,
+    isLiked: false,
+    isPinned: false,
+    isSaved: false,
+    likesCount: 0,
+    menuItems: [],
+    text: text,
+    topics: topics,
+    updatedAt: 0,
+    userId: "",
+    uuid: "",
+    replies: [],
+    isAnonymous,
+    isHidden,
+  }
 }
