@@ -1,4 +1,5 @@
 import { View, Text, Alert, TouchableOpacity, Platform } from "react-native";
+import {ScrollView} from "react-native-gesture-handler"
 import React, { useEffect, useState } from "react";
 import {
   CreatePostContextValues,
@@ -50,6 +51,7 @@ const LMCreatePostAttachmentSelection = () => {
     handleDocument,
     handlePoll,
     handleGallery,
+    isUserTagging
   }: CreatePostContextValues = useCreatePostContext();
   const myClient = Client.myClient;
   const [showTopics, setShowTopics] = useState(false);
@@ -76,8 +78,10 @@ const LMCreatePostAttachmentSelection = () => {
 
   const { handleDocumentProp, handlePollProp, handleGalleryProp } =
     useCreatePostCustomisableMethodsContext();
+
+  if (false) return null;
   return (
-    <View>
+    <View style={{flex: 1, justifyContent: 'flex-end'}}>
       {!postToEdit && showOptions && !showSelecting && (
         <View
           style={[
