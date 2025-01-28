@@ -10,7 +10,7 @@ export const defaultStyles = StyleSheet.create({
   },
   videoStyle: {
     width: layout.window.width,
-    height: 325,
+    height: '100%',
     resizeMode: "contain",
   },
   loaderView: {
