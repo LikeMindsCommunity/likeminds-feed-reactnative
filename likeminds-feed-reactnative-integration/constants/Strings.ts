@@ -66,6 +66,7 @@ export const APP_TITLE = "LikeMinds Sample App";
 
 // uploading post processing text
 export const POST_UPLOADING = "Posting";
+export const POST_UPLOAD_RETRY = "Upload failed";
 
 // selection types of media
 export const SELECT_IMAGE = "photo";

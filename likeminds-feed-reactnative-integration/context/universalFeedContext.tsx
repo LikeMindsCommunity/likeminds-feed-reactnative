@@ -123,6 +123,7 @@ export interface UniversalFeedContextValues {
   postSeen: (initialPosts?: string[]) => void;
   feedType?: FeedType;
   addTemporaryPost: () => void;
+  abortRetry: () => void;
 }
 
 const UniversalFeedContext = createContext<
@@ -262,6 +263,11 @@ export const UniversalFeedContextProvider = ({
     );
   }, []);
 
+  const abortRetry = async () => {
+    await Client?.myClient?.deleteTemporaryPost();
+    setTemporaryPost(null);
+  }
+
   const addTemporaryPost = async () => {
     setPostUploading(true);
     // replace the mentions with route
@@ -337,7 +343,6 @@ export const UniversalFeedContextProvider = ({
     );
     if (addPostResponse !== undefined) {
       setPostUploading(false);
-      setTemporaryPost(null);
       await onRefresh();
       listRef.current?.scrollToIndex({ animated: true, index: 0 });
       if (addPostResponse?.name == "Error") {
@@ -348,6 +353,8 @@ export const UniversalFeedContextProvider = ({
           })
         );
         return addPostResponse;
+      } else {
+        setTemporaryPost(null);
       }
       dispatch(
         showToastMessage({
@@ -471,7 +478,7 @@ export const UniversalFeedContextProvider = ({
     dispatch(autoPlayPostVideo(""));
 
     if (showCreatePost) {
-      if (postUploading) {
+      if (postUploading || temporaryPost) {
         dispatch(
           showToastMessage({
             isToast: true,
@@ -822,7 +829,8 @@ export const UniversalFeedContextProvider = ({
     predefinedTopics,
     postSeen,
     feedType,
-    addTemporaryPost
+    addTemporaryPost,
+    abortRetry
   };
 
   return (
