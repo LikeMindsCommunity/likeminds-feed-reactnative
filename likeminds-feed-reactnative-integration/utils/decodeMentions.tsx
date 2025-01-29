@@ -7,7 +7,7 @@ const REGEX_USER_TAGGING =
   /<<(?<name>[^<>|]+)\|route:\/\/(?<route>[^?]+(\?.+)?)>>/g;
 
 // this function detect links in a string
-function detectLinks(message: string, isLongPress?: boolean) {
+function detectLinks(message: string, isLongPress?: boolean, isHighlighted = false) {
   const regex =
     /((?:https?:\/\/)?(?:www\.)?(?:\w+\.)+\w+(?:\/\S*)?|\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b)/i;
 
@@ -45,7 +45,7 @@ function detectLinks(message: string, isLongPress?: boolean) {
                 <Text style={styles.mentionStyle}>{val}</Text>
               </Text>
             ) : (
-              <Text style={{ fontFamily: STYLES.$FONT_TYPES.LIGHT }}>
+              <Text style={{ fontFamily: STYLES.$FONT_TYPES.LIGHT, fontWeight: isHighlighted ? "bold" : '400' }}>
                 {val}
               </Text>
             )}
@@ -98,7 +98,7 @@ const decode = (
       <Text style={{ fontFamily: STYLES.$FONT_TYPES.LIGHT }}>
         {arr.map((val, index) => (
           <Text
-            style={{ fontFamily: STYLES.$FONT_TYPES.LIGHT, fontWeight: val?.key?.toLowerCase() === highlight?.toLowerCase() ? "bold" : '400'  }}
+            style={{ fontFamily: STYLES.$FONT_TYPES.LIGHT}}
             key={val.key + index}
           >
             {/* key should be unique so we are passing `val(abc) + index(number) = abc2` to make it unique */}
@@ -115,7 +115,7 @@ const decode = (
                 {`@${val.key}`}
               </Text>
             ) : (
-              detectLinks(val.key, isLongPress)
+              detectLinks(val.key, isLongPress, val?.key?.toLowerCase() === highlight?.toLowerCase())
             )}
           </Text>
         ))}
