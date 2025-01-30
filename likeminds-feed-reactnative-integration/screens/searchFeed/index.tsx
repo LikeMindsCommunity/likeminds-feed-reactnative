@@ -28,6 +28,7 @@ import { DeleteModal, ReportModal } from '../../customModals'
 import { useSearchFeedCustomisableMethodsContext } from '../../context/searchFeedCallbacksContext'
 import { SearchedPostListContextValues, useSearchedPostListContext } from '../../context/searchedPostListContext'
 import { styles } from "./styles"
+import { PollCustomisableMethodsContextProvider } from '@likeminds.community/feed-rn-core/context/pollCustomisableCallback';
 
 interface SearchFeedProps {
     children?: React.ReactNode;
@@ -91,26 +92,32 @@ const LMFeedSearchScreen = ({
     hideTopicsView = false
 }: SearchFeedProps) => {
     return (
-        <SearchFeedCustomisableMethodsContextProvider
-            postLikeHandlerProp={postLikeHandlerProp}
-            savePostHandlerProp={savePostHandlerProp}
-            selectEditPostProp={selectEditPostProp}
-            selectPinPostProp={selectPinPostProp}
-            onSelectCommentCountProp={onSelectCommentCountProp}
-            onTapLikeCountProps={onTapLikeCountProps}
-            handleHidePostProp={handleHidePostProp}
-            handleDeletePostProps={handleDeletePostProps}
-            handleReportPostProps={handleReportPostProps}
-            newPostButtonClickProps={newPostButtonClickProps}
-            onOverlayMenuClickProp={onOverlayMenuClickProp}
-            onTapNotificationBellProp={onTapNotificationBellProp}
-            onSharePostClicked={onSharePostClicked}
-            isHeadingEnabled={isHeadingEnabled}
-            isTopResponse={isTopResponse}
-            hideTopicsView={hideTopicsView}
+        <PollCustomisableMethodsContextProvider
+            onSubmitButtonClicked={onSubmitButtonClicked}
+            onAddPollOptionsClicked={onAddPollOptionsClicked}
+            onPollOptionClicked={onPollOptionClicked}
         >
-            <LMFeedSearchScreenComponent navigation={navigation} route={route} />
-        </SearchFeedCustomisableMethodsContextProvider>
+            <SearchFeedCustomisableMethodsContextProvider
+                postLikeHandlerProp={postLikeHandlerProp}
+                savePostHandlerProp={savePostHandlerProp}
+                selectEditPostProp={selectEditPostProp}
+                selectPinPostProp={selectPinPostProp}
+                onSelectCommentCountProp={onSelectCommentCountProp}
+                onTapLikeCountProps={onTapLikeCountProps}
+                handleHidePostProp={handleHidePostProp}
+                handleDeletePostProps={handleDeletePostProps}
+                handleReportPostProps={handleReportPostProps}
+                newPostButtonClickProps={newPostButtonClickProps}
+                onOverlayMenuClickProp={onOverlayMenuClickProp}
+                onTapNotificationBellProp={onTapNotificationBellProp}
+                onSharePostClicked={onSharePostClicked}
+                isHeadingEnabled={isHeadingEnabled}
+                isTopResponse={isTopResponse}
+                hideTopicsView={hideTopicsView}
+            >
+                <LMFeedSearchScreenComponent navigation={navigation} route={route} />
+            </SearchFeedCustomisableMethodsContextProvider>
+        </PollCustomisableMethodsContextProvider>
     )
 }
 
@@ -396,14 +403,15 @@ const LMFeedSearchScreenComponent = ({ navigation, route }) => {
                     } else if (searchPostQuery?.length > 0 && !feedFetching && searchFeedData?.length == 0) {
                         return displayEmptyComponent && (
                             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                <LMIcon height={100} width={100} 
-                                assetPath={require("../../assets/images/nothing3x.png")} 
-                                {...searchFeedStyles?.listEmptyStyle?.listEmptyImageStyle} />
+                                <LMIcon height={100} width={100}
+                                    assetPath={require("../../assets/images/nothing3x.png")}
+                                    {...searchFeedStyles?.listEmptyStyle?.listEmptyImageStyle} />
                                 <Text style={
                                     StyleSheet.flatten([
-                                        { color: STYLES.$IS_DARK_THEME ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
+                                        {
+                                            color: STYLES.$IS_DARK_THEME ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT,
                                             marginVertical: 10
-                                         },
+                                        },
                                         searchFeedStyles?.listEmptyStyle?.listEmptyTextStyle
                                     ])
                                 }>
