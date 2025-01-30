@@ -507,3 +507,14 @@ export interface UserOnboardingStylesProps {
   disableCtaButtonTextStyle?: TextStyle;
   disableCtaButtonStyle?: ViewStyle;
 }
+
+export interface UploadingHeaderStylesProps {
+  uploadingTextStyle?: TextStyle;
+  retryButtonStyle?: LMButtonProps;
+  cancelButtonStyle?: LMButtonProps;
+  progressBarStyle?: {
+    size?: number;
+    width?: number;
+    tintColor?: string;
+  }
+}
