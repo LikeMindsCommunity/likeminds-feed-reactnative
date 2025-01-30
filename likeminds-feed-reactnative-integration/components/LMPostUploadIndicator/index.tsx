@@ -44,7 +44,7 @@ const LMPostUploadIndicator = () => {
                       color: STYLES.$COLORS.RED,
                       fontWeight: '600'
                     },
-                    uploadingHeaderStyle?.retryButtonStyle?.text?.textStyle
+                    uploadingHeaderStyle?.retryButtonStyle?.textStyle
                   ])
                 }} onTap={addTemporaryPost} icon={{
                   assetPath: require("../../assets/images/retry_icon3x.png"),
@@ -52,21 +52,34 @@ const LMPostUploadIndicator = () => {
                   width: 14,
                   color: STYLES.$COLORS.RED,
                   iconStyle: { marginRight: 5 },
-                  ...uploadingHeaderStyle?.retryButtonStyle?.icon
+                  ...uploadingHeaderStyle?.retryButtonStyle?.iconStyle
                 }} buttonStyle={StyleSheet.flatten([
-                  { borderWidth: 1, backgroundColor: '#FEE4E2', borderColor: '#FEE4E2', paddingHorizontal: 12, paddingVertical: 8, borderRadius: 20 },
+                  { borderWidth: 1, backgroundColor: '#FEE4E2', borderColor: '#FEE4E2', paddingHorizontal: 8, paddingVertical: 6, borderRadius: 20 },
                   uploadingHeaderStyle?.retryButtonStyle?.buttonStyle
                 ])} />
                 <LMButton onTap={abortRetry}
                   text={{
                     children: "Cancel",
+                    textStyle: StyleSheet.flatten([
+                      {
+                        color: "#344054"
+                      },
+                      uploadingHeaderStyle?.cancelButtonStyle?.textStyle
+                    ])
                   }}
-                  buttonStyle={{ borderWidth: 1, backgroundColor: '#F2F4F7', borderColor: '#F2F4F7', paddingHorizontal: 12, paddingVertical: 8, borderRadius: 20 }}
-                  {...uploadingHeaderStyle?.cancelButtonStyle}
+                  buttonStyle={StyleSheet.flatten([
+                    { borderWidth: 1, backgroundColor: '#F2F4F7', borderColor: '#F2F4F7', paddingHorizontal: 8, paddingVertical: 6, borderRadius: 20 },
+                    uploadingHeaderStyle?.cancelButtonStyle?.buttonStyle
+                  ])}
                 />
               </View> :
               null}
-            {postUploading && <AnimatedCircularProgress
+            {postUploading && uploadProgress == 0 && <LMLoader size={
+              Platform.OS === "ios"
+                ? STYLES.$LMLoaderSizeiOS
+                : STYLES.$LMLoaderSizeAndroid
+            } />}
+            {postUploading && uploadProgress > 0 && <AnimatedCircularProgress
               size={22}
               width={2}
               fill={Math.round(uploadProgress)}

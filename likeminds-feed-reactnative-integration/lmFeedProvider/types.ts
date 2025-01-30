@@ -510,8 +510,15 @@ export interface UserOnboardingStylesProps {
 
 export interface UploadingHeaderStylesProps {
   uploadingTextStyle?: TextStyle;
-  retryButtonStyle?: LMButtonProps;
-  cancelButtonStyle?: LMButtonProps;
+  retryButtonStyle?: {
+    buttonStyle?: ViewStyle;
+    iconStyle?: LMIconProps;
+    textStyle?: TextStyle;
+  }
+  cancelButtonStyle?: {
+    buttonStyle?: ViewStyle;
+    textStyle?: TextStyle;
+  }
   progressBarStyle?: {
     size?: number;
     width?: number;
