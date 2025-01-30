@@ -4,6 +4,7 @@ import LMLoader from "../LMLoader";
 import STYLES from "../../constants/Styles";
 import { styles } from "../../screens/universalFeed/styles";
 import { POST_UPLOAD_RETRY, POST_UPLOADING } from "../../constants/Strings";
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import {
   UniversalFeedContextValues,
   useUniversalFeedContext,
@@ -11,15 +12,14 @@ import {
 import { LMButton, LMIcon } from "../../uiComponents";
 
 const LMPostUploadIndicator = () => {
-  const { postUploading, addTemporaryPost, temporaryPost, abortRetry }: UniversalFeedContextValues =
+  const { postUploading, addTemporaryPost, temporaryPost, abortRetry, uploadProgress }: UniversalFeedContextValues =
     useUniversalFeedContext();
 
   const isUploadingFailed = !!temporaryPost && !postUploading;
 
-  console.log("", temporaryPost)
 
 
-  if (postUploading || isUploadingFailed) {
+  if (isUploadingFailed || postUploading) {
     return (
       <View>
         {/* post uploading section */}
@@ -27,33 +27,39 @@ const LMPostUploadIndicator = () => {
           <View style={styles.uploadingPostContentView}>
             <Text style={[
               styles.postUploadingText,
-              isUploadingFailed ? {color: STYLES.$COLORS.RED} : null
-              ]}>
+            ]}>
               {isUploadingFailed ? POST_UPLOAD_RETRY : POST_UPLOADING}
             </Text>
           </View>
           {/* progress loader */}
           <View style={{ flexDirection: 'row', gap: 18 }}>
             {isUploadingFailed ?
-              <View style={{ flexDirection: 'row', gap: 18 }}>
-                <LMButton onTap={addTemporaryPost} icon={{
+              <View style={{ flexDirection: 'row', gap: 10 }}>
+                <LMButton text={{
+                  children: "Retry",
+                  textStyle: {
+                    color: STYLES.$COLORS.RED,
+                    fontWeight: '600'
+                  }
+                }} onTap={addTemporaryPost} icon={{
                   assetPath: require("../../assets/images/retry_icon3x.png"),
-                  height: 20,
-                  width: 20,
-                }} buttonStyle={{ borderWidth: 0 }} />
-                <LMButton onTap={abortRetry} icon={{
-                  assetPath: require("../../assets/images/abort_retry_icon3x.png"),
-                  height: 18,
-                  width: 18,
-                }} buttonStyle={{ borderWidth: 0 }} />
+                  height: 14,
+                  width: 14,
+                  color: STYLES.$COLORS.RED,
+                  iconStyle: { marginRight: 5 }
+                }} buttonStyle={{ borderWidth: 1, backgroundColor: '#FEE4E2', borderColor: '#FEE4E2', paddingHorizontal: 12, paddingVertical: 8, borderRadius: 20 }} />
+                <LMButton onTap={abortRetry}
+                  text={{
+                    children: "Cancel"
+                  }}
+                  buttonStyle={{ borderWidth: 1, backgroundColor: '#F2F4F7', borderColor: '#F2F4F7', paddingHorizontal: 12, paddingVertical: 8, borderRadius: 20 }} />
               </View> :
               null}
-            {postUploading && <LMLoader
-              size={
-                Platform.OS === "ios"
-                  ? STYLES.$LMLoaderSizeiOS
-                  : STYLES.$LMLoaderSizeAndroid
-              }
+            {postUploading && <AnimatedCircularProgress
+              size={22}
+              width={2}
+              fill={Math.round(uploadProgress)}
+              tintColor={STYLES.$COLORS.PRIMARY}
             />}
           </View>
         </View>
