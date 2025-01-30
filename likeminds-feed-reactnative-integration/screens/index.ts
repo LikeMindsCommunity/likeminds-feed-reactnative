@@ -9,6 +9,7 @@ import { LMFeedPollResult } from "./LMPollResult";
 import { LMFeedNotificationFeedScreen } from "./notificationFeed";
 import { LMFeedNotificationFeedListView } from "./notificationsList";
 import UserOnboardingScreen from "./userOnboardingScreen"
+import LMFeedSearchScreen from "./searchFeed";
 export {
   UniversalFeed,
   PostsList,
@@ -20,5 +21,6 @@ export {
   LMFeedNotificationFeedScreen,
   LMFeedCreatePollScreen,
   LMFeedPollResult,
+  LMFeedSearchScreen,
   UserOnboardingScreen,
 };

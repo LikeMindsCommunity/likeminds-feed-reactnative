@@ -37,6 +37,10 @@ import {
     EDIT_POST_MENU_ITEM,
     NAVIGATED_FROM_COMMENT,
     PIN_POST_MENU_ITEM,
+    POLL_ENDED_WARNING,
+    POLL_SUBMITTED_SUCCESSFULLY,
+    POLLS_OPTIONS_LIMIT_WARNING,
+    POLLS_OPTIONS_WARNING,
     POST_HIDDEN,
     POST_LIKES,
     POST_PIN_SUCCESS,
@@ -70,6 +74,8 @@ import pluralizeOrCapitalize from "../utils/variables";
 import { WordAction } from "../enums/Variables";
 import { CommunityConfigs } from "../communityConfigs";
 import { SearchPostsRequest } from "@likeminds.community/feed-rn"
+import { PollMultiSelectState, PollType } from "../enums/Poll";
+import { Client } from "../client";
 
 interface SearchedPostListContextProps {
     children?: ReactNode;
@@ -112,6 +118,9 @@ export interface SearchedPostListContextValues {
     setShowActionListModal: Dispatch<SetStateAction<boolean>>;
     setFeedPageNumber?: Dispatch<SetStateAction<number>>;
     setSearchPostQuery: Dispatch<SetStateAction<string>>;
+    addPollOption: any;
+    setSelectedPollOptions: any;
+    submitPoll: any;
     searchPostQuery: string;
     renderLoader: () => JSX.Element | null;
     getPostDetail: () => LMPostViewData;
@@ -170,7 +179,7 @@ export const SearchedPostListContextProvider = ({
     const [feedPageNumber, setFeedPageNumber] = useState(1);
     const [displayEmptyComponent, setDisplayEmptyComponent] = useState(false);
     const searchedPostsData = useAppSelector(state => state.feed.searchedPosts);
-    
+
     const loaderStyle = STYLES.$LOADER_STYLE;
     const PAGE_SIZE = 10;
     const [postInViewport, setPostInViewport] = useState("");
@@ -203,9 +212,9 @@ export const SearchedPostListContextProvider = ({
                 )
             )
             if (response?.posts?.length === 0 || !response?.posts) {
-                setDisplayEmptyComponent(true);    
+                setDisplayEmptyComponent(true);
             } else {
-                setDisplayEmptyComponent(false);   
+                setDisplayEmptyComponent(false);
             }
         } else {
             response = await dispatch(
@@ -224,28 +233,28 @@ export const SearchedPostListContextProvider = ({
     };
 
     const loadData = async (newPage: number) => {
-          setIsLoading(true);
-          setTimeout(async () => {
+        setIsLoading(true);
+        setTimeout(async () => {
             const res: any = await fetchSearchFeed(newPage);
             if (res) {
-              if (res?.posts?.length === 0 || !res?.posts) {
-                setIsPaginationStopped(true);
-                setIsLoading(false);
-              } else {
-                setIsLoading(false);
-              }
+                if (res?.posts?.length === 0 || !res?.posts) {
+                    setIsPaginationStopped(true);
+                    setIsLoading(false);
+                } else {
+                    setIsLoading(false);
+                }
             }
-          }, 200);
+        }, 200);
     };
 
     const handleLoadMore = async () => {
-          if (!isLoading && !isPaginationStopped && searchPostQuery?.length > 0) {
+        if (!isLoading && !isPaginationStopped && searchPostQuery?.length > 0) {
             const newPage = feedPageNumber + 1;
             setFeedPageNumber((page) => {
-              return page + 1;
+                return page + 1;
             });
             loadData(newPage);
-          }
+        }
     };
 
 
@@ -490,6 +499,217 @@ export const SearchedPostListContextProvider = ({
         ) : null;
     };
 
+    // this function call an API which adds a poll option in existing poll
+    async function addPollOption({
+        addOptionInputField,
+        options: pollsArr,
+        poll,
+        setIsAddPollOptionModalVisible,
+        setAddOptionInputField,
+        reloadPost,
+    }) {
+        const item = poll?.attachments[0]?.attachmentMeta;
+        try {
+            if (addOptionInputField.trim().length === 0) {
+                return;
+            } else if (pollsArr.length >= 10) {
+                setIsAddPollOptionModalVisible(false);
+                setAddOptionInputField("");
+                dispatch({
+                    type: SHOW_TOAST,
+                    body: { isToast: true, message: POLLS_OPTIONS_LIMIT_WARNING },
+                });
+                return;
+            }
+
+            let shouldBreak = false;
+            const polls = pollsArr.map((item: any) => {
+                if (item?.text === addOptionInputField) {
+                    setIsAddPollOptionModalVisible(false);
+                    setAddOptionInputField("");
+                    dispatch({
+                        type: SHOW_TOAST,
+                        body: { isToast: true, message: POLLS_OPTIONS_WARNING },
+                    });
+                    shouldBreak = true;
+                }
+            });
+
+            if (shouldBreak) {
+                return;
+            }
+
+            setIsAddPollOptionModalVisible(false);
+            setAddOptionInputField("");
+
+            const payload = {
+                pollId: item?.id,
+                text: addOptionInputField,
+            };
+            await Client?.myClient.addPollOption(payload);
+            await reloadPost();
+        } catch (error) {
+            // process error
+        }
+    }
+
+    // this function used we interact with poll options
+    async function setSelectedPollOptions({
+        pollIndex,
+        poll,
+        selectedPolls,
+        options,
+        shouldShowVotes,
+        isMultiChoicePoll,
+        reloadPost,
+        setSelectedPolls,
+    }) {
+        const item = poll?.attachments[0]?.attachmentMeta;
+        if (Date.now() > item?.expiryTime) {
+            dispatch({
+                type: SHOW_TOAST,
+                body: { isToast: true, message: POLL_ENDED_WARNING },
+            });
+            return;
+        }
+        const newSelectedPolls = [...selectedPolls];
+        const isPollIndexIncluded = newSelectedPolls.includes(pollIndex);
+
+        if (isPollIndexIncluded) {
+            // if poll item is already selected
+            const isSelected = item?.options?.some((poll: any) => {
+                return poll?.isSelected;
+            });
+            const selectedIndex = newSelectedPolls.findIndex(
+                (index) => index === pollIndex
+            );
+            newSelectedPolls.splice(selectedIndex, 1);
+        } else {
+            const isSelected = options?.some((poll: any) => {
+                return poll?.isSelected;
+            });
+
+            // Already submitted poll condition
+            if (isSelected && item?.pollType === PollType.INSTANT) {
+                return;
+            } else if (item?.pollType === PollType.DEFERRED && shouldShowVotes) {
+                return;
+            }
+
+            // if only one option is allowed
+            if (
+                !isMultiChoicePoll(
+                    item?.multipleSelectNumber,
+                    item?.multipleSelectState
+                ) &&
+                (item?.multipleSelectNumber === 1 || !item?.multipleSelectNumber)
+            ) {
+                // can change selected ouptput in deferred poll
+                if (item?.pollType === PollType.DEFERRED) {
+                    const pollSubmissionCall = await Client?.myClient.submitPollVote({
+                        pollId: item?.id,
+                        votes: [item?.options[pollIndex]?.id],
+                    });
+                    await reloadPost();
+                    dispatch({
+                        type: SHOW_TOAST,
+                        body: { isToast: true, message: POLL_SUBMITTED_SUCCESSFULLY },
+                    });
+                } else {
+                    // for instant poll selection only for once
+
+                    // if not selected
+                    if (!isSelected) {
+                        const pollSubmissionCall = await Client?.myClient.submitPollVote({
+                            pollId: item?.id,
+                            votes: [item?.options[pollIndex]?.id],
+                        });
+                        await reloadPost();
+                        dispatch({
+                            type: SHOW_TOAST,
+                            body: { isToast: true, message: POLL_SUBMITTED_SUCCESSFULLY },
+                        });
+                    }
+                }
+                return;
+            }
+
+            // multiple options are allowed
+            switch (item?.multipleSelectState) {
+                case PollMultiSelectState.EXACTLY: {
+                    if (selectedPolls.length === item?.multipleSelectNumber) {
+                        dispatch({
+                            type: SHOW_TOAST,
+                            body: {
+                                isToast: true,
+                                message: `Select exactly ${item?.multipleSelectNumber} options`,
+                            },
+                        });
+                        return;
+                    }
+                    break;
+                }
+                case PollMultiSelectState.AT_MAX: {
+                    if (selectedPolls.length == item?.multipleSelectNumber) {
+                        dispatch({
+                            type: SHOW_TOAST,
+                            body: {
+                                isToast: true,
+                                message: `Select at most ${item?.multipleSelectNumber} options`,
+                            },
+                        });
+                        return;
+                    }
+                    break;
+                }
+            }
+            newSelectedPolls.push(pollIndex);
+        }
+        setSelectedPolls(newSelectedPolls);
+    }
+
+    // this function call submit poll button API
+    async function submitPoll({
+        shouldShowSubmitPollButton,
+        selectedPolls,
+        poll,
+        reloadPost,
+        setShouldShowVotes,
+        setSelectedPolls,
+        stringManipulation,
+    }) {
+        const item = poll?.attachments[0]?.attachmentMeta;
+        if (shouldShowSubmitPollButton) {
+            try {
+                const votes = selectedPolls?.map((itemIndex: any) => {
+                    return item?.options[itemIndex]?.id;
+                });
+                const pollSubmissionCall = await Client?.myClient.submitPollVote({
+                    pollId: item?.id,
+                    votes: votes,
+                });
+                await reloadPost();
+                setShouldShowVotes(true);
+                setSelectedPolls([]);
+                dispatch({
+                    type: SHOW_TOAST,
+                    body: { isToast: true, message: POLL_SUBMITTED_SUCCESSFULLY },
+                });
+            } catch (error) {
+                // process error
+            }
+        } else {
+            const string = stringManipulation(true);
+            dispatch({
+                type: SHOW_TOAST,
+                body: {
+                    isToast: true,
+                    message: string,
+                },
+            });
+        }
+    }
+
     const contextValues: SearchedPostListContextValues = {
         navigation,
         searchFeedData,
@@ -529,7 +749,10 @@ export const SearchedPostListContextProvider = ({
         postInViewport,
         setPostInViewport,
         setSearchPostQuery,
-        displayEmptyComponent
+        displayEmptyComponent,
+        addPollOption,
+        setSelectedPollOptions,
+        submitPoll
     };
 
     return (
