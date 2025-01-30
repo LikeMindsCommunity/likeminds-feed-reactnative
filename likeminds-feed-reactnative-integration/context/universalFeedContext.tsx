@@ -95,6 +95,7 @@ export interface UniversalFeedContextValues {
   mediaAttachmemnts: [];
   linkAttachments: [];
   postContent: string;
+  uploadProgress: number;
   uploadingMediaAttachmentType: number;
   uploadingMediaAttachment: string;
   unreadNotificationCount: number;
@@ -155,6 +156,7 @@ export const UniversalFeedContextProvider = ({
   );
   const [postUploading, setPostUploading] = useState(false);
 
+
   const [feedPageNumber, setFeedPageNumber] = useState(1);
   const [isPaginationStopped, setIsPaginationStopped] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(true);
@@ -178,6 +180,7 @@ export const UniversalFeedContextProvider = ({
 
   const [refreshing, setRefreshing] = useState(false);
   const [localRefresh, setLocalRefresh] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const listRef = useRef<FlatList<LMPostViewData>>(null);
   const route = useRoute();
   const params = route.params as {
@@ -187,7 +190,6 @@ export const UniversalFeedContextProvider = ({
   const myClient = Client.myClient;
 
   useLayoutEffect(() => {
-    console.log("RUNN EFFECT");
     (async () => {
       const response = await Client?.myClient?.getTemporaryPost();
       const locallyStoredPost = response.getData();
@@ -269,6 +271,7 @@ export const UniversalFeedContextProvider = ({
   }
 
   const addTemporaryPost = async () => {
+    setUploadProgress(0);
     setPostUploading(true);
     // replace the mentions with route
     const postContentText = mentionToRouteConverter(temporaryPost?.text ?? "");
@@ -283,9 +286,16 @@ export const UniversalFeedContextProvider = ({
       return item?.attachmentType == 4 || item?.attachmentType == 5 || item?.attachmentType == 6
     }) ?? []
 
+    let progressArray = new Array(mediaAttachmemnts?.length ?? 0).fill(0);
+    const updateTotalProgress = () => {
+      const totalProgress =
+        progressArray.reduce((acc, val) => acc + val, 0) / mediaAttachmemnts?.length;
+        setUploadProgress(totalProgress);
+    };
+
     // upload media to aws
     const uploadPromises = mediaAttachmemnts?.map(
-      async (item: LMAttachmentViewData) => {
+      async (item: LMAttachmentViewData, index) => {
         if (item?.attachmentType == 2) {
           await createThumbnail({
             url: item?.attachmentMeta?.url,
@@ -316,7 +326,12 @@ export const UniversalFeedContextProvider = ({
         return uploadFilesToAWS(
           item.attachmentMeta,
           memberData.userUniqueId,
-          item.attachmentMeta?.url
+          item.attachmentMeta?.url,
+          undefined,
+          (progress) => {
+            progressArray[index] = progress; // Update progress of this file
+            updateTotalProgress(); // Recalculate total progress
+          }
         ).then((res) => {
           item.attachmentMeta.url = res.Location;
           return item; // Return the updated item
@@ -343,6 +358,7 @@ export const UniversalFeedContextProvider = ({
     );
     if (addPostResponse !== undefined) {
       setPostUploading(false);
+      setTemporaryPost(null);
       await onRefresh();
       listRef.current?.scrollToIndex({ animated: true, index: 0 });
       if (addPostResponse?.name == "Error") {
@@ -353,8 +369,6 @@ export const UniversalFeedContextProvider = ({
           })
         );
         return addPostResponse;
-      } else {
-        setTemporaryPost(null);
       }
       dispatch(
         showToastMessage({
@@ -370,12 +384,21 @@ export const UniversalFeedContextProvider = ({
 
   // this function adds a new post
   const postAdd = async () => {
+    setUploadProgress(0);
     // replace the mentions with route
     const postContentText = mentionToRouteConverter(postContent);
     const headingText = heading;
+
+    let progressArray = new Array(mediaAttachmemnts?.length ?? 0).fill(0);
+    const updateTotalProgress = () => {
+      const totalProgress =
+        progressArray.reduce((acc, val) => acc + val, 0) / mediaAttachmemnts?.length;
+        setUploadProgress(totalProgress);
+    };
+
     // upload media to aws
     const uploadPromises = mediaAttachmemnts?.map(
-      async (item: LMAttachmentViewData) => {
+      async (item: LMAttachmentViewData, index) => {
         if (item?.attachmentType == 2) {
           await createThumbnail({
             url: item?.attachmentMeta?.url,
@@ -397,7 +420,7 @@ export const UniversalFeedContextProvider = ({
               const thumbnailRes = await uploadFilesToAWS(
                 thumbnailMeta,
                 memberData.userUniqueId,
-                response?.path
+                response?.path,
               );
               item.attachmentMeta.thumbnailUrl = thumbnailRes.Location;
             })
@@ -406,7 +429,12 @@ export const UniversalFeedContextProvider = ({
         return uploadFilesToAWS(
           item.attachmentMeta,
           memberData.userUniqueId,
-          item.attachmentMeta?.url
+          item.attachmentMeta?.url,
+          undefined,
+          (progress) => {
+            progressArray[index] = progress; // Update progress of this file
+            updateTotalProgress(); // Recalculate total progress
+          }
         ).then((res) => {
           item.attachmentMeta.url = res.Location;
           return item; // Return the updated item
@@ -799,6 +827,7 @@ export const UniversalFeedContextProvider = ({
     setPostUploading,
     setShowCreatePost,
     refreshing,
+    uploadProgress,
     localRefresh,
     listRef,
     mediaAttachmemnts,
