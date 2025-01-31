@@ -8,11 +8,13 @@ import React, {
   useState,
   JSX,
   useLayoutEffect,
+  useRef,
 } from "react";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import {
   autoPlayPostVideo,
   getFeed,
+  getPersonalisedFeed,
   getTopicsFeed,
   hidePost,
   likePost,
@@ -24,9 +26,11 @@ import {
 } from "../store/actions/feed";
 import {
   GetFeedRequest,
+  GetPersonalisedFeedRequest,
   HidePostRequest,
   LikePostRequest,
   PinPostRequest,
+  PostSeenRequest,
   SavePostRequest,
 } from "@likeminds.community/feed-rn";
 import _ from "lodash";
@@ -68,6 +72,9 @@ import { SHOW_TOAST } from "..//store/types/loader";
 import pluralizeOrCapitalize from "../utils/variables";
 import { WordAction } from "../enums/Variables";
 import { CommunityConfigs } from "../communityConfigs";
+import { useLMFeed } from "../lmFeedProvider";
+import { Client } from "../client";
+import { FeedType } from "../enums/FeedType";
 
 interface PostListContextProps {
   children?: ReactNode;
@@ -81,6 +88,10 @@ interface PostListContextProps {
     params: Array<string>;
     path: undefined;
   };
+}
+
+interface MutableRefObject<T> {
+  current: T;
 }
 
 export interface PostListContextValues {
@@ -129,6 +140,8 @@ export interface PostListContextValues {
     },
     postId: string
   ) => void;
+  saveSeenPost: () => void;
+  seenPost: MutableRefObject<Set<string>>;
 }
 
 const PostListContext = createContext<PostListContextValues | undefined>(
@@ -171,11 +184,14 @@ export const PostListContextProvider = ({
     isPaginationStopped,
     setIsPaginationStopped,
     predefinedTopics,
+    postSeen,
+    feedType,
   } = useUniversalFeedContext();
 
   const PAGE_SIZE = 20;
   const [postInViewport, setPostInViewport] = useState("");
   const isFocus = useIsFocused();
+  const seenPost = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     if (isFocus) {
@@ -204,19 +220,43 @@ export const PostListContextProvider = ({
     };
 
     const topicIds = topics?.length > 0 && topics[0] != "0" ? topics : [];
-    // calling getFeed API
-    const getFeedResponse = await dispatch(
-      getFeed(
-        GetFeedRequest.builder()
-          .setPage(payload.page)
-          .setPageSize(payload.pageSize)
-          .setTopicIds(predefinedTopics ? predefinedTopics : topicIds)
-          .build(),
-        false
-      )
-    );
-    setFeedFetching(false);
-    return getFeedResponse;
+
+    if (feedType === FeedType.PERSONALISED_FEED) {
+      // calling personalised API
+      try {
+        const getPersonalisedResponse = await dispatch(
+          getPersonalisedFeed(
+            GetPersonalisedFeedRequest.builder()
+              .setPage(payload.page)
+              .setPageSize(payload.pageSize)
+              .setShouldRecompute(page <= 1 ? true : false)
+              .setShouldReorder(page <= 1 ? true : false)
+              .build(),
+            false
+          )
+        );
+        await postSeen();
+        setFeedFetching(false);
+        return getPersonalisedResponse;
+      } catch (error) {
+        setFeedFetching(false);
+        return;
+      }
+    } else {
+      // calling getFeed API
+      const getFeedResponse = await dispatch(
+        getFeed(
+          GetFeedRequest.builder()
+            .setPage(payload.page)
+            .setPageSize(payload.pageSize)
+            .setTopicIds(predefinedTopics ? predefinedTopics : topicIds)
+            .build(),
+          false
+        )
+      );
+      setFeedFetching(false);
+      return getFeedResponse;
+    }
   };
 
   const loadData = async (newPage: number) => {
@@ -463,6 +503,15 @@ export const PostListContextProvider = ({
     ) : null;
   };
 
+  // Function to save seenPost locally
+  const saveSeenPost = async () => {
+    try {
+      await Client.myClient.setSeenPost([...seenPost.current]);
+    } catch (error) {
+      console.error("Error saving seenPost:", error);
+    }
+  };
+
   const contextValues: PostListContextValues = {
     navigation,
     feedData,
@@ -501,6 +550,8 @@ export const PostListContextProvider = ({
     setModalPosition,
     postInViewport,
     setPostInViewport,
+    seenPost,
+    saveSeenPost,
   };
 
   return (

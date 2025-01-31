@@ -12,8 +12,17 @@ import React, {
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { mentionToRouteConverter, uploadFilesToAWS } from "../utils";
 import { addPost, setUploadAttachments } from "../store/actions/createPost";
-import { AddPostRequest, GetFeedRequest } from "@likeminds.community/feed-rn";
-import { autoPlayPostVideo, refreshFeed } from "../store/actions/feed";
+import {
+  AddPostRequest,
+  GetFeedRequest,
+  GetPersonalisedFeedRequest,
+  PostSeenRequest,
+} from "@likeminds.community/feed-rn";
+import {
+  autoPlayPostVideo,
+  refreshFeed,
+  refreshPersonalisedFeed,
+} from "../store/actions/feed";
 import {
   CREATE_POST_PERMISSION,
   POLLS_OPTIONS_LIMIT_WARNING,
@@ -56,6 +65,8 @@ import {
   SET_FLOW_TO_CREATE_POST_SCREEN,
   SET_PAUSED_STATUS,
 } from "../store/types/types";
+import { useLMFeed } from "../lmFeedProvider";
+import { FeedType } from "../enums/FeedType";
 
 interface UniversalFeedContextProps {
   children?: ReactNode;
@@ -107,6 +118,8 @@ export interface UniversalFeedContextValues {
   setIsPaginationStopped: Dispatch<SetStateAction<boolean>>;
   predefinedTopics?: string[];
   onSearchIconClick: () => void;
+  postSeen: (initialPosts?: string[]) => void;
+  feedType?: FeedType;
 }
 
 const UniversalFeedContext = createContext<
@@ -161,6 +174,10 @@ export const UniversalFeedContextProvider = ({
   const [localRefresh, setLocalRefresh] = useState(false);
   const listRef = useRef<FlatList<LMPostViewData>>(null);
   const route = useRoute();
+  const params = route.params as {
+    feedType?: FeedType;
+  };
+  const feedType = params?.feedType;
   const myClient = Client.myClient;
 
   useEffect(() => {
@@ -187,16 +204,32 @@ export const UniversalFeedContextProvider = ({
       selectedTopics?.length > 0 && selectedTopics[0] != "0"
         ? selectedTopics
         : [];
-    await dispatch(
-      refreshFeed(
-        GetFeedRequest.builder()
-          .setPage(1)
-          .setPageSize(20)
-          .setTopicIds(predefinedTopics ? predefinedTopics : topicIds)
-          .build(),
-        false
-      )
-    );
+
+    if (feedType === FeedType.PERSONALISED_FEED) {
+      const getPersonalisedResponse = await dispatch(
+        refreshPersonalisedFeed(
+          GetPersonalisedFeedRequest.builder()
+            .setPage(1)
+            .setPageSize(20)
+            .setShouldRecompute(true)
+            .setShouldReorder(true)
+            .build(),
+          false
+        )
+      );
+      await postSeen();
+    } else {
+      await dispatch(
+        refreshFeed(
+          GetFeedRequest.builder()
+            .setPage(1)
+            .setPageSize(20)
+            .setTopicIds(predefinedTopics ? predefinedTopics : topicIds)
+            .build(),
+          false
+        )
+      );
+    }
     dispatch({
       type: REFRESH_FROM_ONBOARDING_SCREEN,
       body: { refresh: false },
@@ -297,9 +330,8 @@ export const UniversalFeedContextProvider = ({
           topics: [],
         })
       );
-      await onRefresh();
       listRef.current?.scrollToIndex({ animated: true, index: 0 });
-      if(addPostResponse?.name == "Error") {
+      if (addPostResponse?.name == "Error") {
         dispatch(
           showToastMessage({
             isToast: true,
@@ -615,6 +647,27 @@ export const UniversalFeedContextProvider = ({
   async function onSearchIconClick() {
     navigation.navigate(SEARCH_SCREEN)
   }
+    
+  // Function to send seenPost to the backend
+  const postSeen = async (initialPosts: string[] = []) => {
+    try {
+      const savedSeenPost = await Client.myClient.getSeenPost();
+      const seenPostToSend = savedSeenPost
+        ? [...JSON.parse(savedSeenPost), ...initialPosts]
+        : [...initialPosts];
+
+      if (seenPostToSend.length > 0) {
+        // Simulate API call
+        await Client.myClient.postSeen(
+          PostSeenRequest.builder().setPostIds(seenPostToSend).build()
+        );
+        // Clear local storage on success
+        await Client.myClient.clearSeenPost();
+      }
+    } catch (error) {
+      console.error("Error sending seenPost:", error);
+    }
+  };
 
   const contextValues: UniversalFeedContextValues = {
     navigation,
@@ -653,7 +706,9 @@ export const UniversalFeedContextProvider = ({
     isPaginationStopped,
     setIsPaginationStopped,
     predefinedTopics,
-    onSearchIconClick
+    onSearchIconClick,
+    postSeen,
+    feedType,
   };
 
   return (

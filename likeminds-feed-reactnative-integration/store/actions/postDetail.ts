@@ -97,12 +97,7 @@ export const getComments =
       return {
         type: POST_COMMENTS_SUCCESS,
         [CALL_API]: {
-          func: Client.myClient.getComments(
-            payload.postId,
-            payload,
-            payload.commentId,
-            payload.page
-          ),
+          func: Client.myClient.getComments(payload),
           body: payload,
           types: [POST_COMMENTS, POST_COMMENTS_SUCCESS, POST_COMMENTS_FAILED],
           showLoader: showLoader,
