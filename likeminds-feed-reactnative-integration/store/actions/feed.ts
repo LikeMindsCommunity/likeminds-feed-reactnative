@@ -93,6 +93,14 @@ export const getSearchedPosts = (payload: SearchPostsRequest) => () => {
           GET_SEARCHED_POSTS_SUCCESS,
           GET_SEARCHED_POSTS_FAILED,
         ],
+      },
+    };
+  } catch (error) {
+    Alert.alert(`${error}`);
+  }
+}
+
+
 // get personalised feed API action
 export const getPersonalisedFeed = (payload: GetPersonalisedFeedRequest, showLoader: boolean) => () => {
   try {
@@ -133,7 +141,6 @@ export const getPaginatedSearchedPosts = (payload: SearchPostsRequest) => () => 
   }
 }
 
-};
 
 
 export const getTopicsFeed = (payload: GetFeedRequest, showLoader: boolean) => () => {

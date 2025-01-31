@@ -28,7 +28,7 @@ import { DeleteModal, ReportModal } from '../../customModals'
 import { useSearchFeedCustomisableMethodsContext } from '../../context/searchFeedCallbacksContext'
 import { SearchedPostListContextValues, useSearchedPostListContext } from '../../context/searchedPostListContext'
 import { styles } from "./styles"
-import { PollCustomisableMethodsContextProvider } from '@likeminds.community/feed-rn-core/context/pollCustomisableCallback';
+import { PollCustomisableMethodsContextProvider } from '../../context/pollCustomisableCallback';
 
 interface SearchFeedProps {
     children?: React.ReactNode;
