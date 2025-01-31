@@ -49,7 +49,6 @@ const LMUniversalFeedHeader = () => {
                 onSearchIconClickProp
                   ? onSearchIconClickProp()
                   : onSearchIconClick();
-                // LMFeedAnalytics.track(Events.NOTIFICATION_PAGE_OPENED);
               }}
             >
             <LMIcon 

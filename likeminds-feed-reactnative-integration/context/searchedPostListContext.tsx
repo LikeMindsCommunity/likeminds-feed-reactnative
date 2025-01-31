@@ -76,6 +76,7 @@ import { CommunityConfigs } from "../communityConfigs";
 import { SearchPostsRequest } from "@likeminds.community/feed-rn"
 import { PollMultiSelectState, PollType } from "../enums/Poll";
 import { Client } from "../client";
+import { SearchType } from "../enums/SearchType";
 
 interface SearchedPostListContextProps {
     children?: ReactNode;
@@ -196,7 +197,7 @@ export const SearchedPostListContextProvider = ({
         }
     }, [postInViewport, isFocus]);
 
-    // this functions gets universal feed data
+    // this functions gets search feed data
     const fetchSearchFeed = async (page) => {
         setFeedFetching(true);
         let response;
@@ -207,7 +208,7 @@ export const SearchedPostListContextProvider = ({
                         .setPage(1)
                         .setPageSize(PAGE_SIZE)
                         .setSearch(searchPostQuery)
-                        .setSearchType("text")
+                        .setSearchType(SearchType.text)
                         .build()
                 )
             )
@@ -223,7 +224,7 @@ export const SearchedPostListContextProvider = ({
                         .setPage(page)
                         .setPageSize(PAGE_SIZE)
                         .setSearch(searchPostQuery)
-                        .setSearchType("text")
+                        .setSearchType(SearchType.text)
                         .build()
                 )
             )
@@ -232,6 +233,7 @@ export const SearchedPostListContextProvider = ({
         return response;
     };
 
+    // this function handles the pagination in search post list
     const loadData = async (newPage: number) => {
         setIsLoading(true);
         setTimeout(async () => {
@@ -247,6 +249,7 @@ export const SearchedPostListContextProvider = ({
         }, 200);
     };
 
+    // this function gets called when end of list is reached to handle pagination
     const handleLoadMore = async () => {
         if (!isLoading && !isPaginationStopped && searchPostQuery?.length > 0) {
             const newPage = feedPageNumber + 1;
