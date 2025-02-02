@@ -43,6 +43,7 @@ const LMPostContent = React.memo(() => {
     }
   };
 
+  // to cause a re-render whenever the content of the post is edited
   useEffect(() => {
     setTruncatedText("");
   }, [post, highlight])

@@ -178,6 +178,7 @@ const LMFeedSearchScreenComponent = ({ navigation, route }) => {
         hideTopicsView,
     } = useSearchFeedCustomisableMethodsContext();
 
+    // this function returns the id of the item selected from menu list and handles further functionalities accordingly
     const onMenuItemSelect = (
         postId: string,
         itemId?: number,
@@ -230,7 +231,7 @@ const LMFeedSearchScreenComponent = ({ navigation, route }) => {
     const currentVideoId = useAppSelector((state) => state.feed.currentIdOfVideo);
 
 
-
+    // Post component to be rendered in the post list
     const renderItem = useCallback(
         ({ item, index }: { item: LMPostViewData; index: number }) => {
             return (
