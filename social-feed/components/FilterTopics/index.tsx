@@ -4,16 +4,16 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '@likeminds.community/feed-rn-core/store/store';
-import {useUniversalFeedContext} from '@likeminds.community/feed-rn-core';
-import {UniversalFeedContextValues} from '@likeminds.community/feed-rn-core/context';
+import {useFeedContext} from '@likeminds.community/feed-rn-core';
+import {FeedContextValues} from '@likeminds.community/feed-rn-core/context';
 import {Client} from '@likeminds.community/feed-rn-core/client';
 import {
-  MAPPED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
-  SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
+  MAPPED_TOPICS_FROM_FEED_SCREEN,
+  SELECTED_TOPICS_FOR_FEED_SCREEN,
   SET_TOPICS,
 } from '@likeminds.community/feed-rn-core/store/types/types';
 import Layout from '@likeminds.community/feed-rn-core/constants/Layout';
-import {styles} from '@likeminds.community/feed-rn-core/screens/universalFeed/styles';
+import {styles} from '@likeminds.community/feed-rn-core/screens/feed/styles';
 
 const FilterTopics = () => {
   const dispatch = useAppDispatch();
@@ -21,13 +21,13 @@ const FilterTopics = () => {
     feedData,
     navigation,
     getNotificationsCount,
-  }: UniversalFeedContextValues = useUniversalFeedContext();
+  }: FeedContextValues = useFeedContext();
   const myClient = Client.myClient;
   const [showTopics, setShowTopics] = useState(false);
   const [isAnyMatchFound, setIsAnyMatchFound] = useState(true);
 
   const selectedTopics = useAppSelector(
-    state => state.feed.selectedTopicsForUniversalFeedScreen,
+    state => state.feed.selectedTopicsForFeedScreen,
   );
   const topics = useAppSelector(state => state.feed.topics);
   const mappedTopics = useAppSelector(state => state.feed.mappedTopics);
@@ -43,7 +43,7 @@ const FilterTopics = () => {
       name: topics[topicId]?.name || 'Unknown', // Use optional chaining and provide a default name if not found
     }));
     dispatch({
-      type: MAPPED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
+      type: MAPPED_TOPICS_FROM_FEED_SCREEN,
       body: {topics: filteredTopicArray},
     });
     getUnreadCount();
@@ -52,7 +52,7 @@ const FilterTopics = () => {
   const handleIndividualTopicsPress = async topicId => {
     /* @ts-ignore */
     await dispatch({
-      type: SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
+      type: SELECTED_TOPICS_FOR_FEED_SCREEN,
       body: {topics: [topicId]},
     });
   };
@@ -132,7 +132,7 @@ const FilterTopics = () => {
                 <TouchableOpacity
                   onPress={async () => {
                     await dispatch({
-                      type: SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
+                      type: SELECTED_TOPICS_FOR_FEED_SCREEN,
                       body: {topics: []},
                     });
                   }}>

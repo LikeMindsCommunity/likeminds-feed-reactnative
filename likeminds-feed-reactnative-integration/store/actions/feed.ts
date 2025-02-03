@@ -1,9 +1,9 @@
 import { Alert } from "react-native";
 import { CALL_API } from "../apiMiddleware";
 import {
-  UNIVERSAL_FEED_DATA,
-  UNIVERSAL_FEED_FAILED,
-  UNIVERSAL_FEED_SUCCESS,
+  FEED_DATA,
+  FEED_FAILED,
+  FEED_SUCCESS,
   REPORT_TAGS_SUCCESS,
   REPORT_TAGS_FAILED,
   REPORT_TAGS_DATA,
@@ -28,12 +28,12 @@ import {
   DELETE_POST_STATE,
   AUTO_PLAY_POST_VIDEO,
   CLEAR_FEED,
-  UNIVERSAL_FEED_REFRESH_SUCCESS,
+  FEED_REFRESH_SUCCESS,
   HIDE_POST,
   HIDE_POST_SUCCESS,
   HIDE_POST_FAILED,
   HIDE_POST_STATE,
-  UNIVERSAL_TOPICS_FEED_SUCCESS,
+  TOPICS_FEED_SUCCESS,
   PERSONALISED_FEED_SUCCESS,
   PERSONALISED_FEED_DATA,
   PERSONALISED_FEED_FAILED,
@@ -52,18 +52,18 @@ import {
   SavePostRequest,
 } from "@likeminds.community/feed-rn";
 
-// get universal feed API action
+// get feed API action
 export const getFeed = (payload: GetFeedRequest, showLoader: boolean) => () => {
   try {
     return {
-      type: UNIVERSAL_FEED_SUCCESS,
+      type: FEED_SUCCESS,
       [CALL_API]: {
         func: Client.myClient.getFeed(payload),
         body: payload,
         types: [
-          UNIVERSAL_FEED_DATA,
-          UNIVERSAL_FEED_SUCCESS,
-          UNIVERSAL_FEED_FAILED,
+          FEED_DATA,
+          FEED_SUCCESS,
+          FEED_FAILED,
         ],
         showLoader: showLoader,
       },
@@ -97,14 +97,14 @@ export const getPersonalisedFeed = (payload: GetPersonalisedFeedRequest, showLoa
 export const getTopicsFeed = (payload: GetFeedRequest, showLoader: boolean) => () => {
   try {
     return {
-      type: UNIVERSAL_TOPICS_FEED_SUCCESS,
+      type: TOPICS_FEED_SUCCESS,
       [CALL_API]: {
         func: Client.myClient.getFeed(payload),
         body: payload,
         types: [
-          UNIVERSAL_FEED_DATA,
-          UNIVERSAL_TOPICS_FEED_SUCCESS,
-          UNIVERSAL_FEED_FAILED,
+          FEED_DATA,
+          TOPICS_FEED_SUCCESS,
+          FEED_FAILED,
         ],
         showLoader: showLoader,
       },
@@ -119,14 +119,14 @@ export const refreshFeed =
   (payload: GetFeedRequest, showLoader: boolean) => () => {
     try {
       return {
-        type: UNIVERSAL_FEED_REFRESH_SUCCESS,
+        type: FEED_REFRESH_SUCCESS,
         [CALL_API]: {
           func: Client.myClient.getFeed(payload),
           body: payload,
           types: [
-            UNIVERSAL_FEED_DATA,
-            UNIVERSAL_FEED_REFRESH_SUCCESS,
-            UNIVERSAL_FEED_FAILED,
+            FEED_DATA,
+            FEED_REFRESH_SUCCESS,
+            FEED_FAILED,
           ],
           showLoader: showLoader,
         },

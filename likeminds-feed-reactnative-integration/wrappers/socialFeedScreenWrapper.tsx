@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
 import {
   PostListContextProvider,
-  UniversalFeedContextProvider,
+  FeedContextProvider,
 } from "../context";
 import { useAppSelector } from "../store/store";
 import { token } from "../utils/pushNotifications";
 import { View } from "react-native";
-import { UniversalFeed } from "../screens/universalFeed";
-import LMUniversalFeedHeader from "../components/LMUniversalFeedHeader";
+import { Feed } from "../screens/feed";
+import LMFeedHeader from "../components/LMFeedHeader";
 import LMFilterTopics from "../components/LMFilterTopics";
 import LMPostUploadIndicator from "../components/LMPostUploadIndicator";
 import { PostsList } from "../screens/postsList";
 import LMCreatePostButton from "../components/LMCreatePostButton";
 
-const Feed = () => {
+const SocialFeed = () => {
   const [FCMToken, setFCMToken] = useState("");
 
   /// Setup notifications
@@ -27,24 +27,24 @@ const Feed = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "black" }}>
-      <UniversalFeed>
-        <LMUniversalFeedHeader />
+      <Feed>
+        <LMFeedHeader />
         <LMFilterTopics />
         <LMPostUploadIndicator />
         <PostsList />
         <LMCreatePostButton />
-      </UniversalFeed>
+      </Feed>
     </View>
   );
 };
 
 const LMSocialFeedScreen = ({ navigation, route }) => {
   return (
-    <UniversalFeedContextProvider navigation={navigation} route={route}>
+    <FeedContextProvider navigation={navigation} route={route}>
       <PostListContextProvider navigation={navigation} route={route}>
-        <Feed />
+        <SocialFeed />
       </PostListContextProvider>
-    </UniversalFeedContextProvider>
+    </FeedContextProvider>
   );
 };
 

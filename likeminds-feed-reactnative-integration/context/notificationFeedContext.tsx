@@ -27,7 +27,7 @@ import { clearPostDetail } from "../store/actions/postDetail";
 import {
   CREATE_POST,
   POST_DETAIL,
-  UNIVERSAL_FEED,
+  FEED,
 } from "../constants/screenNames";
 import { NAVIGATED_FROM_NOTIFICATION } from "../constants/Strings";
 import { Client } from "../client";
@@ -98,7 +98,7 @@ export const NotificationFeedContextProvider = ({
   const commentRegexPattern =
     /^route:\/\/post_detail\?post_id=[\w\d]+&comment_id=[\w\d]+$/;
   const createPostRegexPattern = /^route:\/\/create_post$/;
-  const universalFeedRegexPattern = /^route:\/\/feed\?type=universal$/;
+  const feedRegexPattern = /^route:\/\/feed\?type=universal$/;
   const PAGE_SIZE = 20;
   // this functions gets notification feed data
   const fetchNotificationFeed = async (page) => {
@@ -162,8 +162,8 @@ export const NotificationFeedContextProvider = ({
         ]))
       : activity?.cta.match(createPostRegexPattern)
       ? navigation.navigate(CREATE_POST)
-      : activity?.cta.match(universalFeedRegexPattern)
-      ? navigation.navigate(UNIVERSAL_FEED)
+      : activity?.cta.match(feedRegexPattern)
+      ? navigation.navigate(FEED)
       : null;
   };
   const onRefresh = async () => {

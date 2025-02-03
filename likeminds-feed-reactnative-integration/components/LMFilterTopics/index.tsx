@@ -3,19 +3,19 @@ import React, { useEffect, useState } from "react";
 import { Client } from "../../client";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import {
-  UniversalFeedContextValues,
-  useUniversalFeedContext,
+  FeedContextValues,
+  useFeedContext,
 } from "../../context";
 import {
-  CLEAR_SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
-  MAPPED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
-  SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
-  SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
+  CLEAR_SELECTED_TOPICS_FROM_FEED_SCREEN,
+  MAPPED_TOPICS_FROM_FEED_SCREEN,
+  SELECTED_TOPICS_FOR_FEED_SCREEN,
+  SELECTED_TOPICS_FROM_FEED_SCREEN,
   SET_TOPICS,
 } from "../../store/types/types";
 import Layout from "../../constants/Layout";
 import STYLES from "../../constants/Styles";
-import { styles } from "../../screens/universalFeed/styles";
+import { styles } from "../../screens/feed/styles";
 import { TOPIC_FEED } from "../../constants/screenNames";
 import { CommunityConfigs } from "../../communityConfigs";
 import { WordAction } from "../../enums/Variables";
@@ -32,14 +32,14 @@ const LMFilterTopics = () => {
     setIsAnyMatchingPost,
     setFeedPageNumber,
     setIsPaginationStopped
-  }: UniversalFeedContextValues = useUniversalFeedContext();
+  }: FeedContextValues = useFeedContext();
   const myClient = Client.myClient;
   const [showTopics, setShowTopics] = useState(false);
   const topicsStyle = STYLES.$TOPICS_STYLE;
   const [topicsPage, setTopicsPage] = useState(1);
 
   const selectedTopics = useAppSelector(
-    (state) => state.feed.selectedTopicsForUniversalFeedScreen
+    (state) => state.feed.selectedTopicsForFeedScreen
   );
   const topics = useAppSelector((state) => state.feed.topics);
   const mappedTopics = useAppSelector((state) => state.feed.mappedTopics);
@@ -61,7 +61,7 @@ const LMFilterTopics = () => {
       name: topics[topicId]?.name || "Unknown", // Use optional chaining and provide a default name if not found
     }));
     dispatch({
-      type: MAPPED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
+      type: MAPPED_TOPICS_FROM_FEED_SCREEN,
       body: { topics: filteredTopicArray },
     });
     getUnreadCount();
@@ -69,7 +69,7 @@ const LMFilterTopics = () => {
 
   const handleAllTopicPress = () => {
     dispatch({
-      type: CLEAR_SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
+      type: CLEAR_SELECTED_TOPICS_FROM_FEED_SCREEN,
     });
     /* @ts-ignore */
     return navigation.navigate(TOPIC_FEED);
@@ -78,7 +78,7 @@ const LMFilterTopics = () => {
   const handleIndividualTopicsPress = () => {
     const arrayOfIds = mappedTopics.map((obj) => obj.id);
     dispatch({
-      type: SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
+      type: SELECTED_TOPICS_FROM_FEED_SCREEN,
       body: { topics: arrayOfIds },
     });
     /* @ts-ignore */
@@ -90,11 +90,11 @@ const LMFilterTopics = () => {
     const filteredTopics = selectedTopics?.filter(topic =>  topic != (newItems[index])?.id);
     newItems.splice(index, 1); // Remove the item at the specified index
     dispatch({
-      type: MAPPED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
+      type: MAPPED_TOPICS_FROM_FEED_SCREEN,
       body: { topics: newItems },
     }); // Update the state with the new array
     dispatch({
-      type: SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
+      type: SELECTED_TOPICS_FOR_FEED_SCREEN,
       body: { topics: filteredTopics },
     }); // Update the state with the new array
     setFeedPageNumber(1);
@@ -279,11 +279,11 @@ const LMFilterTopics = () => {
             <TouchableOpacity
               onPress={async () => {
                 dispatch({
-                  type: MAPPED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
+                  type: MAPPED_TOPICS_FROM_FEED_SCREEN,
                   body: { topics: [] },
                 });
                 dispatch({
-                  type: SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
+                  type: SELECTED_TOPICS_FOR_FEED_SCREEN,
                   body: { topics: [] },
                 });
                 setFeedPageNumber(1);

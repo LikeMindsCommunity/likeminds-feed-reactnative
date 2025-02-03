@@ -33,7 +33,7 @@ export const initialState: CreatePostReducerState = {
   postContent: "",
   heading: "",
   topics: [],
-  poll: {}, // to send poll data on universal feed screen
+  poll: {}, // to send poll data on feed screen
   selectedTopics: [],
   disbaledTopics: [],
   predefinedTopics: [],

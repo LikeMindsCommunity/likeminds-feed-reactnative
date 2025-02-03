@@ -1,7 +1,7 @@
 import React from "react";
 import {
   CreatePostContextProvider,
-  UniversalFeedContextProvider,
+  FeedContextProvider,
 } from "../context";
 import { CreatePost } from "../screens/createPost";
 import LMCreatePostHeader from "../components/LMCreatePost/LMCreatePostHeader";
@@ -16,7 +16,7 @@ import LMCreatePostMedia from "../components/LMCreatePost/LMCreatePostMedia";
 
 const SocialFeedCreateWrapper = ({ navigation, route }) => {
   return (
-    <UniversalFeedContextProvider navigation={navigation} route={route}>
+    <FeedContextProvider navigation={navigation} route={route}>
       <CreatePostContextProvider navigation={navigation} route={route}>
         {/* @ts-ignore */}
         <CreatePost>
@@ -48,7 +48,7 @@ const SocialFeedCreateWrapper = ({ navigation, route }) => {
           <LMCreatePostAttachmentSelection />
         </CreatePost>
       </CreatePostContextProvider>
-    </UniversalFeedContextProvider>
+    </FeedContextProvider>
   );
 };
 

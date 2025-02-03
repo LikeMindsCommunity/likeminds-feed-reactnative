@@ -1,7 +1,7 @@
 import {
   convertSingleFeedPost,
   convertToLMPostViewData,
-  convertUniversalFeedPosts,
+  convertFeedPosts,
 } from "../../viewDataModels";
 import {
   PIN_POST_ID,
@@ -10,24 +10,24 @@ import {
   UNPIN_THIS_POST,
 } from "../../constants/Strings";
 import {
-  UNIVERSAL_FEED_SUCCESS,
+  FEED_SUCCESS,
   REPORT_TAGS_SUCCESS,
   PIN_POST_STATE,
   DELETE_POST_STATE,
-  UNIVERSAL_FEED_REFRESH_SUCCESS,
+  FEED_REFRESH_SUCCESS,
   LIKE_POST_STATE,
   SAVE_POST_STATE,
   EDIT_POST_SUCCESS,
   CREATE_COMMENT_SUCCESS,
   DELETE_COMMENT_STATE,
   AUTO_PLAY_POST_VIDEO,
-  SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
+  SELECTED_TOPICS_FOR_FEED_SCREEN,
   SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
   CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
   POST_DATA_SUCCESS,
   SET_TOPICS,
-  SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
-  CLEAR_SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
+  SELECTED_TOPICS_FROM_FEED_SCREEN,
+  CLEAR_SELECTED_TOPICS_FROM_FEED_SCREEN,
   STATUS_BAR_STYLE,
   SET_MUTED_STATE,
   SET_PAUSED_STATUS,
@@ -35,13 +35,13 @@ import {
   SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
   SET_FLOW_TO_CREATE_POST_SCREEN,
   SET_FLOW_TO_CAROUSEL_SCREEN,
-  MAPPED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN,
+  MAPPED_TOPICS_FROM_FEED_SCREEN,
   SET_NOTIFICATION_COUNT,
   SET_FLOW_TO_POST_DETAIL_SCREEN,
   HIDE_POST_STATE,
   CLEAR_SELECTED_TOPICS,
   CLEAR_FEED,
-  UNIVERSAL_TOPICS_FEED_SUCCESS,
+  TOPICS_FEED_SUCCESS,
   REFRESH_FROM_ONBOARDING_SCREEN,
   PERSONALISED_FEED_SUCCESS,
   PERSONALISED_FEED_REFRESH_SUCCESS,
@@ -57,9 +57,9 @@ export interface FeedReducerState {
   autoPlayVideoPostId: "";
   topics: {};
   mappedTopics: {};
-  selectedTopicsForUniversalFeedScreen: [];
+  selectedTopicsForFeedScreen: [];
   selectedTopicsForCreatePostScreen: [];
-  selectedTopicsFromUniversalFeedScreen: [];
+  selectedTopicsFromFeedScreen: [];
   statusBarStyle: string;
   muteStatus: boolean;
   pauseStatus: boolean;
@@ -79,9 +79,9 @@ export const initialState: FeedReducerState = {
   autoPlayVideoPostId: "",
   topics: {},
   mappedTopics: {},
-  selectedTopicsForUniversalFeedScreen: [],
+  selectedTopicsForFeedScreen: [],
   selectedTopicsForCreatePostScreen: [],
-  selectedTopicsFromUniversalFeedScreen: [],
+  selectedTopicsFromFeedScreen: [],
   statusBarStyle: Styles.$STATUS_BAR_STYLE.default
     ? Styles.$STATUS_BAR_STYLE.default
     : "",
@@ -148,12 +148,12 @@ export const feedReducer = (state = initialState, action) => {
       return { ...state, statusBarStyle: color };
     }
 
-    case UNIVERSAL_TOPICS_FEED_SUCCESS: {
+    case TOPICS_FEED_SUCCESS: {
       const { users = {}, topics } = action.body;
       let feedData = state.feed;
       let usersData = state.users;
       // model converter function
-      const post = convertUniversalFeedPosts(action.body);
+      const post = convertFeedPosts(action.body);
       // this handles pagination and appends new post data with previous data
       feedData = [...post];
       // this appends the new users data with previous data
@@ -166,26 +166,26 @@ export const feedReducer = (state = initialState, action) => {
       };
     }
 
-    case SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN: {
+    case SELECTED_TOPICS_FROM_FEED_SCREEN: {
       const { topics = {} } = action.body;
       return {
         ...state,
-        selectedTopicsFromUniversalFeedScreen: topics,
+        selectedTopicsFromFeedScreen: topics,
       };
     }
 
-    case CLEAR_SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN: {
+    case CLEAR_SELECTED_TOPICS_FROM_FEED_SCREEN: {
       return {
         ...state,
-        selectedTopicsFromUniversalFeedScreen: [],
+        selectedTopicsFromFeedScreen: [],
       };
     }
 
-    case SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN: {
+    case SELECTED_TOPICS_FOR_FEED_SCREEN: {
       const { topics = {} } = action.body;
       return {
         ...state,
-        selectedTopicsForUniversalFeedScreen: topics,
+        selectedTopicsForFeedScreen: topics,
       };
     }
 
@@ -209,7 +209,7 @@ export const feedReducer = (state = initialState, action) => {
       return { ...state, topics: { ...state.topics, ...topics } };
     }
 
-    case MAPPED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN: {
+    case MAPPED_TOPICS_FROM_FEED_SCREEN: {
       const { topics = {} } = action.body;
       return {
         ...state,
@@ -220,16 +220,16 @@ export const feedReducer = (state = initialState, action) => {
     case CLEAR_SELECTED_TOPICS: {
       return {
         ...state,
-        selectedTopicsForUniversalFeedScreen: [],
+        selectedTopicsForFeedScreen: [],
       };
     }
 
-    case UNIVERSAL_FEED_SUCCESS: {
+    case FEED_SUCCESS: {
       const { users = {}, topics } = action.body;
       let feedData = state.feed;
       let usersData = state.users;
       // model converter function
-      const post = convertUniversalFeedPosts(action.body);
+      const post = convertFeedPosts(action.body);
       // this handles pagination and appends new post data with previous data
       feedData = feedData ? [...feedData, ...post] : [...post];
       // this appends the new users data with previous data
@@ -242,10 +242,10 @@ export const feedReducer = (state = initialState, action) => {
       };
     }
 
-    case UNIVERSAL_FEED_REFRESH_SUCCESS: {
+    case FEED_REFRESH_SUCCESS: {
       const { users = {} } = action.body;
       // model converter function
-      const post = convertUniversalFeedPosts(action.body);
+      const post = convertFeedPosts(action.body);
       return { ...state, feed: post, users: users };
     }
 
@@ -254,7 +254,7 @@ export const feedReducer = (state = initialState, action) => {
       let feedData = state.feed;
       let usersData = state.users;
       // model converter function
-      const post = convertUniversalFeedPosts(action.body);
+      const post = convertFeedPosts(action.body);
       // this handles pagination and appends new post data with previous data
       feedData = feedData ? [...feedData, ...post] : [...post];
       // this appends the new users data with previous data
@@ -270,7 +270,7 @@ export const feedReducer = (state = initialState, action) => {
     case PERSONALISED_FEED_REFRESH_SUCCESS: {
       const { users = {} } = action.body;
       // model converter function
-      const post = convertUniversalFeedPosts(action.body);
+      const post = convertFeedPosts(action.body);
       return { ...state, feed: post, users: users };
     }
 

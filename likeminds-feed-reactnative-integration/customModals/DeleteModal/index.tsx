@@ -41,7 +41,7 @@ import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Events } from "../../enums/Events";
 import { Keys } from "../../enums/Keys";
 import { getPostType } from "../../utils/analytics";
-import { UNIVERSAL_FEED } from "../../constants/screenNames";
+import { FEED } from "../../constants/screenNames";
 import { Client } from "../../client";
 import { usePostDetailContext } from "../../context";
 import { CommunityConfigs } from "../../communityConfigs";
@@ -59,7 +59,7 @@ interface DeleteModalProps {
   parentCommentId?: string;
   navigation?: NativeStackNavigationProp<
     RootStackParamList,
-    "PostDetail" | "UniversalFeed" | "PostsList"
+    "PostDetail" | "Feed" | "PostsList"
   >;
   repliesArrayUnderComments?: any
 }
@@ -121,7 +121,7 @@ const DeleteModal = ({
           const routesLength = routes?.length;
           if (
             routesLength > 0 &&
-            routes[routesLength - 1]?.name !== UNIVERSAL_FEED
+            routes[routesLength - 1]?.name !== FEED
           ) {
             navigation?.goBack();
           }

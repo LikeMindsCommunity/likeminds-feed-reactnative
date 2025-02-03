@@ -30,5 +30,5 @@ export enum Keys {
   YES = "yes",
   NO = "no",
   TOPICS_ADDED = "topics_added",
-  UNIVERSAL_FEED = "universal_feed",
+  FEED = "feed",
 }

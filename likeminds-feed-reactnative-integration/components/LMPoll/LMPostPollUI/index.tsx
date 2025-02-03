@@ -21,7 +21,7 @@ import LMPostPollText from "../../LMPost/LMPostPollText";
 import { decode } from "../../../utils";
 import { LMText } from "../../../uiComponents";
 import { PollType } from "../../../enums/Poll";
-import { useUniversalFeedCustomisableMethodsContext } from "../../../context";
+import { useFeedCustomisableMethodsContext } from "../../../context";
 import { usePollCustomisableMethodsContext } from "../../../context/pollCustomisableCallback";
 
 const LMPostPollUI = ({

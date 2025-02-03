@@ -22,7 +22,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import {
   CREATE_POST,
   POST_DETAIL,
-  UNIVERSAL_FEED,
+  FEED,
 } from "../../../constants/screenNames";
 import RNVideo from "../../../optionalDependencies/Video";
 import { useLMFeed } from "../../../lmFeedProvider";
@@ -180,7 +180,7 @@ const LMVideo = React.memo(
                     : flowToCreatePostScreen
                     ? true
                     : pauseStatus === true &&
-                      previousRoute?.name === UNIVERSAL_FEED &&
+                      previousRoute?.name === FEED &&
                       currentRoute?.name !== CREATE_POST
                     ? pauseStatus
                     : videoInFeed
@@ -218,7 +218,7 @@ const LMVideo = React.memo(
                   : flowToCreatePostScreen
                   ? true
                   : pauseStatus === true &&
-                    previousRoute?.name === UNIVERSAL_FEED &&
+                    previousRoute?.name === FEED &&
                     currentRoute?.name !== CREATE_POST
                   ? pauseStatus
                   : videoInFeed

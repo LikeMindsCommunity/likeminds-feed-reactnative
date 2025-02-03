@@ -17,13 +17,13 @@ import {
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import { useUniversalFeedContext } from "../../context/universalFeedContext";
+import { useFeedContext } from "../../context/feedContext";
 import {
   CLEAR_FEED,
   CLEAR_SELECTED_TOPICS,
   CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
   SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
-  SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
+  SELECTED_TOPICS_FOR_FEED_SCREEN,
   SET_TOPICS,
 } from "../../store/types/types";
 import { getFeed, getTopicsFeed } from "../../store/actions/feed";
@@ -34,7 +34,7 @@ const TopicFeed = () => {
   const navigation = useNavigation<StackNavigationProp<any>>();
   let routes = navigation.getState()?.routes;
   let previousRoute = routes[routes?.length - 2];
-  const { setFeedPageNumber, setIsPaginationStopped } = useUniversalFeedContext()
+  const { setFeedPageNumber, setIsPaginationStopped } = useFeedContext()
 
   const topicsStyle: any = STYLES.$TOPICS_STYLE;
 
@@ -59,7 +59,7 @@ const TopicFeed = () => {
   const [newTopics, setNewTopics] = useState([] as any);
   const [stopPagination, setStopPagination] = useState(false);
   let sortedTopics: any = [];
-  let sortedTopicsFromUniversalFeed: any = [];
+  let sortedTopicsFromFeed: any = [];
 
   const dispatch = useAppDispatch();
 
@@ -72,8 +72,8 @@ const TopicFeed = () => {
   );
   const allTopics = useAppSelector((state) => state.feed.topics);
   
-  const selectedTopicsFromUniversalFeedScreen = useAppSelector(
-    (state) => state.feed.selectedTopicsFromUniversalFeedScreen
+  const selectedTopicsFromFeedScreen = useAppSelector(
+    (state) => state.feed.selectedTopicsFromFeedScreen
   );
 
   const filterEnabledTrue = (topicId) => {
@@ -123,12 +123,12 @@ const TopicFeed = () => {
       const filteredTopics = Object.entries(allTopics)
         .filter(
           ([topicId, topic]: any) =>
-            !selectedTopicsFromUniversalFeedScreen.includes(topicId)
+            !selectedTopicsFromFeedScreen.includes(topicId)
         )
         .map(([topicId]) => topicId);
 
       let newArr = [
-        ...selectedTopicsFromUniversalFeedScreen,
+        ...selectedTopicsFromFeedScreen,
         ...filteredTopics,
       ];
 
@@ -149,13 +149,13 @@ const TopicFeed = () => {
           widgetId: topic.widgetId,
         };
       });
-      sortedTopicsFromUniversalFeed = newTopics;
-      setNewTopics(selectedTopicsFromUniversalFeedScreen);
+      sortedTopicsFromFeed = newTopics;
+      setNewTopics(selectedTopicsFromFeedScreen);
     }
-  }, [topicsSelected, selectedTopicsFromUniversalFeedScreen]);
+  }, [topicsSelected, selectedTopicsFromFeedScreen]);
 
   const handleUpdateAndNavigateBack = async () => {
-    if (previousRoute?.name === "UniversalFeed") {
+    if (previousRoute?.name === "Feed") {
       let body;
       if (newTopics[0] === "0") {
         body = { topics: [] };
@@ -163,7 +163,7 @@ const TopicFeed = () => {
         body = { topics: newTopics };
       }
       await dispatch({
-        type: SELECTED_TOPICS_FOR_UNIVERSAL_FEED_SCREEN,
+        type: SELECTED_TOPICS_FOR_FEED_SCREEN,
         body,
       });
       setFeedPageNumber(1);
@@ -318,18 +318,18 @@ const TopicFeed = () => {
 
   const fetchTopics = async () => {
     const apiRes = await myClient?.getTopics({
-      isEnabled: previousRoute?.name === "UniversalFeed" ? null : true,
+      isEnabled: previousRoute?.name === "Feed" ? null : true,
       search: search,
       searchType: "name",
       page: 1,
       pageSize: 10,
     } as any);
     const res = apiRes?.data;
-    if (previousRoute?.name === "UniversalFeed") {
+    if (previousRoute?.name === "Feed") {
       const updatedTopics = search
         ? [...res?.topics]
-        : sortedTopicsFromUniversalFeed?.length > 0
-        ? [{ id: "0", name: "All Topics" }, ...sortedTopicsFromUniversalFeed]
+        : sortedTopicsFromFeed?.length > 0
+        ? [{ id: "0", name: "All Topics" }, ...sortedTopicsFromFeed]
         : [{ id: "0", name: "All Topics" }, ...res?.topics];
       setTopics(updatedTopics);
     } else {

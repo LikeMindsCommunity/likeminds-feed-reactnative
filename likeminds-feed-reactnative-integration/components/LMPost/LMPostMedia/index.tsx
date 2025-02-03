@@ -22,7 +22,7 @@ import {
 } from "../../../store/types/types";
 import {
   CAROUSEL_SCREEN,
-  UNIVERSAL_FEED,
+  FEED,
 } from "../../../constants/screenNames";
 import STYLES from "../../../constants/Styles";
 import LMPostPollView from "../../LMPoll/LMPostPollView";
@@ -105,7 +105,7 @@ const LMPostMedia = React.memo(() => {
               }
               // videoInFeed={mediaProps?.videoProps?.videoInFeed}
               videoInFeed={
-                previousRoute?.name === UNIVERSAL_FEED ? false : true
+                previousRoute?.name === FEED ? false : true
               }
               videoInCarousel={false}
               showMuteUnmute={true}
@@ -194,7 +194,7 @@ const LMPostMedia = React.memo(() => {
                   ? mediaProps?.videoProps?.autoPlay
                   : true,
               videoInFeed:
-                previousRoute?.name === UNIVERSAL_FEED ? false : true,
+                previousRoute?.name === FEED ? false : true,
               postId: post?.id,
             }}
           />

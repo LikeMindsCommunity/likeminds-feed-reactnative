@@ -13,9 +13,9 @@ import {
   useAppSelector,
 } from '@likeminds.community/feed-rn-core/store/store';
 import {
-  UniversalFeedContextValues,
-  useUniversalFeedContext,
-  useUniversalFeedCustomisableMethodsContext,
+  FeedContextValues,
+  useFeedContext,
+  useFeedCustomisableMethodsContext,
 } from '@likeminds.community/feed-rn-core/context';
 import {SET_PREDEFINED_TOPICS} from '@likeminds.community/feed-rn-core/store/types/types';
 import {LMFeedAnalytics} from '@likeminds.community/feed-rn-core';
@@ -23,10 +23,10 @@ import {Events} from '@likeminds.community/feed-rn-core/enums/Events';
 
 const CreatePostTypeModal = ({actionAlertModalVisible, hideActionModal}) => {
   const dispatch = useAppDispatch();
-  const {showCreatePost, newPostButtonClick}: UniversalFeedContextValues =
-    useUniversalFeedContext();
+  const {showCreatePost, newPostButtonClick}: FeedContextValues =
+    useFeedContext();
   const {newPostButtonClickProps} =
-    useUniversalFeedCustomisableMethodsContext();
+    useFeedCustomisableMethodsContext();
   const topics = useAppSelector(state => state.feed.topics);
   return (
     <View>

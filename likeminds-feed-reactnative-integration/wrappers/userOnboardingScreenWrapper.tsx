@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  UniversalFeedContextProvider,
+  FeedContextProvider,
   UserOnboardingContextProvider,
 } from "../context";
 import UserOnboardingScreen from "../screens/userOnboardingScreen";

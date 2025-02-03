@@ -34,13 +34,13 @@ import { useLMFeed } from "../../lmFeedProvider";
 import { LMButton, LMIcon, LMInputText, LMText } from "../../uiComponents";
 import {
   UserOnboardingCallbacksContextProvider,
-  useUniversalFeedContext,
+  useFeedContext,
 } from "../../context";
 import { useAppDispatch } from "../../store/store";
 import { useUserOnboardingContext } from "../../context/userOnboardingContext";
 import { useUserOnboardingCallbacksContext } from "../../context/userOnboardingCallbacksContext";
 import { Client } from "../../client";
-import { UNIVERSAL_FEED } from "../../constants/screenNames";
+import { FEED } from "../../constants/screenNames";
 import { navigationRef } from "../../navigation/RootNavigation";
 
 interface userOnboardingCallbacksContextProps {
@@ -217,7 +217,7 @@ function UserOnboardingScreen() {
   useEffect(() => {
     if (isInitiated && !isEditing) {
       setTimeout(
-        () => navigation.dispatch(StackActions.replace(UNIVERSAL_FEED)),
+        () => navigation.dispatch(StackActions.replace(FEED)),
         0
       );
     }

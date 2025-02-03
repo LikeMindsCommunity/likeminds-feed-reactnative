@@ -1,5 +1,5 @@
 export type RootStackParamList = {
-  UniversalFeed: undefined;
+  Feed: undefined;
   PostsList: undefined;
   PostDetail: Array<string> | undefined;
   CreatePost: any;

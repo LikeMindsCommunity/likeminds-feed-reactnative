@@ -1,18 +1,18 @@
 import {Text, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
-import {useUniversalFeedContext} from '@likeminds.community/feed-rn-core';
+import {useFeedContext} from '@likeminds.community/feed-rn-core';
 import {
-  UniversalFeedContextValues,
+  FeedContextValues,
 } from '@likeminds.community/feed-rn-core/context';
-import {styles} from '@likeminds.community/feed-rn-core/screens/universalFeed/styles';
+import {styles} from '@likeminds.community/feed-rn-core/screens/feed/styles';
 import CreatePostTypeModal from '../CreatePostTypeModal';
 import STYLES from '@likeminds.community/feed-rn-core/constants/Styles';
 
 const CreatePostButton = () => {
   const [actionAlertModalVisible, setActionAlertModalVisible] = useState(false);
-  const {showCreatePost}: UniversalFeedContextValues =
-    useUniversalFeedContext();
-  const universalFeedStyle = STYLES.$UNIVERSAL_FEED_STYLE;
+  const {showCreatePost}: FeedContextValues =
+    useFeedContext();
+  const feedStyle = STYLES.$FEED_STYLE;
 
   const hideActionModal = () => {
     setActionAlertModalVisible(false);
@@ -31,14 +31,14 @@ const CreatePostButton = () => {
             showCreatePost
               ? styles.newPostButtonEnable
               : styles.newPostButtonDisable,
-            universalFeedStyle?.newPostButtonStyle,
+            feedStyle?.newPostButtonStyle,
           ]}
           // handles post uploading status and member rights to create post
           onPress={() => {
             showActionModal();
           }}>
           <Text
-            style={[styles.newPostText, universalFeedStyle?.newPostButtonText]}>
+            style={[styles.newPostText, feedStyle?.newPostButtonText]}>
             NEW POST
           </Text>
         </TouchableOpacity>
