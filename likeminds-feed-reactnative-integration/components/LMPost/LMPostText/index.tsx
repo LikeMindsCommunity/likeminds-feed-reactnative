@@ -26,7 +26,7 @@ const MoreLessComponent = ({
   return (
     <Text style={[styles.contentText, textStyle]}>
       {!showMore
-        ? `${truncatedText.trim()}...`
+        ? decode(`${truncatedText.trim()}...`, true, undefined, highlight)
         : isDecoding
         ? `${fullText.trim()}`
         : decode(fullText, true, undefined, highlight)}
