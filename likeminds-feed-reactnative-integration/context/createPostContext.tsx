@@ -742,6 +742,7 @@ export const CreatePostContextProvider = ({
           false
         )
       );
+      await Client?.myClient?.deleteTemporaryPost();
       return editPostResponse;
     } else {
       const editPostResponse = dispatch(
@@ -756,6 +757,7 @@ export const CreatePostContextProvider = ({
           false
         )
       );
+      await Client?.myClient?.deleteTemporaryPost();
       return editPostResponse;
     }
   };
