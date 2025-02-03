@@ -1,8 +1,8 @@
 import {
-  UniversalFeedContextProvider,
-  UniversalFeedContextValues,
-  useUniversalFeedContext,
-} from "./universalFeedContext";
+  FeedContextProvider,
+  FeedContextValues,
+  useFeedContext,
+} from "./feedContext";
 import {
   PostListContextProvider,
   PostListContextValues,
@@ -33,10 +33,10 @@ import {
   useLMPostContext,
 } from "./postItemContext";
 import {
-  UniversalFeedCustomisableMethodsContextProvider,
-  UniversalFeedCustomisableMethodsContext,
-  useUniversalFeedCustomisableMethodsContext,
-} from "./universalFeedCallbacksContext";
+  FeedCustomisableMethodsContextProvider,
+  FeedCustomisableMethodsContext,
+  useFeedCustomisableMethodsContext,
+} from "./feedCallbacksContext";
 import {
   PostDetailCustomisableMethodsContextProvider,
   PostDetailCustomisableMethodsContext,
@@ -65,9 +65,9 @@ import {
 import UserOnboardingContextProvider from "./userOnboardingContext";
 import UserOnboardingCallbacksContextProvider from "./userOnboardingCallbacksContext"
 export {
-  UniversalFeedContextProvider,
-  UniversalFeedContextValues,
-  useUniversalFeedContext,
+  FeedContextProvider,
+  FeedContextValues,
+  useFeedContext,
   PostListContextProvider,
   PostListContextValues,
   usePostListContext,
@@ -83,9 +83,9 @@ export {
   LMPostContextProvider,
   LMPostContextValues,
   useLMPostContext,
-  UniversalFeedCustomisableMethodsContext,
-  UniversalFeedCustomisableMethodsContextProvider,
-  useUniversalFeedCustomisableMethodsContext,
+  FeedCustomisableMethodsContext,
+  FeedCustomisableMethodsContextProvider,
+  useFeedCustomisableMethodsContext,
   PostDetailCustomisableMethodsContextProvider,
   PostDetailCustomisableMethodsContext,
   usePostDetailCustomisableMethodsContext,

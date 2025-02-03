@@ -113,7 +113,7 @@ export const carouselScreenStyle = {
   },
 };
 
-export const customUniversalFeedStyles = {
+export const customFeedStyles = {
   newPostButtonStyle: {
     backgroundColor: '#007bff',
     padding: 10,

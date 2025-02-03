@@ -2,7 +2,7 @@ import { LMOverlayProvider } from "./lmOverlayProvider";
 import { initMyClient } from "./setup";
 import { ContextProvider } from "./store/contextStore";
 import {
-  UniversalFeed,
+  Feed,
   PostsList,
   PostDetail,
   CreatePost,
@@ -14,7 +14,7 @@ import {
   LMFeedPollResult,
 } from "./screens";
 import {
-  UNIVERSAL_FEED,
+  FEED,
   CREATE_POST,
   POSTS_LIST,
   POST_DETAIL,
@@ -26,7 +26,7 @@ import {
 } from "./constants/screenNames";
 import {
   usePostDetailContext,
-  useUniversalFeedContext,
+  useFeedContext,
   usePostLikesListContext,
   useCreatePostContext,
   usePostListContext,
@@ -34,7 +34,7 @@ import {
   PostDetailContextProvider,
   PostLikesListContextProvider,
   PostListContextProvider,
-  UniversalFeedContextProvider,
+  FeedContextProvider,
   CreatePostContextProvider,
   NotificationFeedContextProvider,
   useNotificationFeedContext,
@@ -54,7 +54,7 @@ import CarouselScreen from "./screens/carouselScreen";
 import LMCreatePostButton from "./components/LMCreatePostButton";
 import LMFilterTopics from "./components/LMFilterTopics";
 import LMPostUploadIndicator from "./components/LMPostUploadIndicator";
-import LMUniversalFeedHeader from "./components/LMUniversalFeedHeader";
+import LMFeedHeader from "./components/LMFeedHeader";
 import {
   LMSocialFeedPostDetailScreen,
   LMCreatePollScreen,
@@ -90,7 +90,7 @@ export {
   LMOverlayProvider,
   initMyClient,
   ContextProvider,
-  UniversalFeed,
+  Feed,
   PostsList,
   PostDetail,
   CreatePost,
@@ -102,8 +102,8 @@ export {
   LMCreatePostButton,
   LMFilterTopics,
   LMPostUploadIndicator,
-  LMUniversalFeedHeader,
-  UNIVERSAL_FEED,
+  LMFeedHeader,
+  FEED,
   TOPIC_FEED,
   CAROUSEL_SCREEN,
   CREATE_POST,
@@ -116,10 +116,10 @@ export {
   usePostDetailContext,
   usePostLikesListContext,
   usePostListContext,
-  useUniversalFeedContext,
+  useFeedContext,
   useNotificationFeedContext,
   useCreatePollContext,
-  UniversalFeedContextProvider,
+  FeedContextProvider,
   PostDetailContextProvider,
   PostLikesListContextProvider,
   PostListContextProvider,

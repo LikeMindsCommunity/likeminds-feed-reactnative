@@ -8,7 +8,7 @@ import {
   SUBMIT_TEXT,
 } from "../../constants/Strings";
 import { styles } from "../../components/LMPoll/styles";
-import { useUniversalFeedCustomisableMethodsContext } from "../../context";
+import { useFeedCustomisableMethodsContext } from "../../context";
 import { usePollCustomisableMethodsContext } from "../../context/pollCustomisableCallback";
 import STYLES from "../../constants/Styles";
 

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
-  UNIVERSAL_FEED,
+  FEED,
   TOPIC_FEED,
   POST_DETAIL,
   CREATE_POST,
@@ -49,7 +49,7 @@ import {
 import {LMFeedClient, InitiateUserRequest} from '@likeminds.community/feed-rn';
 import {LoginSchemaRO} from './login/loginSchemaRO';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import UniversalFeedScreen from './screens/UniversalFeedScreen';
+import FeedScreen from './screens/FeedScreen';
 import PostDetailsScreen from './screens/PostDetailsScreen';
 import {FeedType} from '@likeminds.community/feed-rn-core';
 
@@ -256,10 +256,10 @@ const App = () => {
             <NavigationContainer ref={navigationRef} independent={true}>
               <Stack.Navigator screenOptions={{headerShown: false}}>
                 <Stack.Screen
-                  name={UNIVERSAL_FEED}
-                  component={UniversalFeedScreen}
+                  name={FEED}
+                  component={FeedScreen}
                   initialParams={{
-                    feedType: FeedType.UNIVERSAL_FEED,
+                    feedType: FeedType.FEED,
                   }}
                 />
                 <Stack.Screen

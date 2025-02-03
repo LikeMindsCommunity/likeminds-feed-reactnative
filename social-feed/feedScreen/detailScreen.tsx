@@ -2,7 +2,7 @@ import React from 'react';
 import {
   PostDetail,
   usePostDetailContext,
-  useUniversalFeedContext,
+  useFeedContext,
 } from '@likeminds.community/feed-rn-core';
 import {Alert, Platform, Share} from 'react-native';
 
@@ -20,7 +20,7 @@ const DetailScreen = ({navigation}) => {
     onCommentOverflowMenuClick,
   } = usePostDetailContext();
   const {addPollOption, setSelectedPollOptions, submitPoll} =
-    useUniversalFeedContext();
+    useFeedContext();
 
   const customGetCommentsRepliesProp = (
     postId,

@@ -1,14 +1,14 @@
 import React, { ReactNode } from "react";
 import { View } from "react-native";
 import { styles } from "./styles";
-import { UniversalFeedCustomisableMethodsContextProvider } from "../../context";
+import { FeedCustomisableMethodsContextProvider } from "../../context";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { LMMenuItemsViewData, RootStackParamList } from "../../models";
 import { PollCustomisableMethodsContextProvider } from "../../context/pollCustomisableCallback";
 
-interface UniversalFeedProps {
+interface FeedProps {
   children?: React.ReactNode;
-  navigation?: NativeStackNavigationProp<RootStackParamList, "UniversalFeed">;
+  navigation?: NativeStackNavigationProp<RootStackParamList, "Feed">;
   route?: {
     key: string;
     name: string;
@@ -42,11 +42,11 @@ interface UniversalFeedProps {
   hideTopicsView?: boolean;
 }
 
-interface UniversalFeedComponentProps {
+interface FeedComponentProps {
   children: ReactNode;
 }
 
-const UniversalFeed = ({
+const Feed = ({
   navigation,
   route,
   children,
@@ -69,14 +69,14 @@ const UniversalFeed = ({
   isHeadingEnabled = false,
   isTopResponse = false,
   hideTopicsView = false
-}: UniversalFeedProps) => {
+}: FeedProps) => {
   return (
     <PollCustomisableMethodsContextProvider
       onSubmitButtonClicked={onSubmitButtonClicked}
       onAddPollOptionsClicked={onAddPollOptionsClicked}
       onPollOptionClicked={onPollOptionClicked}
     >
-      <UniversalFeedCustomisableMethodsContextProvider
+      <FeedCustomisableMethodsContextProvider
         postLikeHandlerProp={postLikeHandlerProp}
         savePostHandlerProp={savePostHandlerProp}
         selectEditPostProp={selectEditPostProp}
@@ -94,14 +94,14 @@ const UniversalFeed = ({
         isTopResponse={isTopResponse}
         hideTopicsView={hideTopicsView}
       >
-        <UniversalFeedComponent children={children} />
-      </UniversalFeedCustomisableMethodsContextProvider>
+        <FeedComponent children={children} />
+      </FeedCustomisableMethodsContextProvider>
     </PollCustomisableMethodsContextProvider>
   );
 };
 
-const UniversalFeedComponent = ({ children }) => {
+const FeedComponent = ({ children }) => {
   return <View style={styles.mainContainer}>{children}</View>;
 };
 
-export { UniversalFeed };
+export { Feed };

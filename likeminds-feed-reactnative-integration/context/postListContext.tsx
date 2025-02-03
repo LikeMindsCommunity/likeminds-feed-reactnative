@@ -65,7 +65,7 @@ import { postLikesClear } from "../store/actions/postLikes";
 import { ActivityIndicator, View } from "react-native";
 import Layout from "../constants/Layout";
 import STYLES from "../constants/Styles";
-import { useUniversalFeedContext } from "../context/universalFeedContext";
+import { useFeedContext } from "../context/feedContext";
 import { useIsFocused } from "@react-navigation/native";
 import { HIDE_POST_STATE, SET_CURRENT_ID_OF_VIDEO } from "../store/types/types";
 import { SHOW_TOAST } from "..//store/types/loader";
@@ -80,7 +80,7 @@ interface PostListContextProps {
   children?: ReactNode;
   navigation: NativeStackNavigationProp<
     RootStackParamList,
-    "PostsList" | "UniversalFeed"
+    "PostsList" | "Feed"
   >;
   route: {
     key: string;
@@ -97,7 +97,7 @@ interface MutableRefObject<T> {
 export interface PostListContextValues {
   navigation: NativeStackNavigationProp<
     RootStackParamList,
-    "PostsList" | "UniversalFeed"
+    "PostsList" | "Feed"
   >;
   feedData: Array<LMPostViewData>;
   accessToken: string;
@@ -167,7 +167,7 @@ export const PostListContextProvider = ({
   const accessToken = useAppSelector((state) => state.login.accessToken);
   const showLoader = useAppSelector((state) => state.loader.count);
   const topics = useAppSelector(
-    (state) => state.feed.selectedTopicsForUniversalFeedScreen
+    (state) => state.feed.selectedTopicsForFeedScreen
   );
   const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
   const [showActionListModal, setShowActionListModal] = useState(false);
@@ -186,7 +186,7 @@ export const PostListContextProvider = ({
     predefinedTopics,
     postSeen,
     feedType,
-  } = useUniversalFeedContext();
+  } = useFeedContext();
 
   const PAGE_SIZE = 20;
   const [postInViewport, setPostInViewport] = useState("");
@@ -204,7 +204,7 @@ export const PostListContextProvider = ({
     }
   }, [postInViewport, isFocus]);
 
-  // this functions gets universal feed data
+  // this functions gets feed data
   const fetchFeed = async (page: number) => {
     const payload = {
       page: page,

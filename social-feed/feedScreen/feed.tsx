@@ -3,11 +3,11 @@ import {
   LMCreatePostButton,
   LMFilterTopics,
   LMPostUploadIndicator,
-  LMUniversalFeedHeader,
+  LMFeedHeader,
   PostsList,
-  UniversalFeed,
+  Feed,
   usePostListContext,
-  useUniversalFeedContext,
+  useFeedContext,
 } from '@likeminds.community/feed-rn-core';
 import {getUniqueId} from 'react-native-device-info';
 import {Alert, Platform, Share} from 'react-native';
@@ -17,7 +17,7 @@ import {useAppSelector} from '@likeminds.community/feed-rn-core/store/store';
 import FilterTopics from '../components/FilterTopics';
 import CreatePostButton from '../components/CreatePostButton';
 
-const Feed = () => {
+const SocialFeed = () => {
   const {
     postLikeHandler,
     savePostHandler,
@@ -35,7 +35,7 @@ const Feed = () => {
     addPollOption,
     setSelectedPollOptions,
     submitPoll,
-  } = useUniversalFeedContext();
+  } = useFeedContext();
   const mappedTopics = useAppSelector(state => state.feed.mappedTopics);
   const [FCMToken, setFCMToken] = useState('');
 
@@ -146,14 +146,8 @@ const Feed = () => {
     });
   }, []);
 
-  // useEffect(() => {
-  //   if (FCMToken) {
-  //     pushAPI(FCMToken, accessToken);
-  //   }
-  // }, [FCMToken]);
-
   return (
-    <UniversalFeed
+    <Feed
       postLikeHandlerProp={id => customPostLike(id)}
       savePostHandlerProp={(id, saved) => customPostSave(id, saved)}
       onSelectCommentCountProp={id => customHandleCommentClick(id)}
@@ -173,13 +167,13 @@ const Feed = () => {
       onSubmitButtonClicked={customPollSubmitButtonClick}
       onAddPollOptionsClicked={customAddPollOptionsClick}
       onPollOptionClicked={customPollOptionClicked}>
-      <LMUniversalFeedHeader />
+      <LMFeedHeader />
       <LMFilterTopics />
       <LMPostUploadIndicator />
       <PostsList items={mappedTopics} />
       <LMCreatePostButton />
-    </UniversalFeed>
+    </Feed>
   );
 };
 
-export default Feed;
+export default SocialFeed;

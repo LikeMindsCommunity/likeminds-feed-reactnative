@@ -1,17 +1,17 @@
 import React from "react";
 import {
-  UniversalFeedContextProvider,
+  FeedContextProvider,
   CreatePostContextProvider,
 } from "../context";
 import { TopicFeed } from "../screens/topicFeed";
 
 const TopicFeedWrapper = ({ navigation, route }) => {
   return (
-    <UniversalFeedContextProvider navigation={navigation} route={route}>
+    <FeedContextProvider navigation={navigation} route={route}>
       <CreatePostContextProvider navigation={navigation} route={route}>
         <TopicFeed />
       </CreatePostContextProvider>
-    </UniversalFeedContextProvider>
+    </FeedContextProvider>
   );
 };
 

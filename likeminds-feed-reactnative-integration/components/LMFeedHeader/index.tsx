@@ -2,9 +2,9 @@ import { View, Text, TouchableOpacity, Image, SafeAreaView } from "react-native"
 import React, { useState } from "react";
 import LMHeader from "../LMHeader";
 import {
-  UniversalFeedContextValues,
-  useUniversalFeedContext,
-  useUniversalFeedCustomisableMethodsContext,
+  FeedContextValues,
+  useFeedContext,
+  useFeedCustomisableMethodsContext,
 } from "../../context";
 import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Events } from "../../enums/Events";
@@ -17,18 +17,18 @@ import { nameInitials } from "../../utils";
 import { LMProfilePicture } from "../../uiComponents";
 import { useLMFeed } from "../../lmFeedProvider";
 
-const LMUniversalFeedHeader = () => {
+const LMFeedHeader = () => {
   const {
     unreadNotificationCount,
     onTapNotificationBell,
     memberData
-  }: UniversalFeedContextValues = useUniversalFeedContext();
+  }: FeedContextValues = useFeedContext();
   const {isUserOnboardingRequired} = useLMFeed()
   const navigation = useNavigation();
-  const universalFeedStyle = STYLES.$UNIVERSAL_FEED_STYLE;
+  const feedStyle = STYLES.$FEED_STYLE;
   const postHeaderStyle = STYLES.$POST_LIST_STYLE.header
   const { onTapNotificationBellProp } =
-    useUniversalFeedCustomisableMethodsContext();
+    useFeedCustomisableMethodsContext();
 
   return (
     <SafeAreaView
@@ -114,10 +114,10 @@ const LMUniversalFeedHeader = () => {
             </TouchableOpacity>
           </View>
         }
-        {...universalFeedStyle?.screenHeader}
+        {...feedStyle?.screenHeader}
       />
     </SafeAreaView>
   );
 };
 
-export default LMUniversalFeedHeader;
+export default LMFeedHeader;

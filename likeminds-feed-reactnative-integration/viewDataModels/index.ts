@@ -42,7 +42,7 @@ import { LMFeedWidgetViewData } from "../models/LMWidgetData";
  * @param data: [GetFeedResponse]
  * @returns list of [LMPostViewData]
  */
-export function convertUniversalFeedPosts(data: {
+export function convertFeedPosts(data: {
   posts: Post[];
   topics: { [key: string]: LMTopicViewData };
   users: { [key: string]: LMUserViewData };

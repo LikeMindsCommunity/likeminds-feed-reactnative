@@ -31,10 +31,10 @@ import { clearPostDetail } from "../../store/actions/postDetail";
 import {
   PostListContextProvider,
   PostListContextValues,
-  UniversalFeedContextValues,
+  FeedContextValues,
   usePostListContext,
-  useUniversalFeedContext,
-  useUniversalFeedCustomisableMethodsContext,
+  useFeedContext,
+  useFeedCustomisableMethodsContext,
 } from "../../context";
 import { postLikesClear } from "../../store/actions/postLikes";
 import LMPost from "../../components/LMPost/LMPost";
@@ -88,7 +88,7 @@ const PostsListComponent = ({
     localRefresh,
     postSeen,
     feedType,
-  }: UniversalFeedContextValues = useUniversalFeedContext();
+  }: FeedContextValues = useFeedContext();
   const {
     navigation,
     feedData,
@@ -138,7 +138,7 @@ const PostsListComponent = ({
     isHeadingEnabled,
     isTopResponse,
     hideTopicsView,
-  } = useUniversalFeedCustomisableMethodsContext();
+  } = useFeedCustomisableMethodsContext();
 
   const hasFetched = useRef(false);
 

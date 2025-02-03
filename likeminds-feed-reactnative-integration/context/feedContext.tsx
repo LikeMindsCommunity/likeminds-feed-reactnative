@@ -44,7 +44,7 @@ import { LMAttachmentViewData, LMPostViewData } from "../models";
 import {
   CREATE_POST,
   NOTIFICATION_FEED,
-  UNIVERSAL_FEED,
+  FEED,
 } from "../constants/screenNames";
 import {
   getUnreadNotificationCount,
@@ -67,9 +67,9 @@ import {
 import { useLMFeed } from "../lmFeedProvider";
 import { FeedType } from "../enums/FeedType";
 
-interface UniversalFeedContextProps {
+interface FeedContextProps {
   children?: ReactNode;
-  navigation: NativeStackNavigationProp<RootStackParamList, "UniversalFeed">;
+  navigation: NativeStackNavigationProp<RootStackParamList, "Feed">;
   route: {
     key: string;
     name: string;
@@ -79,8 +79,8 @@ interface UniversalFeedContextProps {
   predefinedTopics?: string[];
 }
 
-export interface UniversalFeedContextValues {
-  navigation: NativeStackNavigationProp<RootStackParamList, "UniversalFeed">;
+export interface FeedContextValues {
+  navigation: NativeStackNavigationProp<RootStackParamList, "Feed">;
   feedData: Array<LMPostViewData>;
   accessToken: string;
   memberData: {};
@@ -120,32 +120,32 @@ export interface UniversalFeedContextValues {
   feedType?: FeedType;
 }
 
-const UniversalFeedContext = createContext<
-  UniversalFeedContextValues | undefined
+const FeedContext = createContext<
+  FeedContextValues | undefined
 >(undefined);
 
-export const useUniversalFeedContext = () => {
-  const context = useContext(UniversalFeedContext);
+export const useFeedContext = () => {
+  const context = useContext(FeedContext);
   if (!context) {
     throw new Error(
-      "useUniversalFeedContext must be used within an UniversalFeedContextProvider"
+      "useFeedContext must be used within an FeedContextProvider"
     );
   }
   return context;
 };
 
-export const UniversalFeedContextProvider = ({
+export const FeedContextProvider = ({
   children,
   navigation,
   predefinedTopics,
-}: UniversalFeedContextProps) => {
+}: FeedContextProps) => {
   const dispatch = useAppDispatch();
   const feedData = useAppSelector((state) => state.feed.feed);
   const accessToken = useAppSelector((state) => state.login.accessToken);
   const memberData = useAppSelector((state) => state.login.member);
   const memberRight = useAppSelector((state) => state.login.memberRights);
   const selectedTopics = useAppSelector(
-    (state) => state.feed.selectedTopicsForUniversalFeedScreen
+    (state) => state.feed.selectedTopicsForFeedScreen
   );
   const [postUploading, setPostUploading] = useState(false);
   const [feedPageNumber, setFeedPageNumber] = useState(1);
@@ -240,7 +240,7 @@ export const UniversalFeedContextProvider = ({
   useEffect(() => {
     LMFeedAnalytics.track(
       Events.FEED_OPENED,
-      new Map<string, string>([[Keys.FEED_TYPE, Keys.UNIVERSAL_FEED]])
+      new Map<string, string>([[Keys.FEED_TYPE, Keys.FEED]])
     );
   }, []);
 
@@ -395,7 +395,7 @@ export const UniversalFeedContextProvider = ({
         heading !== "" ||
         topics?.length > 0 ||
         Object.keys(poll).length > 0) &&
-      route.name === UNIVERSAL_FEED
+      route.name === FEED
     ) {
       setPostUploading(true);
       postAdd();
@@ -663,7 +663,7 @@ export const UniversalFeedContextProvider = ({
     }
   };
 
-  const contextValues: UniversalFeedContextValues = {
+  const contextValues: FeedContextValues = {
     navigation,
     feedData,
     accessToken,
@@ -705,8 +705,8 @@ export const UniversalFeedContextProvider = ({
   };
 
   return (
-    <UniversalFeedContext.Provider value={contextValues}>
+    <FeedContext.Provider value={contextValues}>
       {children}
-    </UniversalFeedContext.Provider>
+    </FeedContext.Provider>
   );
 };

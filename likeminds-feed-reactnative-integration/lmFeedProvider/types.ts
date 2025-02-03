@@ -27,8 +27,8 @@ interface ThemeStyles {
   lightBackgroundColor?: string;
 }
 
-// custom style interface for universal feed screen
-export interface UniversalFeedStyleProps {
+// custom style interface for feed screen
+export interface FeedStyleProps {
   newPostButtonStyle?: ViewStyle;
   newPostButtonText?: TextStyle;
   newPostIcon?: ImageProps;
@@ -455,7 +455,7 @@ export interface CreatePollStyle {
 
 export interface ThemeContextProps {
   textStyle?: TextStyles;
-  universalFeedStyle?: UniversalFeedStyleProps;
+  feedStyle?: FeedStyleProps;
   postListStyle?: PostListStyleProps;
   loaderStyle?: LoaderStyleProps;
   postDetailStyle?: PostDetailStyleProps;

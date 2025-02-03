@@ -11,7 +11,7 @@ import {
   PostLikesListStyleProps,
   PostListStyleProps,
   TopicsStyle,
-  UniversalFeedStyleProps,
+  FeedStyleProps,
   UserOnboardingStylesProps,
 } from "../lmFeedProvider/types";
 
@@ -160,7 +160,7 @@ export class LMFeedTheme {
   public $LMLoaderSizeAndroid: number;
 
   public $POLL_STYLE: PollStyle;
-  public $UNIVERSAL_FEED_STYLE: UniversalFeedStyleProps;
+  public $FEED_STYLE: FeedStyleProps;
   public $POST_LIST_STYLE: PostListStyleProps;
   public $LOADER_STYLE: LoaderStyleProps;
   public $POST_DETAIL_STYLE: PostDetailStyleProps;
@@ -280,7 +280,7 @@ export class LMFeedTheme {
     this.$LMLoaderSizeiOS = 10;
     this.$LMLoaderSizeAndroid = 25;
     this.$POLL_STYLE = {};
-    this.$UNIVERSAL_FEED_STYLE = {};
+    this.$FEED_STYLE = {};
     this.$POST_LIST_STYLE = {};
     this.$LOADER_STYLE = {};
     this.$POST_DETAIL_STYLE = {};
@@ -339,9 +339,9 @@ export class LMFeedTheme {
     };
   }
 
-  public setUniversalFeedStyles(universalFeedStyles: UniversalFeedStyleProps) {
-    this.$UNIVERSAL_FEED_STYLE = {
-      ...universalFeedStyles,
+  public setFeedStyles(feedStyles: FeedStyleProps) {
+    this.$FEED_STYLE = {
+      ...feedStyles,
     };
   }
 

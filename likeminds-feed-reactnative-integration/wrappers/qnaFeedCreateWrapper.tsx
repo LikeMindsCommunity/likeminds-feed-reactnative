@@ -3,7 +3,7 @@ import { View } from "react-native";
 import {
   CreatePost,
   CreatePostContextProvider,
-  UniversalFeedContextProvider,
+  FeedContextProvider,
   useCreatePostContext,
 } from "../index";
 import {
@@ -57,10 +57,10 @@ const CreateScreen = () => {
 
 export default function QnAFeedCreateWrapper({ navigation, route }) {
   return (
-    <UniversalFeedContextProvider navigation={navigation} route={route}>
+    <FeedContextProvider navigation={navigation} route={route}>
       <CreatePostContextProvider navigation={navigation} route={route}>
         <CreateScreen />
       </CreatePostContextProvider>
-    </UniversalFeedContextProvider>
+    </FeedContextProvider>
   );
 }

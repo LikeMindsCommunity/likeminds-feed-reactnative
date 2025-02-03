@@ -1,7 +1,7 @@
 import { LMMenuItemsViewData, LMPostViewData } from "../models";
 import React, { createContext, ReactNode, useContext } from "react";
 
-export interface UniversalFeedCallbacksContextProps {
+export interface FeedCallbacksContextProps {
   children?: ReactNode;
   isHeadingEnabled: boolean;
   isTopResponse: boolean;
@@ -27,7 +27,7 @@ export interface UniversalFeedCallbacksContextProps {
   onSharePostClicked?: (id: string) => void;
 }
 
-export interface UniversalFeedCustomisableMethodsContext {
+export interface FeedCustomisableMethodsContext {
   isHeadingEnabled: boolean;
   isTopResponse: boolean;
   hideTopicsView?: boolean;
@@ -52,21 +52,21 @@ export interface UniversalFeedCustomisableMethodsContext {
   onSharePostClicked?: (id: string) => void;
 }
 
-const UniversalFeedCustomisableMethodsContext = createContext<
-  UniversalFeedCustomisableMethodsContext | undefined
+const FeedCustomisableMethodsContext = createContext<
+  FeedCustomisableMethodsContext | undefined
 >(undefined);
 
-export const useUniversalFeedCustomisableMethodsContext = () => {
-  const context = useContext(UniversalFeedCustomisableMethodsContext);
+export const useFeedCustomisableMethodsContext = () => {
+  const context = useContext(FeedCustomisableMethodsContext);
   if (!context) {
     throw new Error(
-      "useUniversalFeedCustomisableMethodsContext must be used within an UniversalFeedCustomisableMethodsContext"
+      "useFeedCustomisableMethodsContext must be used within an FeedCustomisableMethodsContext"
     );
   }
   return context;
 };
 
-export const UniversalFeedCustomisableMethodsContextProvider = ({
+export const FeedCustomisableMethodsContextProvider = ({
   children,
   postLikeHandlerProp,
   savePostHandlerProp,
@@ -84,8 +84,8 @@ export const UniversalFeedCustomisableMethodsContextProvider = ({
   isHeadingEnabled = false,
   isTopResponse = false,
   hideTopicsView = false
-}: UniversalFeedCallbacksContextProps) => {
-  const contextValues: UniversalFeedCustomisableMethodsContext = {
+}: FeedCallbacksContextProps) => {
+  const contextValues: FeedCustomisableMethodsContext = {
     postLikeHandlerProp,
     savePostHandlerProp,
     selectPinPostProp,
@@ -105,8 +105,8 @@ export const UniversalFeedCustomisableMethodsContextProvider = ({
   };
 
   return (
-    <UniversalFeedCustomisableMethodsContext.Provider value={contextValues}>
+    <FeedCustomisableMethodsContext.Provider value={contextValues}>
       {children}
-    </UniversalFeedCustomisableMethodsContext.Provider>
+    </FeedCustomisableMethodsContext.Provider>
   );
 };

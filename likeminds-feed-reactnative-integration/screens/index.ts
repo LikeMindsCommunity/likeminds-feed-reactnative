@@ -1,4 +1,4 @@
-import { UniversalFeed } from "./universalFeed";
+import { Feed } from "./feed";
 import { PostsList } from "./postsList";
 import { PostDetail } from "./postDetail";
 import { CreatePost } from "./createPost";
@@ -10,7 +10,7 @@ import { LMFeedNotificationFeedScreen } from "./notificationFeed";
 import { LMFeedNotificationFeedListView } from "./notificationsList";
 import UserOnboardingScreen from "./userOnboardingScreen"
 export {
-  UniversalFeed,
+  Feed,
   PostsList,
   PostDetail,
   CreatePost,

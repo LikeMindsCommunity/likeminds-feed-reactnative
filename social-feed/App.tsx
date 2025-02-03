@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
-  UNIVERSAL_FEED,
+  FEED,
   TOPIC_FEED,
   POST_DETAIL,
   CREATE_POST,
@@ -263,10 +263,10 @@ const App = () => {
                   }}
                 />
                 <Stack.Screen
-                  name={UNIVERSAL_FEED}
+                  name={FEED}
                   component={LMSocialFeedScreen}
                   initialParams={{
-                    feedType: FeedType.UNIVERSAL_FEED,
+                    feedType: FeedType.FEED,
                   }}
                 />
                 <Stack.Screen

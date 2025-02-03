@@ -14,7 +14,7 @@ import { useAppDispatch, useAppSelector } from "../store/store";
 import { RootStackParamList } from "../models/RootStackParamsList";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { selectImageVideo, uploadFilesToAWS } from "../utils";
-import { useUniversalFeedContext } from "../context";
+import { useFeedContext } from "../context";
 import { convertImageVideoMetaData } from "../viewDataModels";
 import { Asset } from "react-native-image-picker";
 import { SHOW_TOAST } from "../store/types/loader";
@@ -23,7 +23,7 @@ import { getMemberState } from "../store/actions/login";
 import { BackHandler } from "react-native";
 import { useLMFeed } from "../lmFeedProvider";
 import { REFRESH_FROM_ONBOARDING_SCREEN } from "../store/types/types";
-import { UNIVERSAL_FEED } from "../constants/screenNames";
+import { FEED } from "../constants/screenNames";
 
 interface userOnboardingContextProps {
   children?: ReactNode;
@@ -132,7 +132,7 @@ export default function UserOnboardingContextProvider({
           });
           navigation.goBack();
         } else {
-          navigation.navigate(UNIVERSAL_FEED);
+          navigation.navigate(FEED);
         }
       } else {
         if (withAPIKeySecurity) {

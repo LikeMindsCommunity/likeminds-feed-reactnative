@@ -26,7 +26,7 @@ import { POLL_RESULT } from "../../../constants/screenNames";
 import { PollMultiSelectState, PollType } from "../../../enums/Poll";
 import { GetPostRequest } from "@likeminds.community/feed-rn";
 import { getPost } from "../../../store/actions/postDetail";
-import { useUniversalFeedContext } from "../../../context";
+import { useFeedContext } from "../../../context";
 
 const LMPostPollView = ({
   item,
@@ -35,7 +35,7 @@ const LMPostPollView = ({
   editPollAttachment,
 }: any) => {
   const { navigation, setSelectedPollOptions, addPollOption, submitPoll } =
-    useUniversalFeedContext();
+    useFeedContext();
 
   const [selectedPolls, setSelectedPolls] = useState<number[]>([]);
   const [showSelected, setShowSelected] = useState(false);

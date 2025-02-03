@@ -1,5 +1,5 @@
 import { NAVIGATED_FROM_NOTIFICATION } from "../constants/Strings";
-import { CREATE_POST, POST_DETAIL, UNIVERSAL_FEED } from "../constants/screenNames";
+import { CREATE_POST, POST_DETAIL, FEED } from "../constants/screenNames";
 import notifee, {AndroidImportance, EventType} from '@notifee/react-native';
 
 
@@ -11,7 +11,7 @@ export interface RouteParams {
 // to get notification routes
 export function getRoute(route: any) {
     if (route === undefined) {
-      return {route: UNIVERSAL_FEED, params: {}};
+      return {route: FEED, params: {}};
     }
   
     let params = {} as RouteParams,
@@ -36,13 +36,13 @@ export function getRoute(route: any) {
         }
         default:
           return {
-            route: UNIVERSAL_FEED,
+            route: FEED,
             params: { navigationRoute: navigationRoute[1]},
           };
       }
     } else {
         return {
-          route: UNIVERSAL_FEED,
+          route: FEED,
           params: { navigationRoute: navigationRoute[1] },
         };
       }
