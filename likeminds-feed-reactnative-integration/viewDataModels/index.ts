@@ -561,7 +561,7 @@ export function convertToLMActivityEntityViewData(
   return activityEntityData;
 }
 
-export function convertToTemporaryPost(attachment: LMAttachmentViewData[], heading: string, text: string, topics: string[], isAnonymous: boolean = false, isHidden = false): LMTemporaryPostViewData {
+export function convertToTemporaryPost(attachment: Attachment[], heading: string, text: string, topics: string[], isAnonymous: boolean = false, isHidden = false): LMTemporaryPostViewData {
   return {
     id: `-${Date.now()}`,
     temporaryId: `-${Date.now()}`,
