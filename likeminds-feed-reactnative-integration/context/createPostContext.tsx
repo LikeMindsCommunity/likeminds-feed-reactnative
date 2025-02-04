@@ -422,7 +422,9 @@ export const CreatePostContextProvider = ({
         topics,
         isAnonymous
       )
-      const response = await Client?.myClient?.saveTemporaryPost(post);
+      const response = await Client?.myClient?.saveTemporaryPost({
+        tempPost: post
+      });
       postToEdit
         ? postEdit(topics)
         : dispatch(

@@ -37,7 +37,7 @@ import {
 import { LMFilterCommentViewData } from "../models/LMFilterCommentViewData";
 import { LMTopicViewData } from "../models/LMTopicViewData";
 import { LMFeedWidgetViewData } from "../models/LMWidgetData";
-import { LMTemporaryPostViewData } from "@likeminds.community/feed-rn/dist/post/models/TemporaryPostViewData";
+import { TemporaryPost } from "@likeminds.community/feed-rn/dist/post/models/TemporaryPost";
 
 /**
  * @param data: [GetFeedResponse]
@@ -561,7 +561,7 @@ export function convertToLMActivityEntityViewData(
   return activityEntityData;
 }
 
-export function convertToTemporaryPost(attachment: Attachment[], heading: string, text: string, topics: string[], isAnonymous: boolean = false, isHidden = false): LMTemporaryPostViewData {
+export function convertToTemporaryPost(attachment: Attachment[], heading: string, text: string, topics: string[], isAnonymous: boolean = false, isHidden = false): TemporaryPost {
   return {
     id: `-${Date.now()}`,
     temporaryId: `-${Date.now()}`,
