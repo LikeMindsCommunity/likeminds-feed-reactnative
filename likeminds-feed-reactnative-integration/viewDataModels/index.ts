@@ -37,7 +37,6 @@ import {
 import { LMFilterCommentViewData } from "../models/LMFilterCommentViewData";
 import { LMTopicViewData } from "../models/LMTopicViewData";
 import { LMFeedWidgetViewData } from "../models/LMWidgetData";
-import { TemporaryPost } from "@likeminds.community/feed-rn/dist/post/models/TemporaryPost";
 
 /**
  * @param data: [GetFeedResponse]
@@ -567,10 +566,10 @@ export function convertToTemporaryPost(
   text: string,
   topics: string[],
   isAnonymous: boolean = false,
-  isHidden = false): TemporaryPost {
+  isHidden = false): Post {
   return {
     id: `-${Date.now()}`,
-    temporaryId: `-${Date.now()}`,
+    tempId: `-${Date.now()}`,
     attachments: attachment,
     commentsCount: 0,
     communityId: 0,
@@ -587,7 +586,9 @@ export function convertToTemporaryPost(
     updatedAt: 0,
     userId: "",
     uuid: "",
-    replies: [],
+    isRepost: false,
+    repostCount: 0,
+    isRepostedByUser: false,
     isAnonymous,
     isHidden,
   }

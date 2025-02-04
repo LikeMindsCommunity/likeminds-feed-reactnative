@@ -17,6 +17,7 @@ import {
   AddPostRequest,
   GetFeedRequest,
   GetPersonalisedFeedRequest,
+  Post,
   PostSeenRequest,
 } from "@likeminds.community/feed-rn";
 import {
@@ -60,7 +61,6 @@ import { useRoute } from "@react-navigation/native";
 import { SHOW_TOAST } from "../store/types/loader";
 import { Client } from "../client";
 import { PollMultiSelectState, PollType } from "../enums/Poll";
-import { TemporaryPost } from "@likeminds.community/feed-rn/dist/post/models/TemporaryPost";
 import {
   REFRESH_FROM_ONBOARDING_SCREEN,
   SET_FLOW_TO_CREATE_POST_SCREEN,
@@ -99,8 +99,8 @@ export interface UniversalFeedContextValues {
   uploadingMediaAttachmentType: number;
   uploadingMediaAttachment: string;
   unreadNotificationCount: number;
-  temporaryPost?: TemporaryPost | null;
-  setTemporaryPost?: Dispatch<SetStateAction<TemporaryPost | null>>;
+  temporaryPost?: Post | null;
+  setTemporaryPost?: Dispatch<SetStateAction<Post | null>>;
   setLocalRefresh: Dispatch<SetStateAction<boolean>>;
   setRefreshing: Dispatch<SetStateAction<boolean>>;
   setPostUploading: Dispatch<SetStateAction<boolean>>;
@@ -192,7 +192,7 @@ export const UniversalFeedContextProvider = ({
   useLayoutEffect(() => {
     (async () => {
       const response = await Client?.myClient?.getTemporaryPost();
-      const locallyStoredPost = response.getData()?.tempPost;
+      const locallyStoredPost = response.getData()?.tempPost?.post;
       if (locallyStoredPost) {
         setTemporaryPost(locallyStoredPost)
       }
