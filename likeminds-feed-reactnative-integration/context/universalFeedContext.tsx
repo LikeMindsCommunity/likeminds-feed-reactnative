@@ -67,6 +67,7 @@ import {
 } from "../store/types/types";
 import { useLMFeed } from "../lmFeedProvider";
 import { FeedType } from "../enums/FeedType";
+import { AddPollOptionParams, SetSelectedPollOptionsParams, SubmitPollParams } from "../constants/types";
 
 interface UniversalFeedContextProps {
   children?: ReactNode;
@@ -441,7 +442,7 @@ export const UniversalFeedContextProvider = ({
     setIsAddPollOptionModalVisible,
     setAddOptionInputField,
     reloadPost,
-  }) {
+  }: AddPollOptionParams) {
     const item = poll?.attachments[0]?.attachmentMeta;
     try {
       if (addOptionInputField.trim().length === 0) {
@@ -497,7 +498,7 @@ export const UniversalFeedContextProvider = ({
     isMultiChoicePoll,
     reloadPost,
     setSelectedPolls,
-  }) {
+  }: SetSelectedPollOptionsParams) {
     const item = poll?.attachments[0]?.attachmentMeta;
     if (Date.now() > item?.expiryTime) {
       dispatch({
@@ -611,7 +612,7 @@ export const UniversalFeedContextProvider = ({
     setShouldShowVotes,
     setSelectedPolls,
     stringManipulation,
-  }) {
+  }: SubmitPollParams) {
     const item = poll?.attachments[0]?.attachmentMeta;
     if (shouldShowSubmitPollButton) {
       try {

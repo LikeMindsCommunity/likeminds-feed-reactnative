@@ -77,6 +77,7 @@ import { SearchPostsRequest } from "@likeminds.community/feed-rn"
 import { PollMultiSelectState, PollType } from "../enums/Poll";
 import { Client } from "../client";
 import { SearchType } from "../enums/SearchType";
+import { AddPollOptionParams, SetSelectedPollOptionsParams, SubmitPollParams } from "../constants/types";
 
 interface SearchedPostListContextProps {
     children?: ReactNode;
@@ -510,7 +511,7 @@ export const SearchedPostListContextProvider = ({
         setIsAddPollOptionModalVisible,
         setAddOptionInputField,
         reloadPost,
-    }) {
+    }: AddPollOptionParams) {
         const item = poll?.attachments[0]?.attachmentMeta;
         try {
             if (addOptionInputField.trim().length === 0) {
@@ -566,7 +567,7 @@ export const SearchedPostListContextProvider = ({
         isMultiChoicePoll,
         reloadPost,
         setSelectedPolls,
-    }) {
+    }: SetSelectedPollOptionsParams) {
         const item = poll?.attachments[0]?.attachmentMeta;
         if (Date.now() > item?.expiryTime) {
             dispatch({
@@ -680,7 +681,7 @@ export const SearchedPostListContextProvider = ({
         setShouldShowVotes,
         setSelectedPolls,
         stringManipulation,
-    }) {
+    }: SubmitPollParams) {
         const item = poll?.attachments[0]?.attachmentMeta;
         if (shouldShowSubmitPollButton) {
             try {
