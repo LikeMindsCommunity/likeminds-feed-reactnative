@@ -359,7 +359,6 @@ export const UniversalFeedContextProvider = ({
     if (addPostResponse !== undefined) {
       setPostUploading(false);
       setTemporaryPost(null);
-      await onRefresh();
       listRef.current?.scrollToIndex({ animated: true, index: 0 });
       if (addPostResponse?.name == "Error") {
         dispatch(
@@ -472,7 +471,8 @@ export const UniversalFeedContextProvider = ({
     );
     if (addPostResponse !== undefined) {
       setPostUploading(false);
-      Client?.myClient?.deleteTemporaryPost();
+      await Client?.myClient?.deleteTemporaryPost();
+      setTemporaryPost(null);
       dispatch(
         setUploadAttachments({
           allAttachment: [],
