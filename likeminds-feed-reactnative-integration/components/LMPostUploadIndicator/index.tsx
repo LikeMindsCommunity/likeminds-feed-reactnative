@@ -53,11 +53,15 @@ const LMPostUploadIndicator = () => {
                   color: STYLES.$COLORS.RED,
                   iconStyle: { marginRight: 5 },
                   ...uploadingHeaderStyle?.retryButtonStyle?.iconStyle
-                  }} buttonStyle={StyleSheet.flatten([
-                    {
-                      borderWidth: 1, backgroundColor: '#FEE4E2', borderColor: '#FEE4E2',
-                      paddingHorizontal: 8, paddingVertical: 6, borderRadius: 20
-                    },
+                }} buttonStyle={StyleSheet.flatten([
+                  {
+                    borderWidth: 1,
+                    backgroundColor: '#FEE4E2',
+                    borderColor: '#FEE4E2',
+                    paddingHorizontal: 8,
+                    paddingVertical: 6,
+                    borderRadius: 20
+                  },
                   uploadingHeaderStyle?.retryButtonStyle?.buttonStyle
                 ])} />
                 <LMButton onTap={abortRetry}
@@ -70,10 +74,19 @@ const LMPostUploadIndicator = () => {
                       uploadingHeaderStyle?.cancelButtonStyle?.textStyle
                     ])
                   }}
-                  buttonStyle={StyleSheet.flatten([
-                    { borderWidth: 1, backgroundColor: '#F2F4F7', borderColor: '#F2F4F7', paddingHorizontal: 8, paddingVertical: 6, borderRadius: 20 },
-                    uploadingHeaderStyle?.cancelButtonStyle?.buttonStyle
-                  ])}
+                  buttonStyle={
+                    StyleSheet.flatten([
+                      {
+                        borderWidth: 1,
+                        backgroundColor: '#F2F4F7',
+                        borderColor: '#F2F4F7',
+                        paddingHorizontal: 8,
+                        paddingVertical: 6,
+                        borderRadius: 20
+                      },
+                      uploadingHeaderStyle?.cancelButtonStyle?.buttonStyle
+                    ])
+                  }
                 />
               </View> :
               null}
