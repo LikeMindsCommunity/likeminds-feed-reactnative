@@ -25,7 +25,8 @@ export interface SearchFeedCallbacksContextProps {
   ) => void;
   onTapNotificationBellProp?: () => void;
   onSharePostClicked?: (id: string) => void;
-  onSearchIconClickProp?: () => void;
+  onBackArrowPressProp?: () => void;
+  onCrossPressProp?: () => void;
 }
 
 export interface SearchFeedCustomisableMethodsContext {
@@ -51,6 +52,8 @@ export interface SearchFeedCustomisableMethodsContext {
   ) => void;
   onTapNotificationBellProp?: () => void;
   onSharePostClicked?: (id: string) => void;
+  onBackArrowPressProp?: () => void;
+  onCrossPressProp?: () => void;
 }
 
 const SearchFeedCustomisableMethodsContext = createContext<
@@ -61,7 +64,7 @@ export const useSearchFeedCustomisableMethodsContext = () => {
   const context = useContext(SearchFeedCustomisableMethodsContext);
   if (!context) {
     throw new Error(
-      "useUniversalFeedCustomisableMethodsContext must be used within an UniversalFeedCustomisableMethodsContext"
+      "useSearchFeedCustomisableMethodsContext must be used within SearchFeedCustomisableMethodsContextProvider"
     );
   }
   return context;
@@ -82,6 +85,8 @@ export const SearchFeedCustomisableMethodsContextProvider = ({
   handleHidePostProp,
   onTapNotificationBellProp,
   onSharePostClicked,
+  onBackArrowPressProp,
+  onCrossPressProp,
   isHeadingEnabled = false,
   isTopResponse = false,
   hideTopicsView = false
@@ -99,6 +104,8 @@ export const SearchFeedCustomisableMethodsContextProvider = ({
     newPostButtonClickProps,
     onOverlayMenuClickProp,
     onTapNotificationBellProp,
+    onBackArrowPressProp,
+    onCrossPressProp,
     onSharePostClicked,
     isHeadingEnabled,
     isTopResponse,

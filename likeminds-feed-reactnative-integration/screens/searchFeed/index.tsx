@@ -51,6 +51,8 @@ interface SearchFeedProps {
     handleReportPostProps?: (postId: string) => void;
     handleHidePostProp?: (postId: string) => void,
     newPostButtonClickProps?: () => void;
+    onBackArrowPressProp?: () => void;
+    onCrossPressProp?: () => void;
     onOverlayMenuClickProp?: (
         event: {
             nativeEvent: { pageX: number; pageY: number };
@@ -84,6 +86,8 @@ const LMFeedSearchScreen = ({
     onOverlayMenuClickProp,
     onTapNotificationBellProp,
     onSharePostClicked,
+    onBackArrowPressProp,
+    onCrossPressProp,
     onSubmitButtonClicked,
     onAddPollOptionsClicked,
     onPollOptionClicked,
@@ -110,6 +114,8 @@ const LMFeedSearchScreen = ({
                 newPostButtonClickProps={newPostButtonClickProps}
                 onOverlayMenuClickProp={onOverlayMenuClickProp}
                 onTapNotificationBellProp={onTapNotificationBellProp}
+                onBackArrowPressProp={onBackArrowPressProp}
+                onCrossPressProp={onCrossPressProp}
                 onSharePostClicked={onSharePostClicked}
                 isHeadingEnabled={isHeadingEnabled}
                 isTopResponse={isTopResponse}
@@ -173,6 +179,8 @@ const LMFeedSearchScreenComponent = ({ navigation, route }) => {
         handleHidePostProp,
         onOverlayMenuClickProp,
         onSharePostClicked,
+        onBackArrowPressProp,
+        onCrossPressProp,
         isHeadingEnabled,
         isTopResponse,
         hideTopicsView,
@@ -344,7 +352,7 @@ const LMFeedSearchScreenComponent = ({ navigation, route }) => {
         <SafeAreaView style={styles.safeAreaView}>
             <View style={styles.borderBottomView}>
                 <View style={styles.innerView}>
-                    <TouchableOpacity onPress={onBackArrowPress} style={styles.touchableOpacity}>
+                    <TouchableOpacity onPress={ onBackArrowPressProp ? onBackArrowPressProp : onBackArrowPress} style={styles.touchableOpacity}>
                         <LMIcon
                             height={24}
                             width={24}
@@ -369,7 +377,7 @@ const LMFeedSearchScreenComponent = ({ navigation, route }) => {
                                     color: STYLES.$IS_DARK_THEME ? "white" : "black",
                                     ...searchFeedStyles?.crossIconStyle
                                 },
-                                onTap: onCrossPress,
+                                onTap: onCrossPressProp ? onCrossPressProp : onCrossPress,
                             }}
                             inputTextStyle={StyleSheet.flatten([
                                 styles.inputTextStyle,
