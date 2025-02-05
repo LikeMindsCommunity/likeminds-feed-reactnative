@@ -51,7 +51,6 @@ export interface SearchFeedCustomisableMethodsContext {
   ) => void;
   onTapNotificationBellProp?: () => void;
   onSharePostClicked?: (id: string) => void;
-  onSearchIconClickProp?: () => void;
 }
 
 const SearchFeedCustomisableMethodsContext = createContext<
@@ -83,7 +82,6 @@ export const SearchFeedCustomisableMethodsContextProvider = ({
   handleHidePostProp,
   onTapNotificationBellProp,
   onSharePostClicked,
-  onSearchIconClickProp,
   isHeadingEnabled = false,
   isTopResponse = false,
   hideTopicsView = false
@@ -102,7 +100,6 @@ export const SearchFeedCustomisableMethodsContextProvider = ({
     onOverlayMenuClickProp,
     onTapNotificationBellProp,
     onSharePostClicked,
-    onSearchIconClickProp,
     isHeadingEnabled,
     isTopResponse,
     hideTopicsView,
