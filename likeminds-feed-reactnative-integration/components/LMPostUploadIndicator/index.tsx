@@ -8,12 +8,15 @@ import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import {
   UniversalFeedContextValues,
   useUniversalFeedContext,
+  useUniversalFeedCustomisableMethodsContext,
 } from "../../context";
 import { LMButton, LMIcon } from "../../uiComponents";
 
 const LMPostUploadIndicator = () => {
-  const { postUploading, addTemporaryPost, temporaryPost, abortRetry, uploadProgress }: UniversalFeedContextValues =
+  const { postUploading, temporaryPost, uploadProgress, onCancelPress, onRetryPress }: UniversalFeedContextValues =
     useUniversalFeedContext();
+
+  const {onRetryPressProp, onCancelPressProp} = useUniversalFeedCustomisableMethodsContext()
 
   const isUploadingFailed = !!temporaryPost && !postUploading;
 
@@ -46,7 +49,7 @@ const LMPostUploadIndicator = () => {
                     },
                     uploadingHeaderStyle?.retryButtonStyle?.textStyle
                   ])
-                }} onTap={addTemporaryPost} icon={{
+                }} onTap={onRetryPressProp ? onRetryPressProp : onRetryPress} icon={{
                   assetPath: require("../../assets/images/retry_icon3x.png"),
                   height: 14,
                   width: 14,
@@ -64,7 +67,7 @@ const LMPostUploadIndicator = () => {
                   },
                   uploadingHeaderStyle?.retryButtonStyle?.buttonStyle
                 ])} />
-                <LMButton onTap={abortRetry}
+                <LMButton onTap={onCancelPressProp ? onCancelPressProp : onCancelPress}
                   text={{
                     children: "Cancel",
                     textStyle: StyleSheet.flatten([

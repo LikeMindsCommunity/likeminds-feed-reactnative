@@ -125,6 +125,8 @@ export interface UniversalFeedContextValues {
   feedType?: FeedType;
   addTemporaryPost: () => void;
   abortRetry: () => void;
+  onRetryPress?: () => void;
+  onCancelPress?: () => void;
 }
 
 const UniversalFeedContext = createContext<
@@ -795,6 +797,14 @@ export const UniversalFeedContextProvider = ({
     }
   }
 
+  async function onRetryPress() {
+    await addTemporaryPost();
+  }
+
+  async function onCancelPress() {
+    await abortRetry();
+  }
+
   // Function to send seenPost to the backend
   const postSeen = async (initialPosts: string[] = []) => {
     try {
@@ -859,7 +869,9 @@ export const UniversalFeedContextProvider = ({
     postSeen,
     feedType,
     addTemporaryPost,
-    abortRetry
+    abortRetry,
+    onCancelPress,
+    onRetryPress
   };
 
   return (
