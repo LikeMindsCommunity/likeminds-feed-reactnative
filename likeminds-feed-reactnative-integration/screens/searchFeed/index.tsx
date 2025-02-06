@@ -66,6 +66,8 @@ interface SearchFeedProps {
     onAddPollOptionsClicked?: any;
     onPollOptionClicked?: any;
     hideTopicsView?: boolean;
+    lmPostCustomFooter?: any;
+    customWidgetPostView?: any;
 }
 
 
@@ -91,6 +93,8 @@ const LMFeedSearchScreen = ({
     onSubmitButtonClicked,
     onAddPollOptionsClicked,
     onPollOptionClicked,
+    lmPostCustomFooter,
+    customWidgetPostView,
     isHeadingEnabled = false,
     isTopResponse = false,
     hideTopicsView = false
@@ -121,14 +125,24 @@ const LMFeedSearchScreen = ({
                 isTopResponse={isTopResponse}
                 hideTopicsView={hideTopicsView}
             >
-                <LMFeedSearchScreenComponent navigation={navigation} route={route} />
+                <LMFeedSearchScreenComponent
+                  navigation={navigation}
+                  route={route}
+                  lmPostCustomFooter={lmPostCustomFooter}
+                  customWidgetPostView={customWidgetPostView}
+                />
             </SearchFeedCustomisableMethodsContextProvider>
         </PollCustomisableMethodsContextProvider>
     )
 }
 
 
-const LMFeedSearchScreenComponent = ({ navigation, route }) => {
+const LMFeedSearchScreenComponent = ({
+    navigation,
+    route,
+    lmPostCustomFooter,
+    customWidgetPostView
+}: any) => {
     const dispatch = useAppDispatch();
     const [debounceId, setDebounceId] = useState<number | null>(null);
     const {
@@ -322,6 +336,8 @@ const LMFeedSearchScreenComponent = ({ navigation, route }) => {
                                 },
                             }}
                             hideTopicsView={hideTopicsView ?? false}
+                            customFooter={lmPostCustomFooter}
+                            customWidgetPostView={customWidgetPostView}
                         />
                     </TouchableOpacity>
                     {!postListStyle?.shouldHideSeparator &&
@@ -352,7 +368,7 @@ const LMFeedSearchScreenComponent = ({ navigation, route }) => {
         <SafeAreaView style={styles.safeAreaView}>
             <View style={styles.borderBottomView}>
                 <View style={styles.innerView}>
-                    <TouchableOpacity onPress={ onBackArrowPressProp ? onBackArrowPressProp : onBackArrowPress} style={styles.touchableOpacity}>
+                    <TouchableOpacity onPress={onBackArrowPressProp ? onBackArrowPressProp : onBackArrowPress} style={styles.touchableOpacity}>
                         <LMIcon
                             height={24}
                             width={24}
