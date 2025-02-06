@@ -9,6 +9,8 @@ import LMTopicFeedScreen from "./topicFeedScreenWrapper";
 import LMQnAPostDetailScreen from "./qnaFeedPostDetailWrapper"
 import LMSocialFeedScreen from './socialFeedScreenWrapper'
 import LMUserOnboardingScreen from "./userOnboardingScreenWrapper";
+import LMSocialFeedSearchScreenWrapper from "./LMSocialFeedSearchScreenWrapper";
+import LMQnaFeedSearchScreenWrapper from "./LMQnaFeedSearchScreenWrapper";
 
 export {
   LMSocialFeedPostDetailScreen,
@@ -21,5 +23,7 @@ export {
   LMQnAFeedScreen,
   LMTopicFeedScreen,
   LMSocialFeedScreen,
-  LMUserOnboardingScreen
+  LMUserOnboardingScreen,
+  LMQnaFeedSearchScreenWrapper,
+  LMSocialFeedSearchScreenWrapper
 };

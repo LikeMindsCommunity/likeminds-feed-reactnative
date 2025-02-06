@@ -91,6 +91,7 @@ interface SearchedPostListContextProps {
         params: Array<string>;
         path: undefined;
     };
+    searchType: SearchType
 }
 
 export interface SearchedPostListContextValues {
@@ -164,6 +165,7 @@ export const useSearchedPostListContext = () => {
 export const SearchedPostListContextProvider = ({
     children,
     navigation,
+    searchType
 }: SearchedPostListContextProps) => {
     const dispatch = useAppDispatch();
     const searchFeedData = useAppSelector((state) => state.feed.searchedPosts);
@@ -209,7 +211,7 @@ export const SearchedPostListContextProvider = ({
                         .setPage(1)
                         .setPageSize(PAGE_SIZE)
                         .setSearch(searchPostQuery)
-                        .setSearchType(SearchType.text)
+                        .setSearchType(searchType)
                         .build()
                 )
             )
@@ -225,7 +227,7 @@ export const SearchedPostListContextProvider = ({
                         .setPage(page)
                         .setPageSize(PAGE_SIZE)
                         .setSearch(searchPostQuery)
-                        .setSearchType(SearchType.text)
+                        .setSearchType(searchType)
                         .build()
                 )
             )

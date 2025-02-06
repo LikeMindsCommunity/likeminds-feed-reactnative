@@ -12,6 +12,7 @@ import {
   LMFeedNotificationFeedScreen,
   LMFeedCreatePollScreen,
   LMFeedPollResult,
+  LMFeedSearchScreen
 } from "./screens";
 import {
   UNIVERSAL_FEED,
@@ -67,6 +68,8 @@ import {
   LMTopicFeedScreen,
   LMSocialFeedScreen,
   LMUserOnboardingScreen,
+  LMQnaFeedSearchScreenWrapper,
+  LMSocialFeedSearchScreenWrapper
 } from "./wrappers";
 import LMFeedTheme from "./constants/Styles";
 import {
@@ -140,6 +143,7 @@ export {
   LMSocialFeedPostDetailScreen,
   LMCreatePollScreen,
   LMLikesScreen,
+  LMFeedSearchScreen,
   LMNotificationScreen,
   LMSocialFeedCreateScreen,
   LMQnAFeedCreatePostScreen,
@@ -159,6 +163,8 @@ export {
   LMCreatePostAttachmentSelection,
   LMUserOnboardingScreen,
   LMCreatePostAnonymousCheckbox,
+  LMQnaFeedSearchScreenWrapper,
+  LMSocialFeedSearchScreenWrapper,
   Layout,
   FeedType,
   Client,
