@@ -14,7 +14,12 @@ const LMQnaFeedSearchScreenWrapper = ({navigation, route}) => {
 const SearchFeedComponent = ({navigation, route}) => {
   const context = useSearchedPostListContext();
   return (
-    <SearchFeed navigation={navigation} route={route} />
+    <SearchFeed
+      isHeadingEnabled={true}
+      isTopResponse={true}
+      navigation={navigation}
+      route={route}
+    />
   );
 }
 
