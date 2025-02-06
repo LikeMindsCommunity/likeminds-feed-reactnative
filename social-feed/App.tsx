@@ -17,6 +17,9 @@ import {
   LMTopicFeedScreen,
   LMSocialFeedScreen,
   LMUserOnboardingScreen,
+  LMSocialFeedSearchScreenWrapper,
+  LMQnAFeedCreatePostScreen,
+  LMQnaFeedSearchScreenWrapper
 } from '@likeminds.community/feed-rn-core';
 import LMSocialFeedCreateScreen from '@likeminds.community/feed-rn-core/wrappers/socialFeedCreateWrapper';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -52,12 +55,6 @@ import {
 import {LMFeedClient, InitiateUserRequest} from '@likeminds.community/feed-rn';
 import {LoginSchemaRO} from './login/loginSchemaRO';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-
-import UserOnboardingScreen from '@likeminds.community/feed-rn-core/screens/userOnboardingScreen';
-import STYLES from '@likeminds.community/feed-rn-core/constants/Styles';
-import { LMFeedSearchScreen } from '@likeminds.community/feed-rn-core/screens';
-import LMFeedSearchScreenWrapper from '@likeminds.community/feed-rn-core/wrappers/LMFeedSearchScreenWrapper';
-
 import {FeedType} from '@likeminds.community/feed-rn-core';
 
 
@@ -316,7 +313,7 @@ const App = () => {
                 />
                 <Stack.Screen
                   name={SEARCH_SCREEN}
-                  component={LMFeedSearchScreenWrapper}
+                  component={LMSocialFeedSearchScreenWrapper}
                 />
               </Stack.Navigator>
             </LMOverlayProvider>

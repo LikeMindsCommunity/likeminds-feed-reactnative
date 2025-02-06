@@ -17,6 +17,8 @@ import {
   LMQnAPostDetailScreen,
   LMQnAFeedScreen,
   LMTopicFeedScreen,
+  SearchType,
+  LMQnaFeedSearchScreenWrapper
 } from '@likeminds.community/feed-rn-core';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {LMCoreCallbacks} from '@likeminds.community/feed-rn-core/setupFeed';
@@ -45,6 +47,7 @@ import FetchKeyInputScreen from './login';
 import {
   CREATE_POLL_SCREEN,
   POLL_RESULT,
+  SEARCH_SCREEN,
 } from '@likeminds.community/feed-rn-core/constants/screenNames';
 import {LMFeedClient, InitiateUserRequest} from '@likeminds.community/feed-rn';
 import {LoginSchemaRO} from './login/loginSchemaRO';
@@ -298,6 +301,10 @@ const App = () => {
                 <Stack.Screen
                   name={CREATE_POLL_SCREEN}
                   component={LMCreatePollScreen}
+                />
+                <Stack.Screen
+                  name={SEARCH_SCREEN}
+                  component={LMQnaFeedSearchScreenWrapper}
                 />
               </Stack.Navigator>
             </NavigationContainer>
