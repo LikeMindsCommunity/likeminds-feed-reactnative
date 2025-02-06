@@ -88,6 +88,7 @@ import Layout from "./constants/Layout";
 import { FeedType } from "./enums/FeedType";
 import { Client } from "./client";
 import { STYLES } from "./constants/Styles";
+import { SearchType } from "./enums/SearchType";
 
 export {
   LMOverlayProvider,
@@ -168,5 +169,6 @@ export {
   Layout,
   FeedType,
   Client,
+  SearchType,
   STYLES,
 };
