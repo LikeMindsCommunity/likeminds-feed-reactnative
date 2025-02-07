@@ -25,6 +25,8 @@ export interface UniversalFeedCallbacksContextProps {
   ) => void;
   onTapNotificationBellProp?: () => void;
   onSharePostClicked?: (id: string) => void;
+  onRetryPressProp?: () => void;
+  onCancelPressProp?: () => void;
 }
 
 export interface UniversalFeedCustomisableMethodsContext {
@@ -50,6 +52,8 @@ export interface UniversalFeedCustomisableMethodsContext {
   ) => void;
   onTapNotificationBellProp?: () => void;
   onSharePostClicked?: (id: string) => void;
+  onRetryPressProp?: () => void;
+  onCancelPressProp?: () => void;
 }
 
 const UniversalFeedCustomisableMethodsContext = createContext<
@@ -81,6 +85,8 @@ export const UniversalFeedCustomisableMethodsContextProvider = ({
   handleHidePostProp,
   onTapNotificationBellProp,
   onSharePostClicked,
+  onCancelPressProp,
+  onRetryPressProp,
   isHeadingEnabled = false,
   isTopResponse = false,
   hideTopicsView = false
@@ -99,6 +105,8 @@ export const UniversalFeedCustomisableMethodsContextProvider = ({
     onOverlayMenuClickProp,
     onTapNotificationBellProp,
     onSharePostClicked,
+    onCancelPressProp,
+    onRetryPressProp,
     isHeadingEnabled,
     isTopResponse,
     hideTopicsView,

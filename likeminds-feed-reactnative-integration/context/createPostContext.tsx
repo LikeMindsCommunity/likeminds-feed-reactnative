@@ -41,6 +41,7 @@ import {
   convertLinkMetaData,
   convertPollMetaData,
   convertToLMPostViewData,
+  convertToTemporaryPost,
 } from "../viewDataModels";
 import _ from "lodash";
 import {
@@ -78,6 +79,7 @@ import { CommunityConfigs } from "../communityConfigs";
 import { CREATE_POLL_SCREEN } from "../constants/screenNames";
 import STYLES from "../constants/Styles";
 import { Video, getVideoMetaData } from "react-native-compressor";
+import { Client } from "../client";
 
 interface CreatePostContextProps {
   children?: ReactNode;
@@ -399,6 +401,32 @@ export const CreatePostContextProvider = ({
   ) => {
     const isConnected = await NetworkUtil.isNetworkAvailable();
     if (isConnected) {
+      let pollAttachment: any = [];
+      if (Object.keys(poll).length > 0) {
+        let updatedPollAttachment = convertPollMetaData(poll);
+        pollAttachment = [...pollAttachment, updatedPollAttachment];
+      }
+      const attachments =
+        Object.keys(metaData)?.length > 0
+          ? [
+            ...allMedia,
+            ...linkData,
+            ...pollAttachment,
+            ...[{ attachmentType: 5, attachmentMeta: { meta: metaData } }],
+          ]
+          : [...allMedia, ...linkData, ...pollAttachment];
+      const post = convertToTemporaryPost(
+        attachments,
+        heading,
+        postContentText,
+        topics,
+        isAnonymous
+      )
+      const response = await Client?.myClient?.saveTemporaryPost({
+        tempPost: {
+          post: post
+        }
+      });
       postToEdit
         ? postEdit(topics)
         : dispatch(
@@ -718,6 +746,7 @@ export const CreatePostContextProvider = ({
           false
         )
       );
+      await Client?.myClient?.deleteTemporaryPost();
       return editPostResponse;
     } else {
       const editPostResponse = dispatch(
@@ -732,6 +761,7 @@ export const CreatePostContextProvider = ({
           false
         )
       );
+      await Client?.myClient?.deleteTemporaryPost();
       return editPostResponse;
     }
   };

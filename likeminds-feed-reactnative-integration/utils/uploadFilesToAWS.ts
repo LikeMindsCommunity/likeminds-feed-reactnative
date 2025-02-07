@@ -30,7 +30,8 @@ export const uploadFilesToAWS = async (
   media: LMAttachmentMetaViewData,
   userUniqueId: string,
   url: string,
-  path?: string
+  path?: string,
+  onProgressUpdate?: (progress: number) => void 
 ) => {
   const blob = await uriToBlob(url);
   const mediaObject = getAWS()
@@ -42,7 +43,10 @@ export const uploadFilesToAWS = async (
       ContentType: media.format,
     })
     .on("httpUploadProgress", function (progress) {
-      Math.round((progress.loaded / progress.total) * 100);
+      let percent = Math.round((progress.loaded / progress.total) * 100);
+      if (onProgressUpdate) {
+        onProgressUpdate(percent); // Send update to tracking function
+      }
     });
   return mediaObject.promise();
 };
