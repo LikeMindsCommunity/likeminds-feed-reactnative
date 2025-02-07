@@ -41,6 +41,8 @@ interface UniversalFeedProps {
   onAddPollOptionsClicked?: any;
   onPollOptionClicked?: any;
   hideTopicsView?: boolean;
+  onRetryPressProp?: () => void;
+  onCancelPressProp?: () => void;
 }
 
 interface UniversalFeedComponentProps {
@@ -67,6 +69,8 @@ const UniversalFeed = ({
   onSearchIconClickProp,
   onSubmitButtonClicked,
   onAddPollOptionsClicked,
+  onCancelPressProp,
+  onRetryPressProp,
   onPollOptionClicked,
   isHeadingEnabled = false,
   isTopResponse = false,
@@ -90,6 +94,8 @@ const UniversalFeed = ({
         handleDeletePostProps={handleDeletePostProps}
         handleReportPostProps={handleReportPostProps}
         newPostButtonClickProps={newPostButtonClickProps}
+        onCancelPressProp={onCancelPressProp}
+        onRetryPressProp={onRetryPressProp}
         onOverlayMenuClickProp={onOverlayMenuClickProp}
         onTapNotificationBellProp={onTapNotificationBellProp}
         onSharePostClicked={onSharePostClicked}

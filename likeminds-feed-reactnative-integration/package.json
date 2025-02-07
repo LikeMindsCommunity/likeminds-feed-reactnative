@@ -1,6 +1,6 @@
 {
   "name": "@likeminds.community/feed-rn-core",
-  "version": "1.12.0",
+  "version": "1.12.1",
   "description": "LikeMinds ReactNative Core SDK for feed",
   "scripts": {
     "android": "react-native run-android",
@@ -18,7 +18,7 @@
   "homepage": "https://likeminds.community/",
   "license": "ISC",
   "dependencies": {
-    "@likeminds.community/feed-rn": "1.4.0",
+    "@likeminds.community/feed-rn": "1.4.1",
     "aws-sdk": "2.1548.0",
     "diff": "5.1.0",
     "lodash": "4.17.21",
@@ -51,7 +51,9 @@
     "react-native-dotenv": ">=3.4.9",
     "react-native-file-viewer": ">=2.1.5",
     "@types/react-native-video": ">=5.0.14",
-    "react-native-compressor": ">=1.9.0"
+    "react-native-compressor": ">=1.9.0",
+    "react-native-svg": ">=15.0.0",
+    "react-native-circular-progress": ">=1.4.0"
   },
   "peerDependenciesMeta": {
     "react-native-video": {

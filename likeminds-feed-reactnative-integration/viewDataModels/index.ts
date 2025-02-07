@@ -559,3 +559,37 @@ export function convertToLMActivityEntityViewData(
   };
   return activityEntityData;
 }
+
+export function convertToTemporaryPost(
+  attachment: Attachment[],
+  heading: string,
+  text: string,
+  topics: string[],
+  isAnonymous: boolean = false,
+  isHidden = false): Post {
+  return {
+    id: `-${Date.now()}`,
+    tempId: `-${Date.now()}`,
+    attachments: attachment,
+    commentsCount: 0,
+    communityId: 0,
+    createdAt: Date.now(),
+    heading: heading,
+    isEdited: false,
+    isLiked: false,
+    isPinned: false,
+    isSaved: false,
+    likesCount: 0,
+    menuItems: [],
+    text: text,
+    topics: topics,
+    updatedAt: 0,
+    userId: "",
+    uuid: "",
+    isRepost: false,
+    repostCount: 0,
+    isRepostedByUser: false,
+    isAnonymous,
+    isHidden,
+  }
+}

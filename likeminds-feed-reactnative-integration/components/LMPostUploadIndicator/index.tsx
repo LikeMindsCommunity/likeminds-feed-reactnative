@@ -1,67 +1,116 @@
-import { View, Text, Platform } from "react-native";
+import { View, Text, Platform, TouchableOpacity, StyleSheet } from "react-native";
 import React from "react";
 import LMLoader from "../LMLoader";
 import STYLES from "../../constants/Styles";
 import { styles } from "../../screens/universalFeed/styles";
-import { POST_UPLOADING } from "../../constants/Strings";
+import { POST_UPLOAD_RETRY, POST_UPLOADING } from "../../constants/Strings";
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import {
   UniversalFeedContextValues,
   useUniversalFeedContext,
+  useUniversalFeedCustomisableMethodsContext,
 } from "../../context";
+import { LMButton, LMIcon } from "../../uiComponents";
 
 const LMPostUploadIndicator = () => {
-  const { postUploading }: UniversalFeedContextValues =
+  const { postUploading, temporaryPost, uploadProgress, onCancelPress, onRetryPress }: UniversalFeedContextValues =
     useUniversalFeedContext();
-  return (
-    <View>
-      {/* post uploading section */}
-      {postUploading && (
+
+  const {onRetryPressProp, onCancelPressProp} = useUniversalFeedCustomisableMethodsContext()
+
+  const isUploadingFailed = !!temporaryPost && !postUploading;
+
+  const uploadingHeaderStyle = STYLES.$UPLOADING_HEADER_STYLES
+
+
+  if (isUploadingFailed || postUploading) {
+    return (
+      <View>
+        {/* post uploading section */}
         <View style={styles.postUploadingView}>
           <View style={styles.uploadingPostContentView}>
-            {/* post uploading media preview */}
-            {/* {uploadingMediaAttachmentType === IMAGE_ATTACHMENT_TYPE && (
-              <LMImage
-                imageUrl={uploadingMediaAttachment}
-                imageStyle={styles.uploadingImageStyle}
-                boxStyle={styles.uploadingImageVideoBox}
-                width={styles.uploadingImageVideoBox.width}
-                height={styles.uploadingImageVideoBox.height}
-              />
-            )}
-            {uploadingMediaAttachmentType === VIDEO_ATTACHMENT_TYPE && (
-              <LMVideo
-                videoUrl={uploadingMediaAttachment}
-                videoStyle={styles.uploadingVideoStyle}
-                boxStyle={styles.uploadingImageVideoBox}
-                width={styles.uploadingImageVideoBox.width}
-                height={styles.uploadingImageVideoBox.height}
-                showControls={false}
-                boxFit="contain"
-                autoPlay={false}
-              />
-            )}
-            {uploadingMediaAttachmentType === DOCUMENT_ATTACHMENT_TYPE && (
-              <LMIcon
-                assetPath={require("../../assets/images/pdf_icon3x.png")}
-                iconStyle={styles.uploadingDocumentStyle}
-                height={styles.uploadingPdfIconSize.height}
-                width={styles.uploadingPdfIconSize.width}
-              />
-            )} */}
-            <Text style={styles.postUploadingText}>{POST_UPLOADING}</Text>
+            <Text style={StyleSheet.flatten([
+              styles.postUploadingText,
+              uploadingHeaderStyle?.uploadingTextStyle
+            ])}>
+              {isUploadingFailed ? POST_UPLOAD_RETRY : POST_UPLOADING}
+            </Text>
           </View>
           {/* progress loader */}
-          <LMLoader
-            size={
+          <View style={{ flexDirection: 'row', gap: 18 }}>
+            {isUploadingFailed ?
+              <View style={{ flexDirection: 'row', gap: 10 }}>
+                <LMButton text={{
+                  children: "Retry",
+                  textStyle: StyleSheet.flatten([
+                    {
+                      color: STYLES.$COLORS.RED,
+                      fontWeight: '600'
+                    },
+                    uploadingHeaderStyle?.retryButtonStyle?.textStyle
+                  ])
+                }} onTap={onRetryPressProp ? onRetryPressProp : onRetryPress} icon={{
+                  assetPath: require("../../assets/images/retry_icon3x.png"),
+                  height: 14,
+                  width: 14,
+                  color: STYLES.$COLORS.RED,
+                  iconStyle: { marginRight: 5 },
+                  ...uploadingHeaderStyle?.retryButtonStyle?.iconStyle
+                }} buttonStyle={StyleSheet.flatten([
+                  {
+                    borderWidth: 1,
+                    backgroundColor: '#FEE4E2',
+                    borderColor: '#FEE4E2',
+                    paddingHorizontal: 8,
+                    paddingVertical: 6,
+                    borderRadius: 20
+                  },
+                  uploadingHeaderStyle?.retryButtonStyle?.buttonStyle
+                ])} />
+                <LMButton onTap={onCancelPressProp ? onCancelPressProp : onCancelPress}
+                  text={{
+                    children: "Cancel",
+                    textStyle: StyleSheet.flatten([
+                      {
+                        color: "#344054"
+                      },
+                      uploadingHeaderStyle?.cancelButtonStyle?.textStyle
+                    ])
+                  }}
+                  buttonStyle={
+                    StyleSheet.flatten([
+                      {
+                        borderWidth: 1,
+                        backgroundColor: '#F2F4F7',
+                        borderColor: '#F2F4F7',
+                        paddingHorizontal: 8,
+                        paddingVertical: 6,
+                        borderRadius: 20
+                      },
+                      uploadingHeaderStyle?.cancelButtonStyle?.buttonStyle
+                    ])
+                  }
+                />
+              </View> :
+              null}
+            {postUploading && uploadProgress == 0 && <LMLoader size={
               Platform.OS === "ios"
                 ? STYLES.$LMLoaderSizeiOS
                 : STYLES.$LMLoaderSizeAndroid
-            }
-          />
+            } />}
+            {postUploading && uploadProgress > 0 && <AnimatedCircularProgress
+              size={22}
+              width={2}
+              fill={Math.round(uploadProgress)}
+              tintColor={STYLES.$COLORS.PRIMARY}
+              {...uploadingHeaderStyle?.progressBarStyle}
+            />}
+          </View>
         </View>
-      )}
-    </View>
-  );
+      </View>
+    );
+  }
+  return null
 };
 
 export default LMPostUploadIndicator;

@@ -136,7 +136,15 @@ const LMInputText: FC<LMInputTextProps> = React.memo(({
       <TextInput
         {...textInputProps}
         ref={handleTextInputRef}
-        onChangeText={onChangeInput}
+        onChangeText={(text) => {
+          // Bypass regex is long content is pasted directly
+          if (Math.abs(text?.length - inputLength) > 250) {
+            setInputLength(text?.length)
+            onType(text)
+          } else {
+            onChangeInput(text)
+          }
+        }}
         autoFocus={autoFocus}
         onContentSizeChange={onContentSizeChange}
         onSelectionChange={handleSelectionChange}

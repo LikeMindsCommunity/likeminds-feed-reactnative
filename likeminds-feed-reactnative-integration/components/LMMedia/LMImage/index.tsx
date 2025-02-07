@@ -61,9 +61,9 @@ const LMImage = React.memo(
             imageStyle,
             {
               height: heightCalculated,
-              resizeMode: boxFit ? boxFit : defaultStyles.imageStyle.resizeMode,
               aspectRatio: aspectRatio ? aspectRatio : desiredAspectRatio,
-            },
+              resizeMode: boxFit ? boxFit : defaultStyles.imageStyle.resizeMode,
+            }
           ])}
         />
         {/* this renders the cancel button */}

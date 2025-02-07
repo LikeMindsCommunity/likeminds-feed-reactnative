@@ -574,8 +574,10 @@ export const feedReducer = (state = initialState, action) => {
     case CREATE_POST_SUCCESS: {
       // model converter function
       const post = convertSingleFeedPost(action.body);
+      const topics = action?.body?.topics ?? {}
+      
       if (post) {
-        return { ...state, feed: [post, ...state.feed] };
+        return { ...state, feed: [post, ...state.feed], topics: { ...state.topics, ...topics } };
       } else {
         return state;
       }
