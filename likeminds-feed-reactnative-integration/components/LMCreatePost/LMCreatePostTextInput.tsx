@@ -1,4 +1,5 @@
 import React from "react";
+import {ScrollView, View} from "react-native"
 import {
   CreatePostContextValues,
   useCreatePostContext,
@@ -25,7 +26,6 @@ const LMCreatePostTextInput = () => {
 
   const { isHeadingEnabled } = useCreatePostCustomisableMethodsContext();
   return (
-    <>
       <LMInputText
         {...customTextInputStyle}
         placeholderText={
@@ -51,6 +51,7 @@ const LMCreatePostTextInput = () => {
             ? customTextInputStyle?.multilineField
             : true
         }
+        scrollEnabled={false}
         inputRef={myRef}
         inputText={postContentText}
         onType={handleInputChange}
@@ -71,7 +72,6 @@ const LMCreatePostTextInput = () => {
         ]}
         autoCapitalize="sentences"
       />
-    </>
   );
 };
 

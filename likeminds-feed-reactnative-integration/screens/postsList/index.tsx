@@ -337,7 +337,7 @@ const PostsListComponent = ({
 
   // Monitor scroll state
   const onMomentumScrollEnd = async ({ nativeEvent }) => {
-    if (nativeEvent.velocity.y === 0 && feedType === FeedType.PERSONALISED_FEED) {
+    if (nativeEvent?.velocity?.y === 0 && feedType === FeedType.PERSONALISED_FEED) {
       await saveSeenPost();
       await postSeen();
     }

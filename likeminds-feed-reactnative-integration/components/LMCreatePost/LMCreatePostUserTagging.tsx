@@ -1,5 +1,6 @@
-import { View, Text, FlatList, Pressable, TextStyle } from "react-native";
+import { View, Text, Pressable, TextStyle } from "react-native";
 import React from "react";
+import {FlatList} from "react-native-gesture-handler"
 import { LMUserViewData } from "../../models";
 import { nameInitials, replaceLastMention } from "../../utils";
 import { userTaggingDecoder } from "../../utils/decodeMentions";
@@ -43,6 +44,7 @@ const LMCreatePostUserTagging = () => {
           ]}
         >
           <FlatList
+            nestedScrollEnabled={true}
             data={[...allTags]}
             renderItem={({ item }: { item: LMUserViewData }) => {
               return (

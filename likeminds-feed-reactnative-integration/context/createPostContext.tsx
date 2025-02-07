@@ -559,7 +559,7 @@ export const CreatePostContextProvider = ({
               );
               decodeUrlResponse
                 .then((res: any) => {
-                  resolve(res?.og_tags);
+                  resolve(res?.ogTags);
                 })
                 .catch((error: any) => {
                   reject(error);

@@ -30,7 +30,6 @@ export const styles = StyleSheet.create({
     marginVertical: 8,
     fontSize: 16,
     elevation: 0,
-    maxHeight: Layout.normalize(145),
   },
   addMoreButtonView: {
     width: "35%",
@@ -42,8 +41,6 @@ export const styles = StyleSheet.create({
     marginVertical: 20,
   },
   selectionOptionsView: {
-    position: "absolute",
-    bottom: 0,
     width: layout.window.width,
     backgroundColor: STYLES.$IS_DARK_THEME
       ? STYLES.$BACKGROUND_COLORS.DARK
@@ -84,7 +81,6 @@ export const styles = StyleSheet.create({
   },
   scrollViewStyleWithOptions: {
     flex: 1,
-    marginBottom: 125,
   },
   scrollViewStyleWithoutOptions: {
     flex: 1,
