@@ -17,6 +17,9 @@ import {
   LMTopicFeedScreen,
   LMSocialFeedScreen,
   LMUserOnboardingScreen,
+  LMSocialFeedSearchScreenWrapper,
+  LMQnAFeedCreatePostScreen,
+  LMQnaFeedSearchScreenWrapper
 } from '@likeminds.community/feed-rn-core';
 import LMSocialFeedCreateScreen from '@likeminds.community/feed-rn-core/wrappers/socialFeedCreateWrapper';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -46,12 +49,14 @@ import FetchKeyInputScreen from './login';
 import {
   CREATE_POLL_SCREEN,
   POLL_RESULT,
+  SEARCH_SCREEN,
   USER_ONBOARDING_SCREEN,
 } from '@likeminds.community/feed-rn-core/constants/screenNames';
 import {LMFeedClient, InitiateUserRequest} from '@likeminds.community/feed-rn';
 import {LoginSchemaRO} from './login/loginSchemaRO';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {FeedType} from '@likeminds.community/feed-rn-core';
+
 
 class CustomCallbacks implements LMFeedCallbacks, LMCarouselScreenCallbacks {
   onEventTriggered(eventName: string, eventProperties?: Map<string, string>) {
@@ -305,6 +310,10 @@ const App = () => {
                 <Stack.Screen
                   name={CREATE_POLL_SCREEN}
                   component={LMCreatePollScreen}
+                />
+                <Stack.Screen
+                  name={SEARCH_SCREEN}
+                  component={LMSocialFeedSearchScreenWrapper}
                 />
               </Stack.Navigator>
             </LMOverlayProvider>

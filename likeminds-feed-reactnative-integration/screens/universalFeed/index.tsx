@@ -27,6 +27,7 @@ interface UniversalFeedProps {
   handleReportPostProps?: (postId: string) => void;
   handleHidePostProp?: (postId: string) => void,
   newPostButtonClickProps?: () => void;
+  onSearchIconClickProp?: () => void;
   onOverlayMenuClickProp?: (
     event: {
       nativeEvent: { pageX: number; pageY: number };
@@ -65,6 +66,7 @@ const UniversalFeed = ({
   onOverlayMenuClickProp,
   onTapNotificationBellProp,
   onSharePostClicked,
+  onSearchIconClickProp,
   onSubmitButtonClicked,
   onAddPollOptionsClicked,
   onCancelPressProp,
@@ -88,6 +90,7 @@ const UniversalFeed = ({
         onSelectCommentCountProp={onSelectCommentCountProp}
         onTapLikeCountProps={onTapLikeCountProps}
         handleHidePostProp={handleHidePostProp}
+        onSearchIconClickProp={onSearchIconClickProp}
         handleDeletePostProps={handleDeletePostProps}
         handleReportPostProps={handleReportPostProps}
         newPostButtonClickProps={newPostButtonClickProps}

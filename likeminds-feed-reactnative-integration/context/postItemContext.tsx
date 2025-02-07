@@ -9,6 +9,7 @@ interface LMPostContextProps {
   children?: ReactNode;
   navigation: any;
   post: LMPostViewData;
+  highlight: string;
   headerProps?: LMPostHeaderProps;
   footerProps?: LMPostFooterProps;
   contentProps?: LMPostContentProps;
@@ -24,6 +25,7 @@ export interface LMPostContextValues {
   navigation: any;
   children?: ReactNode;
   post: LMPostViewData;
+  highlight: string;
   headerProps?: LMPostHeaderProps;
   footerProps?: LMPostFooterProps;
   contentProps?: LMPostContentProps;
@@ -51,6 +53,7 @@ export const LMPostContextProvider = ({
   children,
   navigation,
   post,
+  highlight = "",
   headerProps,
   footerProps,
   contentProps,
@@ -65,6 +68,7 @@ export const LMPostContextProvider = ({
     navigation,
     children,
     post,
+    highlight,
     headerProps,
     contentProps,
     footerProps,

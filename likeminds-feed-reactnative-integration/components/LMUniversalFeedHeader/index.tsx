@@ -14,20 +14,21 @@ import Layout from "../../constants/Layout";
 import { useNavigation } from "@react-navigation/native";
 import { USER_ONBOARDING_SCREEN } from "../../constants/screenNames";
 import { nameInitials } from "../../utils";
-import { LMProfilePicture } from "../../uiComponents";
+import { LMIcon, LMProfilePicture } from "../../uiComponents";
 import { useLMFeed } from "../../lmFeedProvider";
 
 const LMUniversalFeedHeader = () => {
   const {
     unreadNotificationCount,
     onTapNotificationBell,
-    memberData
+    memberData,
+    onSearchIconClick
   }: UniversalFeedContextValues = useUniversalFeedContext();
-  const {isUserOnboardingRequired} = useLMFeed()
+  const { isUserOnboardingRequired } = useLMFeed()
   const navigation = useNavigation();
   const universalFeedStyle = STYLES.$UNIVERSAL_FEED_STYLE;
   const postHeaderStyle = STYLES.$POST_LIST_STYLE.header
-  const { onTapNotificationBellProp } =
+  const { onTapNotificationBellProp, onSearchIconClickProp} =
     useUniversalFeedCustomisableMethodsContext();
 
   return (
@@ -43,6 +44,21 @@ const LMUniversalFeedHeader = () => {
         heading={APP_TITLE}
         rightComponent={
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+            <TouchableOpacity
+              onPress={() => {
+                onSearchIconClickProp
+                  ? onSearchIconClickProp()
+                  : onSearchIconClick();
+              }}
+            >
+            <LMIcon 
+              assetPath={require("../../assets/images/search_icon3x.png")}
+              color={STYLES.$IS_DARK_THEME
+                ? STYLES.$BACKGROUND_COLORS.LIGHT
+                : STYLES.$BACKGROUND_COLORS.DARK}
+              {...postHeaderStyle?.searchIconStyle}
+            />
+            </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
                 onTapNotificationBellProp
@@ -92,7 +108,7 @@ const LMUniversalFeedHeader = () => {
               )}
             </TouchableOpacity>
             <TouchableOpacity
-            // @ts-ignore
+              // @ts-ignore
               onPress={ isUserOnboardingRequired ? () => navigation.navigate(USER_ONBOARDING_SCREEN, {
                 action: "EDIT_PROFILE"
               }) : () => {}}

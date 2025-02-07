@@ -17,6 +17,7 @@ const LMPost = ({
   navigation,
   children,
   post,
+  highlight = "",
   headerProps,
   contentProps,
   mediaProps,
@@ -30,6 +31,7 @@ const LMPost = ({
   return (
     <LMPostContextProvider
       navigation={navigation}
+      highlight={highlight}
       post={post}
       headerProps={headerProps}
       footerProps={footerProps}
@@ -52,7 +54,7 @@ const LMPostComponent = React.memo(() => {
     isTopResponse,
     customFooter,
     customWidgetPostView,
-    hideTopicsView,
+    hideTopicsView
   } = useLMPostContext();
   const allTopics = useAppSelector((state) => state.feed.topics);
   const postListStyle = STYLES.$POST_LIST_STYLE;

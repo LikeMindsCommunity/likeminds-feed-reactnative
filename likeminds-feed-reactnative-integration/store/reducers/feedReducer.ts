@@ -43,6 +43,9 @@ import {
   CLEAR_FEED,
   UNIVERSAL_TOPICS_FEED_SUCCESS,
   REFRESH_FROM_ONBOARDING_SCREEN,
+  GET_SEARCHED_POSTS_SUCCESS,
+  CLEAR_SEARCH,
+  GET_PAGINATED_SEARCHED_POSTS_SUCCESS,
   PERSONALISED_FEED_SUCCESS,
   PERSONALISED_FEED_REFRESH_SUCCESS,
   CREATE_POST_SUCCESS,
@@ -52,6 +55,7 @@ import Styles from "../../constants/Styles";
 
 export interface FeedReducerState {
   feed: LMPostViewData[];
+  searchedPosts: LMPostViewData[];
   users: {};
   reportTags: {};
   autoPlayVideoPostId: "";
@@ -79,6 +83,7 @@ export const initialState: FeedReducerState = {
   autoPlayVideoPostId: "",
   topics: {},
   mappedTopics: {},
+  searchedPosts:[],
   selectedTopicsForUniversalFeedScreen: [],
   selectedTopicsForCreatePostScreen: [],
   selectedTopicsFromUniversalFeedScreen: [],
@@ -166,6 +171,28 @@ export const feedReducer = (state = initialState, action) => {
       };
     }
 
+    case GET_SEARCHED_POSTS_SUCCESS: {
+      let searchedPosts = state.searchedPosts;
+      // model converter function
+      const post = convertUniversalFeedPosts(action.body);
+      // this handles pagination and appends new post data with previous data
+      searchedPosts = [...post];
+      return {
+        ...state,
+        searchedPosts
+      };
+    }
+    case GET_PAGINATED_SEARCHED_POSTS_SUCCESS: {
+      let searchedPosts = state.searchedPosts;
+      // model converter function
+      const post = convertUniversalFeedPosts(action.body);
+      // this handles pagination and appends new post data with previous data
+      searchedPosts = searchedPosts ? [...searchedPosts, ...post] : [...post];
+      return {
+        ...state,
+        searchedPosts
+      };
+    }
     case SELECTED_TOPICS_FROM_UNIVERSAL_FEED_SCREEN: {
       const { topics = {} } = action.body;
       return {
@@ -288,15 +315,22 @@ export const feedReducer = (state = initialState, action) => {
     }
     case DELETE_POST_STATE: {
       const updatedFeed = state.feed;
+      const updatedSearchFeed = state.searchedPosts
       // this gets the index of the post that is deleted
       const deletedPostIndex = updatedFeed.findIndex(
+        (item: LMPostViewData) => item?.id === action.body
+      );
+      const deletedPostIndexSearchFeed = updatedSearchFeed.findIndex(
         (item: LMPostViewData) => item?.id === action.body
       );
       // removes that post from the data
       if (deletedPostIndex != -1) {
         updatedFeed.splice(deletedPostIndex, 1);
       }
-      return { ...state, feed: updatedFeed };
+      if (deletedPostIndexSearchFeed != -1) {
+        updatedSearchFeed.splice(deletedPostIndexSearchFeed, 1);
+      }
+      return { ...state, feed: updatedFeed, searchedPosts: updatedSearchFeed  };
     }
 
     case REPORT_TAGS_SUCCESS: {
@@ -306,8 +340,13 @@ export const feedReducer = (state = initialState, action) => {
 
     case PIN_POST_STATE: {
       const updatedFeed = state.feed;
+      const updatedSearchfeed = state.searchedPosts;
       // this gets the index of post that is pinned
       const pinnedPostIndex = updatedFeed.findIndex(
+        (item: any) => item?.id === action.body
+      );
+
+      const pinnedPostIndexSearchFeed = updatedSearchfeed.findIndex(
         (item: any) => item?.id === action.body
       );
 
@@ -337,13 +376,42 @@ export const feedReducer = (state = initialState, action) => {
         }
       }
 
+      if (pinnedPostIndexSearchFeed != -1) {
+        updatedSearchfeed[pinnedPostIndexSearchFeed].isPinned =
+          !updatedSearchfeed[pinnedPostIndexSearchFeed].isPinned;
+        // this gets the index of pin/unpin from menu item
+        const menuItemIndex = updatedSearchfeed[pinnedPostIndexSearchFeed].menuItems.findIndex(
+          (item: any) => item.id === PIN_POST_ID || item.id === UNPIN_POST_ID
+        );
+
+        if (menuItemIndex != -1) {
+          if (updatedSearchfeed[pinnedPostIndexSearchFeed].isPinned) {
+            //  this updates the menuItem title to unpin
+            updatedSearchfeed[pinnedPostIndexSearchFeed].menuItems[menuItemIndex].id =
+              UNPIN_POST_ID;
+              updatedSearchfeed[pinnedPostIndexSearchFeed].menuItems[menuItemIndex].title =
+              UNPIN_THIS_POST;
+          } else {
+            //  this updates the menuItem title to pin
+            updatedSearchfeed[pinnedPostIndexSearchFeed].menuItems[menuItemIndex].id =
+              PIN_POST_ID;
+              updatedSearchfeed[pinnedPostIndexSearchFeed].menuItems[menuItemIndex].title =
+              PIN_THIS_POST;
+          }
+        }
+      }
+
       return { ...state, feed: updatedFeed };
     }
 
     case LIKE_POST_STATE: {
       const updatedFeed = state.feed;
+      const updatedSearchFeed = state.searchedPosts
       // this gets the index of post that is liked
       const likedPostIndex = updatedFeed.findIndex(
+        (item: LMPostViewData) => item?.id === action.body
+      );
+      const likedPostIndexSearchFeed = updatedSearchFeed.findIndex(
         (item: LMPostViewData) => item?.id === action.body
       );
       // this updates the isLiked value
@@ -360,13 +428,30 @@ export const feedReducer = (state = initialState, action) => {
             updatedFeed[likedPostIndex].likesCount - 1;
         }
       }
-      return { ...state, feed: updatedFeed };
+      if (likedPostIndexSearchFeed != -1) {
+        updatedSearchFeed[likedPostIndexSearchFeed].isLiked =
+          !updatedSearchFeed[likedPostIndexSearchFeed].isLiked;
+        if (updatedSearchFeed[likedPostIndexSearchFeed].isLiked) {
+          // increase the like count
+          updatedSearchFeed[likedPostIndexSearchFeed].likesCount =
+            updatedSearchFeed[likedPostIndexSearchFeed].likesCount + 1;
+        } else {
+          // decrease the like count
+          updatedSearchFeed[likedPostIndexSearchFeed].likesCount =
+            updatedSearchFeed[likedPostIndexSearchFeed].likesCount - 1;
+        }
+      }
+      return { ...state, feed: updatedFeed, searchedPosts: updatedSearchFeed };
     }
 
     case SAVE_POST_STATE: {
       const updatedFeed = state.feed;
+      const updatedSearchFeed = state.searchedPosts;
       // this gets the index of post that is saved
       const savedPostIndex = updatedFeed.findIndex(
+        (item: any) => item?.id === action.body
+      );
+      const savedPostIndexSearchFeed = updatedSearchFeed.findIndex(
         (item: any) => item?.id === action.body
       );
       // this updates the isSaved value
@@ -374,8 +459,12 @@ export const feedReducer = (state = initialState, action) => {
         updatedFeed[savedPostIndex].isSaved =
           !updatedFeed[savedPostIndex].isSaved;
       }
+      if (savedPostIndexSearchFeed != -1) {
+        updatedSearchFeed[savedPostIndexSearchFeed].isSaved =
+          !updatedSearchFeed[savedPostIndexSearchFeed].isSaved;
+      }
 
-      return { ...state, feed: updatedFeed };
+      return { ...state, feed: updatedFeed, searchedPosts: updatedSearchFeed };
     }
 
     case EDIT_POST_SUCCESS: {
@@ -386,6 +475,7 @@ export const feedReducer = (state = initialState, action) => {
         filteredComments = {},
       } = action.body;
       const updatedFeed = [...state.feed];
+      const updatedSearchFeed = [...state.searchedPosts];
       const postData = convertToLMPostViewData(
         post,
         users,
@@ -393,17 +483,27 @@ export const feedReducer = (state = initialState, action) => {
         filteredComments
       );
       const index = updatedFeed.findIndex((item) => item.id === postData.id);
+      const indexSearchFeed = updatedSearchFeed.findIndex((item) => item.id === postData.id);
       if (index !== -1) {
         updatedFeed[index] = postData;
       }
-      return { ...state, feed: updatedFeed };
+      if (indexSearchFeed !== -1) {
+        updatedSearchFeed[indexSearchFeed] = postData;
+      }
+      return { ...state, feed: updatedFeed, searchedPosts: updatedSearchFeed };
     }
 
     case CREATE_COMMENT_SUCCESS: {
       const { comment } = action.body;
       const updatedFeed = state.feed;
+      const updatedSearchFeed = state.searchedPosts;
       // finds the post in which new comment is added in post detail and manage its comment count
       updatedFeed.find((item: LMPostViewData) => {
+        if (item.id === comment.postId) {
+          item.commentsCount = item?.commentsCount + 1;
+        }
+      });
+      updatedSearchFeed.find((item: LMPostViewData) => {
         if (item.id === comment.postId) {
           item.commentsCount = item?.commentsCount + 1;
         }
@@ -413,8 +513,14 @@ export const feedReducer = (state = initialState, action) => {
 
     case DELETE_COMMENT_STATE: {
       const updatedFeed = state.feed;
+      const updatedSearchFeed = state.searchedPosts;
       // finds the post whose comment is deleted in post detail and manage its comment count
       updatedFeed.find((item: LMPostViewData) => {
+        if (item.id === action.body.postId) {
+          item.commentsCount = item?.commentsCount - 1;
+        }
+      });
+      updatedSearchFeed.find((item: LMPostViewData) => {
         if (item.id === action.body.postId) {
           item.commentsCount = item?.commentsCount - 1;
         }
@@ -424,8 +530,10 @@ export const feedReducer = (state = initialState, action) => {
 
     case HIDE_POST_STATE: {
       const feed = state.feed;
+      const searchFeed = state.searchedPosts;
       const { postId, title } = action.body;
       const postIndex = feed.findIndex((post) => post.id == postId);
+      const postIndexSearchFeed = searchFeed.findIndex((post) => post.id == postId);
 
       if (postIndex != -1) {
         feed[postIndex].isHidden = !feed[postIndex]?.isHidden;
@@ -440,11 +548,27 @@ export const feedReducer = (state = initialState, action) => {
         });
       }
 
+      if(postIndexSearchFeed != -1) {
+        searchFeed[postIndexSearchFeed].isHidden = !(searchFeed[postIndexSearchFeed])?.isHidden;
+        (searchFeed[postIndexSearchFeed])?.menuItems?.forEach((menuItem) => {
+          if(menuItem?.id == 12){
+            menuItem.id = 13;
+            menuItem.title = title
+          }else if(menuItem?.id == 13){
+            menuItem.id = 12;
+            menuItem.title = title
+          }
+        })
+      }
+
       return { ...state };
     }
 
     case AUTO_PLAY_POST_VIDEO: {
       return { ...state, autoPlayVideoPostId: action.body };
+    }
+    case CLEAR_SEARCH: {
+      return {...state, searchedPosts: []}
     }
 
     case CREATE_POST_SUCCESS: {

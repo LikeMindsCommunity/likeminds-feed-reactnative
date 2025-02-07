@@ -14,7 +14,7 @@ import MoreLessComponent from "../LMPostText";
 import STYLES from "../../../constants/Styles";
 
 const LMPostContent = React.memo(() => {
-  const { post }: LMPostContextValues = useLMPostContext();
+  const { post, highlight }: LMPostContextValues = useLMPostContext();
   const postListStyle = STYLES.$POST_LIST_STYLE;
   const postContentStyle = postListStyle?.postContent;
 
@@ -43,6 +43,11 @@ const LMPostContent = React.memo(() => {
     }
   };
 
+  // to cause a re-render whenever the content of the post is edited
+  useEffect(() => {
+    setTruncatedText("");
+  }, [post, highlight])
+
   return (
     <View
       style={StyleSheet.flatten([
@@ -64,13 +69,14 @@ const LMPostContent = React.memo(() => {
       ) : (
         <LMText
           maxLines={MAX_LINES + 1}
+          highlight={highlight ?? ""}
           textStyle={StyleSheet.flatten([
             styles.contentText,
             postContentStyle?.textStyle,
           ])}
           onTextLayout={(e) => onTextLayout(e)}
         >
-          {decode(post?.text, true)}
+          {decode(post?.text, true, undefined, highlight)}
         </LMText>
       )}
     </View>

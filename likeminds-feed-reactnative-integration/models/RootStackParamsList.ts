@@ -9,4 +9,5 @@ export type RootStackParamList = {
   CreatePollScreen: any;
   PollResult: any;
   UserOnboardingScreen: any;
+  LMFeedSearchScreen: any;
 };

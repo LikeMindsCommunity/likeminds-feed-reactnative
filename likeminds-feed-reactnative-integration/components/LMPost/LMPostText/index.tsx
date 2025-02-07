@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, Text, TextStyle, TouchableOpacity } from "react-native";
 import { decode } from "../../../utils";
 import { styles } from "../LMPostContent/styles";
+import { useLMPostContext } from "../../../context";
 
 interface MoreLessComponentProps {
   truncatedText: string;
@@ -20,14 +21,15 @@ const MoreLessComponent = ({
   disable,
   isDecoding,
 }: MoreLessComponentProps) => {
+  const { highlight } = useLMPostContext();
   const [showMore, setShowMore] = React.useState(false);
   return (
     <Text style={[styles.contentText, textStyle]}>
       {!showMore
-        ? `${truncatedText.trim()}...`
+        ? decode(`${truncatedText.trim()}...`, true, undefined, highlight)
         : isDecoding
         ? `${fullText.trim()}`
-        : decode(fullText, true)}
+        : decode(fullText, true, undefined, highlight)}
       {/* show more button section */}
       <Text
         style={[styles.showMoreText, showMoreTextStyle]}

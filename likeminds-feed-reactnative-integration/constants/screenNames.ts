@@ -11,3 +11,4 @@ export const NOTIFICATION_FEED = "NotificationFeed";
 export const POLL_RESULT = "PollResult";
 export const CREATE_POLL_SCREEN = "CreatePollScreen";
 export const USER_ONBOARDING_SCREEN = "UserOnboardingScreen";
+export const SEARCH_SCREEN = "LMFeedSearchScreen";

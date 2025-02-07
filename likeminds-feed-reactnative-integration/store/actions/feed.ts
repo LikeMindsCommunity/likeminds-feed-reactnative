@@ -34,10 +34,17 @@ import {
   HIDE_POST_FAILED,
   HIDE_POST_STATE,
   UNIVERSAL_TOPICS_FEED_SUCCESS,
+  GET_SEARCHED_POSTS_DATA,
+  GET_SEARCHED_POSTS_SUCCESS,
+  GET_SEARCHED_POSTS_FAILED,
+  GET_PAGINATED_SEARCHED_POSTS_SUCCESS,
+  GET_PAGINATED_SEARCHED_POSTS_DATA,
+  GET_PAGINATED_SEARCHED_POSTS_FAILED,
   PERSONALISED_FEED_SUCCESS,
   PERSONALISED_FEED_DATA,
   PERSONALISED_FEED_FAILED,
   PERSONALISED_FEED_REFRESH_SUCCESS,
+
 } from "../types/types";
 import { Client } from "../../client";
 import {
@@ -50,6 +57,7 @@ import {
   PinPostRequest,
   PostReportRequest,
   SavePostRequest,
+  SearchPostsRequest
 } from "@likeminds.community/feed-rn";
 
 // get universal feed API action
@@ -73,6 +81,26 @@ export const getFeed = (payload: GetFeedRequest, showLoader: boolean) => () => {
   }
 };
 
+
+export const getSearchedPosts = (payload: SearchPostsRequest) => () => {
+  try {
+    return {
+      type: GET_SEARCHED_POSTS_SUCCESS,
+      [CALL_API]: {
+        func: Client?.myClient?.searchPosts(payload),
+        types: [
+          GET_SEARCHED_POSTS_DATA,
+          GET_SEARCHED_POSTS_SUCCESS,
+          GET_SEARCHED_POSTS_FAILED,
+        ],
+      },
+    };
+  } catch (error) {
+    Alert.alert(`${error}`);
+  }
+}
+
+
 // get personalised feed API action
 export const getPersonalisedFeed = (payload: GetPersonalisedFeedRequest, showLoader: boolean) => () => {
   try {
@@ -92,7 +120,28 @@ export const getPersonalisedFeed = (payload: GetPersonalisedFeedRequest, showLoa
   } catch (error) {
     Alert.alert(`${error}`);
   }
-};
+
+}
+
+export const getPaginatedSearchedPosts = (payload: SearchPostsRequest) => () => {
+  try {
+    return {
+      type: GET_PAGINATED_SEARCHED_POSTS_SUCCESS,
+      [CALL_API]: {
+        func: Client?.myClient?.searchPosts(payload),
+        types: [
+          GET_PAGINATED_SEARCHED_POSTS_DATA,
+          GET_PAGINATED_SEARCHED_POSTS_SUCCESS,
+          GET_PAGINATED_SEARCHED_POSTS_FAILED,
+        ],
+      },
+    };
+  } catch (error) {
+    Alert.alert(`${error}`);
+  }
+}
+
+
 
 export const getTopicsFeed = (payload: GetFeedRequest, showLoader: boolean) => () => {
   try {
