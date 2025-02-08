@@ -12,4 +12,5 @@ export interface LMTextProps {
   selectable?: boolean; // this represents the selection behaviour of the text
   onTextLayout?: (event: NativeSyntheticEvent<TextLayoutEventData>) => void; // callback function executed on change of text layout
   children?: React.ReactNode;
+  highlight?: string
 }

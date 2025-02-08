@@ -228,10 +228,16 @@ const CarouselScreen = ({ navigation, route }: any) => {
             >
               {item?.attachmentType === IMAGE_ATTACHMENT_TYPE ? (
                 <ImageViewer
-                  imageUrls={attachmentsUrls}
+                  imageUrls={[{url: attachmentsUrls[index]?.url}]}
                   style={styles.image}
                   enablePreload={true}
-                  index={index}
+                  onMove={(position) => {
+                    if (position?.positionX !== 0 || position?.positionY !== 0) {
+                      setDisableGesture(true);
+                    } else {
+                      setDisableGesture(false);
+                    }
+                  }}
                   useNativeDriver={true}
                   enableSwipeDown={false}
                   loadingRender={renderLoading}

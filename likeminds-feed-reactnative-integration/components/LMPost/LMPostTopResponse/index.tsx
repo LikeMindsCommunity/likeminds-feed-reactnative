@@ -37,7 +37,7 @@ const LMPostTopResponse = () => {
   };
   return (
     <>
-      {Object.keys(post?.filteredComments).length > 0 ? (
+      {Object.keys(post?.filteredComments ?? {}).length > 0 ? (
         <View style={{ paddingHorizontal: 15, paddingBottom: 10 }}>
           <Text
             style={[

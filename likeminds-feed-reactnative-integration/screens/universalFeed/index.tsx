@@ -27,6 +27,7 @@ interface UniversalFeedProps {
   handleReportPostProps?: (postId: string) => void;
   handleHidePostProp?: (postId: string) => void,
   newPostButtonClickProps?: () => void;
+  onSearchIconClickProp?: () => void;
   onOverlayMenuClickProp?: (
     event: {
       nativeEvent: { pageX: number; pageY: number };
@@ -40,6 +41,8 @@ interface UniversalFeedProps {
   onAddPollOptionsClicked?: any;
   onPollOptionClicked?: any;
   hideTopicsView?: boolean;
+  onRetryPressProp?: () => void;
+  onCancelPressProp?: () => void;
 }
 
 interface UniversalFeedComponentProps {
@@ -63,8 +66,11 @@ const UniversalFeed = ({
   onOverlayMenuClickProp,
   onTapNotificationBellProp,
   onSharePostClicked,
+  onSearchIconClickProp,
   onSubmitButtonClicked,
   onAddPollOptionsClicked,
+  onCancelPressProp,
+  onRetryPressProp,
   onPollOptionClicked,
   isHeadingEnabled = false,
   isTopResponse = false,
@@ -84,9 +90,12 @@ const UniversalFeed = ({
         onSelectCommentCountProp={onSelectCommentCountProp}
         onTapLikeCountProps={onTapLikeCountProps}
         handleHidePostProp={handleHidePostProp}
+        onSearchIconClickProp={onSearchIconClickProp}
         handleDeletePostProps={handleDeletePostProps}
         handleReportPostProps={handleReportPostProps}
         newPostButtonClickProps={newPostButtonClickProps}
+        onCancelPressProp={onCancelPressProp}
+        onRetryPressProp={onRetryPressProp}
         onOverlayMenuClickProp={onOverlayMenuClickProp}
         onTapNotificationBellProp={onTapNotificationBellProp}
         onSharePostClicked={onSharePostClicked}

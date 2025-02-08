@@ -10,8 +10,10 @@ import {
   PostDetailStyleProps,
   PostLikesListStyleProps,
   PostListStyleProps,
+  SearchFeedStyleProps,
   TopicsStyle,
   UniversalFeedStyleProps,
+  UploadingHeaderStylesProps,
   UserOnboardingStylesProps,
 } from "../lmFeedProvider/types";
 
@@ -171,6 +173,8 @@ export class LMFeedTheme {
   public $CAROUSEL_SCREEN_STYLE: CarouselScreenStyle;
   public $CREATE_POLL_STYLE: CreatePollStyle;
   public $USER_ONBOARDING_SCREEN_STYLES: UserOnboardingStylesProps
+  public $SEARCH_FEED_STYLES: SearchFeedStyleProps
+  public $UPLOADING_HEADER_STYLES: UploadingHeaderStylesProps
 
   constructor({
     hue = 244,
@@ -291,6 +295,8 @@ export class LMFeedTheme {
     this.$CAROUSEL_SCREEN_STYLE = {};
     this.$CREATE_POLL_STYLE = {};
     this.$USER_ONBOARDING_SCREEN_STYLES = {};
+    this.$SEARCH_FEED_STYLES = {};
+    this.$UPLOADING_HEADER_STYLES = {};
   }
 
   public setTheme(themeProps: StylesProps) {
@@ -405,6 +411,19 @@ export class LMFeedTheme {
     this.$USER_ONBOARDING_SCREEN_STYLES = {
       ...onBoardingStyles,
     };
+    
+  }
+
+  public setSearchFeedStyles(searchFeedStyles: SearchFeedStyleProps) {
+    this.$SEARCH_FEED_STYLES = {
+      ...searchFeedStyles
+    }
+  }
+
+  public setUploadingHeaderStyles(uploadingHeaderStyles: UploadingHeaderStylesProps) {
+    this.$UPLOADING_HEADER_STYLES = {
+      ...uploadingHeaderStyles
+    }
   }
 }
 

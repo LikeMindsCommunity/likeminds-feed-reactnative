@@ -1,7 +1,7 @@
 import { LMMenuItemsViewData, LMPostViewData } from "../models";
 import React, { createContext, ReactNode, useContext } from "react";
 
-export interface UniversalFeedCallbacksContextProps {
+export interface SearchFeedCallbacksContextProps {
   children?: ReactNode;
   isHeadingEnabled: boolean;
   isTopResponse: boolean;
@@ -25,12 +25,11 @@ export interface UniversalFeedCallbacksContextProps {
   ) => void;
   onTapNotificationBellProp?: () => void;
   onSharePostClicked?: (id: string) => void;
-  onSearchIconClickProp?: () => void;
-  onRetryPressProp?: () => void;
-  onCancelPressProp?: () => void;
+  onBackArrowPressProp?: () => void;
+  onCrossPressProp?: () => void;
 }
 
-export interface UniversalFeedCustomisableMethodsContext {
+export interface SearchFeedCustomisableMethodsContext {
   isHeadingEnabled: boolean;
   isTopResponse: boolean;
   hideTopicsView?: boolean;
@@ -53,26 +52,25 @@ export interface UniversalFeedCustomisableMethodsContext {
   ) => void;
   onTapNotificationBellProp?: () => void;
   onSharePostClicked?: (id: string) => void;
-  onSearchIconClickProp?: () => void;
-  onRetryPressProp?: () => void;
-  onCancelPressProp?: () => void;
+  onBackArrowPressProp?: () => void;
+  onCrossPressProp?: () => void;
 }
 
-const UniversalFeedCustomisableMethodsContext = createContext<
-  UniversalFeedCustomisableMethodsContext | undefined
+const SearchFeedCustomisableMethodsContext = createContext<
+  SearchFeedCustomisableMethodsContext | undefined
 >(undefined);
 
-export const useUniversalFeedCustomisableMethodsContext = () => {
-  const context = useContext(UniversalFeedCustomisableMethodsContext);
+export const useSearchFeedCustomisableMethodsContext = () => {
+  const context = useContext(SearchFeedCustomisableMethodsContext);
   if (!context) {
     throw new Error(
-      "useUniversalFeedCustomisableMethodsContext must be used within an UniversalFeedCustomisableMethodsContext"
+      "useSearchFeedCustomisableMethodsContext must be used within SearchFeedCustomisableMethodsContextProvider"
     );
   }
   return context;
 };
 
-export const UniversalFeedCustomisableMethodsContextProvider = ({
+export const SearchFeedCustomisableMethodsContextProvider = ({
   children,
   postLikeHandlerProp,
   savePostHandlerProp,
@@ -87,14 +85,13 @@ export const UniversalFeedCustomisableMethodsContextProvider = ({
   handleHidePostProp,
   onTapNotificationBellProp,
   onSharePostClicked,
-  onSearchIconClickProp,
-  onCancelPressProp,
-  onRetryPressProp,
+  onBackArrowPressProp,
+  onCrossPressProp,
   isHeadingEnabled = false,
   isTopResponse = false,
   hideTopicsView = false
-}: UniversalFeedCallbacksContextProps) => {
-  const contextValues: UniversalFeedCustomisableMethodsContext = {
+}: SearchFeedCallbacksContextProps) => {
+  const contextValues: SearchFeedCustomisableMethodsContext = {
     postLikeHandlerProp,
     savePostHandlerProp,
     selectPinPostProp,
@@ -107,18 +104,17 @@ export const UniversalFeedCustomisableMethodsContextProvider = ({
     newPostButtonClickProps,
     onOverlayMenuClickProp,
     onTapNotificationBellProp,
+    onBackArrowPressProp,
+    onCrossPressProp,
     onSharePostClicked,
-    onSearchIconClickProp,
-    onCancelPressProp,
-    onRetryPressProp,
     isHeadingEnabled,
     isTopResponse,
     hideTopicsView,
   };
 
   return (
-    <UniversalFeedCustomisableMethodsContext.Provider value={contextValues}>
+    <SearchFeedCustomisableMethodsContext.Provider value={contextValues}>
       {children}
-    </UniversalFeedCustomisableMethodsContext.Provider>
+    </SearchFeedCustomisableMethodsContext.Provider>
   );
 };

@@ -19,7 +19,7 @@ import AddOptionsModal from "../../../customModals/AddOptionModal";
 import { LMPostPollViewProps, LMPostPollViewState } from "../models";
 import { Client } from "../../../client";
 import STYLES from "../../../constants/Styles";
-
+import { useRoute } from "@react-navigation/native";
 import { SHOW_TOAST } from "../../../store/types/loader";
 import { useAppDispatch, useAppSelector } from "../../../store/store";
 import { POLL_RESULT } from "../../../constants/screenNames";
@@ -27,6 +27,7 @@ import { PollMultiSelectState, PollType } from "../../../enums/Poll";
 import { GetPostRequest } from "@likeminds.community/feed-rn";
 import { getPost } from "../../../store/actions/postDetail";
 import { useUniversalFeedContext } from "../../../context";
+import { useSearchedPostListContext } from "../../../context/searchedPostListContext";
 
 const LMPostPollView = ({
   item,
@@ -34,8 +35,9 @@ const LMPostPollView = ({
   removePollAttachment,
   editPollAttachment,
 }: any) => {
+  const route = useRoute();
   const { navigation, setSelectedPollOptions, addPollOption, submitPoll } =
-    useUniversalFeedContext();
+   route?.name == "LMFeedSearchScreen" ? useSearchedPostListContext() : useUniversalFeedContext();
 
   const [selectedPolls, setSelectedPolls] = useState<number[]>([]);
   const [showSelected, setShowSelected] = useState(false);

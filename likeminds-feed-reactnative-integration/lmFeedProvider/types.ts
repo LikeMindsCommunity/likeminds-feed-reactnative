@@ -61,6 +61,7 @@ export interface PostListStyleProps {
       menuViewStyle?: ViewStyle;
       backdropColor?: string;
     };
+    searchIconStyle?: LMIconProps;
   };
   footer?: {
     showBookMarkIcon?: boolean;
@@ -233,6 +234,7 @@ export interface PostListStyleProps {
   noPostView?: ViewStyle;
   noPostText?: TextStyle;
   listStyle?: ViewStyle;
+  listContentContainerStyle?: ViewStyle;
   shouldHideSeparator?: boolean;
 }
 
@@ -506,4 +508,36 @@ export interface UserOnboardingStylesProps {
   ctaButtonTextStyle?: TextStyle;
   disableCtaButtonTextStyle?: TextStyle;
   disableCtaButtonStyle?: ViewStyle;
+}
+
+export interface SearchFeedStyleProps {
+  postListStyle?: PostListStyleProps;
+  placeholderText?: string;
+  placeholderTextColor?: string;
+  searchQueryTextStyle?: TextStyle;
+  inputBoxStyle?: ViewStyle;
+  crossIconStyle?: LMIconProps;
+  backIconStyle?: LMIconProps;
+  listEmptyStyle?: {
+    listEmptyTextStyle?: TextStyle;
+    listEmptyImageStyle?: LMIconProps;
+  }
+}
+
+export interface UploadingHeaderStylesProps {
+  uploadingTextStyle?: TextStyle;
+  retryButtonStyle?: {
+    buttonStyle?: ViewStyle;
+    iconStyle?: LMIconProps;
+    textStyle?: TextStyle;
+  }
+  cancelButtonStyle?: {
+    buttonStyle?: ViewStyle;
+    textStyle?: TextStyle;
+  }
+  progressBarStyle?: {
+    size?: number;
+    width?: number;
+    tintColor?: string;
+  }
 }
