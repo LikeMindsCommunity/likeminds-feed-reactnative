@@ -126,10 +126,10 @@ const LMFeedSearchScreen = ({
                 hideTopicsView={hideTopicsView}
             >
                 <LMFeedSearchScreenComponent
-                  navigation={navigation}
-                  route={route}
-                  lmPostCustomFooter={lmPostCustomFooter}
-                  customWidgetPostView={customWidgetPostView}
+                    navigation={navigation}
+                    route={route}
+                    lmPostCustomFooter={lmPostCustomFooter}
+                    customWidgetPostView={customWidgetPostView}
                 />
             </SearchFeedCustomisableMethodsContextProvider>
         </PollCustomisableMethodsContextProvider>
@@ -385,16 +385,20 @@ const LMFeedSearchScreenComponent = ({
                             },
                             searchFeedStyles?.searchQueryTextStyle
                         ])}
-                            rightIcon={{
-                                icon: {
-                                    assetPath: require("../../assets/images/cross_icon3x.png"),
-                                    height: 18,
-                                    width: 18,
-                                    color: STYLES.$IS_DARK_THEME ? "white" : "black",
-                                    ...searchFeedStyles?.crossIconStyle
-                                },
-                                onTap: onCrossPressProp ? onCrossPressProp : onCrossPress,
-                            }}
+                            rightIcon={
+                                searchPostQuery?.length > 0 ?
+                                    {
+                                        icon: {
+                                            assetPath: require("../../assets/images/cross_icon3x.png"),
+                                            height: 18,
+                                            width: 18,
+                                            color: STYLES.$IS_DARK_THEME ? "white" : "black",
+                                            ...searchFeedStyles?.crossIconStyle
+                                        },
+                                        onTap: onCrossPressProp ? onCrossPressProp : onCrossPress,
+                                    } :
+                                    undefined
+                            }
                             inputTextStyle={StyleSheet.flatten([
                                 styles.inputTextStyle,
                                 searchFeedStyles?.inputBoxStyle
