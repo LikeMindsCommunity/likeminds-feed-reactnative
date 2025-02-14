@@ -294,6 +294,7 @@ export interface PostDetailStyleProps {
     mentionTextStyle?: TextStyle;
     multilineField?: boolean;
   };
+  readMoreTextStyle?: TextStyle
 }
 
 export interface CreatePostStyleProps {

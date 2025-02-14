@@ -282,14 +282,30 @@ const PostDetailComponent = React.memo(() => {
     setSelectedMenuItemPostId("");
     setSelectedMenuItemCommentId(commentId);
     if (itemId === REPORT_COMMENT_MENU_ITEM) {
-      handleReportCommentProp
-        ? handleReportCommentProp(commentId)
-        : handleReportComment();
+      if (Platform.OS == "ios") {
+        setTimeout(() => {
+          handleReportCommentProp
+            ? handleReportCommentProp(commentId)
+            : handleReportComment();
+        }, 500)
+      } else {
+        handleReportCommentProp
+          ? handleReportCommentProp(commentId)
+          : handleReportComment();
+      }
     }
     if (itemId === DELETE_COMMENT_MENU_ITEM) {
-      handleDeleteCommentProp
-        ? handleDeleteCommentProp(true, commentId)
-        : handleDeleteComment(true);
+      if (Platform.OS == "ios") {
+        setTimeout(() => {
+          handleDeleteCommentProp
+            ? handleDeleteCommentProp(true, commentId)
+            : handleDeleteComment(true);
+        }, 500)
+      } else {
+        handleDeleteCommentProp
+          ? handleDeleteCommentProp(true, commentId)
+          : handleDeleteComment(true);
+      }
     }
     if (itemId === EDIT_COMMENT_MENU_ITEM) {
       handleEditCommentProp
