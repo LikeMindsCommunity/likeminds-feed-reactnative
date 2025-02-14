@@ -536,10 +536,22 @@ export const PostDetailContextProvider = ({
       );
     }
     if (itemId === REPORT_POST_MENU_ITEM) {
-      handleReportPost();
+      if (Platform.OS == "ios") {
+        setTimeout(() => {
+          handleReportPost();
+        }, 500)
+      } else {
+        handleReportPost();
+      }
     }
     if (itemId === DELETE_POST_MENU_ITEM) {
-      handleDeletePost(true);
+      if (Platform.OS == "ios") {
+        setTimeout(() => {
+          handleDeletePost(true);
+        }, 500)
+      } else {
+        handleDeletePost(true);
+      }
     }
     if (itemId === HIDE_POST_MENU_ITEM || itemId === UNHIDE_POST_MENU_ITEM) {
       handleHidePost(postId)

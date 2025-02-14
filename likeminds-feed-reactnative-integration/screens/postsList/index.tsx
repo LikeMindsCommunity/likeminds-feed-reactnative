@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import {
   FlatList,
+  Platform,
   RefreshControl,
   Text,
   TouchableOpacity,
@@ -165,14 +166,30 @@ const PostsListComponent = ({
       );
     }
     if (itemId === REPORT_POST_MENU_ITEM) {
-      handleReportPostProps
+      if (Platform.OS == "ios") {
+        setTimeout(() => {
+          handleReportPostProps
+          ? handleReportPostProps(postId)
+          : handleReportPost();
+        }, 500)
+      } else {
+        handleReportPostProps
         ? handleReportPostProps(postId)
         : handleReportPost();
+      }
     }
     if (itemId === DELETE_POST_MENU_ITEM) {
-      handleDeletePostProps
-        ? handleDeletePostProps(true, postId)
-        : handleDeletePost(true);
+      if (Platform.OS == "ios") {
+        setTimeout(() => {
+          handleDeletePostProps
+          ? handleDeletePostProps(true, postId)
+          : handleDeletePost(true);
+        }, 500)
+      } else {
+        handleDeletePostProps
+          ? handleDeletePostProps(true, postId)
+          : handleDeletePost(true);
+      }
     }
     if (itemId === HIDE_POST_MENU_ITEM || itemId === UNHIDE_POST_MENU_ITEM) {
       handleHidePostProp ? handleHidePostProp(postId) : handleHidePost(postId);
