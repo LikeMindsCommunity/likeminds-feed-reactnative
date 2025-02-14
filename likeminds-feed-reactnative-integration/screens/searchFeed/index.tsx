@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity, RefreshControl, FlatList, ActivityIndicator } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity, RefreshControl, FlatList, ActivityIndicator, Platform } from 'react-native'
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { LMMenuItemsViewData, RootStackParamList } from "../../models";
 import { SearchFeedCustomisableMethodsContextProvider } from '../../context/searchFeedCallbacksContext';
@@ -223,14 +223,30 @@ const LMFeedSearchScreenComponent = ({
             );
         }
         if (itemId === REPORT_POST_MENU_ITEM) {
-            handleReportPostProps
-                ? handleReportPostProps(postId)
-                : handleReportPost();
+            if (Platform.OS == "ios") {
+                setTimeout(() => {
+                    handleReportPostProps
+                        ? handleReportPostProps(postId)
+                        : handleReportPost();
+                }, 500)
+            } else {
+                handleReportPostProps
+                    ? handleReportPostProps(postId)
+                    : handleReportPost();
+            }
         }
         if (itemId === DELETE_POST_MENU_ITEM) {
-            handleDeletePostProps
-                ? handleDeletePostProps(true, postId)
-                : handleDeletePost(true);
+            if (Platform.OS == "ios") {
+                setTimeout(() => {
+                    handleDeletePostProps
+                        ? handleDeletePostProps(true, postId)
+                        : handleDeletePost(true);
+                }, 500)
+            } else {
+                handleDeletePostProps
+                    ? handleDeletePostProps(true, postId)
+                    : handleDeletePost(true);
+            }
         }
         if (itemId === HIDE_POST_MENU_ITEM || itemId === UNHIDE_POST_MENU_ITEM) {
             handleHidePostProp ? handleHidePostProp(postId) : handleHidePost(postId);
