@@ -19,7 +19,8 @@ import {
   LMUserOnboardingScreen,
   LMSocialFeedSearchScreenWrapper,
   LMQnAFeedCreatePostScreen,
-  LMQnaFeedSearchScreenWrapper
+  LMQnaFeedSearchScreenWrapper,
+  Client
 } from '@likeminds.community/feed-rn-core';
 import LMSocialFeedCreateScreen from '@likeminds.community/feed-rn-core/wrappers/socialFeedCreateWrapper';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -56,6 +57,9 @@ import {LMFeedClient, InitiateUserRequest} from '@likeminds.community/feed-rn';
 import {LoginSchemaRO} from './login/loginSchemaRO';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {FeedType} from '@likeminds.community/feed-rn-core';
+import { token } from '@likeminds.community/feed-rn-core/utils/pushNotifications';
+import { getUniqueId } from 'react-native-device-info';
+import { RegisterDeviceRequest } from "@likeminds.community/feed-rn"
 
 
 class CustomCallbacks implements LMFeedCallbacks, LMCarouselScreenCallbacks {
@@ -73,6 +77,7 @@ const lmFeedInterface = new CustomCallbacks();
 const App = () => {
   const Stack = createNativeStackNavigator();
   const [users, setUsers] = useState<any>();
+  const [FCMToken, setFCMToken] = useState("");
   const [apiKey, setApiKey] = useState(
     Credentials?.apiKey?.length > 0 ? Credentials?.apiKey : users?.apiKey,
   );
@@ -244,6 +249,30 @@ const App = () => {
       };
     },
   );
+
+  /// Setup notifications
+  useEffect(() => {
+    token().then((res) => {
+      if (!!res) {
+        setFCMToken(res);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    async function pushNotifications() {
+      const deviceID = await getUniqueId();
+      await myClient?.registerDevice(
+        RegisterDeviceRequest.builder()
+          .setDeviceId(deviceID)
+          .setPlatformCode("an")
+          .setToken(FCMToken)
+          .build()
+      );
+    }
+    pushNotifications();
+  }, [FCMToken, myClient]);
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

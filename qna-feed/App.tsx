@@ -55,6 +55,9 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import UniversalFeedScreen from './screens/UniversalFeedScreen';
 import PostDetailsScreen from './screens/PostDetailsScreen';
 import {FeedType} from '@likeminds.community/feed-rn-core';
+import { token } from './pushNotification';
+import { getUniqueId } from 'react-native-device-info';
+import { RegisterDeviceRequest } from "@likeminds.community/feed-rn"
 
 class CustomCallbacks implements LMFeedCallbacks, LMCarouselScreenCallbacks {
   onEventTriggered(eventName: string, eventProperties?: Map<string, string>) {
@@ -70,6 +73,7 @@ const lmFeedInterface = new CustomCallbacks();
 
 const App = () => {
   const Stack = createNativeStackNavigator();
+  const [FCMToken, setFCMToken] = useState("");
   const [users, setUsers] = useState<any>();
   const [apiKey, setApiKey] = useState(
     Credentials?.apiKey?.length > 0 ? Credentials?.apiKey : users?.apiKey,
@@ -126,6 +130,29 @@ const App = () => {
       Credentials?.apiKey?.length > 0 ? Credentials?.apiKey : users?.apiKey,
     );
   }, [users, isTrue]);
+
+    /// Setup notifications
+    useEffect(() => {
+      token().then((res) => {
+        if (!!res) {
+          setFCMToken(res);
+        }
+      });
+    }, []);
+  
+    useEffect(() => {
+      async function pushNotifications() {
+        const deviceID = await getUniqueId();
+        await myClient?.registerDevice(
+          RegisterDeviceRequest.builder()
+            .setDeviceId(deviceID)
+            .setPlatformCode("an")
+            .setToken(FCMToken)
+            .build()
+        );
+      }
+      pushNotifications();
+    }, [FCMToken, myClient]);
 
   // custom style of new post button
   const regex = /post_id=([^&]+)/;
