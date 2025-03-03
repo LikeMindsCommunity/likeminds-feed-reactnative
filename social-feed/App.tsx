@@ -265,7 +265,9 @@ const App = () => {
       await myClient?.registerDevice(
         RegisterDeviceRequest.builder()
           .setDeviceId(deviceID)
-          .setPlatformCode("an")
+          .setPlatformCode(
+            Platform.OS == "ios" ? "ios" : "an"
+          )
           .setToken(FCMToken)
           .build()
       );
