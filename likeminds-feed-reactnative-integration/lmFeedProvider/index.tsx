@@ -110,7 +110,7 @@ export const LMFeedProvider = ({
   const callValidateApi = async (
     accessToken,
     refreshToken,
-    isUserOnboarded = false
+    isUserOnboarded = true,
   ) => {
     const validateResponse = await dispatch(
       validateUser(
@@ -137,7 +137,7 @@ export const LMFeedProvider = ({
   async function callInitiateAPI(
     onBoardingUserName?: string,
     imageUrl?: string,
-    isUserOnboarded: boolean = false
+    isUserOnboarded: boolean = true
   ) {
     const { accessToken, refreshToken } = await myClient?.getTokens();
     if (accessToken && refreshToken) {
@@ -170,6 +170,12 @@ export const LMFeedProvider = ({
       );
       await callGetCommunityConfigurations();
       setIsInitiated(true);
+    } else {
+      // initiate api fails
+      if (isUserOnboardingRequired) {
+        // onboard user if init api fails due to missing username
+        setOnboardUser(true);
+      }
     }
   }
 
@@ -187,7 +193,7 @@ export const LMFeedProvider = ({
 
         if (apiKey && userUniqueId) {
           setWithAPIKeySecurity(false);
-          setOnboardUser(true);
+          callInitiateAPI();
         } else if (accessToken && refreshToken) {
           setWithAPIKeySecurity(true);
           callValidateApi(accessToken, refreshToken, isUserOnboarded);
