@@ -110,7 +110,7 @@ export const LMFeedProvider = ({
   const callValidateApi = async (
     accessToken,
     refreshToken,
-    isUserOnboarded = true,
+    isUserOnboarded = false,
   ) => {
     const validateResponse = await dispatch(
       validateUser(
@@ -125,6 +125,7 @@ export const LMFeedProvider = ({
     if (validateResponse !== undefined && validateResponse !== null) {
       // calling getMemberState API
       if (isUserOnboardingRequired && !isUserOnboarded) {
+        // incase user had previously logged in but hasn't been onboarded
         setOnboardUser(true);
       } else {
         await dispatch(getMemberState());
@@ -137,7 +138,7 @@ export const LMFeedProvider = ({
   async function callInitiateAPI(
     onBoardingUserName?: string,
     imageUrl?: string,
-    isUserOnboarded: boolean = true
+    isUserOnboarded: boolean = false
   ) {
     const { accessToken, refreshToken } = await myClient?.getTokens();
     if (accessToken && refreshToken) {
@@ -193,7 +194,7 @@ export const LMFeedProvider = ({
 
         if (apiKey && userUniqueId) {
           setWithAPIKeySecurity(false);
-          callInitiateAPI();
+          callInitiateAPI(undefined, undefined, isUserOnboarded);
         } else if (accessToken && refreshToken) {
           setWithAPIKeySecurity(true);
           callValidateApi(accessToken, refreshToken, isUserOnboarded);
