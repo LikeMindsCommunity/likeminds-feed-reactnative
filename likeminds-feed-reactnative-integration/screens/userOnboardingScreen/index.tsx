@@ -203,7 +203,6 @@ function UserOnboardingScreen() {
       if (isUserOnboardingDone && !isInitiated) {
         const { accessToken, refreshToken } = await Client.myClient.getTokens();
         const isOnboarded = await callIsUserOnboardingDone();
-        console.log(accessToken, refreshToken);
         if (accessToken && refreshToken && isOnboarded) {
           // validate API will be call internally regardless
           callInitiateAPI(undefined, undefined, true);
@@ -215,12 +214,15 @@ function UserOnboardingScreen() {
   }, [isUserOnboardingDone, withAPIKeySecurity]);
 
   useEffect(() => {
-    if (isInitiated && !isEditing) {
-      setTimeout(
-        () => navigation.dispatch(StackActions.replace(UNIVERSAL_FEED)),
-        0
-      );
-    }
+    (async () => {
+      if (isInitiated && !isEditing) {
+        await Client.myClient?.setIsUserOnboardingDone(true);
+        setTimeout(
+          () => navigation.dispatch(StackActions.replace(UNIVERSAL_FEED)),
+          0
+        );
+      }
+    })()
   }, [isInitiated]);
 
   useEffect(() => {
@@ -265,8 +267,8 @@ function UserOnboardingScreen() {
                   ? editScreenHeaderTitle
                   : "Profile"
                 : createScreenHeaderTitle
-                ? createScreenHeaderTitle
-                : "Community"
+                  ? createScreenHeaderTitle
+                  : "Community"
             }
             showBackArrow={isEditing}
             rightComponent={
@@ -278,7 +280,7 @@ function UserOnboardingScreen() {
                     ? onCTAButtonClickedProp
                       ? onCTAButtonClickedProp
                       : onCTAButtonClicked
-                    : () => {}
+                    : () => { }
                 }
               >
                 <>
@@ -320,8 +322,8 @@ function UserOnboardingScreen() {
                           ? editScreenCtaButtonText
                           : "DONE"
                         : createScreenCtaButtonText
-                        ? createScreenCtaButtonText
-                        : "CONTINUE"}
+                          ? createScreenCtaButtonText
+                          : "CONTINUE"}
                     </LMText>
                   )}
                 </>
@@ -355,6 +357,7 @@ function UserOnboardingScreen() {
   if (
     (isUserOnboardingRequired == false ||
       isUserOnboardingRequired == undefined ||
+      isUserOnboardingRequired == null ||
       isUserOnboardingDone) &&
     !isEditing
   ) {
@@ -369,7 +372,7 @@ function UserOnboardingScreen() {
           alignItems: "center",
         }}
       >
-        <LMLoader />
+        <LMLoader {...STYLES?.$LOADER_STYLE?.loader} />
       </View>
     );
   }
@@ -412,8 +415,8 @@ function UserOnboardingScreen() {
                 ? editScreenTitle
                 : "Edit Profile"
               : createScreenTitle
-              ? createScreenTitle
-              : "Create Your Community Profile"}
+                ? createScreenTitle
+                : "Create Your Community Profile"}
           </LMText>
           <LMText
             textStyle={StyleSheet.flatten([
@@ -431,8 +434,8 @@ function UserOnboardingScreen() {
                 ? editScreenSubtitle
                 : "Edit profile picture"
               : createScreenSubtitle
-              ? createScreenSubtitle
-              : "Set up your profile to join the community. Please provide your name and profile picture."}
+                ? createScreenSubtitle
+                : "Set up your profile to join the community. Please provide your name and profile picture."}
           </LMText>
         </View>
         <View
@@ -449,8 +452,8 @@ function UserOnboardingScreen() {
             backgroundColor: imageUrl
               ? "black"
               : STYLES.$IS_DARK_THEME
-              ? STYLES.$COLORS.BLACK
-              : STYLES.$COLORS.WHITE,
+                ? STYLES.$COLORS.BLACK
+                : STYLES.$COLORS.WHITE,
           }}
         >
           {imageUrl?.length > 0 ? (
@@ -497,8 +500,8 @@ function UserOnboardingScreen() {
                 onBoardingScreenStyles?.pickImageIconStyles?.assetPath
                   ? onBoardingScreenStyles?.pickImageIconStyles?.assetPath
                   : isEditing
-                  ? require("../../assets/images/edit_profile3x.png")
-                  : require("../../assets/images/camera_3x.png")
+                    ? require("../../assets/images/edit_profile3x.png")
+                    : require("../../assets/images/camera_3x.png")
               }
               height={
                 onBoardingScreenStyles?.pickImageIconStyles?.height

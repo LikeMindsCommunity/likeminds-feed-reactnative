@@ -20,7 +20,7 @@ import {
   initiateUser,
   validateUser,
 } from "../store/actions/login";
-import { LMToast } from "../components";
+import { LMLoader, LMToast } from "../components";
 import { CallBack } from "../callBacks/callBackClass";
 import { Client } from "../client";
 import { CommunityConfigs } from "../communityConfigs";
@@ -110,7 +110,7 @@ export const LMFeedProvider = ({
   const callValidateApi = async (
     accessToken,
     refreshToken,
-    isUserOnboarded = false
+    isUserOnboarded = false,
   ) => {
     const validateResponse = await dispatch(
       validateUser(
@@ -125,10 +125,14 @@ export const LMFeedProvider = ({
     if (validateResponse !== undefined && validateResponse !== null) {
       // calling getMemberState API
       if (isUserOnboardingRequired && !isUserOnboarded) {
+        // incase user had previously logged in but hasn't been onboarded
         setOnboardUser(true);
       } else {
         await dispatch(getMemberState());
         await callGetCommunityConfigurations();
+        if (isUserOnboardingRequired) {
+          await myClient?.setIsUserOnboardingDone(true);
+        }
         setIsInitiated(true);
       }
     }
@@ -148,16 +152,16 @@ export const LMFeedProvider = ({
       initiateUser(
         isUserOnboardingRequired
           ? InitiateUserRequest.builder()
-              .setUserName(onBoardingUserName ? onBoardingUserName : "")
-              .setImageUrl(imageUrl ? imageUrl : "")
-              .setApiKey(apiKey ? apiKey : "")
-              .setUUID(userUniqueId ? userUniqueId : "")
-              .build()
+            .setUserName(onBoardingUserName ? onBoardingUserName : "")
+            .setImageUrl(imageUrl ? imageUrl : "")
+            .setApiKey(apiKey ? apiKey : "")
+            .setUUID(userUniqueId ? userUniqueId : "")
+            .build()
           : InitiateUserRequest.builder()
-              .setUserName(userName ? userName : "")
-              .setApiKey(apiKey ? apiKey : "")
-              .setUUID(userUniqueId ? userUniqueId : "")
-              .build(),
+            .setUserName(userName ? userName : "")
+            .setApiKey(apiKey ? apiKey : "")
+            .setUUID(userUniqueId ? userUniqueId : "")
+            .build(),
         true
       )
     );
@@ -169,7 +173,16 @@ export const LMFeedProvider = ({
         initiateResponse?.refreshToken
       );
       await callGetCommunityConfigurations();
+      if (isUserOnboardingRequired) {
+        await myClient?.setIsUserOnboardingDone(true);
+      }
       setIsInitiated(true);
+    } else {
+      // initiate api fails
+      if (isUserOnboardingRequired) {
+        // onboard user if init api fails due to missing username
+        setOnboardUser(true);
+      }
     }
   }
 
@@ -187,7 +200,7 @@ export const LMFeedProvider = ({
 
         if (apiKey && userUniqueId) {
           setWithAPIKeySecurity(false);
-          setOnboardUser(true);
+          callInitiateAPI(undefined, undefined, isUserOnboarded);
         } else if (accessToken && refreshToken) {
           setWithAPIKeySecurity(true);
           callValidateApi(accessToken, refreshToken, isUserOnboarded);
@@ -226,7 +239,16 @@ export const LMFeedProvider = ({
       {showToast && <LMToast />}
     </LMFeedContext.Provider>
   ) : (
-    <></>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: STYLES.$IS_DARK_THEME ? STYLES.$BACKGROUND_COLORS.DARK : STYLES.$BACKGROUND_COLORS.LIGHT,
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}
+    >
+      <LMLoader {...STYLES.$LOADER_STYLE?.loader} />
+    </View>
   );
 };
 
