@@ -20,7 +20,7 @@ import {
   initiateUser,
   validateUser,
 } from "../store/actions/login";
-import { LMToast } from "../components";
+import { LMLoader, LMToast } from "../components";
 import { CallBack } from "../callBacks/callBackClass";
 import { Client } from "../client";
 import { CommunityConfigs } from "../communityConfigs";
@@ -130,6 +130,9 @@ export const LMFeedProvider = ({
       } else {
         await dispatch(getMemberState());
         await callGetCommunityConfigurations();
+        if (isUserOnboardingRequired) {
+          await myClient?.setIsUserOnboardingDone(true);
+        }
         setIsInitiated(true);
       }
     }
@@ -149,16 +152,16 @@ export const LMFeedProvider = ({
       initiateUser(
         isUserOnboardingRequired
           ? InitiateUserRequest.builder()
-              .setUserName(onBoardingUserName ? onBoardingUserName : "")
-              .setImageUrl(imageUrl ? imageUrl : "")
-              .setApiKey(apiKey ? apiKey : "")
-              .setUUID(userUniqueId ? userUniqueId : "")
-              .build()
+            .setUserName(onBoardingUserName ? onBoardingUserName : "")
+            .setImageUrl(imageUrl ? imageUrl : "")
+            .setApiKey(apiKey ? apiKey : "")
+            .setUUID(userUniqueId ? userUniqueId : "")
+            .build()
           : InitiateUserRequest.builder()
-              .setUserName(userName ? userName : "")
-              .setApiKey(apiKey ? apiKey : "")
-              .setUUID(userUniqueId ? userUniqueId : "")
-              .build(),
+            .setUserName(userName ? userName : "")
+            .setApiKey(apiKey ? apiKey : "")
+            .setUUID(userUniqueId ? userUniqueId : "")
+            .build(),
         true
       )
     );
@@ -170,6 +173,9 @@ export const LMFeedProvider = ({
         initiateResponse?.refreshToken
       );
       await callGetCommunityConfigurations();
+      if (isUserOnboardingRequired) {
+        await myClient?.setIsUserOnboardingDone(true);
+      }
       setIsInitiated(true);
     } else {
       // initiate api fails
@@ -233,7 +239,16 @@ export const LMFeedProvider = ({
       {showToast && <LMToast />}
     </LMFeedContext.Provider>
   ) : (
-    <></>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: STYLES.$IS_DARK_THEME ? STYLES.$BACKGROUND_COLORS.DARK : STYLES.$BACKGROUND_COLORS.LIGHT,
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}
+    >
+      <LMLoader {...STYLES.$LOADER_STYLE?.loader} />
+    </View>
   );
 };
 

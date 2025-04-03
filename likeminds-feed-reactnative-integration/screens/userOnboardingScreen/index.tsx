@@ -372,7 +372,7 @@ function UserOnboardingScreen() {
           alignItems: "center",
         }}
       >
-        <LMLoader />
+        <LMLoader {...STYLES?.$LOADER_STYLE?.loader} />
       </View>
     );
   }
