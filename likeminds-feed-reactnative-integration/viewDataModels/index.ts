@@ -351,11 +351,11 @@ export function convertImageVideoMetaData(
 export function convertDocumentMetaData(
   data: DocumentMetaData[]
 ): LMAttachmentViewData[] {
-  const convertedDocumentMetaData = data?.map((item) => {
+  const convertedDocumentMetaData = data?.map((item: any) => {
     return {
       attachmentMeta: {
         entityId: "",
-        format: item?.type,
+        format: item?.type ?? item?.mimeType,
         name: item?.name,
         ogTags: {
           description: "",

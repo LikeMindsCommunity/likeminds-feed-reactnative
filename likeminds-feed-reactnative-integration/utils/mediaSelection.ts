@@ -28,16 +28,16 @@ export const selectImageVideo = async (type: string, limit: number = 0) => {
   } else if (ExpoImagePicker) {
     const result = await ExpoImagePicker.launchImageLibraryAsync({
       mediaTypes: type === 'photo'
-        ? ExpoImagePicker.MediaTypeOptions.Images
+        ? ["images"]
         : type === 'video'
-          ? ExpoImagePicker.MediaTypeOptions.Videos
-          : ExpoImagePicker.MediaTypeOptions.All,
+          ? ["videos"]
+          : ["images", "videos"],
       allowsMultipleSelection: limit !== 1,
       quality: 1,
     });
 
     if (!result.canceled) {
-      return result.assets;
+      return result;
     }
     return null;
   } else {
