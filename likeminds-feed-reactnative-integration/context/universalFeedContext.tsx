@@ -56,7 +56,6 @@ import {
 import { LMFeedAnalytics } from "../analytics/LMFeedAnalytics";
 import { Events } from "../enums/Events";
 import { Keys } from "../enums/Keys";
-import { createThumbnail } from "react-native-create-thumbnail";
 import { convertPollMetaData } from "../viewDataModels";
 import { useRoute } from "@react-navigation/native";
 import { SHOW_TOAST } from "../store/types/loader";
@@ -70,6 +69,7 @@ import {
 import { useLMFeed } from "../lmFeedProvider";
 import { FeedType } from "../enums/FeedType";
 import { AddPollOptionParams, SetSelectedPollOptionsParams, SubmitPollParams } from "../constants/types";
+import { CreateThumbnail } from "../optionalDependencies/VideoThumbnails";
 
 interface UniversalFeedContextProps {
   children?: ReactNode;
@@ -295,18 +295,17 @@ export const UniversalFeedContextProvider = ({
     const updateTotalProgress = () => {
       const totalProgress =
         progressArray.reduce((acc, val) => acc + val, 0) / mediaAttachmemnts?.length;
-        setUploadProgress(totalProgress);
+      setUploadProgress(totalProgress);
     };
 
     // upload media to aws
     const uploadPromises = mediaAttachmemnts?.map(
       async (item: LMAttachmentViewData, index) => {
         if (item?.attachmentType == 2) {
-          await createThumbnail({
-            url: item?.attachmentMeta?.url,
-            timeStamp: 10000,
-          })
-            .then(async (response) => {
+          await CreateThumbnail(
+            item?.attachmentMeta?.url,
+            10000
+          ).then(async (response) => {
               const newName =
                 item.attachmentMeta.name &&
                 item.attachmentMeta.name.substring(
@@ -397,17 +396,17 @@ export const UniversalFeedContextProvider = ({
     const updateTotalProgress = () => {
       const totalProgress =
         progressArray.reduce((acc, val) => acc + val, 0) / mediaAttachmemnts?.length;
-        setUploadProgress(totalProgress);
+      setUploadProgress(totalProgress);
     };
 
     // upload media to aws
     const uploadPromises = mediaAttachmemnts?.map(
       async (item: LMAttachmentViewData, index) => {
         if (item?.attachmentType == 2) {
-          await createThumbnail({
-            url: item?.attachmentMeta?.url,
-            timeStamp: 10000,
-          })
+          await CreateThumbnail(
+            item?.attachmentMeta?.url,
+            10000,
+          )
             .then(async (response) => {
               const newName =
                 item.attachmentMeta.name &&
@@ -803,7 +802,7 @@ export const UniversalFeedContextProvider = ({
   async function onSearchIconClick() {
     navigation.navigate(SEARCH_SCREEN)
   }
-    
+
   async function onRetryPress() {
     await addTemporaryPost();
   }
