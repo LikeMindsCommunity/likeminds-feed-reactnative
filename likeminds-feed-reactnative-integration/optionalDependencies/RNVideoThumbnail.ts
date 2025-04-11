@@ -9,7 +9,6 @@ try {
         expo = true;
     }
 } catch (e) {
-    console.log("error ahaya 14", e)
     // do nothing
 }
 
