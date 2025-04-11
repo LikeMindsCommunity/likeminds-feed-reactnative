@@ -2,10 +2,8 @@ const availableLibraries: any = {};
 try {
   availableLibraries['expo-image-picker'] = require('expo-image-picker')
   availableLibraries['expo-document-picker'] = require('expo-document-picker')
-  availableLibraries['expo-device'] = require('expo-device')
   availableLibraries['expo-video-thumbnails'] = require('expo-video-thumbnails')
 
-  availableLibraries['react-native-device-info'] = require('react-native-device-info')
   availableLibraries['react-native-create-thumbnail'] = require('react-native-create-thumbnail')
   availableLibraries['react-native-document-picker'] = require('expo-document-picker')
   availableLibraries['react-native-image-picker'] = require('react-native-image-picker')
