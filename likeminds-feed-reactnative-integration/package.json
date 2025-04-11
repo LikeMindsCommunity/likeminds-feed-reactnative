@@ -51,29 +51,16 @@
     "react-native-dotenv": ">=3.4.9",
     "react-native-file-viewer": ">=2.1.5",
     "@types/react-native-video": ">=5.0.14",
-    "react-native-video": ">=6.0.0",
+    "react-native-video": ">=5.2.1",
     "react-native-compressor": ">=1.9.0",
     "react-native-svg": ">=15.0.0",
     "react-native-circular-progress": ">=1.4.0",
     "react-native-device-info": "10.13.1",
-    "expo-device": ">=7.0.0",
     "expo-document-picker": ">=13.0.0",
     "expo-image-picker": ">=16.0.0",
     "expo-video-thumbnails": ">=9.0.0"
   },
   "peerDependenciesMeta": {
-    "react-native-video": {
-      "optional": true
-    },
-    "@types/react-native-video": {
-      "optional": true
-    },
-    "@react-native-community/datetimepicker": {
-      "optional": true
-    },
-    "@react-native-async-storage/async-storage": {
-      "optional": true
-    },
     "react-native-document-picker": {
       "optional": true
     },
@@ -81,15 +68,6 @@
       "optional": true
     },
     "react-native-create-thumbnail": {
-      "optional": true
-    },
-    "react-native-device-info": {
-      "optional": true
-    },
-    "react-native-compressor": {
-      "optional": true
-    },
-    "expo-device": {
       "optional": true
     },
     "expo-document-picker": {
