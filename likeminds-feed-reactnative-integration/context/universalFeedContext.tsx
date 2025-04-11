@@ -71,6 +71,8 @@ import { FeedType } from "../enums/FeedType";
 import { AddPollOptionParams, SetSelectedPollOptionsParams, SubmitPollParams } from "../constants/types";
 import RNVideoThumbnail from "../optionalDependencies/RNVideoThumbnail";
 import expoVideoThumbnail from "../optionalDependencies/ExpoVideoThumbnail";
+import t from "react-native-create-thumbnail"
+import s from "expo-video-thumbnails"
 interface UniversalFeedContextProps {
   children?: ReactNode;
   navigation: NativeStackNavigationProp<RootStackParamList, "UniversalFeed">;
@@ -303,7 +305,7 @@ export const UniversalFeedContextProvider = ({
       async (item: LMAttachmentViewData, index) => {
         if (item?.attachmentType == 2) {
           if (RNVideoThumbnail) {
-            await RNVideoThumbnail({
+            await RNVideoThumbnail.createThumbnail({
               url: item?.attachmentMeta?.url,
               timeStamp: 1000
             }).then(async (response) => {
@@ -328,7 +330,7 @@ export const UniversalFeedContextProvider = ({
             })
               .catch((res) => { });
           } else if (expoVideoThumbnail) {
-            await expoVideoThumbnail(
+            await expoVideoThumbnail.getThumbnailAsync(
               item?.attachmentMeta?.url,
               {
                 time: 1000
@@ -431,58 +433,60 @@ export const UniversalFeedContextProvider = ({
     // upload media to aws
     const uploadPromises = mediaAttachmemnts?.map(
       async (item: LMAttachmentViewData, index) => {
-        if (RNVideoThumbnail) {
-          await RNVideoThumbnail({
-            url: item?.attachmentMeta?.url,
-            timeStamp: 1000
-          }).then(async (response) => {
-            const newName =
-              item.attachmentMeta.name &&
-              item.attachmentMeta.name.substring(
-                0,
-                item.attachmentMeta.name.lastIndexOf(".")
-              ) + ".jpeg";
-            const thumbnailMeta = {
-              ...item.attachmentMeta,
-              name: newName,
-              format: "image/jpeg",
-              thumbnailUrl: response?.path,
-            };
-            const thumbnailRes = await uploadFilesToAWS(
-              thumbnailMeta,
-              memberData.userUniqueId,
-              response?.path
-            );
-            item.attachmentMeta.thumbnailUrl = thumbnailRes.Location;
-          })
-            .catch((res) => { });
-        } else if (expoVideoThumbnail) {
-          await expoVideoThumbnail(
-            item?.attachmentMeta?.url,
-            {
-              time: 1000
-            }
-          ).then(async (response) => {
-            const newName =
-              item.attachmentMeta.name &&
-              item.attachmentMeta.name.substring(
-                0,
-                item.attachmentMeta.name.lastIndexOf(".")
-              ) + ".jpeg";
-            const thumbnailMeta = {
-              ...item.attachmentMeta,
-              name: newName,
-              format: "image/jpeg",
-              thumbnailUrl: response?.path,
-            };
-            const thumbnailRes = await uploadFilesToAWS(
-              thumbnailMeta,
-              memberData.userUniqueId,
-              response?.path
-            );
-            item.attachmentMeta.thumbnailUrl = thumbnailRes.Location;
-          })
-            .catch((res) => { });
+        if (item?.attachmentType == 2) {
+          if (RNVideoThumbnail) {
+            await RNVideoThumbnail.createThumbnail({
+              url: item?.attachmentMeta?.url,
+              timeStamp: 1000
+            }).then(async (response) => {
+              const newName =
+                item.attachmentMeta.name &&
+                item.attachmentMeta.name.substring(
+                  0,
+                  item.attachmentMeta.name.lastIndexOf(".")
+                ) + ".jpeg";
+              const thumbnailMeta = {
+                ...item.attachmentMeta,
+                name: newName,
+                format: "image/jpeg",
+                thumbnailUrl: response?.path,
+              };
+              const thumbnailRes = await uploadFilesToAWS(
+                thumbnailMeta,
+                memberData.userUniqueId,
+                response?.path
+              );
+              item.attachmentMeta.thumbnailUrl = thumbnailRes.Location;
+            })
+              .catch((res) => { });
+          } else if (expoVideoThumbnail) {
+            await expoVideoThumbnail.getThumbnailAsync(
+              item?.attachmentMeta?.url,
+              {
+                time: 1000
+              }
+            ).then(async (response) => {
+              const newName =
+                item.attachmentMeta.name &&
+                item.attachmentMeta.name.substring(
+                  0,
+                  item.attachmentMeta.name.lastIndexOf(".")
+                ) + ".jpeg";
+              const thumbnailMeta = {
+                ...item.attachmentMeta,
+                name: newName,
+                format: "image/jpeg",
+                thumbnailUrl: response?.path,
+              };
+              const thumbnailRes = await uploadFilesToAWS(
+                thumbnailMeta,
+                memberData.userUniqueId,
+                response?.path
+              );
+              item.attachmentMeta.thumbnailUrl = thumbnailRes.Location;
+            })
+              .catch((res) => { });
+          }
         }
         return uploadFilesToAWS(
           item.attachmentMeta,
