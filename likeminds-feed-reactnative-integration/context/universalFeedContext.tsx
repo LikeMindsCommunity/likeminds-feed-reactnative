@@ -69,7 +69,7 @@ import {
 import { useLMFeed } from "../lmFeedProvider";
 import { FeedType } from "../enums/FeedType";
 import { AddPollOptionParams, SetSelectedPollOptionsParams, SubmitPollParams } from "../constants/types";
-import { CreateThumbnail } from "../optionalDependencies/VideoThumbnails";
+import CreateThumbnail from "../optionalDependencies/RNVideoThumbnail";
 
 interface UniversalFeedContextProps {
   children?: ReactNode;
