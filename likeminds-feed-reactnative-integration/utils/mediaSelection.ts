@@ -1,5 +1,5 @@
-import ImagePicker, {expo} from "../optionalDependencies/RNImagePicker"
-import RNDocumentPicker, {expo as expoDocument} from "../optionalDependencies/RNDocumentPicker" 
+import ImagePicker, {expo, cli} from "../optionalDependencies/RNImagePicker"
+import RNDocumentPicker, {expo as expoDocument, cli as cliDocument} from "../optionalDependencies/RNDocumentPicker" 
 
 //select Images and videoes From Gallery
 export const selectImageVideo = async (type: string, limit: number = 0) => {
@@ -7,7 +7,7 @@ export const selectImageVideo = async (type: string, limit: number = 0) => {
     mediaType: type,
     selectionLimit: limit ?? 0,
   };
-  if (!expo) {
+  if (cli) {
     return await ImagePicker?.launchImageLibrary(options as any, async (response: any) => {
       if (response?.didCancel) {
         // process cancel
@@ -42,7 +42,7 @@ export const selectImageVideo = async (type: string, limit: number = 0) => {
 //select Documents From Gallery
 export const selectDocument = async () => {
   try {
-    if (!expo) {
+    if (cliDocument) {
       const response = await RNDocumentPicker.pick({
         type: [RNDocumentPicker.types.pdf],
         allowMultiSelection: true,

@@ -1,5 +1,6 @@
 let ImagePicker;
 let expo = false;
+let cli = false;
 
 try {
     let module;
@@ -7,9 +8,10 @@ try {
     if (module) {
         ImagePicker = module;
         expo = true;
+        cli = false;
     }
 } catch (e) {
-    // do nothing
+    cli = true;
 }
 
 try {
@@ -18,10 +20,11 @@ try {
     if (module) {
         ImagePicker = module;
         expo = false;
+        cli = true;
     }
 } catch (e) {
-    // do nothing
-    expo = false;
+    cli = false;
+    expo = true;
 }
 
 
@@ -31,5 +34,5 @@ if (!ImagePicker) {
     );
 }
 
-export { expo }
+export { expo, cli }
 export default ImagePicker

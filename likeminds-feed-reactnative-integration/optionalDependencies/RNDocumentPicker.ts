@@ -1,5 +1,6 @@
 let DocumentPicker;
 let expo = false
+let cli = false
 
 try {
     let module;
@@ -8,9 +9,10 @@ try {
     if (module) {
         DocumentPicker = module;
         expo = true;
+        cli = false;
     }
 } catch (e) {
-    // do nothing
+    cli = true;
 }
 
 try {
@@ -20,10 +22,11 @@ try {
     if (module) {
         DocumentPicker = module;
         expo = false;
+        cli = true;
     }
 } catch (e) {
-    // do nothing
-    expo = false;
+    expo = true;
+    cli = false;
 }
 
 if (!DocumentPicker) {
@@ -32,5 +35,5 @@ if (!DocumentPicker) {
     );
 }
 
-export {expo}
+export {expo, cli}
 export default DocumentPicker;
