@@ -1,5 +1,8 @@
-import ImagePicker, {expo, cli} from "../optionalDependencies/RNImagePicker"
-import RNDocumentPicker, {expo as expoDocument, cli as cliDocument} from "../optionalDependencies/RNDocumentPicker" 
+import RNDocumentPicker from "../optionalDependencies/RNDocumentPicker";
+import expoDocumentPicker from "../optionalDependencies/ExpoDocumentPicker";
+
+import RNImagePicker from "../optionalDependencies/RNImagePicker";
+import expoImagePicker from "../optionalDependencies/ExpoImagePicker";
 
 //select Images and videoes From Gallery
 export const selectImageVideo = async (type: string, limit: number = 0) => {
@@ -7,8 +10,8 @@ export const selectImageVideo = async (type: string, limit: number = 0) => {
     mediaType: type,
     selectionLimit: limit ?? 0,
   };
-  if (cli) {
-    return await ImagePicker?.launchImageLibrary(options as any, async (response: any) => {
+  if (RNImagePicker) {
+    return await RNImagePicker?.launchImageLibrary(options as any, async (response: any) => {
       if (response?.didCancel) {
         // process cancel
       }
@@ -19,8 +22,8 @@ export const selectImageVideo = async (type: string, limit: number = 0) => {
       }
     });
 
-  } else if (expo) {
-    const result = await ImagePicker?.launchImageLibraryAsync({
+  } else if (expoImagePicker) {
+    const result = await expoImagePicker?.launchImageLibraryAsync({
       mediaTypes: type === 'photo'
         ? ["images"]
         : type === 'video'
@@ -42,7 +45,7 @@ export const selectImageVideo = async (type: string, limit: number = 0) => {
 //select Documents From Gallery
 export const selectDocument = async () => {
   try {
-    if (cliDocument) {
+    if (RNDocumentPicker) {
       const response = await RNDocumentPicker.pick({
         type: [RNDocumentPicker.types.pdf],
         allowMultiSelection: true,
@@ -54,8 +57,8 @@ export const selectDocument = async () => {
           return selectedDocs;
         }
       }
-    } else if (expoDocument) {
-      const result = await RNDocumentPicker.getDocumentAsync({
+    } else if (expoDocumentPicker) {
+      const result = await expoDocumentPicker.getDocumentAsync({
         type: 'application/pdf',
         multiple: true,
         copyToCacheDirectory: true,

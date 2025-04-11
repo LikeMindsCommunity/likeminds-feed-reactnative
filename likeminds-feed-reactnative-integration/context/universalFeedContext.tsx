@@ -69,8 +69,8 @@ import {
 import { useLMFeed } from "../lmFeedProvider";
 import { FeedType } from "../enums/FeedType";
 import { AddPollOptionParams, SetSelectedPollOptionsParams, SubmitPollParams } from "../constants/types";
-import CreateThumbnail from "../optionalDependencies/RNVideoThumbnail";
-
+import RNVideoThumbnail from "../optionalDependencies/RNVideoThumbnail";
+import expoVideoThumbnail from "../optionalDependencies/ExpoVideoThumbnail";
 interface UniversalFeedContextProps {
   children?: ReactNode;
   navigation: NativeStackNavigationProp<RootStackParamList, "UniversalFeed">;
@@ -302,10 +302,11 @@ export const UniversalFeedContextProvider = ({
     const uploadPromises = mediaAttachmemnts?.map(
       async (item: LMAttachmentViewData, index) => {
         if (item?.attachmentType == 2) {
-          await CreateThumbnail(
-            item?.attachmentMeta?.url,
-            10000
-          ).then(async (response) => {
+          if (RNVideoThumbnail) {
+            await RNVideoThumbnail({
+              url: item?.attachmentMeta?.url,
+              timeStamp: 1000
+            }).then(async (response) => {
               const newName =
                 item.attachmentMeta.name &&
                 item.attachmentMeta.name.substring(
@@ -325,7 +326,35 @@ export const UniversalFeedContextProvider = ({
               );
               item.attachmentMeta.thumbnailUrl = thumbnailRes.Location;
             })
-            .catch((res) => { });
+              .catch((res) => { });
+          } else if (expoVideoThumbnail) {
+            await expoVideoThumbnail(
+              item?.attachmentMeta?.url,
+              {
+                time: 1000
+              }
+            ).then(async (response) => {
+              const newName =
+                item.attachmentMeta.name &&
+                item.attachmentMeta.name.substring(
+                  0,
+                  item.attachmentMeta.name.lastIndexOf(".")
+                ) + ".jpeg";
+              const thumbnailMeta = {
+                ...item.attachmentMeta,
+                name: newName,
+                format: "image/jpeg",
+                thumbnailUrl: response?.path,
+              };
+              const thumbnailRes = await uploadFilesToAWS(
+                thumbnailMeta,
+                memberData.userUniqueId,
+                response?.path
+              );
+              item.attachmentMeta.thumbnailUrl = thumbnailRes.Location;
+            })
+              .catch((res) => { });
+          }
         }
         return uploadFilesToAWS(
           item.attachmentMeta,
@@ -402,31 +431,57 @@ export const UniversalFeedContextProvider = ({
     // upload media to aws
     const uploadPromises = mediaAttachmemnts?.map(
       async (item: LMAttachmentViewData, index) => {
-        if (item?.attachmentType == 2) {
-          await CreateThumbnail(
+        if (RNVideoThumbnail) {
+          await RNVideoThumbnail({
+            url: item?.attachmentMeta?.url,
+            timeStamp: 1000
+          }).then(async (response) => {
+            const newName =
+              item.attachmentMeta.name &&
+              item.attachmentMeta.name.substring(
+                0,
+                item.attachmentMeta.name.lastIndexOf(".")
+              ) + ".jpeg";
+            const thumbnailMeta = {
+              ...item.attachmentMeta,
+              name: newName,
+              format: "image/jpeg",
+              thumbnailUrl: response?.path,
+            };
+            const thumbnailRes = await uploadFilesToAWS(
+              thumbnailMeta,
+              memberData.userUniqueId,
+              response?.path
+            );
+            item.attachmentMeta.thumbnailUrl = thumbnailRes.Location;
+          })
+            .catch((res) => { });
+        } else if (expoVideoThumbnail) {
+          await expoVideoThumbnail(
             item?.attachmentMeta?.url,
-            10000,
-          )
-            .then(async (response) => {
-              const newName =
-                item.attachmentMeta.name &&
-                item.attachmentMeta.name.substring(
-                  0,
-                  item.attachmentMeta.name.lastIndexOf(".")
-                ) + ".jpeg";
-              const thumbnailMeta = {
-                ...item.attachmentMeta,
-                name: newName,
-                format: "image/jpeg",
-                thumbnailUrl: response?.path,
-              };
-              const thumbnailRes = await uploadFilesToAWS(
-                thumbnailMeta,
-                memberData.userUniqueId,
-                response?.path,
-              );
-              item.attachmentMeta.thumbnailUrl = thumbnailRes.Location;
-            })
+            {
+              time: 1000
+            }
+          ).then(async (response) => {
+            const newName =
+              item.attachmentMeta.name &&
+              item.attachmentMeta.name.substring(
+                0,
+                item.attachmentMeta.name.lastIndexOf(".")
+              ) + ".jpeg";
+            const thumbnailMeta = {
+              ...item.attachmentMeta,
+              name: newName,
+              format: "image/jpeg",
+              thumbnailUrl: response?.path,
+            };
+            const thumbnailRes = await uploadFilesToAWS(
+              thumbnailMeta,
+              memberData.userUniqueId,
+              response?.path
+            );
+            item.attachmentMeta.thumbnailUrl = thumbnailRes.Location;
+          })
             .catch((res) => { });
         }
         return uploadFilesToAWS(
