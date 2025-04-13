@@ -1,6 +1,6 @@
 {
   "name": "@likeminds.community/feed-rn-core",
-  "version": "1.14.0",
+  "version": "1.15.0",
   "description": "LikeMinds ReactNative Core SDK for feed",
   "scripts": {
     "android": "react-native run-android",
@@ -77,6 +77,15 @@
       "optional": true
     },
     "expo-video-thumbnails": {
+      "optional": true
+    },
+    "@notifee/react-native": {
+      "optional": true
+    },
+    "@react-native-firebase/app": {
+      "optional": true
+    },
+    "@react-native-firebase/messaging": {
       "optional": true
     }
   },
