@@ -6,7 +6,6 @@ import {
   usePostListContext,
 } from "../context";
 import { useAppSelector } from "../store/store";
-import { token } from "../utils/pushNotifications";
 import { View } from "react-native";
 import { UniversalFeed } from "../screens/universalFeed";
 import LMUniversalFeedHeader from "../components/LMUniversalFeedHeader";
