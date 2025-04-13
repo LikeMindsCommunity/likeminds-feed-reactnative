@@ -21,16 +21,6 @@ import { LMPostContent, LMPostFooter, LMPostHeader, LMPostMedia } from "../compo
 import LMPostTopResponse from "../components/LMPost/LMPostTopResponse";
 import LMPostHeading from "../components/LMPost/LMPostHeading";
 const Feed = () => {
-  const [FCMToken, setFCMToken] = useState("");
-
-  /// Setup notifications
-  useEffect(() => {
-    token().then((res) => {
-      if (!!res) {
-        setFCMToken(res);
-      }
-    });
-  }, []);
 
   return (
     <View style={{ flex: 1, backgroundColor: "black" }}>

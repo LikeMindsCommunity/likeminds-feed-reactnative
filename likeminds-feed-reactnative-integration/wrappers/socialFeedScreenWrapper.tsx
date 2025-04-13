@@ -14,16 +14,6 @@ import { PostsList } from "../screens/postsList";
 import LMCreatePostButton from "../components/LMCreatePostButton";
 
 const Feed = () => {
-  const [FCMToken, setFCMToken] = useState("");
-
-  /// Setup notifications
-  useEffect(() => {
-    token().then((res) => {
-      if (!!res) {
-        setFCMToken(res);
-      }
-    });
-  }, []);
 
   return (
     <View style={{ flex: 1, backgroundColor: "black" }}>
