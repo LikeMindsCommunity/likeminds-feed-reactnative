@@ -50,7 +50,6 @@ export function getRoute(route: any) {
   
   export default async function getNotification(remoteMessage: any) {  
     if (!RNnotifee) return
-    console.log(RNnotifee)
     const { AndroidImportance, EventType } = RNnotifee;
     const channelId = await RNnotifee?.default?.createChannel({
       id: 'important',
