@@ -1,5 +1,4 @@
 let RNnotifee
-import {} from "@notifee/react-native"
 
 try {
   RNnotifee = require('@notifee/react-native');
