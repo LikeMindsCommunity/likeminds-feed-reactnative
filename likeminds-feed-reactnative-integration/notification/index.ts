@@ -1,6 +1,6 @@
 import { NAVIGATED_FROM_NOTIFICATION } from "../constants/Strings";
 import { CREATE_POST, POST_DETAIL, UNIVERSAL_FEED } from "../constants/screenNames";
-import notifee, {AndroidImportance, EventType} from '@notifee/react-native';
+import RNnotifee from "../optionalDependencies/RNnotifee";
 
 
 export interface RouteParams {
@@ -49,12 +49,14 @@ export function getRoute(route: any) {
   }
   
   export default async function getNotification(remoteMessage: any) {  
-    const channelId = await notifee.createChannel({
+    if (!RNnotifee) return
+    const { AndroidImportance, EventType } = RNnotifee;
+    const channelId = await RNnotifee?.default?.createChannel({
       id: 'important',
       name: 'Important Notifications',
       importance: AndroidImportance.HIGH,
     });
-    await notifee.displayNotification({
+    await RNnotifee?.default?.displayNotification({
       title: remoteMessage?.data?.title,
       body: remoteMessage?.data?.sub_title,
       data: remoteMessage?.data,

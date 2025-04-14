@@ -47,10 +47,10 @@ const CreateScreen = () => {
 
         {/* selected media section */}
         <LMCreatePostMedia />
-      </LMCreatePostUIRender>
 
-      {/* selection options section */}
-      <LMCreatePostAttachmentSelection />
+        {/* selection options section */}
+        <LMCreatePostAttachmentSelection />
+      </LMCreatePostUIRender>
     </CreatePost>
   );
 };
