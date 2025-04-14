@@ -71,8 +71,6 @@ import { FeedType } from "../enums/FeedType";
 import { AddPollOptionParams, SetSelectedPollOptionsParams, SubmitPollParams } from "../constants/types";
 import RNVideoThumbnail from "../optionalDependencies/RNVideoThumbnail";
 import expoVideoThumbnail from "../optionalDependencies/ExpoVideoThumbnail";
-import t from "react-native-create-thumbnail"
-import s from "expo-video-thumbnails"
 interface UniversalFeedContextProps {
   children?: ReactNode;
   navigation: NativeStackNavigationProp<RootStackParamList, "UniversalFeed">;
