@@ -224,6 +224,7 @@ const ReportModal = ({
       visible={visible}
       animationType="fade"
       transparent={true}
+      style={{flex: 1}}
       onRequestClose={() => {
         setSelectedId(-1);
         setSelectedIndex(-1);
@@ -313,8 +314,6 @@ const ReportModal = ({
               />
             </View>
           ) : null}
-          {/* toast component */}
-          <Toast config={toastConfig} />
           {/* report button */}
           <View style={styles.reportBtnParent}>
             <TouchableOpacity

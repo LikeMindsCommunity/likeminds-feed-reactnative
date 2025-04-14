@@ -1,12 +1,14 @@
-import messaging from "@react-native-firebase/messaging";
+import messaging from "../optionalDependencies/FBMessaging"
 
 export const fetchFCMToken = async () => {
-  const fcmToken = await messaging().getToken();
+  if (!messaging) return;
+  const fcmToken = await messaging()?.getToken();
   return fcmToken;
 };
 
 export async function requestUserPermission() {
-  const authStatus = await messaging().requestPermission();
+  if (!messaging) return
+  const authStatus = await messaging()?.requestPermission();
   const enabled =
     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
     authStatus === messaging.AuthorizationStatus.PROVISIONAL;

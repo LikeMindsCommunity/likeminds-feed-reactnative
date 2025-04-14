@@ -4,7 +4,6 @@ import {
   UniversalFeedContextProvider,
 } from "../context";
 import { useAppSelector } from "../store/store";
-import { token } from "../utils/pushNotifications";
 import { View } from "react-native";
 import { UniversalFeed } from "../screens/universalFeed";
 import LMUniversalFeedHeader from "../components/LMUniversalFeedHeader";
@@ -14,16 +13,6 @@ import { PostsList } from "../screens/postsList";
 import LMCreatePostButton from "../components/LMCreatePostButton";
 
 const Feed = () => {
-  const [FCMToken, setFCMToken] = useState("");
-
-  /// Setup notifications
-  useEffect(() => {
-    token().then((res) => {
-      if (!!res) {
-        setFCMToken(res);
-      }
-    });
-  }, []);
 
   return (
     <View style={{ flex: 1, backgroundColor: "black" }}>
