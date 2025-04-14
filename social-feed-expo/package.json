@@ -16,8 +16,8 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
-    "@likeminds.community/feed-rn": "^1.6.0",
-    "@likeminds.community/feed-rn-core-beta": "^1.11.7",
+    "@likeminds.community/feed-rn": "1.6.0",
+    "@likeminds.community/feed-rn-core": "1.15.0",
     "@notifee/react-native": "^9.1.8",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-community/datetimepicker": "8.2.0",
