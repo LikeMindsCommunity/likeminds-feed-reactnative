@@ -64,7 +64,6 @@ const styles = StyleSheet.create({
     width: Layout.normalize(20),
     resizeMode: "contain",
     tintColor: STYLES.$COLORS.TERTIARY,
-    padding: Layout.normalize(5),
   },
   chatRoomInfo: { gap: Layout.normalize(5) },
 });
