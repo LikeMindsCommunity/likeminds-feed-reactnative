@@ -55,10 +55,12 @@
     "react-native-compressor": ">=1.9.0",
     "react-native-svg": ">=15.0.0",
     "react-native-circular-progress": ">=1.4.0",
-    "react-native-device-info": "10.13.1",
+    "react-native-device-info": ">=10.13.1",
     "expo-document-picker": ">=13.0.0",
     "expo-image-picker": ">=16.0.0",
-    "expo-video-thumbnails": ">=9.0.0"
+    "expo-video-thumbnails": ">=9.0.0",
+    "@react-native-documents/picker": ">=10.1.1",
+    "@react-native-documents/viewer": "^1.0.1"
   },
   "peerDependenciesMeta": {
     "react-native-document-picker": {
@@ -86,6 +88,15 @@
       "optional": true
     },
     "@react-native-firebase/messaging": {
+      "optional": true
+    },
+    "@react-native-documents/picker": {
+      "optional": true
+    },
+    "@react-native-documents/viewer": {
+      "optional": true
+    },
+    "react-native-file-viewer": {
       "optional": true
     }
   },
