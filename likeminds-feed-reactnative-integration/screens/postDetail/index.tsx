@@ -1210,17 +1210,16 @@ function ViewWrapper({children}: any) {
     applyKeyboardAvoidingViewOffset
   } = STYLES.$KeyboardAvoidingViewOffset;
 
-  const {keyboardIsVisible} = usePostDetailContext();
-  console.log(keyboardIsVisible)
+  const { keyboardIsVisible}  = usePostDetailContext();
 
   return (
     <KeyboardAvoidingView
-        enabled={true}
+        enabled={Platform.OS == "android" ? keyboardIsVisible : true}
         behavior={"height"}
         style={styles.flexView}
         keyboardVerticalOffset={
             applyKeyboardAvoidingViewOffset ? 
-            Platform.OS == "ios" ? iOSKeyboardAvoidingViewOffset : keyboardIsVisible ? androidKeyboardAvoidingViewOffset : 0
+            Platform.OS == "ios" ? iOSKeyboardAvoidingViewOffset : androidKeyboardAvoidingViewOffset
             : 0
         }
       >

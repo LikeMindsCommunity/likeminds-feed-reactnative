@@ -130,7 +130,7 @@ function ViewWrapper({ children }: any) {
     return (
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior="padding"
+        behavior={Platform.OS == "android" ? "height" : "padding"}
         keyboardVerticalOffset={
           applyKeyboardAvoidingViewOffset ?
             Platform.OS == "ios" ? iOSKeyboardAvoidingViewOffset : isKeyboardVisible ? androidKeyboardAvoidingViewOffset : 0
