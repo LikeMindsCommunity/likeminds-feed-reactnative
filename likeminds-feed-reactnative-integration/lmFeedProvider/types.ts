@@ -542,3 +542,9 @@ export interface UploadingHeaderStylesProps {
     tintColor?: string;
   }
 }
+
+export interface KeyboardAvoidingViewOffset {
+  applyKeyboardAvoidingViewOffset?: boolean;
+  androidKeyboardAvoidingViewOffset?: number;
+  iOSKeyboardAvoidingViewOffset?: number;
+}

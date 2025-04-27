@@ -1,4 +1,4 @@
-import { View, SafeAreaView, ScrollView } from "react-native";
+import { View, SafeAreaView, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 import React from "react";
 import { styles } from "./styles";
 import {
@@ -21,6 +21,8 @@ import LMCreatePostHeading from "../../components/LMCreatePost/LMCreatePostHeadi
 import LMCreatePostMedia from "../../components/LMCreatePost/LMCreatePostMedia";
 import LMCreatePostTextInput from "../../components/LMCreatePost/LMCreatePostTextInput";
 import LMCreatePostUserTagging from "../../components/LMCreatePost/LMCreatePostUserTagging";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import STYLES from "@likeminds.community/feed-rn-core-beta/constants/Styles";
 
 interface CreatePostProps {
   children?: React.ReactNode;
@@ -94,8 +96,28 @@ const CreatePost = ({
   );
 };
 
+const {
+  iOSKeyboardAvoidingViewOffset,
+  androidKeyboardAvoidingViewOffset,
+  applyKeyboardAvoidingViewOffset
+} = STYLES.$KeyboardAvoidingViewOffset;
+
 const CreatePostComponent = ({ children }) => {
-  return <SafeAreaView style={styles.container}>{children}</SafeAreaView>;
+  return (
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior="padding"
+        keyboardVerticalOffset={
+          applyKeyboardAvoidingViewOffset ?
+            Platform.OS == "ios" ? iOSKeyboardAvoidingViewOffset : 0
+            : 0
+        }
+      >
+        {children}
+      </KeyboardAvoidingView>
+    </SafeAreaView>
+  )
 };
 
 

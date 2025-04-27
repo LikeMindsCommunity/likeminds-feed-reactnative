@@ -4,6 +4,7 @@ import {
   CarouselScreenStyle,
   CreatePollStyle,
   CreatePostStyleProps,
+  KeyboardAvoidingViewOffset,
   LoaderStyleProps,
   NotificationFeedStyleProps,
   PollStyle,
@@ -161,6 +162,8 @@ export class LMFeedTheme {
   public $LMLoaderSizeiOS: number;
   public $LMLoaderSizeAndroid: number;
 
+  public $KeyboardAvoidingViewOffset: KeyboardAvoidingViewOffset
+
   public $POLL_STYLE: PollStyle;
   public $UNIVERSAL_FEED_STYLE: UniversalFeedStyleProps;
   public $POST_LIST_STYLE: PostListStyleProps;
@@ -297,6 +300,7 @@ export class LMFeedTheme {
     this.$USER_ONBOARDING_SCREEN_STYLES = {};
     this.$SEARCH_FEED_STYLES = {};
     this.$UPLOADING_HEADER_STYLES = {};
+    this.$KeyboardAvoidingViewOffset = {};
   }
 
   public setTheme(themeProps: StylesProps) {
@@ -423,6 +427,12 @@ export class LMFeedTheme {
   public setUploadingHeaderStyles(uploadingHeaderStyles: UploadingHeaderStylesProps) {
     this.$UPLOADING_HEADER_STYLES = {
       ...uploadingHeaderStyles
+    }
+  }
+
+  public setKeyboardAvoidingViewOffset(keyboardAvoidingViewOffsets: KeyboardAvoidingViewOffset) {
+    this.$KeyboardAvoidingViewOffset = {
+      ...keyboardAvoidingViewOffsets
     }
   }
 }

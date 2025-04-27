@@ -58,6 +58,8 @@ const TopicFeed = () => {
   const [searchPage, setSearchPage] = useState(1);
   const [newTopics, setNewTopics] = useState([] as any);
   const [stopPagination, setStopPagination] = useState(false);
+  const [showInitialHeader, setShowInitialHeader] = useState(false);
+  const [showSearchHeader, setShowSearchHeader] = useState(false);
   let sortedTopics: any = [];
   let sortedTopicsFromUniversalFeed: any = [];
 
@@ -71,7 +73,7 @@ const TopicFeed = () => {
     (state) => state.createPost.selectedTopics
   );
   const allTopics = useAppSelector((state) => state.feed.topics);
-  
+
   const selectedTopicsFromUniversalFeedScreen = useAppSelector(
     (state) => state.feed.selectedTopicsFromUniversalFeedScreen
   );
@@ -177,8 +179,8 @@ const TopicFeed = () => {
             .build(),
           false
         )
-      ),100);
-  
+      ), 100);
+
     } else if (previousRoute?.name === "CreatePost") {
       // clearing selected topics for create screen to allow deselecting and updating topics
       dispatch({
@@ -193,127 +195,13 @@ const TopicFeed = () => {
   };
 
   const setInitialHeader = () => {
-    navigation.setOptions({
-      title: "",
-      headerShadowVisible: true,
-      headerLeft: () => (
-        <View style={styles.headingContainer}>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.goBack();
-            }}
-          >
-            <Image
-              source={require("../../assets/images/backArrow_icon3x.png")}
-              style={styles.backBtn}
-            />
-          </TouchableOpacity>
-          {!(Object.keys(topics ? topics : 0).length === 0) ? (
-            <View style={styles.chatRoomInfo}>
-              <Text
-                style={{
-                  color: STYLES.$IS_DARK_THEME
-                    ? STYLES.$COLORS.FONT_PRIMARY
-                    : STYLES.$COLORS.BLACK,
-                  fontSize: STYLES.$FONT_SIZES.XXL,
-                  fontFamily: STYLES.$FONT_TYPES.BOLD,
-                  ...(selectTopicHeaderStyle !== undefined
-                    ? selectTopicHeaderStyle
-                    : {}),
-                }}
-              >
-                {selectTopicHeaderPlaceholder !== undefined
-                  ? selectTopicHeaderPlaceholder
-                  : "Select Topic"}
-              </Text>
-              {newTopics?.length > 0 && newTopics[0] !== "0" && (
-                <Text
-                  style={{
-                    color: STYLES.$COLORS.MSG,
-                    fontSize: STYLES.$FONT_SIZES.MEDIUM,
-                    fontFamily: STYLES.$FONT_TYPES.LIGHT,
-                  }}
-                >
-                  {`${newTopics?.length} selected`}
-                </Text>
-              )}
-            </View>
-          ) : null}
-        </View>
-      ),
-      headerRight: () => (
-        <TouchableOpacity
-          onPress={() => {
-            setIsSearch(true);
-          }}
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            padding: Layout.normalize(5),
-          }}
-        >
-          <Image
-            source={require("../../assets/images/search_icon3x.png")}
-            style={styles.search}
-          />
-        </TouchableOpacity>
-      ),
-      headerStyle: {
-        backgroundColor: STYLES.$IS_DARK_THEME
-          ? STYLES.$BACKGROUND_COLORS.DARK
-          : STYLES.$BACKGROUND_COLORS.LIGHT,
-      },
-    });
+    setShowInitialHeader(true);
+    setShowSearchHeader(false);
   };
 
   const setSearchHeader = () => {
-    navigation.setOptions({
-      title: "",
-      headerShadowVisible: false,
-      headerLeft: () => (
-        <View style={styles.headingContainer}>
-          <TouchableOpacity
-            onPress={() => {
-              setSearch("");
-              setIsSearch(false);
-            }}
-          >
-            <Image
-              source={require("../../assets/images/backArrow_icon3x.png")}
-              style={styles.backBtn}
-            />
-          </TouchableOpacity>
-          <TextInput
-            value={search}
-            onChangeText={setSearch}
-            style={[styles.input]}
-            autoFocus={true}
-            placeholder={
-              searchTextPlaceholder !== undefined
-                ? searchTextPlaceholder
-                : "Search..."
-            }
-            placeholderTextColor="#aaa"
-            {...(searchTextStyle !== undefined ? searchTextStyle : {})}
-          />
-        </View>
-      ),
-      headerRight: () => (
-        <TouchableOpacity
-          onPress={() => {}}
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            padding: Layout.normalize(5),
-          }}
-        >
-          <Image
-            source={require("../../assets/images/search_icon3x.png")}
-            style={styles.search}
-          />
-        </TouchableOpacity>
-      ),
-    });
+    setShowInitialHeader(false);
+    setShowSearchHeader(true);
   };
 
   const fetchTopics = async () => {
@@ -329,8 +217,8 @@ const TopicFeed = () => {
       const updatedTopics = search
         ? [...res?.topics]
         : sortedTopicsFromUniversalFeed?.length > 0
-        ? [{ id: "0", name: "All Topics" }, ...sortedTopicsFromUniversalFeed]
-        : [{ id: "0", name: "All Topics" }, ...res?.topics];
+          ? [{ id: "0", name: "All Topics" }, ...sortedTopicsFromUniversalFeed]
+          : [{ id: "0", name: "All Topics" }, ...res?.topics];
       setTopics(updatedTopics);
     } else {
       if (sortedTopics?.length > 0) {
@@ -371,7 +259,7 @@ const TopicFeed = () => {
         });
         dispatch({
           type: SET_TOPICS,
-          body: { topics: topicsObject},
+          body: { topics: topicsObject },
         });
       }
 
@@ -395,13 +283,13 @@ const TopicFeed = () => {
     } else {
       setInitialHeader();
     }
-  }, [topics]);
+  }, [topics, isSearch]);
 
   useEffect(() => {
     if (isSearch) {
       setSearchHeader();
     }
-  }, [search]);
+  }, [search, isSearch]);
 
   useEffect(() => {
     const delay = setTimeout(() => {
@@ -455,13 +343,13 @@ const TopicFeed = () => {
             priority: topic.priority,
             totalChildCount: topic.totalChildCount,
             widgetId: topic.widgetId,
-            };
-          });
-          dispatch({
-            type: SET_TOPICS,
-            body: { topics: topicsObject },
-          });
-        }
+          };
+        });
+        dispatch({
+          type: SET_TOPICS,
+          body: { topics: topicsObject },
+        });
+      }
       setTopics([...topics, ...res?.topics]);
       setIsLoading(false);
     }
@@ -508,8 +396,8 @@ const TopicFeed = () => {
     );
   };
 
-  function getUniqueObjectsById(topics : any[]) {
-    if(!Array.isArray(topics)) return []
+  function getUniqueObjectsById(topics: any[]) {
+    if (!Array.isArray(topics)) return []
     const seen = new Set(); // To track unique ids
     return topics.filter(topic => {
       if (!topic?.id || seen.has(topic?.id)) {
@@ -520,8 +408,122 @@ const TopicFeed = () => {
     });
   }
 
+  function renderHeader() {
+    if (showInitialHeader) {
+      return (
+        <View style={{ ...styles.headingContainer, padding: Layout.normalize(5)}}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}
+          >
+            <Image
+              source={require("../../assets/images/backArrow_icon3x.png")}
+              style={styles.backBtn}
+            />
+          </TouchableOpacity>
+          <View style={{ flex: 1, flexDirection: 'row' }}>
+            {!(Object.keys(topics ? topics : 0).length === 0) ? (
+              <View style={{ ...styles.chatRoomInfo, flex: 1 }}>
+                <Text
+                  style={{
+                    color: STYLES.$IS_DARK_THEME
+                      ? STYLES.$COLORS.FONT_PRIMARY
+                      : STYLES.$COLORS.BLACK,
+                    fontSize: STYLES.$FONT_SIZES.XXL,
+                    fontFamily: STYLES.$FONT_TYPES.BOLD,
+                    ...(selectTopicHeaderStyle !== undefined
+                      ? selectTopicHeaderStyle
+                      : {}),
+                  }}
+                >
+                  {selectTopicHeaderPlaceholder !== undefined
+                    ? selectTopicHeaderPlaceholder
+                    : "Select Topic"}
+                </Text>
+                {newTopics?.length > 0 && newTopics[0] !== "0" && (
+                  <Text
+                    style={{
+                      color: STYLES.$COLORS.MSG,
+                      fontSize: STYLES.$FONT_SIZES.MEDIUM,
+                      fontFamily: STYLES.$FONT_TYPES.LIGHT,
+                    }}
+                  >
+                    {`${newTopics?.length} selected`}
+                  </Text>
+                )}
+              </View>
+            ) : null}
+          </View>
+          <TouchableOpacity
+            onPress={() => {
+              setIsSearch(true);
+              setSearchHeader()
+            }}
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              padding: Layout.normalize(5),
+            }}
+          >
+            <Image
+              source={require("../../assets/images/search_icon3x.png")}
+              style={styles.search}
+            />
+          </TouchableOpacity>
+        </View>
+      )
+    } else if(showSearchHeader) {
+      return (
+        <View style={{flexDirection: 'row', justifyContent: 'space-between', padding: Layout.normalize(5)}}>
+          <View style={{ ...styles.headingContainer }}>
+            <TouchableOpacity
+              onPress={() => {
+                setSearch("");
+                setIsSearch(false);
+                setInitialHeader()
+              }}
+            >
+              <Image
+                source={require("../../assets/images/backArrow_icon3x.png")}
+                style={styles.backBtn}
+              />
+            </TouchableOpacity>
+            <TextInput
+              value={search}
+              onChangeText={setSearch}
+              style={[styles.input]}
+              autoFocus={true}
+              placeholder={
+                searchTextPlaceholder !== undefined
+                  ? searchTextPlaceholder
+                  : "Search..."
+              }
+              placeholderTextColor="#aaa"
+              {...(searchTextStyle !== undefined ? searchTextStyle : {})}
+            />
+          </View>
+          <TouchableOpacity
+            onPress={() => {}}
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              padding: Layout.normalize(5),
+            }}
+          >
+            <Image
+              source={require("../../assets/images/search_icon3x.png")}
+              style={styles.search}
+            />
+          </TouchableOpacity>
+        </View>
+      )
+    }
+  }
+
   return (
-    <View style={styles.page}>
+    <View style={[styles.page]}>
+      {renderHeader()}
       <FlatList
         data={getUniqueObjectsById(topics)}
         renderItem={({ item }: any) => {
@@ -570,7 +572,7 @@ const TopicFeed = () => {
                     <View style={StyleSheet.flatten([
                       styles.selected,
                       topicsStyle?.tickIconContainerStyle
-                      ])}>
+                    ])}>
                       <Image
                         source={require("../../assets/images/white_tick3x.png")}
                         style={[
