@@ -22,7 +22,7 @@ import LMCreatePostMedia from "../../components/LMCreatePost/LMCreatePostMedia";
 import LMCreatePostTextInput from "../../components/LMCreatePost/LMCreatePostTextInput";
 import LMCreatePostUserTagging from "../../components/LMCreatePost/LMCreatePostUserTagging";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import STYLES from "@likeminds.community/feed-rn-core-beta/constants/Styles";
+import STYLES from "../../constants/Styles";
 
 interface CreatePostProps {
   children?: React.ReactNode;
@@ -96,29 +96,49 @@ const CreatePost = ({
   );
 };
 
-const {
-  iOSKeyboardAvoidingViewOffset,
-  androidKeyboardAvoidingViewOffset,
-  applyKeyboardAvoidingViewOffset
-} = STYLES.$KeyboardAvoidingViewOffset;
 
 const CreatePostComponent = ({ children }) => {
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior="padding"
-        keyboardVerticalOffset={
-          applyKeyboardAvoidingViewOffset ?
-            Platform.OS == "ios" ? iOSKeyboardAvoidingViewOffset : 0
-            : 0
-        }
-      >
+      <ViewWrapper>
         {children}
-      </KeyboardAvoidingView>
+      </ViewWrapper>
     </SafeAreaView>
   )
 };
 
 
 export { CreatePost };
+
+function ViewWrapper({ children }: any) {
+  const { isKeyboardVisible } = useCreatePostContext();
+  
+  const {
+    iOSKeyboardAvoidingViewOffset,
+    androidKeyboardAvoidingViewOffset,
+    applyKeyboardAvoidingViewOffset,
+    disableKeyboardAvoidingViewCreatePostScreen
+  } = STYLES.$KeyboardAvoidingViewOffset;
+
+  if (disableKeyboardAvoidingViewCreatePostScreen) {
+    return (
+      <View style={styles.container}>
+        {children}
+      </View>
+    )
+  } else {
+    return (
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior="padding"
+        keyboardVerticalOffset={
+          applyKeyboardAvoidingViewOffset ?
+            Platform.OS == "ios" ? iOSKeyboardAvoidingViewOffset : isKeyboardVisible ? androidKeyboardAvoidingViewOffset : 0
+            : 0
+        }
+      >
+        {children}
+      </KeyboardAvoidingView>
+    )
+  }
+}

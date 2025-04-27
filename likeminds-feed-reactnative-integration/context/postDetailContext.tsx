@@ -799,33 +799,31 @@ export const PostDetailContextProvider = ({
 
   // this handles the view layout with keyboard visibility
   useEffect(() => {
-    if (Platform.OS === "android") {
-      const keyboardDidShowListener = Keyboard.addListener(
-        "keyboardDidShow",
-        () => {
-          setKeyboardIsVisible(true);
-        }
-      );
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setKeyboardIsVisible(true);
+      }
+    );
 
-      const keyboardDidHideListener = Keyboard.addListener(
-        "keyboardDidHide",
-        () => {
-          setKeyboardIsVisible(false);
-          if (Keyboard.isVisible() === false) {
-            Keyboard.dismiss();
-            setKeyboardFocusOnReply(false);
-            setEditCommentFocus(false);
-            setCommentFocus(false);
-            setRouteParams(false);
-          }
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboardIsVisible(false);
+        if (Keyboard.isVisible() === false) {
+          Keyboard.dismiss();
+          setKeyboardFocusOnReply(false);
+          setEditCommentFocus(false);
+          setCommentFocus(false);
+          setRouteParams(false);
         }
-      );
+      }
+    );
 
-      return () => {
-        keyboardDidShowListener.remove();
-        keyboardDidHideListener.remove();
-      };
-    }
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
   }, [isKeyboardVisible]);
 
 
