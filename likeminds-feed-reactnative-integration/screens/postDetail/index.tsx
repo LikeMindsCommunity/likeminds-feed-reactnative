@@ -401,25 +401,11 @@ const PostDetailComponent = React.memo(() => {
     return () => backHandler.remove();
   }, []);
 
-  const {
-    iOSKeyboardAvoidingViewOffset,
-    androidKeyboardAvoidingViewOffset,
-    applyKeyboardAvoidingViewOffset
-  } = STYLES.$KeyboardAvoidingViewOffset;
 
 
   return (
     <SafeAreaView style={styles.flexView}>
-      <KeyboardAvoidingView
-        enabled={true}
-        behavior={"height"}
-        style={styles.flexView}
-        keyboardVerticalOffset={
-            applyKeyboardAvoidingViewOffset ? 
-            Platform.OS == "ios" ? iOSKeyboardAvoidingViewOffset : keyboardIsVisible ? androidKeyboardAvoidingViewOffset : 0
-            : 0
-        }
-      >
+      <ViewWrapper>
         {/* header view */}
         <LMHeader
           showBackArrow={
@@ -1149,7 +1135,7 @@ const PostDetailComponent = React.memo(() => {
             )
           ) : null}
         </View>
-      </KeyboardAvoidingView>
+      </ViewWrapper>
 
       {/* delete post modal */}
       {localModalVisibility && (
@@ -1215,3 +1201,31 @@ const PostDetailComponent = React.memo(() => {
 });
 
 export { PostDetail };
+
+function ViewWrapper({children}: any) {
+
+  const {
+    iOSKeyboardAvoidingViewOffset,
+    androidKeyboardAvoidingViewOffset,
+    applyKeyboardAvoidingViewOffset
+  } = STYLES.$KeyboardAvoidingViewOffset;
+
+  const {keyboardIsVisible} = usePostDetailContext();
+  console.log(keyboardIsVisible)
+
+  return (
+    <KeyboardAvoidingView
+        enabled={true}
+        behavior={"height"}
+        style={styles.flexView}
+        keyboardVerticalOffset={
+            applyKeyboardAvoidingViewOffset ? 
+            Platform.OS == "ios" ? iOSKeyboardAvoidingViewOffset : keyboardIsVisible ? androidKeyboardAvoidingViewOffset : 0
+            : 0
+        }
+      >
+        {children}
+      </KeyboardAvoidingView>
+  )
+
+}

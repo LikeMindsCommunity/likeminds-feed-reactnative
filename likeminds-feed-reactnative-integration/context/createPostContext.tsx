@@ -10,7 +10,7 @@ import React, {
   MutableRefObject,
 } from "react";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { Alert, Platform, TextInput } from "react-native";
+import { Alert, Keyboard, Platform, TextInput } from "react-native";
 import {
   NetworkUtil,
   detectMentions,
@@ -121,6 +121,7 @@ export interface CreatePostContextValues {
   isUserTagging: boolean;
   isLoading: boolean;
   heading: string;
+  isKeyboardVisible: boolean;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   setIsUserTagging: Dispatch<SetStateAction<boolean>>;
   setAllTags: Dispatch<SetStateAction<Array<LMUserViewData>>>;
@@ -241,6 +242,7 @@ export const CreatePostContextProvider = ({
   const [disbaledTopicsGlobal, setDisabledTopicsGlobal] = useState([] as any);
   const [showTopics, setShowTopics] = useState(false);
   const [mappedTopics, setMappedTopics] = useState([] as any);
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
 
   const maxHeadingWords = STYLES?.$CREATE_POST_STYLE?.headingMaxWords
     ? STYLES?.$CREATE_POST_STYLE?.headingMaxWords
@@ -872,6 +874,28 @@ export const CreatePostContextProvider = ({
     navigation.goBack();
   };
 
+  // this handles the view layout with keyboard visibility
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setIsKeyboardVisible(true);
+      }
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setIsKeyboardVisible(false);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   const contextValues: CreatePostContextValues = {
     navigation,
     route,
@@ -899,6 +923,7 @@ export const CreatePostContextProvider = ({
     disbaledTopicsGlobal,
     showTopics,
     mappedTopics,
+    isKeyboardVisible,
     setAnonymousPost,
     setIsLoading,
     setIsUserTagging,
