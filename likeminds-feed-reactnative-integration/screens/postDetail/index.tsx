@@ -1211,6 +1211,7 @@ function ViewWrapper({children}: any) {
   } = STYLES.$KeyboardAvoidingViewOffset;
 
   const { keyboardIsVisible }  = usePostDetailContext();
+  const { top } = useSafeAreaInsets()
 
   return (
     <KeyboardAvoidingView
@@ -1219,8 +1220,8 @@ function ViewWrapper({children}: any) {
         style={styles.flexView}
         keyboardVerticalOffset={
             applyKeyboardAvoidingViewOffset ? 
-            Platform.OS == "ios" ? iOSKeyboardAvoidingViewOffset : androidKeyboardAvoidingViewOffset
-            : 0
+            Platform.OS == "ios" ? (iOSKeyboardAvoidingViewOffset ?? top ) : (androidKeyboardAvoidingViewOffset ?? StatusBar.currentHeight)
+            : undefined
         }
       >
         {children}

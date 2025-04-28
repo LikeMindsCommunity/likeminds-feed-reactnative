@@ -1,4 +1,4 @@
-import { View, SafeAreaView, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
+import { View, SafeAreaView, ScrollView, KeyboardAvoidingView, Platform, StatusBar } from "react-native";
 import React from "react";
 import { styles } from "./styles";
 import {
@@ -120,6 +120,8 @@ function ViewWrapper({ children }: any) {
     disableKeyboardAvoidingViewCreatePostScreen
   } = STYLES.$KeyboardAvoidingViewOffset;
 
+  const { top } = useSafeAreaInsets()
+
   if (disableKeyboardAvoidingViewCreatePostScreen) {
     return (
       <View style={styles.container}>
@@ -130,10 +132,11 @@ function ViewWrapper({ children }: any) {
     return (
       <KeyboardAvoidingView
         style={{ flex: 1 }}
+        enabled={Platform.OS == "android" ? isKeyboardVisible : true}
         behavior={Platform.OS == "android" ? "height" : "padding"}
         keyboardVerticalOffset={
-          applyKeyboardAvoidingViewOffset ?
-            Platform.OS == "ios" ? iOSKeyboardAvoidingViewOffset : isKeyboardVisible ? androidKeyboardAvoidingViewOffset : 0
+            applyKeyboardAvoidingViewOffset ? 
+            Platform.OS == "ios" ? (iOSKeyboardAvoidingViewOffset ?? top) : (androidKeyboardAvoidingViewOffset ?? StatusBar.currentHeight)
             : 0
         }
       >
