@@ -769,7 +769,7 @@ const PostDetailComponent = React.memo(() => {
           </View>
         ) : null}
         {/* input field */}
-        <View style={{ position: "absolute", bottom: 0, width: "100%" }}>
+        <SafeAreaView style={{ position: "absolute", bottom: 0, width: "100%" }}>
           {/* users tagging list */}
           {allTags && isUserTagging ? (
             <View
@@ -1134,7 +1134,7 @@ const PostDetailComponent = React.memo(() => {
               )
             )
           ) : null}
-        </View>
+        </SafeAreaView>
       </ViewWrapper>
 
       {/* delete post modal */}
@@ -1210,7 +1210,7 @@ function ViewWrapper({children}: any) {
     applyKeyboardAvoidingViewOffset
   } = STYLES.$KeyboardAvoidingViewOffset;
 
-  const { keyboardIsVisible}  = usePostDetailContext();
+  const { keyboardIsVisible }  = usePostDetailContext();
 
   return (
     <KeyboardAvoidingView
