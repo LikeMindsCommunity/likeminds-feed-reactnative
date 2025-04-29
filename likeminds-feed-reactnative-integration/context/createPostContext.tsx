@@ -27,6 +27,8 @@ import {
   FILE_UPLOAD_SIZE_VALIDATION,
   FILE_UPLOAD_VIDEO_SIZE_VALIDATION,
   IMAGE_ATTACHMENT_TYPE,
+  KEYBOARD_DID_HIDE,
+  KEYBOARD_DID_SHOW,
   MAX_FILE_SIZE,
   MAX_IMAGE_FILE_SIZE,
   MAX_VIDEO_FILE_SIZE,
@@ -877,14 +879,14 @@ export const CreatePostContextProvider = ({
   // this handles the view layout with keyboard visibility
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
+      KEYBOARD_DID_SHOW,
       () => {
         setIsKeyboardVisible(true);
       }
     );
 
     const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
+      KEYBOARD_DID_HIDE,
       () => {
         setIsKeyboardVisible(false);
       }

@@ -42,6 +42,7 @@ import { useUserOnboardingCallbacksContext } from "../../context/userOnboardingC
 import { Client } from "../../client";
 import { UNIVERSAL_FEED } from "../../constants/screenNames";
 import { navigationRef } from "../../navigation/RootNavigation";
+import { KEYBOARD_DID_HIDE, KEYBOARD_DID_SHOW } from "../../constants/Strings";
 
 interface userOnboardingCallbacksContextProps {
   onCTAButtonClickedProp?: () => void;
@@ -146,13 +147,13 @@ function UserOnboardingScreen() {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   useLayoutEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
+      KEYBOARD_DID_SHOW,
       () => {
         setKeyboardVisible(true); // or some other action
       }
     );
     const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
+      KEYBOARD_DID_HIDE,
       () => {
         setKeyboardVisible(false); // or some other action
       }
