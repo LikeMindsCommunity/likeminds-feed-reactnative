@@ -776,7 +776,6 @@ const PostDetailComponent = React.memo(() => {
               style={[
                 styles.taggingListView,
                 {
-                  // bottom: keyboardIsVisible ? Layout.normalize(25) : 0,
                   maxHeight: 300,
                 },
                 postDetailStyle?.userTaggingListStyle?.taggingListView,
@@ -874,7 +873,6 @@ const PostDetailComponent = React.memo(() => {
             <View
               style={[
                 styles.replyCommentSection,
-                // { bottom: keyboardIsVisible ? Layout.normalize(25) : 0 },
                 customReplyingViewStyle?.replyingView,
               ]}
             >
@@ -938,9 +936,6 @@ const PostDetailComponent = React.memo(() => {
                 onType={handleInputChange}
                 inputTextStyle={[
                   styles.textInputStyle,
-                  {
-                    // bottom: keyboardIsVisible ? Layout.normalize(25) : 0,
-                  },
                   customCommentTextInput?.inputTextStyle,
                 ]}
                 autoFocus={
@@ -1032,9 +1027,6 @@ const PostDetailComponent = React.memo(() => {
                 onType={handleInputChange}
                 inputTextStyle={[
                   styles.textInputStyle,
-                  {
-                    // bottom: keyboardIsVisible ? Layout.normalize(25) : 0,
-                  },
                   customCommentTextInput?.inputTextStyle,
                 ]}
                 autoFocus={
