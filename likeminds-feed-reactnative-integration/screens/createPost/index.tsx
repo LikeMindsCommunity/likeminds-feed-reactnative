@@ -117,7 +117,9 @@ function ViewWrapper({ children }: any) {
     iOSKeyboardAvoidingViewOffset,
     androidKeyboardAvoidingViewOffset,
     applyKeyboardAvoidingViewOffset,
-    disableKeyboardAvoidingViewCreatePostScreen
+    disableKeyboardAvoidingViewCreatePostScreen,
+    addZeroOffsetOnKeyboardHidIOS,
+    addZeroOffsetOnKeyboardHideAndroid
   } = STYLES.$KeyboardAvoidingViewOffset;
 
   const { top } = useSafeAreaInsets()
@@ -132,11 +134,17 @@ function ViewWrapper({ children }: any) {
     return (
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        enabled={Platform.OS == "android" ? isKeyboardVisible : true}
+        enabled={(Platform.OS == "android" && !addZeroOffsetOnKeyboardHideAndroid) ? (isKeyboardVisible) : true}
         behavior={Platform.OS == "android" ? "height" : "padding"}
         keyboardVerticalOffset={
-            applyKeyboardAvoidingViewOffset ? 
-            Platform.OS == "ios" ? (iOSKeyboardAvoidingViewOffset ?? top) : (androidKeyboardAvoidingViewOffset ?? StatusBar.currentHeight)
+          applyKeyboardAvoidingViewOffset ?
+            Platform.OS == "ios" ?
+              addZeroOffsetOnKeyboardHidIOS ?
+                (isKeyboardVisible ? iOSKeyboardAvoidingViewOffset ?? top : 0) :
+                (iOSKeyboardAvoidingViewOffset ?? top) :
+              addZeroOffsetOnKeyboardHideAndroid ?
+                (isKeyboardVisible ? androidKeyboardAvoidingViewOffset ?? StatusBar.currentHeight : 0) :
+                (androidKeyboardAvoidingViewOffset ?? StatusBar.currentHeight)
             : 0
         }
       >
@@ -145,3 +153,4 @@ function ViewWrapper({ children }: any) {
     )
   }
 }
+

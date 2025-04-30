@@ -549,4 +549,6 @@ export interface KeyboardAvoidingViewOffset {
   iOSKeyboardAvoidingViewOffset?: number;
   disableKeyboardAvoidingViewCreatePostScreen?: boolean;
   disableKeyboardAvoidingViewPostDetailScreen?: boolean;
+  addZeroOffsetOnKeyboardHideAndroid?:boolean;
+  addZeroOffsetOnKeyboardHidIOS?: boolean
 }

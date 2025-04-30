@@ -1194,30 +1194,38 @@ const PostDetailComponent = React.memo(() => {
 
 export { PostDetail };
 
-function ViewWrapper({children}: any) {
+function ViewWrapper({ children }: any) {
 
   const {
     iOSKeyboardAvoidingViewOffset,
     androidKeyboardAvoidingViewOffset,
-    applyKeyboardAvoidingViewOffset
+    applyKeyboardAvoidingViewOffset,
+    addZeroOffsetOnKeyboardHidIOS,
+    addZeroOffsetOnKeyboardHideAndroid
   } = STYLES.$KeyboardAvoidingViewOffset;
 
-  const { keyboardIsVisible }  = usePostDetailContext();
+  const { keyboardIsVisible } = usePostDetailContext();
   const { top } = useSafeAreaInsets()
 
   return (
     <KeyboardAvoidingView
-        enabled={Platform.OS == "android" ? keyboardIsVisible : true}
-        behavior={"height"}
-        style={styles.flexView}
-        keyboardVerticalOffset={
-            applyKeyboardAvoidingViewOffset ? 
-            Platform.OS == "ios" ? (iOSKeyboardAvoidingViewOffset ?? top ) : (androidKeyboardAvoidingViewOffset ?? StatusBar.currentHeight)
-            : undefined
-        }
-      >
-        {children}
-      </KeyboardAvoidingView>
+      enabled={(Platform.OS == "android" && !addZeroOffsetOnKeyboardHideAndroid) ? (keyboardIsVisible) : true}
+      behavior={"height"}
+      style={styles.flexView}
+      keyboardVerticalOffset={
+        applyKeyboardAvoidingViewOffset ?
+          Platform.OS == "ios" ?
+            addZeroOffsetOnKeyboardHidIOS ?
+              (keyboardIsVisible ? iOSKeyboardAvoidingViewOffset ?? top : 0) :
+              (iOSKeyboardAvoidingViewOffset ?? top) :
+            addZeroOffsetOnKeyboardHideAndroid ?
+              (keyboardIsVisible ? androidKeyboardAvoidingViewOffset ?? StatusBar.currentHeight : 0) :
+              (androidKeyboardAvoidingViewOffset ?? StatusBar.currentHeight)
+          : undefined
+      }
+    >
+      {children}
+    </KeyboardAvoidingView>
   )
 
 }
