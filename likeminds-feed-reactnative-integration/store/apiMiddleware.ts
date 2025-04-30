@@ -16,7 +16,7 @@ async function invokeAPI(func: Function, payload: any, name = "") {
     } catch (error) {
       return error;
     }
-  } else {
+  } else if (isConnected == false) {
     Alert.alert("", "Please check your internet connection");
   }
 }
