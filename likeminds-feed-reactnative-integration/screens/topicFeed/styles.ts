@@ -56,6 +56,9 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: Layout.normalize(15),
+    borderBottomWidth: 1,
+    borderBlockColor: "#D0D8E2",
+    paddingVertical: 14
   },
   backBtn: {
     height: Layout.normalize(25),

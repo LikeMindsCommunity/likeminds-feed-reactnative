@@ -63,6 +63,7 @@ const LMImage = React.memo(
               height: heightCalculated,
               aspectRatio: aspectRatio ? aspectRatio : desiredAspectRatio,
               resizeMode: boxFit ? boxFit : defaultStyles.imageStyle.resizeMode,
+              display: loading ? "none" : "flex"
             }
           ])}
         />
