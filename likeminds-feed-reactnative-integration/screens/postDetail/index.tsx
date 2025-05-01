@@ -1201,11 +1201,20 @@ function ViewWrapper({ children }: any) {
     androidKeyboardAvoidingViewOffset,
     applyKeyboardAvoidingViewOffset,
     addZeroOffsetOnKeyboardHidIOS,
-    addZeroOffsetOnKeyboardHideAndroid
+    addZeroOffsetOnKeyboardHideAndroid,
+    disableKeyboardAvoidingViewPostDetailScreen
   } = STYLES.$KeyboardAvoidingViewOffset;
 
   const { keyboardIsVisible } = usePostDetailContext();
   const { top } = useSafeAreaInsets()
+
+  if (disableKeyboardAvoidingViewPostDetailScreen) {
+    return (
+      <View style={styles.flexView}>
+        {children}
+      </View>
+    )
+  }
 
   return (
     <KeyboardAvoidingView
