@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   UNIVERSAL_FEED,
   TOPIC_FEED,
@@ -20,11 +20,12 @@ import {
   LMSocialFeedSearchScreenWrapper,
   LMQnAFeedCreatePostScreen,
   LMQnaFeedSearchScreenWrapper,
-  Client
+  Client,
+  STYLES
 } from '@likeminds.community/feed-rn-core';
 import LMSocialFeedCreateScreen from '@likeminds.community/feed-rn-core/wrappers/socialFeedCreateWrapper';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {LMCoreCallbacks} from '@likeminds.community/feed-rn-core/setupFeed';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { LMCoreCallbacks } from '@likeminds.community/feed-rn-core/setupFeed';
 import {
   NOTIFICATION_FEED,
   getNotification,
@@ -40,12 +41,12 @@ import {
   Platform,
   ViewStyle,
 } from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import {navigationRef} from './RootNavigation';
+import { NavigationContainer } from '@react-navigation/native';
+import { navigationRef } from './RootNavigation';
 import messaging from '@react-native-firebase/messaging';
-import notifee, {EventType} from '@notifee/react-native';
-import {Credentials} from './login/credentials';
-import {useQuery} from '@realm/react';
+import notifee, { EventType } from '@notifee/react-native';
+import { Credentials } from './login/credentials';
+import { useQuery } from '@realm/react';
 import FetchKeyInputScreen from './login';
 import {
   CREATE_POLL_SCREEN,
@@ -53,13 +54,14 @@ import {
   SEARCH_SCREEN,
   USER_ONBOARDING_SCREEN,
 } from '@likeminds.community/feed-rn-core/constants/screenNames';
-import {LMFeedClient, InitiateUserRequest} from '@likeminds.community/feed-rn';
-import {LoginSchemaRO} from './login/loginSchemaRO';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {FeedType} from '@likeminds.community/feed-rn-core';
+import { LMFeedClient, InitiateUserRequest } from '@likeminds.community/feed-rn';
+import { LoginSchemaRO } from './login/loginSchemaRO';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { FeedType } from '@likeminds.community/feed-rn-core';
 import { token } from '@likeminds.community/feed-rn-core/utils/pushNotifications';
 import { getUniqueId } from 'react-native-device-info';
 import { RegisterDeviceRequest } from "@likeminds.community/feed-rn"
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context"
 
 
 class CustomCallbacks implements LMFeedCallbacks, LMCarouselScreenCallbacks {
@@ -165,7 +167,7 @@ const App = () => {
 
   // notification display on foreground state
   useEffect(() => {
-    return notifee.onForegroundEvent(({type, detail}) => {
+    return notifee.onForegroundEvent(({ type, detail }) => {
       let routes = getRoute(detail?.notification?.data?.route);
       switch (type) {
         case EventType.DISMISSED:
@@ -180,7 +182,7 @@ const App = () => {
   });
   // deeplink listener for foreground state
   useEffect(() => {
-    Linking.addEventListener('url', ({url}) => {
+    Linking.addEventListener('url', ({ url }) => {
       const match = url.match(regex);
       // Extract the postId from the matched result
       const postId = match ? match[1] : null;
@@ -275,89 +277,94 @@ const App = () => {
     pushNotifications();
   }, [FCMToken, myClient]);
 
+  STYLES.setKeyboardAvoidingViewOffset({
+    applyKeyboardAvoidingViewOffset: true,
+    addZeroOffsetOnKeyboardHideAndroid: true
+  })
+
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{flex: 1}}>
-      <GestureHandlerRootView style={{flex: 1}}>
-        <NavigationContainer ref={navigationRef} independent={true}>
-          {apiKey && myClient ? (
-            <LMOverlayProvider
-              myClient={myClient}
-              apiKey={apiKey}
-              userName={userName}
-              userUniqueId={userUniqueID}
-              lmFeedInterface={lmFeedInterface}
-              callbackClass={callbackClass}
-              isUserOnboardingRequired={true}>
-              <Stack.Navigator screenOptions={{headerShown: false}}>
-                <Stack.Screen
-                  name={USER_ONBOARDING_SCREEN}
-                  component={LMUserOnboardingScreen}
-                  options={{
-                    headerShown: false,
-                  }}
-                />
-                <Stack.Screen
-                  name={UNIVERSAL_FEED}
-                  component={LMSocialFeedScreen}
-                  initialParams={{
-                    feedType: FeedType.UNIVERSAL_FEED,
-                  }}
-                />
-                <Stack.Screen
-                  name={POST_DETAIL}
-                  component={LMSocialFeedPostDetailScreen}
-                />
-                <Stack.Screen
-                  name={CREATE_POST}
-                  component={LMSocialFeedCreateScreen}
-                />
-                <Stack.Screen
-                  name={POST_LIKES_LIST}
-                  component={LMLikesScreen}
-                />
-                <Stack.Screen
-                  name={TOPIC_FEED}
-                  component={LMTopicFeedScreen}
-                  options={{headerShown: true}}
-                />
-                <Stack.Screen
-                  name={NOTIFICATION_FEED}
-                  component={LMNotificationScreen}
-                />
-                <Stack.Screen
-                  options={{gestureEnabled: false}}
-                  name={CAROUSEL_SCREEN}
-                  component={CarouselScreen}
-                />
-                <Stack.Screen
-                  name={POLL_RESULT}
-                  component={LMFeedPollResult}
-                  options={{
-                    gestureEnabled: false,
-                  }}
-                />
-                <Stack.Screen
-                  name={CREATE_POLL_SCREEN}
-                  component={LMCreatePollScreen}
-                />
-                <Stack.Screen
-                  name={SEARCH_SCREEN}
-                  component={LMSocialFeedSearchScreenWrapper}
-                />
-              </Stack.Navigator>
-            </LMOverlayProvider>
-          ) : !userName && !userUniqueID && !apiKey ? (
-            <FetchKeyInputScreen
-              isUserOnboardingRequired={true}
-              isTrue={isTrue}
-              setIsTrue={setIsTrue}
-            />
-          ) : null}
-        </NavigationContainer>
-      </GestureHandlerRootView>
-    </KeyboardAvoidingView>
+    <SafeAreaProvider>
+      <SafeAreaView style={{ flex: 1 }}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <NavigationContainer ref={navigationRef} independent={true}>
+            {apiKey && myClient ? (
+              <LMOverlayProvider
+                myClient={myClient}
+                apiKey={apiKey}
+                userName={userName}
+                userUniqueId={userUniqueID}
+                lmFeedInterface={lmFeedInterface}
+                callbackClass={callbackClass}
+                isUserOnboardingRequired={true}>
+                <Stack.Navigator screenOptions={{ headerShown: false }}>
+                  <Stack.Screen
+                    name={USER_ONBOARDING_SCREEN}
+                    component={LMUserOnboardingScreen}
+                    options={{
+                      headerShown: false,
+                    }}
+                  />
+                  <Stack.Screen
+                    name={UNIVERSAL_FEED}
+                    component={LMSocialFeedScreen}
+                    initialParams={{
+                      feedType: FeedType.UNIVERSAL_FEED,
+                    }}
+                  />
+                  <Stack.Screen
+                    name={POST_DETAIL}
+                    component={LMSocialFeedPostDetailScreen}
+                  />
+                  <Stack.Screen
+                    name={CREATE_POST}
+                    component={LMSocialFeedCreateScreen}
+                  />
+                  <Stack.Screen
+                    name={POST_LIKES_LIST}
+                    component={LMLikesScreen}
+                  />
+                  <Stack.Screen
+                    name={TOPIC_FEED}
+                    component={LMTopicFeedScreen}
+                    options={{ headerShown: true }}
+                  />
+                  <Stack.Screen
+                    name={NOTIFICATION_FEED}
+                    component={LMNotificationScreen}
+                  />
+                  <Stack.Screen
+                    options={{ gestureEnabled: false }}
+                    name={CAROUSEL_SCREEN}
+                    component={CarouselScreen}
+                  />
+                  <Stack.Screen
+                    name={POLL_RESULT}
+                    component={LMFeedPollResult}
+                    options={{
+                      gestureEnabled: false,
+                    }}
+                  />
+                  <Stack.Screen
+                    name={CREATE_POLL_SCREEN}
+                    component={LMCreatePollScreen}
+                  />
+                  <Stack.Screen
+                    name={SEARCH_SCREEN}
+                    component={LMSocialFeedSearchScreenWrapper}
+                  />
+                </Stack.Navigator>
+              </LMOverlayProvider>
+            ) : !userName && !userUniqueID && !apiKey ? (
+              <FetchKeyInputScreen
+                isUserOnboardingRequired={true}
+                isTrue={isTrue}
+                setIsTrue={setIsTrue}
+              />
+            ) : null}
+          </NavigationContainer>
+        </GestureHandlerRootView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   UNIVERSAL_FEED,
   TOPIC_FEED,
@@ -18,10 +18,11 @@ import {
   LMQnAFeedScreen,
   LMTopicFeedScreen,
   SearchType,
-  LMQnaFeedSearchScreenWrapper
+  LMQnaFeedSearchScreenWrapper,
+  STYLES
 } from '@likeminds.community/feed-rn-core';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {LMCoreCallbacks} from '@likeminds.community/feed-rn-core/setupFeed';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { LMCoreCallbacks } from '@likeminds.community/feed-rn-core/setupFeed';
 import {
   NOTIFICATION_FEED,
   getNotification,
@@ -37,27 +38,28 @@ import {
   Platform,
   ViewStyle,
 } from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import {navigationRef} from './RootNavigation';
+import { NavigationContainer } from '@react-navigation/native';
+import { navigationRef } from './RootNavigation';
 import messaging from '@react-native-firebase/messaging';
-import notifee, {EventType} from '@notifee/react-native';
-import {Credentials} from './login/credentials';
-import {useQuery} from '@realm/react';
+import notifee, { EventType } from '@notifee/react-native';
+import { Credentials } from './login/credentials';
+import { useQuery } from '@realm/react';
 import FetchKeyInputScreen from './login';
 import {
   CREATE_POLL_SCREEN,
   POLL_RESULT,
   SEARCH_SCREEN,
 } from '@likeminds.community/feed-rn-core/constants/screenNames';
-import {LMFeedClient, InitiateUserRequest} from '@likeminds.community/feed-rn';
-import {LoginSchemaRO} from './login/loginSchemaRO';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import { LMFeedClient, InitiateUserRequest } from '@likeminds.community/feed-rn';
+import { LoginSchemaRO } from './login/loginSchemaRO';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import UniversalFeedScreen from './screens/UniversalFeedScreen';
 import PostDetailsScreen from './screens/PostDetailsScreen';
-import {FeedType} from '@likeminds.community/feed-rn-core';
+import { FeedType } from '@likeminds.community/feed-rn-core';
 import { token } from './pushNotification';
 import { getUniqueId } from 'react-native-device-info';
 import { RegisterDeviceRequest } from "@likeminds.community/feed-rn"
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 class CustomCallbacks implements LMFeedCallbacks, LMCarouselScreenCallbacks {
   onEventTriggered(eventName: string, eventProperties?: Map<string, string>) {
@@ -131,30 +133,30 @@ const App = () => {
     );
   }, [users, isTrue]);
 
-    /// Setup notifications
-    useEffect(() => {
-      token().then((res) => {
-        if (!!res) {
-          setFCMToken(res);
-        }
-      });
-    }, []);
-  
-    useEffect(() => {
-      async function pushNotifications() {
-        const deviceID = await getUniqueId();
-        await myClient?.registerDevice(
-          RegisterDeviceRequest.builder()
-            .setDeviceId(deviceID)
-            .setPlatformCode(
-              Platform.OS == "ios" ? "ios" : "an"
-            )
-            .setToken(FCMToken)
-            .build()
-        );
+  /// Setup notifications
+  useEffect(() => {
+    token().then((res) => {
+      if (!!res) {
+        setFCMToken(res);
       }
-      pushNotifications();
-    }, [FCMToken, myClient]);
+    });
+  }, []);
+
+  useEffect(() => {
+    async function pushNotifications() {
+      const deviceID = await getUniqueId();
+      await myClient?.registerDevice(
+        RegisterDeviceRequest.builder()
+          .setDeviceId(deviceID)
+          .setPlatformCode(
+            Platform.OS == "ios" ? "ios" : "an"
+          )
+          .setToken(FCMToken)
+          .build()
+      );
+    }
+    pushNotifications();
+  }, [FCMToken, myClient]);
 
   // custom style of new post button
   const regex = /post_id=([^&]+)/;
@@ -187,7 +189,7 @@ const App = () => {
 
   // notification display on foreground state
   useEffect(() => {
-    return notifee.onForegroundEvent(({type, detail}) => {
+    return notifee.onForegroundEvent(({ type, detail }) => {
       let routes = getRoute(detail?.notification?.data?.route);
       switch (type) {
         case EventType.DISMISSED:
@@ -202,7 +204,7 @@ const App = () => {
   });
   // deeplink listener for foreground state
   useEffect(() => {
-    Linking.addEventListener('url', ({url}) => {
+    Linking.addEventListener('url', ({ url }) => {
       const match = url.match(regex);
       // Extract the postId from the matched result
       const postId = match ? match[1] : null;
@@ -272,77 +274,82 @@ const App = () => {
     },
   );
 
+  STYLES.setKeyboardAvoidingViewOffset({
+    applyKeyboardAvoidingViewOffset: true,
+    addZeroOffsetOnKeyboardHideAndroid: true
+  })
+
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{flex: 1}}>
-      <GestureHandlerRootView style={{flex: 1}}>
-        {userName && userUniqueID && apiKey && myClient ? (
-          <LMOverlayProvider
-            myClient={myClient}
-            apiKey={apiKey}
-            userName={userName}
-            userUniqueId={userUniqueID}
-            lmFeedInterface={lmFeedInterface}
-            callbackClass={callbackClass}>
-            <NavigationContainer ref={navigationRef} independent={true}>
-              <Stack.Navigator screenOptions={{headerShown: false}}>
-                <Stack.Screen
-                  name={UNIVERSAL_FEED}
-                  component={UniversalFeedScreen}
-                  initialParams={{
-                    feedType: FeedType.UNIVERSAL_FEED,
-                  }}
-                />
-                <Stack.Screen
-                  name={POST_DETAIL}
-                  component={PostDetailsScreen}
-                />
-                <Stack.Screen
-                  name={CREATE_POST}
-                  component={LMQnAFeedCreatePostScreen}
-                />
-                <Stack.Screen
-                  name={POST_LIKES_LIST}
-                  component={LMLikesScreen}
-                />
-                <Stack.Screen
-                  name={TOPIC_FEED}
-                  component={LMTopicFeedScreen}
-                  options={{headerShown: true}}
-                />
-                <Stack.Screen
-                  name={NOTIFICATION_FEED}
-                  component={LMNotificationScreen}
-                />
-                <Stack.Screen
-                  options={{gestureEnabled: false}}
-                  name={CAROUSEL_SCREEN}
-                  component={CarouselScreen}
-                />
-                <Stack.Screen
-                  name={POLL_RESULT}
-                  component={LMFeedPollResult}
-                  options={{
-                    gestureEnabled: false,
-                  }}
-                />
-                <Stack.Screen
-                  name={CREATE_POLL_SCREEN}
-                  component={LMCreatePollScreen}
-                />
-                <Stack.Screen
-                  name={SEARCH_SCREEN}
-                  component={LMQnaFeedSearchScreenWrapper}
-                />
-              </Stack.Navigator>
-            </NavigationContainer>
-          </LMOverlayProvider>
-        ) : !userName && !userUniqueID && !apiKey ? (
-          <FetchKeyInputScreen isTrue={isTrue} setIsTrue={setIsTrue} />
-        ) : null}
-      </GestureHandlerRootView>
-    </KeyboardAvoidingView>
+    <SafeAreaProvider>
+      <SafeAreaView style={{ flex: 1 }}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          {userName && userUniqueID && apiKey && myClient ? (
+            <LMOverlayProvider
+              myClient={myClient}
+              apiKey={apiKey}
+              userName={userName}
+              userUniqueId={userUniqueID}
+              lmFeedInterface={lmFeedInterface}
+              callbackClass={callbackClass}>
+              <NavigationContainer ref={navigationRef} independent={true}>
+                <Stack.Navigator screenOptions={{ headerShown: false }}>
+                  <Stack.Screen
+                    name={UNIVERSAL_FEED}
+                    component={UniversalFeedScreen}
+                    initialParams={{
+                      feedType: FeedType.UNIVERSAL_FEED,
+                    }}
+                  />
+                  <Stack.Screen
+                    name={POST_DETAIL}
+                    component={PostDetailsScreen}
+                  />
+                  <Stack.Screen
+                    name={CREATE_POST}
+                    component={LMQnAFeedCreatePostScreen}
+                  />
+                  <Stack.Screen
+                    name={POST_LIKES_LIST}
+                    component={LMLikesScreen}
+                  />
+                  <Stack.Screen
+                    name={TOPIC_FEED}
+                    component={LMTopicFeedScreen}
+                    options={{ headerShown: true }}
+                  />
+                  <Stack.Screen
+                    name={NOTIFICATION_FEED}
+                    component={LMNotificationScreen}
+                  />
+                  <Stack.Screen
+                    options={{ gestureEnabled: false }}
+                    name={CAROUSEL_SCREEN}
+                    component={CarouselScreen}
+                  />
+                  <Stack.Screen
+                    name={POLL_RESULT}
+                    component={LMFeedPollResult}
+                    options={{
+                      gestureEnabled: false,
+                    }}
+                  />
+                  <Stack.Screen
+                    name={CREATE_POLL_SCREEN}
+                    component={LMCreatePollScreen}
+                  />
+                  <Stack.Screen
+                    name={SEARCH_SCREEN}
+                    component={LMQnaFeedSearchScreenWrapper}
+                  />
+                </Stack.Navigator>
+              </NavigationContainer>
+            </LMOverlayProvider>
+          ) : !userName && !userUniqueID && !apiKey ? (
+            <FetchKeyInputScreen isTrue={isTrue} setIsTrue={setIsTrue} />
+          ) : null}
+        </GestureHandlerRootView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 
