@@ -65,6 +65,7 @@ import {
   REFRESH_FROM_ONBOARDING_SCREEN,
   SET_FLOW_TO_CREATE_POST_SCREEN,
   SET_PAUSED_STATUS,
+  SET_POST_UPLOADING_CREATE_SCREEN,
 } from "../store/types/types";
 import { useLMFeed } from "../lmFeedProvider";
 import { FeedType } from "../enums/FeedType";
@@ -410,6 +411,12 @@ export const UniversalFeedContextProvider = ({
       );
       await Client?.myClient?.deleteTemporaryPost();
     }
+    dispatch({
+      type: SET_POST_UPLOADING_CREATE_SCREEN,
+      body: {
+        uploading: false
+      }
+    })
     return addPostResponse;
 
   }
@@ -559,6 +566,12 @@ export const UniversalFeedContextProvider = ({
         })
       );
     }
+    dispatch({
+      type: SET_POST_UPLOADING_CREATE_SCREEN,
+      body: {
+        uploading: false
+      }
+    })
     return addPostResponse;
   };
 

@@ -45,7 +45,6 @@ import {
   convertToLMPostViewData,
   convertToTemporaryPost,
 } from "../viewDataModels";
-import _ from "lodash";
 import {
   editPost,
   getDecodedUrl,
@@ -71,6 +70,7 @@ import {
   ADD_SELECTED_TOPICS,
   CLEAR_POLL,
   CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
+  SET_POST_UPLOADING_CREATE_SCREEN,
   SET_FLOW_TO_CREATE_POST_SCREEN,
   SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
 } from "../store/types/types";
@@ -82,6 +82,8 @@ import { CREATE_POLL_SCREEN } from "../constants/screenNames";
 import STYLES from "../constants/Styles";
 import { Video, getVideoMetaData } from "react-native-compressor";
 import { Client } from "../client";
+import _ from "lodash";
+
 
 interface CreatePostContextProps {
   children?: ReactNode;
@@ -403,6 +405,12 @@ export const CreatePostContextProvider = ({
     isAnonymous: boolean = false,
     metaData?: any
   ) => {
+    dispatch({
+      type: SET_POST_UPLOADING_CREATE_SCREEN,
+      body: {
+        uploading: true
+      }
+    })
     const isConnected = await NetworkUtil.isNetworkAvailable();
     if (isConnected) {
       let pollAttachment: any = [];
@@ -750,6 +758,12 @@ export const CreatePostContextProvider = ({
           false
         )
       );
+      dispatch({
+        type: SET_POST_UPLOADING_CREATE_SCREEN,
+        body: {
+          uploading: false
+        }
+      })
       await Client?.myClient?.deleteTemporaryPost();
       return editPostResponse;
     } else {
@@ -766,6 +780,12 @@ export const CreatePostContextProvider = ({
         )
       );
       await Client?.myClient?.deleteTemporaryPost();
+      dispatch({
+        type: SET_POST_UPLOADING_CREATE_SCREEN,
+        body: {
+          uploading: false
+        }
+      })
       return editPostResponse;
     }
   };

@@ -30,6 +30,8 @@ import { styles } from "../../screens/createPost/styles";
 import { CommunityConfigs } from "../../communityConfigs";
 import pluralizeOrCapitalize from "../../utils/variables";
 import { WordAction } from "../../enums/Variables";
+import useDebounceCallback from "../../hooks/useDebounceCallback"
+import LMLoader from "../../components/LMLoader";
 
 const LMCreatePostHeader = () => {
   const dispatch = useAppDispatch();
@@ -53,11 +55,13 @@ const LMCreatePostHeader = () => {
     anonymousPost
   }: CreatePostContextValues = useCreatePostContext();
   const poll = useAppSelector((state) => state.createPost.pollAttachment);
+  const isPostUploadingCreateScreen = useAppSelector((state) => state.createPost.isPostUploadingCreateScreen);
+  const loaderStyle = STYLES.$LOADER_STYLE;
 
   const handleAcceptedOnPress = () => {
     const idValuesArray = mappedTopics.map((topic) => topic.id);
     onPostClickProp
-    ? onPostClickProp(
+      ? onPostClickProp(
         allAttachment,
         formattedLinkAttachments,
         postContentText,
@@ -66,7 +70,7 @@ const LMCreatePostHeader = () => {
         poll,
         anonymousPost
       )
-    : onPostClick(
+      : onPostClick(
         allAttachment,
         formattedLinkAttachments,
         postContentText,
@@ -184,6 +188,8 @@ const LMCreatePostHeader = () => {
     }
   };
 
+  const debouncedHandleOnPress = useDebounceCallback(handleOnPress, 1000)
+
   const { onPostClickProp, handleScreenBackPressProp, isHeadingEnabled } =
     useCreatePostCustomisableMethodsContext();
   return (
@@ -204,60 +210,61 @@ const LMCreatePostHeader = () => {
           postToEdit
             ? customCreatePostScreenHeader?.editPostHeading
               ? customCreatePostScreenHeader?.editPostHeading
-              : `Edit ${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.post ?? "post",WordAction.firstLetterCapitalSingular)}`
+              : `Edit ${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.post ?? "post", WordAction.firstLetterCapitalSingular)}`
             : customCreatePostScreenHeader?.createPostHeading
-            ? customCreatePostScreenHeader?.createPostHeading
-            : `Create ${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.post ?? "post",WordAction.firstLetterCapitalSingular)}`
+              ? customCreatePostScreenHeader?.createPostHeading
+              : `Create ${pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.post ?? "post", WordAction.firstLetterCapitalSingular)}`
         }
         rightComponent={
           // post button section
-          <TouchableOpacity
-            activeOpacity={0.8}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            disabled={
-              postToEdit
-                ? isHeadingEnabled
-                  ? heading?.trim() === ""
-                  : false
-                : isHeadingEnabled
-                ? heading?.trim() !== ""
-                  ? false
-                  : true
-                : allAttachment?.length > 0 ||
-                  formattedLinkAttachments?.length > 0 ||
-                  postContentText.trim() !== "" ||
-                  Object.keys(poll).length > 0
-                ? false
-                : true
-            }
-            style={
-              postToEdit
-                ? isHeadingEnabled
-                  ? heading?.trim() !== ""
-                    ? styles.enabledOpacity
-                    : styles.disabledOpacity
-                  : styles.enabledOpacity
-                : isHeadingEnabled
-                ? heading?.trim() !== ""
-                  ? styles.enabledOpacity
-                  : styles.disabledOpacity
-                : allAttachment?.length > 0 ||
-                  formattedLinkAttachments?.length > 0 ||
-                  postContentText.trim() !== "" ||
-                  Object.keys(poll).length > 0
-                ? styles.enabledOpacity
-                : styles.disabledOpacity
-            }
-            onPress={handleOnPress}
-          >
-            {customCreatePostScreenHeader?.rightComponent ? (
-              customCreatePostScreenHeader?.rightComponent
-            ) : (
-              <Text style={styles.headerRightComponentText}>
-                {postToEdit ? SAVE_POST_TEXT : ADD_POST_TEXT}
-              </Text>
-            )}
-          </TouchableOpacity>
+          !isPostUploadingCreateScreen ?
+            (<TouchableOpacity
+              activeOpacity={0.8}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              disabled={
+                postToEdit
+                  ? isHeadingEnabled
+                    ? heading?.trim() === ""
+                    : false
+                  : isHeadingEnabled
+                    ? heading?.trim() !== ""
+                      ? false
+                      : true
+                    : allAttachment?.length > 0 ||
+                      formattedLinkAttachments?.length > 0 ||
+                      postContentText.trim() !== "" ||
+                      Object.keys(poll).length > 0
+                      ? false
+                      : true
+              }
+              style={
+                postToEdit
+                  ? isHeadingEnabled
+                    ? heading?.trim() !== ""
+                      ? styles.enabledOpacity
+                      : styles.disabledOpacity
+                    : styles.enabledOpacity
+                  : isHeadingEnabled
+                    ? heading?.trim() !== ""
+                      ? styles.enabledOpacity
+                      : styles.disabledOpacity
+                    : allAttachment?.length > 0 ||
+                      formattedLinkAttachments?.length > 0 ||
+                      postContentText.trim() !== "" ||
+                      Object.keys(poll).length > 0
+                      ? styles.enabledOpacity
+                      : styles.disabledOpacity
+              }
+              onPress={debouncedHandleOnPress}
+            >
+              {customCreatePostScreenHeader?.rightComponent ? (
+                customCreatePostScreenHeader?.rightComponent
+              ) : (
+                <Text style={styles.headerRightComponentText}>
+                  {postToEdit ? SAVE_POST_TEXT : ADD_POST_TEXT}
+                </Text>
+              )}
+            </TouchableOpacity>) : <LMLoader size={"small"} {...loaderStyle?.loader} />
         }
       />
     </>
