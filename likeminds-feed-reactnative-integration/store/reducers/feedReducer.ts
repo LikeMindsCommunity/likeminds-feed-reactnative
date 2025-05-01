@@ -49,6 +49,7 @@ import {
   PERSONALISED_FEED_SUCCESS,
   PERSONALISED_FEED_REFRESH_SUCCESS,
   CREATE_POST_SUCCESS,
+  CLEAR_FLOWS_AND_ID,
 } from "../types/types";
 import { LMPostViewData } from "../../models";
 import Styles from "../../constants/Styles";
@@ -598,6 +599,18 @@ export const feedReducer = (state = initialState, action) => {
         return { ...state, feed: feed };
       } else {
         return state;
+      }
+    }
+
+    case CLEAR_FLOWS_AND_ID: {
+      return {
+        ...state,
+        currentIdOfVideo: "",
+        autoPlayVideoPostId: "",
+        flowToCarouselScreen: false,
+        flowToPostDetailScreen: false,
+        flowToCreatePostScreen: false,
+        pauseStatus: false
       }
     }
     default:

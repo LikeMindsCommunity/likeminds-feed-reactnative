@@ -56,6 +56,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: Layout.normalize(15),
+    paddingVertical: 14
   },
   backBtn: {
     height: Layout.normalize(25),
@@ -81,11 +82,9 @@ export const styles = StyleSheet.create({
     paddingVertical: Layout.normalize(10),
   },
   input: {
-    fontSize: STYLES.$FONT_SIZES.MEDIUM,
+    fontSize: STYLES.$FONT_SIZES.XL,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
     color: STYLES.$IS_DARK_THEME ? STYLES.$COLORS.SECONDARY: STYLES.$COLORS.BLACK,
-    paddingVertical: Layout.normalize(10),
-    marginBottom: Layout.normalize(2),
     width: Layout.window.width - Layout.normalize(150),
   },
   messageCustomTitle: {

@@ -39,6 +39,8 @@ export const LMFeedPollResult = ({ navigation, route }: any) => {
         heading={POLL_RESULT_TEXT}
       />
       <PollStack.Navigator
+        // to avoid TS issues
+        id={undefined}
         screenOptions={{
           tabBarLabelStyle: styles.font,
           tabBarIndicatorStyle: { backgroundColor: STYLES.$COLORS.PRIMARY },

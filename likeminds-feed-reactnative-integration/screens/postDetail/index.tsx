@@ -11,6 +11,8 @@ import {
   Text,
   View,
   SafeAreaView,
+  Dimensions,
+  StatusBar,
 } from "react-native";
 import React, { useState, useEffect, ReactNode } from "react";
 import { POST_LIKES_LIST } from "../../constants/screenNames";
@@ -75,6 +77,7 @@ import STYLES from "../../constants/Styles";
 import pluralizeOrCapitalize from "../../utils/variables";
 import { CommunityConfigs } from "../../communityConfigs";
 import { WordAction } from "../..//enums/Variables";
+import { useSafeAreaFrame, useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface PostDetailProps {
   children?: React.ReactNode;
@@ -398,13 +401,11 @@ const PostDetailComponent = React.memo(() => {
     return () => backHandler.remove();
   }, []);
 
+
+
   return (
     <SafeAreaView style={styles.flexView}>
-      <KeyboardAvoidingView
-        enabled={true}
-        behavior={"height"}
-        style={styles.flexView}
-      >
+      <ViewWrapper>
         {/* header view */}
         <LMHeader
           showBackArrow={
@@ -416,27 +417,27 @@ const PostDetailComponent = React.memo(() => {
             customScreenHeader?.heading
               ? customScreenHeader?.heading
               : pluralizeOrCapitalize(
-                  CommunityConfigs?.getCommunityConfigs("feed_metadata")?.value
-                    ?.post ?? "post",
-                  WordAction.firstLetterCapitalSingular
-                )
+                CommunityConfigs?.getCommunityConfigs("feed_metadata")?.value
+                  ?.post ?? "post",
+                WordAction.firstLetterCapitalSingular
+              )
           }
           subHeading={
             customScreenHeader?.subHeading
               ? customScreenHeader?.subHeading
               : postDetail?.id
-              ? postDetail?.commentsCount > 1
-                ? `${postDetail?.commentsCount} ${pluralizeOrCapitalize(
+                ? postDetail?.commentsCount > 1
+                  ? `${postDetail?.commentsCount} ${pluralizeOrCapitalize(
                     CommunityConfigs?.getCommunityConfigs("feed_metadata")
                       ?.value?.comment ?? "comment",
                     WordAction.firstLetterCapitalPlural
                   )}`
-                : `${postDetail?.commentsCount} ${pluralizeOrCapitalize(
+                  : `${postDetail?.commentsCount} ${pluralizeOrCapitalize(
                     CommunityConfigs?.getCommunityConfigs("feed_metadata")
                       ?.value?.comment ?? "comment",
                     WordAction.firstLetterCapitalSingular
                   )}`
-              : ""
+                : ""
           }
           onBackPress={() => {
             handleScreenBackPressProp
@@ -466,15 +467,15 @@ const PostDetailComponent = React.memo(() => {
                       allTags && isUserTagging
                         ? 0
                         : replyOnComment.textInputFocus
-                        ? Platform.OS === "android"
-                          ? keyboardFocusOnReply
-                            ? //  navigatedFromComments
+                          ? Platform.OS === "android"
+                            ? keyboardFocusOnReply
+                              ? //  navigatedFromComments
                               //   ? Layout.normalize(119)
                               //   :
                               Layout.normalize(119)
+                              : Layout.normalize(64)
                             : Layout.normalize(64)
-                          : Layout.normalize(64)
-                        : Layout.normalize(89),
+                          : Layout.normalize(89),
                   },
                 ])}
               >
@@ -516,22 +517,20 @@ const PostDetailComponent = React.memo(() => {
                               ]}
                             >
                               {postDetail.commentsCount > 1
-                                ? `${
-                                    postDetail.commentsCount
-                                  } ${pluralizeOrCapitalize(
-                                    CommunityConfigs?.getCommunityConfigs(
-                                      "feed_metadata"
-                                    )?.value?.comment ?? "comment",
-                                    WordAction.firstLetterCapitalPlural
-                                  )}`
-                                : `${
-                                    postDetail.commentsCount
-                                  } ${pluralizeOrCapitalize(
-                                    CommunityConfigs?.getCommunityConfigs(
-                                      "feed_metadata"
-                                    )?.value?.comment ?? "comment",
-                                    WordAction.firstLetterCapitalSingular
-                                  )}`}
+                                ? `${postDetail.commentsCount
+                                } ${pluralizeOrCapitalize(
+                                  CommunityConfigs?.getCommunityConfigs(
+                                    "feed_metadata"
+                                  )?.value?.comment ?? "comment",
+                                  WordAction.firstLetterCapitalPlural
+                                )}`
+                                : `${postDetail.commentsCount
+                                } ${pluralizeOrCapitalize(
+                                  CommunityConfigs?.getCommunityConfigs(
+                                    "feed_metadata"
+                                  )?.value?.comment ?? "comment",
+                                  WordAction.firstLetterCapitalSingular
+                                )}`}
                             </Text>
                           )}
                         </>
@@ -556,17 +555,17 @@ const PostDetailComponent = React.memo(() => {
                                   setShowRepliesOfCommentId(commentIdOfReplies);
                                   getCommentsRepliesProp
                                     ? getCommentsRepliesProp(
-                                        item?.postId,
-                                        item?.id,
-                                        repliesResponseCallback,
-                                        1
-                                      )
+                                      item?.postId,
+                                      item?.id,
+                                      repliesResponseCallback,
+                                      1
+                                    )
                                     : getCommentsReplies(
-                                        item?.postId,
-                                        item?.id,
-                                        repliesResponseCallback,
-                                        1
-                                      );
+                                      item?.postId,
+                                      item?.id,
+                                      repliesResponseCallback,
+                                      1
+                                    );
                                   customCommentItemStyle?.onTapReplies &&
                                     customCommentItemStyle?.onTapReplies();
                                 }}
@@ -624,7 +623,7 @@ const PostDetailComponent = React.memo(() => {
                                   textStyle: customCommentItemStyle
                                     ?.viewMoreRepliesProps?.textStyle
                                     ? customCommentItemStyle
-                                        ?.viewMoreRepliesProps?.textStyle
+                                      ?.viewMoreRepliesProps?.textStyle
                                     : styles.viewMoreText,
                                 }}
                                 menuIcon={{
@@ -681,14 +680,14 @@ const PostDetailComponent = React.memo(() => {
                                 ) => {
                                   onCommentOverflowMenuClickProp
                                     ? onCommentOverflowMenuClickProp(
-                                        event,
-                                        item?.menuItems,
-                                        commentId
-                                      )
+                                      event,
+                                      item?.menuItems,
+                                      commentId
+                                    )
                                     : onCommentOverflowMenuClick(
-                                        event,
-                                        commentId
-                                      );
+                                      event,
+                                      commentId
+                                    );
                                 }}
                               />
                             )}
@@ -770,14 +769,13 @@ const PostDetailComponent = React.memo(() => {
           </View>
         ) : null}
         {/* input field */}
-        <View style={{ position: "absolute", bottom: 0, width: "100%" }}>
+        <SafeAreaView style={{ position: "absolute", bottom: 0, width: "100%" }}>
           {/* users tagging list */}
           {allTags && isUserTagging ? (
             <View
               style={[
                 styles.taggingListView,
                 {
-                  bottom: keyboardIsVisible ? Layout.normalize(25) : 0,
                   maxHeight: 300,
                 },
                 postDetailStyle?.userTaggingListStyle?.taggingListView,
@@ -875,7 +873,6 @@ const PostDetailComponent = React.memo(() => {
             <View
               style={[
                 styles.replyCommentSection,
-                { bottom: keyboardIsVisible ? Layout.normalize(25) : 0 },
                 customReplyingViewStyle?.replyingView,
               ]}
             >
@@ -902,7 +899,7 @@ const PostDetailComponent = React.memo(() => {
                 style={customReplyingViewStyle?.cancelReplyIcon?.boxStyle}
               >
                 {customReplyingViewStyle?.cancelReplyIcon?.assetPath ||
-                customReplyingViewStyle?.cancelReplyIcon?.iconUrl ? (
+                  customReplyingViewStyle?.cancelReplyIcon?.iconUrl ? (
                   <LMIcon {...customReplyingViewStyle?.cancelReplyIcon} />
                 ) : (
                   <Image
@@ -939,37 +936,34 @@ const PostDetailComponent = React.memo(() => {
                 onType={handleInputChange}
                 inputTextStyle={[
                   styles.textInputStyle,
-                  {
-                    bottom: keyboardIsVisible ? Layout.normalize(25) : 0,
-                  },
                   customCommentTextInput?.inputTextStyle,
                 ]}
                 autoFocus={
                   customCommentTextInput?.autoFocus != undefined
                     ? customCommentTextInput?.autoFocus
                     : routeParams
-                    ? true
-                    : keyboardFocusOnReply
-                    ? true
-                    : editCommentFocus
-                    ? true
-                    : commentFocus
+                      ? true
+                      : keyboardFocusOnReply
+                        ? true
+                        : editCommentFocus
+                          ? true
+                          : commentFocus
                 }
                 placeholderText={
                   customCommentTextInput?.placeholderText
                     ? customCommentTextInput?.placeholderText
                     : `Write a ${pluralizeOrCapitalize(
-                        CommunityConfigs?.getCommunityConfigs("feed_metadata")
-                          ?.value?.comment ?? "comment",
-                        WordAction.allSmallSingular
-                      )}`
+                      CommunityConfigs?.getCommunityConfigs("feed_metadata")
+                        ?.value?.comment ?? "comment",
+                      WordAction.allSmallSingular
+                    )}`
                 }
                 placeholderTextColor={
                   customCommentTextInput?.placeholderTextColor
                     ? customCommentTextInput?.placeholderTextColor
                     : STYLES.$IS_DARK_THEME
-                    ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
-                    : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
+                      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
                 }
                 inputRef={myRef}
                 rightIcon={{
@@ -980,18 +974,18 @@ const PostDetailComponent = React.memo(() => {
                       ? editCommentFocus
                         ? commentEdit()
                         : replyOnComment.textInputFocus
-                        ? addNewReplyProp
-                          ? addNewReplyProp(
+                          ? addNewReplyProp
+                            ? addNewReplyProp(
                               postDetail?.id,
                               replyOnComment.commentId
                             )
-                          : addNewReply(
+                            : addNewReply(
                               postDetail?.id,
                               replyOnComment.commentId
                             )
-                        : addNewCommentProp
-                        ? addNewCommentProp(postDetail?.id)
-                        : addNewComment(postDetail?.id)
+                          : addNewCommentProp
+                            ? addNewCommentProp(postDetail?.id)
+                            : addNewComment(postDetail?.id)
                       : {};
                     setAllTags([]);
                     setIsUserTagging(false);
@@ -1033,37 +1027,34 @@ const PostDetailComponent = React.memo(() => {
                 onType={handleInputChange}
                 inputTextStyle={[
                   styles.textInputStyle,
-                  {
-                    bottom: keyboardIsVisible ? Layout.normalize(25) : 0,
-                  },
                   customCommentTextInput?.inputTextStyle,
                 ]}
                 autoFocus={
                   customCommentTextInput?.autoFocus != undefined
                     ? customCommentTextInput?.autoFocus
                     : routeParams
-                    ? true
-                    : keyboardFocusOnReply
-                    ? true
-                    : editCommentFocus
-                    ? true
-                    : commentFocus
+                      ? true
+                      : keyboardFocusOnReply
+                        ? true
+                        : editCommentFocus
+                          ? true
+                          : commentFocus
                 }
                 placeholderText={
                   customCommentTextInput?.placeholderText
                     ? customCommentTextInput?.placeholderText
                     : `Write a ${pluralizeOrCapitalize(
-                        CommunityConfigs?.getCommunityConfigs("feed_metadata")
-                          ?.value?.comment ?? "comment",
-                        WordAction.firstLetterCapitalSingular
-                      )}`
+                      CommunityConfigs?.getCommunityConfigs("feed_metadata")
+                        ?.value?.comment ?? "comment",
+                      WordAction.firstLetterCapitalSingular
+                    )}`
                 }
                 placeholderTextColor={
                   customCommentTextInput?.placeholderTextColor
                     ? customCommentTextInput?.placeholderTextColor
                     : STYLES.$IS_DARK_THEME
-                    ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
-                    : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
+                      ? STYLES.$TEXT_COLOR.SECONDARY_TEXT_DARK
+                      : STYLES.$TEXT_COLOR.SECONDARY_TEXT_LIGHT
                 }
                 inputRef={myRef}
                 rightIcon={{
@@ -1074,18 +1065,18 @@ const PostDetailComponent = React.memo(() => {
                       ? editCommentFocus
                         ? commentEdit()
                         : replyOnComment.textInputFocus
-                        ? addNewReplyProp
-                          ? addNewReplyProp(
+                          ? addNewReplyProp
+                            ? addNewReplyProp(
                               postDetail?.id,
                               replyOnComment.commentId
                             )
-                          : addNewReply(
+                            : addNewReply(
                               postDetail?.id,
                               replyOnComment.commentId
                             )
-                        : addNewCommentProp
-                        ? addNewCommentProp(postDetail?.id)
-                        : addNewComment(postDetail?.id)
+                          : addNewCommentProp
+                            ? addNewCommentProp(postDetail?.id)
+                            : addNewComment(postDetail?.id)
                       : {};
                     setAllTags([]);
                     setIsUserTagging(false);
@@ -1135,8 +1126,8 @@ const PostDetailComponent = React.memo(() => {
               )
             )
           ) : null}
-        </View>
-      </KeyboardAvoidingView>
+        </SafeAreaView>
+      </ViewWrapper>
 
       {/* delete post modal */}
       {localModalVisibility && (
@@ -1172,8 +1163,8 @@ const PostDetailComponent = React.memo(() => {
             selectedMenuItemPostId
               ? POST_TYPE
               : commentOnFocus?.level > 0
-              ? REPLY_TYPE
-              : COMMENT_TYPE
+                ? REPLY_TYPE
+                : COMMENT_TYPE
           }
           postDetail={postDetail}
           commentDetail={getCommentDetail(postDetail?.replies)?.commentDetail}
@@ -1202,3 +1193,48 @@ const PostDetailComponent = React.memo(() => {
 });
 
 export { PostDetail };
+
+function ViewWrapper({ children }: any) {
+
+  const {
+    iOSKeyboardAvoidingViewOffset,
+    androidKeyboardAvoidingViewOffset,
+    applyKeyboardAvoidingViewOffset,
+    addZeroOffsetOnKeyboardHidIOS,
+    addZeroOffsetOnKeyboardHideAndroid,
+    disableKeyboardAvoidingViewPostDetailScreen
+  } = STYLES.$KeyboardAvoidingViewOffset;
+
+  const { keyboardIsVisible } = usePostDetailContext();
+  const { top } = useSafeAreaInsets()
+
+  if (disableKeyboardAvoidingViewPostDetailScreen) {
+    return (
+      <View style={styles.flexView}>
+        {children}
+      </View>
+    )
+  }
+
+  return (
+    <KeyboardAvoidingView
+      enabled={(Platform.OS == "android" && !addZeroOffsetOnKeyboardHideAndroid) ? (keyboardIsVisible) : true}
+      behavior={"height"}
+      style={styles.flexView}
+      keyboardVerticalOffset={
+        applyKeyboardAvoidingViewOffset ?
+          Platform.OS == "ios" ?
+            addZeroOffsetOnKeyboardHidIOS ?
+              (keyboardIsVisible ? iOSKeyboardAvoidingViewOffset ?? top : 0) :
+              (iOSKeyboardAvoidingViewOffset ?? top) :
+            addZeroOffsetOnKeyboardHideAndroid ?
+              (keyboardIsVisible ? androidKeyboardAvoidingViewOffset ?? StatusBar.currentHeight : 0) :
+              (androidKeyboardAvoidingViewOffset ?? StatusBar.currentHeight)
+          : undefined
+      }
+    >
+      {children}
+    </KeyboardAvoidingView>
+  )
+
+}

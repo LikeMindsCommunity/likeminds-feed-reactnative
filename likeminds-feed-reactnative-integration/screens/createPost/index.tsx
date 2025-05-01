@@ -1,4 +1,4 @@
-import { View, SafeAreaView, ScrollView } from "react-native";
+import { View, SafeAreaView, ScrollView, KeyboardAvoidingView, Platform, StatusBar } from "react-native";
 import React from "react";
 import { styles } from "./styles";
 import {
@@ -21,6 +21,8 @@ import LMCreatePostHeading from "../../components/LMCreatePost/LMCreatePostHeadi
 import LMCreatePostMedia from "../../components/LMCreatePost/LMCreatePostMedia";
 import LMCreatePostTextInput from "../../components/LMCreatePost/LMCreatePostTextInput";
 import LMCreatePostUserTagging from "../../components/LMCreatePost/LMCreatePostUserTagging";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import STYLES from "../../constants/Styles";
 
 interface CreatePostProps {
   children?: React.ReactNode;
@@ -94,9 +96,61 @@ const CreatePost = ({
   );
 };
 
+
 const CreatePostComponent = ({ children }) => {
-  return <SafeAreaView style={styles.container}>{children}</SafeAreaView>;
+  return (
+    <SafeAreaView style={styles.container}>
+      <ViewWrapper>
+        {children}
+      </ViewWrapper>
+    </SafeAreaView>
+  )
 };
 
 
 export { CreatePost };
+
+function ViewWrapper({ children }: any) {
+  const { isKeyboardVisible } = useCreatePostContext();
+  
+  const {
+    iOSKeyboardAvoidingViewOffset,
+    androidKeyboardAvoidingViewOffset,
+    applyKeyboardAvoidingViewOffset,
+    disableKeyboardAvoidingViewCreatePostScreen,
+    addZeroOffsetOnKeyboardHidIOS,
+    addZeroOffsetOnKeyboardHideAndroid
+  } = STYLES.$KeyboardAvoidingViewOffset;
+
+  const { top } = useSafeAreaInsets()
+
+  if (disableKeyboardAvoidingViewCreatePostScreen) {
+    return (
+      <View style={styles.container}>
+        {children}
+      </View>
+    )
+  } else {
+    return (
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        enabled={(Platform.OS == "android" && !addZeroOffsetOnKeyboardHideAndroid) ? (isKeyboardVisible) : true}
+        behavior={Platform.OS == "android" ? "height" : "padding"}
+        keyboardVerticalOffset={
+          applyKeyboardAvoidingViewOffset ?
+            Platform.OS == "ios" ?
+              addZeroOffsetOnKeyboardHidIOS ?
+                (isKeyboardVisible ? iOSKeyboardAvoidingViewOffset ?? top : 0) :
+                (iOSKeyboardAvoidingViewOffset ?? top) :
+              addZeroOffsetOnKeyboardHideAndroid ?
+                (isKeyboardVisible ? androidKeyboardAvoidingViewOffset ?? StatusBar.currentHeight : 0) :
+                (androidKeyboardAvoidingViewOffset ?? StatusBar.currentHeight)
+            : 0
+        }
+      >
+        {children}
+      </KeyboardAvoidingView>
+    )
+  }
+}
+

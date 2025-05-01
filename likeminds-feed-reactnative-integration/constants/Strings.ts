@@ -199,6 +199,10 @@ export const POLL_MULTIPLE_STATE_LEAST = 2;
 export const OKAY = "Okay";
 export const NO_RESPONSES = "No Response";
 
+// Events
+export const KEYBOARD_DID_SHOW = "keyboardDidShow";
+export const KEYBOARD_DID_HIDE = "keyboardDidHide";
+
 export function updateVariables (communityConfig: Configuration[]) {
     const config = communityConfig.find((item) => item?.type == "feed_metadata")
     const POST = (config)?.value?.post ?? "post"

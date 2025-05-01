@@ -47,7 +47,7 @@ import { Events } from "../../enums/Events";
 import { LMFeedAnalytics } from "../../analytics/LMFeedAnalytics";
 import { Keys } from "../../enums/Keys";
 import { getPostType } from "../../utils/analytics";
-import { SET_FLOW_TO_POST_DETAIL_SCREEN } from "../../store/types/types";
+import { SET_FLOW_TO_POST_DETAIL_SCREEN, SET_PAUSED_STATUS } from "../../store/types/types";
 import STYLES from "../../constants/Styles";
 import { CommunityConfigs } from "../../communityConfigs";
 import { WordAction } from "../../enums/Variables";
@@ -79,6 +79,7 @@ const PostsListComponent = ({
   customWidgetPostView,
 }: any) => {
   const dispatch = useAppDispatch();
+  const focused = useIsFocused();
   const refreshFromOnboardingScreen = useAppSelector(
     (state) => state.feed.refreshScreenFromOnboardingScreen
   );
@@ -332,6 +333,14 @@ const PostsListComponent = ({
       hideTopicsView,
     ]
   );
+
+  useEffect(() => {
+    if (!focused) {
+      dispatch({
+        type: "CLEAR_FLOWS_AND_ID"
+      })
+    }
+  }, [focused])
 
   useEffect(() => {
     if (refreshFromOnboardingScreen) {

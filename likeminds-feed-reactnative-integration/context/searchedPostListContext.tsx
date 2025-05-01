@@ -345,7 +345,7 @@ export const SearchedPostListContextProvider = ({
             return;
         }
 
-        let id = setTimeout(() => {
+        let id: any = setTimeout(() => {
             dispatch({
                 type: CLEAR_SEARCH
             })

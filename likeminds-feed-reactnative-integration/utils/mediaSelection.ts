@@ -1,8 +1,12 @@
 import RNDocumentPicker from "../optionalDependencies/RNDocumentPicker";
+import RNDocumentPickerLegacy from "../optionalDependencies/RNDocumentPickerLegacy";
 import expoDocumentPicker from "../optionalDependencies/ExpoDocumentPicker";
 
 import RNImagePicker from "../optionalDependencies/RNImagePicker";
 import expoImagePicker from "../optionalDependencies/ExpoImagePicker";
+
+import RNFileViewer from "../optionalDependencies/RNFileViewer";
+import RNDocumentViewer from "../optionalDependencies/RNDocumentViewer";
 
 //select Images and videoes From Gallery
 export const selectImageVideo = async (type: string, limit: number = 0) => {
@@ -69,6 +73,18 @@ export const selectDocument = async () => {
       }
 
       return null;
+    } else if (RNDocumentPickerLegacy) {
+      const response = await RNDocumentPickerLegacy.pick({
+        type: [RNDocumentPickerLegacy.types.pdf],
+        allowMultiSelection: true,
+      });
+      const selectedDocs: any = response; // selectedImages can be anything images or videos or both
+      const docsArrlength = selectedDocs?.length;
+      if (docsArrlength > 0) {
+        if (selectedDocs) {
+          return selectedDocs;
+        }
+      }
     } else {
       throw new Error('No document picker library found. Please install one.');
     }
@@ -76,3 +92,17 @@ export const selectDocument = async () => {
     // process error
   }
 };
+
+export const viewDocument = async (uri: string) => {
+  try {
+    if (RNFileViewer) {
+      RNFileViewer.open(uri)
+    } else if (RNDocumentViewer) {
+      RNDocumentViewer.viewDocument({
+        uri,
+      })
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
