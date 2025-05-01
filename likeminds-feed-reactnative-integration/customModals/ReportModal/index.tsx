@@ -18,6 +18,8 @@ import {
   COMMENT_REPORTED_SUCCESSFULLY,
   COMMENT_REPORT_ENTITY_TYPE,
   COMMENT_TYPE,
+  KEYBOARD_DID_HIDE,
+  KEYBOARD_DID_SHOW,
   POST_REPORT_ENTITY_TYPE,
   POST_TYPE,
   REASON_FOR_DELETION_PLACEHOLDER,
@@ -87,11 +89,11 @@ const ReportModal = ({
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
+      KEYBOARD_DID_SHOW,
       _keyboardDidShow
     );
     const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
+      KEYBOARD_DID_HIDE,
       _keyboardDidHide
     );
 

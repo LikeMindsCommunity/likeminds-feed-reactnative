@@ -394,7 +394,7 @@ const LMFeedSearchScreenComponent = ({
                         />
                     </TouchableOpacity>
                     <View style={styles.flexView}>
-                        <LMInputText textValueStyle={StyleSheet.flatten([
+                        <LMInputText autoFocus={true} textValueStyle={StyleSheet.flatten([
                             styles.textValueStyle,
                             {
                                 color: STYLES.$IS_DARK_THEME ? STYLES.$TEXT_COLOR.PRIMARY_TEXT_DARK : STYLES.$TEXT_COLOR.PRIMARY_TEXT_LIGHT

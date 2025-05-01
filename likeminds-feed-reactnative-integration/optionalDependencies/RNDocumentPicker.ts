@@ -1,7 +1,7 @@
 let RNDocumentPicker;
 
 try {
-    RNDocumentPicker = require("react-native-document-picker")
+    RNDocumentPicker = require("@react-native-documents/picker")
 } catch (error) {
     // do nothing
 }

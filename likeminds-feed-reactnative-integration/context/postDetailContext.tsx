@@ -18,6 +18,8 @@ import {
   EDIT_COMMENT_MENU_ITEM,
   EDIT_POST_MENU_ITEM,
   HIDE_POST_MENU_ITEM,
+  KEYBOARD_DID_HIDE,
+  KEYBOARD_DID_SHOW,
   NAVIGATED_FROM_COMMENT,
   PIN_POST_MENU_ITEM,
   POST_HIDDEN,
@@ -799,33 +801,31 @@ export const PostDetailContextProvider = ({
 
   // this handles the view layout with keyboard visibility
   useEffect(() => {
-    if (Platform.OS === "android") {
-      const keyboardDidShowListener = Keyboard.addListener(
-        "keyboardDidShow",
-        () => {
-          setKeyboardIsVisible(true);
-        }
-      );
+    const keyboardDidShowListener = Keyboard.addListener(
+      KEYBOARD_DID_SHOW,
+      () => {
+        setKeyboardIsVisible(true);
+      }
+    );
 
-      const keyboardDidHideListener = Keyboard.addListener(
-        "keyboardDidHide",
-        () => {
-          setKeyboardIsVisible(false);
-          if (Keyboard.isVisible() === false) {
-            Keyboard.dismiss();
-            setKeyboardFocusOnReply(false);
-            setEditCommentFocus(false);
-            setCommentFocus(false);
-            setRouteParams(false);
-          }
+    const keyboardDidHideListener = Keyboard.addListener(
+      KEYBOARD_DID_HIDE,
+      () => {
+        setKeyboardIsVisible(false);
+        if (Keyboard.isVisible() === false) {
+          Keyboard.dismiss();
+          setKeyboardFocusOnReply(false);
+          setEditCommentFocus(false);
+          setCommentFocus(false);
+          setRouteParams(false);
         }
-      );
+      }
+    );
 
-      return () => {
-        keyboardDidShowListener.remove();
-        keyboardDidHideListener.remove();
-      };
-    }
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
   }, [isKeyboardVisible]);
 
 

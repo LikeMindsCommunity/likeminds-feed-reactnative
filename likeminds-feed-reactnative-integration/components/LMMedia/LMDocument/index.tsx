@@ -12,7 +12,7 @@ import { formatBytes } from "../../../utils";
 import { MIN_DOCUMENT_ITEM } from "../../../constants/Strings";
 import { LMText, LMButton, LMIcon } from "../../../uiComponents";
 import { styles } from "./styles";
-import FileViewer from "react-native-file-viewer";
+import { viewDocument } from "../../../utils/mediaSelection";
 
 const LMDocument = React.memo(
   ({
@@ -55,7 +55,7 @@ const LMDocument = React.memo(
                 item?.attachmentMeta?.url
                   ? item?.attachmentMeta?.url.includes("https://")
                     ? Linking.openURL(item?.attachmentMeta?.url)
-                    : FileViewer.open(item?.attachmentMeta?.url)
+                    : viewDocument(item?.attachmentMeta?.url)
                   : null;
                 onTap && onTap();
               }}

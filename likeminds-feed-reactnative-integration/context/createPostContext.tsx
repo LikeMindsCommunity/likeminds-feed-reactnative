@@ -10,7 +10,7 @@ import React, {
   MutableRefObject,
 } from "react";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { Alert, Platform, TextInput } from "react-native";
+import { Alert, Keyboard, Platform, TextInput } from "react-native";
 import {
   NetworkUtil,
   detectMentions,
@@ -27,6 +27,8 @@ import {
   FILE_UPLOAD_SIZE_VALIDATION,
   FILE_UPLOAD_VIDEO_SIZE_VALIDATION,
   IMAGE_ATTACHMENT_TYPE,
+  KEYBOARD_DID_HIDE,
+  KEYBOARD_DID_SHOW,
   MAX_FILE_SIZE,
   MAX_IMAGE_FILE_SIZE,
   MAX_VIDEO_FILE_SIZE,
@@ -43,7 +45,6 @@ import {
   convertToLMPostViewData,
   convertToTemporaryPost,
 } from "../viewDataModels";
-import _ from "lodash";
 import {
   editPost,
   getDecodedUrl,
@@ -69,6 +70,7 @@ import {
   ADD_SELECTED_TOPICS,
   CLEAR_POLL,
   CLEAR_SELECTED_TOPICS_FOR_CREATE_POST_SCREEN,
+  SET_POST_UPLOADING_CREATE_SCREEN,
   SET_FLOW_TO_CREATE_POST_SCREEN,
   SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
 } from "../store/types/types";
@@ -80,6 +82,8 @@ import { CREATE_POLL_SCREEN } from "../constants/screenNames";
 import STYLES from "../constants/Styles";
 import { Video, getVideoMetaData } from "react-native-compressor";
 import { Client } from "../client";
+import _ from "lodash";
+
 
 interface CreatePostContextProps {
   children?: ReactNode;
@@ -121,6 +125,7 @@ export interface CreatePostContextValues {
   isUserTagging: boolean;
   isLoading: boolean;
   heading: string;
+  isKeyboardVisible: boolean;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   setIsUserTagging: Dispatch<SetStateAction<boolean>>;
   setAllTags: Dispatch<SetStateAction<Array<LMUserViewData>>>;
@@ -241,6 +246,7 @@ export const CreatePostContextProvider = ({
   const [disbaledTopicsGlobal, setDisabledTopicsGlobal] = useState([] as any);
   const [showTopics, setShowTopics] = useState(false);
   const [mappedTopics, setMappedTopics] = useState([] as any);
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
 
   const maxHeadingWords = STYLES?.$CREATE_POST_STYLE?.headingMaxWords
     ? STYLES?.$CREATE_POST_STYLE?.headingMaxWords
@@ -399,6 +405,12 @@ export const CreatePostContextProvider = ({
     isAnonymous: boolean = false,
     metaData?: any
   ) => {
+    dispatch({
+      type: SET_POST_UPLOADING_CREATE_SCREEN,
+      body: {
+        uploading: true
+      }
+    })
     const isConnected = await NetworkUtil.isNetworkAvailable();
     if (isConnected) {
       let pollAttachment: any = [];
@@ -746,6 +758,12 @@ export const CreatePostContextProvider = ({
           false
         )
       );
+      dispatch({
+        type: SET_POST_UPLOADING_CREATE_SCREEN,
+        body: {
+          uploading: false
+        }
+      })
       await Client?.myClient?.deleteTemporaryPost();
       return editPostResponse;
     } else {
@@ -762,6 +780,12 @@ export const CreatePostContextProvider = ({
         )
       );
       await Client?.myClient?.deleteTemporaryPost();
+      dispatch({
+        type: SET_POST_UPLOADING_CREATE_SCREEN,
+        body: {
+          uploading: false
+        }
+      })
       return editPostResponse;
     }
   };
@@ -872,6 +896,28 @@ export const CreatePostContextProvider = ({
     navigation.goBack();
   };
 
+  // this handles the view layout with keyboard visibility
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      KEYBOARD_DID_SHOW,
+      () => {
+        setIsKeyboardVisible(true);
+      }
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      KEYBOARD_DID_HIDE,
+      () => {
+        setIsKeyboardVisible(false);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   const contextValues: CreatePostContextValues = {
     navigation,
     route,
@@ -899,6 +945,7 @@ export const CreatePostContextProvider = ({
     disbaledTopicsGlobal,
     showTopics,
     mappedTopics,
+    isKeyboardVisible,
     setAnonymousPost,
     setIsLoading,
     setIsUserTagging,

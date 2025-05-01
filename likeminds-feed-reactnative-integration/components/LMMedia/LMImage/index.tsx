@@ -47,11 +47,9 @@ const LMImage = React.memo(
         style={StyleSheet.flatten([defaultStyles.imageContainer, boxStyle])}
       >
         {/* this renders the loader until the image renders */}
-        {loading ? (
-          <View style={[defaultStyles.loaderView, imageStyle]}>
-            {loaderWidget ? loaderWidget : <LMLoader />}
-          </View>
-        ) : null}
+        <View style={[defaultStyles.loaderView, imageStyle]}>
+          {loaderWidget ? loaderWidget : loading && <LMLoader />}
+        </View>
         {/* this renders the image */}
         <Image
           source={{ uri: imageUrl }}

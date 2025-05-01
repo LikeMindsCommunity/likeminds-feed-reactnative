@@ -6,6 +6,7 @@ import {
   DECODE_URL_SUCCESS,
   SET_DISABLED_TOPICS,
   SET_POLL,
+  SET_POST_UPLOADING_CREATE_SCREEN,
   SET_PREDEFINED_TOPICS,
   UPLOAD_ATTACHMENTS,
 } from "../types/types";
@@ -24,6 +25,7 @@ export interface CreatePostReducerState {
   pollAttachment: {};
   metaData: {};
   isAnonymous: boolean;
+  isPostUploadingCreateScreen: boolean;
 }
 
 export const initialState: CreatePostReducerState = {
@@ -39,7 +41,8 @@ export const initialState: CreatePostReducerState = {
   predefinedTopics: [],
   pollAttachment: {}, // for local preview of poll data
   metaData: {}, // meta data for custom widget
-  isAnonymous: false
+  isAnonymous: false,
+  isPostUploadingCreateScreen: false
 };
 
 export function createPostReducer(state = initialState, action) {
@@ -113,6 +116,13 @@ export function createPostReducer(state = initialState, action) {
         metaData: metaData,
         isAnonymous: isAnonymous
       };
+    }
+    case SET_POST_UPLOADING_CREATE_SCREEN: {
+      const { uploading } = action.body;
+      return {
+        ...state,
+        isPostUploadingCreateScreen: uploading
+      }
     }
     default:
       return state;
