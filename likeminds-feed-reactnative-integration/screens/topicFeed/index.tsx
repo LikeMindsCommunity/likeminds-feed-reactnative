@@ -411,7 +411,8 @@ const TopicFeed = () => {
   function renderHeader() {
     if (showInitialHeader) {
       return (
-        <View style={{ ...styles.headingContainer, padding: Layout.normalize(5)}}>
+        <View style={{ ...styles.headingContainer, padding: Layout.normalize(5), borderBottomWidth: 1,
+          borderBlockColor: "#D0D8E2" }}>
           <TouchableOpacity
             onPress={() => {
               navigation.goBack();
@@ -473,10 +474,13 @@ const TopicFeed = () => {
           </TouchableOpacity>
         </View>
       )
-    } else if(showSearchHeader) {
+    } else if (showSearchHeader) {
       return (
-        <View style={{flexDirection: 'row', justifyContent: 'space-between', padding: Layout.normalize(5)}}>
-          <View style={{ ...styles.headingContainer }}>
+        <View style={{
+          flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: Layout.normalize(5), borderBottomWidth: 1,
+          borderBlockColor: "#D0D8E2"
+        }}>
+          <View style={{ ...styles.headingContainer, flex: 1 }}>
             <TouchableOpacity
               onPress={() => {
                 setSearch("");
@@ -504,7 +508,7 @@ const TopicFeed = () => {
             />
           </View>
           <TouchableOpacity
-            onPress={() => {}}
+            onPress={() => { }}
             style={{
               justifyContent: "center",
               alignItems: "center",
