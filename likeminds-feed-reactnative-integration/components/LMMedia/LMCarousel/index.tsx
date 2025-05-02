@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, View, Pressable } from "react-native";
+import { StyleSheet, TouchableOpacity, View, Pressable, Dimensions } from "react-native";
 import React, { useState } from "react";
 import SwiperFlatList from "react-native-swiper-flatlist";
 import { LMCarouselProps } from "./types";
@@ -50,12 +50,27 @@ const LMCarousel = React.memo(
     };
 
     const getMaxHeightOfAttachments = () => {
-      if (!post?.attachments?.length) return 400;
+      if (!post?.attachments?.length) return 0;
+    
+      const ScreenWidth = Dimensions.get("window").width;
+    
+      // Map over attachments and compute scaled heights
+      const scaledHeights = post?.attachments?.map(item => {
+        const meta = item?.attachmentMeta;
+        const width = meta?.width;
+        const height = meta?.height;
+    
+        if (!width || !height) return 0;
+    
+        // Determine desired aspect ratio (portrait vs landscape)
+        const desiredAspectRatio = width > height ? 1.91 : 0.8;
+        return ScreenWidth * (1 / desiredAspectRatio);
+      });
 
-      return Math.max(
-        ...post.attachments.map(item => item?.attachmentMeta?.height || 0)
-      );
-    }
+      let max = Math.max(...scaledHeights);
+    
+      return max > 0 ? max : 500
+    };
 
     return (
       <SwiperFlatList
