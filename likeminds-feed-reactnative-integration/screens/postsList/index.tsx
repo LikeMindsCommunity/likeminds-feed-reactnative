@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import {
+  Dimensions,
   FlatList,
   Platform,
   RefreshControl,
@@ -7,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import Flashlist, { FlashList } from "@shopify/flash-list"
 import { styles } from "./styles";
 import {
   DELETE_POST_MENU_ITEM,
@@ -387,9 +389,12 @@ const PostsListComponent = ({
       <>
         {!feedFetching ? (
           feedData?.length > 0 ? (
-            <FlatList
+            <FlashList
               ref={listRef}
               refreshing={refreshing}
+              estimatedItemSize={650}
+              disableIntervalMomentum={true}
+              decelerationRate={"fast"}
               style={postListStyle?.listStyle}
               refreshControl={
                 <RefreshControl
@@ -398,10 +403,10 @@ const PostsListComponent = ({
                 />
               }
               data={feedData}
+              extraData={[]}
               renderItem={renderItem}
               onEndReachedThreshold={0.3}
               onEndReached={handleLoadMore}
-              removeClippedSubviews={true}
               keyExtractor={(item) => {
                 return item?.id?.toString();
               }}
