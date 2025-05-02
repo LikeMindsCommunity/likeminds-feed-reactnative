@@ -28,7 +28,8 @@ const LMImage = React.memo(
     const [desiredAspectRatio, setDesiredAspectRatio] = useState(0);
 
     useLayoutEffect(() => {
-      if (!height && !width) {
+      if (!height || !width) {
+
         console.log("NO DIMENSIONS");
         Image.getSize(
           imageUrl,
@@ -37,10 +38,7 @@ const LMImage = React.memo(
             const ScreenWidth = Dimensions.get("window").width;
             const desiredAspectRatio = width > height ? 1.91 : 0.8;
             const heightCalculated = ScreenWidth * (1 / desiredAspectRatio);
-            console.log({
-              heightCalculated,
-              desiredAspectRatio
-            })
+            
             setHeightCalculated(heightCalculated);
             setDesiredAspectRatio(desiredAspectRatio);
           },
@@ -48,22 +46,18 @@ const LMImage = React.memo(
             console.error('Failed to get image size:', error);
           }
         );
+
         return;
+
       } else {
-        console.log({
-          height,
-          width
-        })
   
         const ScreenWidth = Dimensions.get("window").width;
         const desiredAspectRatio = width > height ? 1.91 : 0.8;
         const heightCalculated = ScreenWidth * (1 / desiredAspectRatio);
-        console.log({
-          heightCalculated,
-          desiredAspectRatio
-        })
+
         setHeightCalculated(heightCalculated);
         setDesiredAspectRatio(desiredAspectRatio);
+
       }
 
 
