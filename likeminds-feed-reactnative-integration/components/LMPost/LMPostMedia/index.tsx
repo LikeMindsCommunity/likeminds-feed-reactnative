@@ -58,6 +58,8 @@ const LMPostMedia = React.memo(() => {
             }}
           >
             <LMImage
+              height={post?.attachments[0]?.attachmentMeta?.height}
+              width={post?.attachments[0]?.attachmentMeta?.width}
               imageUrl={
                 post?.attachments
                   ? post?.attachments[0]?.attachmentMeta.url
@@ -89,6 +91,8 @@ const LMPostMedia = React.memo(() => {
             }}
           >
             <LMVideo
+              height={post?.attachments[0]?.attachmentMeta?.height}
+              width={post?.attachments[0]?.attachmentMeta?.width}
               videoUrl={
                 post?.attachments
                   ? post?.attachments[0]?.attachmentMeta.url
@@ -155,7 +159,7 @@ const LMPostMedia = React.memo(() => {
     const url = post?.attachments?.find(
       (item) => item?.attachmentType === type
     );
-    return url?.attachmentMeta.url ? url?.attachmentMeta.url : "";
+    return url
   };
 
   // this gets the required attachment type data to render in its component
@@ -205,7 +209,7 @@ const LMPostMedia = React.memo(() => {
               (item) => item?.attachmentType === IMAGE_ATTACHMENT_TYPE
             ) && (
               <LMImage
-                imageUrl={getUrl(IMAGE_ATTACHMENT_TYPE)}
+                imageUrl={getUrl(IMAGE_ATTACHMENT_TYPE)?.attachmentMeta?.url}
                 {...customPostMediaStyle?.image}
               />
             )}
@@ -213,7 +217,7 @@ const LMPostMedia = React.memo(() => {
               (item) => item?.attachmentType === VIDEO_ATTACHMENT_TYPE
             ) && (
               <LMVideo
-                videoUrl={getUrl(VIDEO_ATTACHMENT_TYPE)}
+                videoUrl={getUrl(VIDEO_ATTACHMENT_TYPE)?.attachmentMeta?.url}
                 postId={post?.id}
                 {...customPostMediaStyle?.video}
                 autoPlay={
