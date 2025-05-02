@@ -67,7 +67,7 @@ const LMVideo = React.memo(
     const player = useRef<any>(null);
     const [paused, setPaused] = useState(true);
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-    const [heightCalculated, setHeightCalculated] = useState(0);
+    const [heightCalculated, setHeightCalculated] = useState(400);
     const [desiredAspectRatio, setDesiredAspectRatio] = useState(0);
 
     const currentVideoId = useAppSelector(
@@ -119,7 +119,7 @@ const LMVideo = React.memo(
 
     return (
       <View
-        style={StyleSheet.flatten([defaultStyles.videoContainer, boxStyle])}
+        style={StyleSheet.flatten([defaultStyles.videoContainer, boxStyle, {minHeight: heightCalculated}])}
       >
         {/* this renders the loader until the first picture of video is displayed */}
         {loading ? (

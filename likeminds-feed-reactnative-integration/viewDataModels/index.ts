@@ -169,6 +169,8 @@ export function convertToLMAttachmentMetaViewData(
     size: data.size,
     url: data.url,
     thumbnailUrl: data.thumbnailUrl,
+    height: data?.height,
+    width: data?.width,
     ...convertToLMPollViewData(data?.entityId ? data?.entityId : "", widgets),
   };
   return attachmentMetaData;
@@ -320,6 +322,7 @@ export function convertImageVideoMetaData(
   data: ImageVideoMetaData[]
 ): LMAttachmentViewData[] {
   const convertedImageVideoMetaData = data?.map((item) => {
+    console.log(item)
     return {
       attachmentMeta: {
         entityId: "",
@@ -335,6 +338,8 @@ export function convertImageVideoMetaData(
         duration: Math.round(item?.duration ? item.duration : 0),
         pageCount: 0,
         url: item?.uri,
+        height: item?.height,
+        width: item?.width
       },
       attachmentType: item?.duration
         ? VIDEO_ATTACHMENT_TYPE

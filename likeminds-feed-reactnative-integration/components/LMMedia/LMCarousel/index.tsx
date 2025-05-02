@@ -49,6 +49,14 @@ const LMCarousel = React.memo(
       }
     };
 
+    const getMaxHeightOfAttachments = () => {
+      if (!post?.attachments?.length) return 400;
+
+      return Math.max(
+        ...post.attachments.map(item => item?.attachmentMeta?.height || 0)
+      );
+    }
+
     return (
       <SwiperFlatList
         autoplay={lastItem ? true : false}
@@ -64,7 +72,7 @@ const LMCarousel = React.memo(
             setLastItem(false);
           }
         }}
-        style={StyleSheet.flatten([styles.swiperView, carouselStyle])}
+        style={StyleSheet.flatten([styles.swiperView, carouselStyle, {minHeight: getMaxHeightOfAttachments()}])}
         // handling custom style of pagination container
         paginationStyle={StyleSheet.flatten([
           styles.paginationView,
@@ -108,8 +116,8 @@ const LMCarousel = React.memo(
               >
                 <LMImage
                   imageUrl={item?.attachmentMeta?.url}
-                  width={imageItem?.width}
-                  height={imageItem?.height}
+                  width={item?.attachmentMeta?.width}
+                  height={item?.attachmentMeta?.height}
                   imageStyle={imageItem?.imageStyle}
                   boxFit={imageItem?.boxFit}
                   boxStyle={imageItem?.boxStyle}
