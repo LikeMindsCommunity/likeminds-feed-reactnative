@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import {
   Dimensions,
   FlatList,
@@ -145,6 +145,8 @@ const PostsListComponent = ({
   } = useUniversalFeedCustomisableMethodsContext();
 
   const hasFetched = useRef(false);
+
+  const screenHeight = useMemo(() => Dimensions.get("window").height, [])
 
   // this function returns the id of the item selected from menu list and handles further functionalities accordingly
   const onMenuItemSelect = (
@@ -392,9 +394,11 @@ const PostsListComponent = ({
             <FlashList
               ref={listRef}
               refreshing={refreshing}
-              estimatedItemSize={650}
+              estimatedItemSize={
+                (screenHeight)/3
+              }
               disableIntervalMomentum={true}
-              decelerationRate={"fast"}
+              decelerationRate={0.96}
               style={postListStyle?.listStyle}
               refreshControl={
                 <RefreshControl
