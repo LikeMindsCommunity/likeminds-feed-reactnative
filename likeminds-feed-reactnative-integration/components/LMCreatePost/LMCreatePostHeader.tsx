@@ -32,6 +32,7 @@ import pluralizeOrCapitalize from "../../utils/variables";
 import { WordAction } from "../../enums/Variables";
 import useDebounceCallback from "../../hooks/useDebounceCallback"
 import LMLoader from "../../components/LMLoader";
+import { AttachmentType } from "@likeminds.community/feed-rn";
 
 const LMCreatePostHeader = () => {
   const dispatch = useAppDispatch();
@@ -84,7 +85,7 @@ const LMCreatePostHeader = () => {
       const map: Map<string | undefined, string | undefined> = new Map();
       const taggedUsers: any = userTaggingDecoder(postContentText);
 
-      const ogTags = formattedLinkAttachments[0]?.attachmentMeta?.ogTags;
+      const ogTags = formattedLinkAttachments[0]?.metaData?.ogTags;
 
       // To fire user tagged analytics event
       if (taggedUsers?.length > 0) {
@@ -109,12 +110,12 @@ const LMCreatePostHeader = () => {
       let videoCount = 0;
       let documentCount = 0;
       for (let i = 0; i < allAttachment.length; i++) {
-        if (allAttachment[i].attachmentType === IMAGE_ATTACHMENT_TYPE) {
+        if (allAttachment[i].type === AttachmentType.IMAGE) {
           imageCount++;
-        } else if (allAttachment[i].attachmentType === VIDEO_ATTACHMENT_TYPE) {
+        } else if (allAttachment[i].type === AttachmentType.VIDEO) {
           videoCount++;
         } else if (
-          allAttachment[i].attachmentType === DOCUMENT_ATTACHMENT_TYPE
+          allAttachment[i].type === AttachmentType.DOCUMENT
         ) {
           documentCount++;
         }
@@ -255,7 +256,7 @@ const LMCreatePostHeader = () => {
                       ? styles.enabledOpacity
                       : styles.disabledOpacity
               }
-              onPress={debouncedHandleOnPress}
+              onPress={handleOnPress}
             >
               {customCreatePostScreenHeader?.rightComponent ? (
                 customCreatePostScreenHeader?.rightComponent
