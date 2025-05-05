@@ -110,7 +110,7 @@ const LMCreatePostCarousel = React.memo(
                 }}
               >
                 <LMImage
-                  imageUrl={item?.attachmentMeta?.url}
+                  imageUrl={item?.metaData?.url}
                   width={imageItem?.width}
                   height={imageItem?.height}
                   imageStyle={imageItem?.imageStyle}
@@ -154,7 +154,7 @@ const LMCreatePostCarousel = React.memo(
                 }}
               >
                 <LMCreatePostVideo
-                  videoUrl={item?.attachmentMeta?.url}
+                  videoUrl={item?.metaData?.url}
                   height={videoItem?.height}
                   width={videoItem?.width}
                   videoStyle={videoItem?.videoStyle}
@@ -186,7 +186,7 @@ const LMCreatePostCarousel = React.memo(
                   videoInFeed={videoItem?.videoInFeed}
                   videoInCarousel={true}
                   currentVideoInCarousel={
-                    attachments[activeIndex]?.attachmentMeta?.url
+                    attachments[activeIndex]?.metaData?.url
                   }
                   postId={videoItem?.postId}
                   showMuteUnmute={true}

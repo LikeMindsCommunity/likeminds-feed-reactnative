@@ -4,8 +4,8 @@ import { LMButtonProps } from "../../../uiComponents";
 
 export interface LMVideoProps {
   videoUrl: string; // url of the video to be displayed
-  height: number; // height of the video player
-  width: number; // width of the video player
+  height?: number; // height of the video player
+  width?: number; // width of the video player
   videoStyle?: ViewStyle; // this represents the style of the video player
   boxFit?: "stretch" | "contain" | "cover" | "none"; // this represents how the video player should be fitted in its wrapper view
   boxStyle?: ViewStyle; // this represents the style of the view that contains the video player

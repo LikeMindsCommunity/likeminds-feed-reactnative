@@ -16,6 +16,7 @@ import {
 } from "../../constants/Strings";
 import { styles } from "./styles";
 import { nameInitials, timeStamp } from "../../utils";
+import { AttachmentType } from "@likeminds.community/feed-rn";
 
 const LMNotificationFeedItem = React.memo(
   ({ activity, onTap }: LMNotificationFeedItemProps) => {
@@ -24,7 +25,7 @@ const LMNotificationFeedItem = React.memo(
     const activityAttachments = activity.activityEntityData?.attachments;
     // storing the value of attachment type of the attachment if present
     const activityAttachmentType = activityAttachments
-      ? activityAttachments[0]?.attachmentType
+      ? activityAttachments[0]?.type
       : "";
     //creating profile picture props as per customization
     const profilePictureStyle = notificationFeedStyle?.userImageStyles;
@@ -121,8 +122,8 @@ const LMNotificationFeedItem = React.memo(
             {/* handles the gallery and document icon on profile picture */}
             {activityAttachments &&
               // show gallery icon
-              (activityAttachmentType === IMAGE_ATTACHMENT_TYPE ||
-              activityAttachmentType === VIDEO_ATTACHMENT_TYPE ? (
+              (activityAttachmentType === AttachmentType.IMAGE ||
+              activityAttachmentType === AttachmentType.VIDEO ? (
                 <LMIcon
                   {...attachmentIconStyle}
                   assetPath={
@@ -145,7 +146,7 @@ const LMNotificationFeedItem = React.memo(
                   }
                 />
               ) : // show document icon
-              activityAttachmentType === DOCUMENT_ATTACHMENT_TYPE ? (
+              activityAttachmentType === AttachmentType.DOCUMENT ? (
                 <LMIcon
                   {...attachmentIconStyle}
                   assetPath={

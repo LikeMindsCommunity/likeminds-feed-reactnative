@@ -17,6 +17,7 @@ import {
   SET_FLOW_TO_CAROUSEL_SCREEN,
   STATUS_BAR_STYLE,
 } from "../../../store/types/types";
+import {AttachmentType} from "@likeminds.community/feed-rn"
 import { CAROUSEL_SCREEN } from "../../../constants/screenNames";
 
 const LMCarousel = React.memo(
@@ -56,7 +57,7 @@ const LMCarousel = React.memo(
     
       // Map over attachments and compute scaled heights
       const scaledHeights = post?.attachments?.map(item => {
-        const meta = item?.attachmentMeta;
+        const meta = item?.metaData;
         const width = meta?.width;
         const height = meta?.height;
     
@@ -112,7 +113,7 @@ const LMCarousel = React.memo(
         renderItem={({ item, index }) => (
           <View style={styles.swiperListMediaContainer} onStartShouldSetResponder={() => true}>
             {/* this section render image */}
-            {item?.attachmentType === IMAGE_ATTACHMENT_TYPE && (
+            {item?.type === AttachmentType.IMAGE && (
               <Pressable
                 onPress={() => {
                   navigation.navigate(CAROUSEL_SCREEN, {
@@ -130,9 +131,9 @@ const LMCarousel = React.memo(
                 }}
               >
                 <LMImage
-                  imageUrl={item?.attachmentMeta?.url}
-                  width={item?.attachmentMeta?.width}
-                  height={item?.attachmentMeta?.height}
+                  imageUrl={item?.metaData?.url}
+                  width={item?.metaData?.width}
+                  height={item?.metaData?.height}
                   imageStyle={imageItem?.imageStyle}
                   boxFit={imageItem?.boxFit}
                   boxStyle={imageItem?.boxStyle}
@@ -154,7 +155,7 @@ const LMCarousel = React.memo(
               </Pressable>
             )}
             {/* this section render video */}
-            {item?.attachmentType === VIDEO_ATTACHMENT_TYPE && (
+            {item?.type === AttachmentType.VIDEO && (
               <Pressable
                 onPress={() => {
                   navigation.navigate(CAROUSEL_SCREEN, {
@@ -174,7 +175,7 @@ const LMCarousel = React.memo(
                 }}
               >
                 <LMVideo
-                  videoUrl={item?.attachmentMeta?.url}
+                  videoUrl={item?.metaData?.url}
                   height={videoItem?.height}
                   width={videoItem?.width}
                   videoStyle={videoItem?.videoStyle}
@@ -206,7 +207,7 @@ const LMCarousel = React.memo(
                   videoInFeed={videoItem?.videoInFeed}
                   videoInCarousel={true}
                   currentVideoInCarousel={
-                    attachments[activeIndex]?.attachmentMeta?.url
+                    attachments[activeIndex]?.metaData?.url
                   }
                   postId={videoItem?.postId}
                   showMuteUnmute={true}

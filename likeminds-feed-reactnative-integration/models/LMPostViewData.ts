@@ -10,7 +10,7 @@ export interface LMPostViewData {
   id: string;
   attachments?: Array<LMAttachmentViewData>;
   commentsCount: number;
-  communityId: number;
+  communityId?: number;
   createdAt: number;
   isEdited: boolean;
   isLiked: boolean;

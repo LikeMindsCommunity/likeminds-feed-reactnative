@@ -26,6 +26,7 @@ import {
 } from "../../../constants/screenNames";
 import STYLES from "../../../constants/Styles";
 import LMPostPollView from "../../LMPoll/LMPostPollView";
+import { AttachmentType } from "@likeminds.community/feed-rn";
 
 const LMPostMedia = React.memo(() => {
   const { post, mediaProps }: LMPostContextValues = useLMPostContext();
@@ -38,8 +39,8 @@ const LMPostMedia = React.memo(() => {
   let previousRoute = routes[routes?.length - 2];
   // this handles the rendering of posts with single attachment
   const renderSingleAttachment = () => {
-    switch (post?.attachments && post?.attachments[0]?.attachmentType) {
-      case IMAGE_ATTACHMENT_TYPE: {
+    switch (post?.attachments && post?.attachments[0]?.type) {
+      case AttachmentType.IMAGE: {
         return (
           <Pressable
             onPress={() => {
@@ -58,12 +59,12 @@ const LMPostMedia = React.memo(() => {
             }}
           >
             <LMImage
-              height={post?.attachments[0]?.attachmentMeta?.height}
-              width={post?.attachments[0]?.attachmentMeta?.width}
+              height={post?.attachments[0]?.metaData?.height}
+              width={post?.attachments[0]?.metaData?.width}
               imageUrl={
                 post?.attachments
-                  ? post?.attachments[0]?.attachmentMeta.url
-                    ? post?.attachments[0]?.attachmentMeta.url
+                  ? post?.attachments[0]?.metaData.url
+                    ? post?.attachments[0]?.metaData.url
                     : ""
                   : ""
               }
@@ -72,7 +73,7 @@ const LMPostMedia = React.memo(() => {
           </Pressable>
         );
       }
-      case VIDEO_ATTACHMENT_TYPE: {
+      case AttachmentType.VIDEO: {
         return (
           <Pressable
             onPress={() => {
@@ -91,12 +92,12 @@ const LMPostMedia = React.memo(() => {
             }}
           >
             <LMVideo
-              height={post?.attachments[0]?.attachmentMeta?.height}
-              width={post?.attachments[0]?.attachmentMeta?.width}
+              height={post?.attachments[0]?.metaData?.height}
+              width={post?.attachments[0]?.metaData?.width}
               videoUrl={
                 post?.attachments
-                  ? post?.attachments[0]?.attachmentMeta.url
-                    ? post?.attachments[0]?.attachmentMeta.url
+                  ? post?.attachments[0]?.metaData.url
+                    ? post?.attachments[0]?.metaData.url
                     : ""
                   : ""
               }
@@ -117,7 +118,7 @@ const LMPostMedia = React.memo(() => {
           </Pressable>
         );
       }
-      case DOCUMENT_ATTACHMENT_TYPE: {
+      case AttachmentType.DOCUMENT: {
         return (
           /* @ts-ignore */
           <LMDocument
@@ -127,7 +128,7 @@ const LMPostMedia = React.memo(() => {
           />
         );
       }
-      case LINK_ATTACHMENT_TYPE: {
+      case AttachmentType.LINK: {
         return (
           /* @ts-ignore */
           <LMLinkPreview
@@ -137,12 +138,12 @@ const LMPostMedia = React.memo(() => {
           />
         );
       }
-      case POLL_ATTACHMENT_TYPE: {
+      case AttachmentType.POLL: {
         return (
           /* @ts-ignore */
           <View style={{ paddingHorizontal: 20 }}>
             <LMPostPollView
-              item={post?.attachments && post?.attachments[0]?.attachmentMeta}
+              item={post?.attachments && post?.attachments[0]?.metaData}
               post={post}
             />
           </View>
@@ -155,19 +156,19 @@ const LMPostMedia = React.memo(() => {
   };
 
   // this functions gets the url of image and video for rendering in its components
-  const getUrl = (type: number) => {
+  const getUrl = (type: AttachmentType) => {
     const url = post?.attachments?.find(
-      (item) => item?.attachmentType === type
+      (item) => item?.type === type
     );
     return url
   };
 
   // this gets the required attachment type data to render in its component
-  const getData = (type: number, type2?: number) => {
+  const getData = (type: AttachmentType, type2?: AttachmentType) => {
     const data =
       post?.attachments &&
       post?.attachments.filter(
-        (item) => item.attachmentType === type || item.attachmentType === type2
+        (item) => item.type === type || item.type === type2
       );
     return data;
   };
@@ -183,12 +184,12 @@ const LMPostMedia = React.memo(() => {
         // this section renders if there are multiple attachments
         post?.attachments?.filter(
           (item) =>
-            item?.attachmentType === IMAGE_ATTACHMENT_TYPE ||
-            item?.attachmentType === VIDEO_ATTACHMENT_TYPE
+            item?.type === AttachmentType.IMAGE ||
+            item?.type === AttachmentType.VIDEO
         ).length >= 2 ? (
           <LMCarousel
             post={post}
-            attachments={getData(IMAGE_ATTACHMENT_TYPE, VIDEO_ATTACHMENT_TYPE)}
+            attachments={getData(AttachmentType.IMAGE, AttachmentType.VIDEO)}
             {...customPostMediaStyle?.carousel}
             imageItem={customPostMediaStyle?.image}
             videoItem={{
@@ -206,18 +207,18 @@ const LMPostMedia = React.memo(() => {
           // this section renders if there are multiple attachments but the image or video attachments are less than 2
           <>
             {post?.attachments?.find(
-              (item) => item?.attachmentType === IMAGE_ATTACHMENT_TYPE
+              (item) => item?.type === AttachmentType.IMAGE
             ) && (
               <LMImage
-                imageUrl={getUrl(IMAGE_ATTACHMENT_TYPE)?.attachmentMeta?.url}
+                imageUrl={getUrl(AttachmentType.IMAGE)?.metaData?.url}
                 {...customPostMediaStyle?.image}
               />
             )}
             {post?.attachments?.find(
-              (item) => item?.attachmentType === VIDEO_ATTACHMENT_TYPE
+              (item) => item?.type === AttachmentType.VIDEO
             ) && (
               <LMVideo
-                videoUrl={getUrl(VIDEO_ATTACHMENT_TYPE)?.attachmentMeta?.url}
+                videoUrl={getUrl(AttachmentType.VIDEO)?.metaData?.url}
                 postId={post?.id}
                 {...customPostMediaStyle?.video}
                 autoPlay={
@@ -229,15 +230,15 @@ const LMPostMedia = React.memo(() => {
               />
             )}
             {post?.attachments?.find(
-              (item) => item?.attachmentType === DOCUMENT_ATTACHMENT_TYPE
+              (item) => item?.type === AttachmentType.DOCUMENT
             ) && (
               <LMDocument
-                attachments={getData(DOCUMENT_ATTACHMENT_TYPE)}
+                attachments={getData(AttachmentType.DOCUMENT)}
                 {...customPostMediaStyle?.document}
               />
             )}
             {post?.attachments?.every(
-              (item) => item?.attachmentType === LINK_ATTACHMENT_TYPE
+              (item) => item?.type === AttachmentType.LINK
             ) && (
               <LMLinkPreview
                 attachments={post?.attachments}

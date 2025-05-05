@@ -30,11 +30,9 @@ const LMImage = React.memo(
     useLayoutEffect(() => {
       if (!height || !width) {
 
-        console.log("NO DIMENSIONS");
         Image.getSize(
           imageUrl,
           (width, height) => {
-            console.log(`Image dimensions: ${width}x${height}`);
             const ScreenWidth = Dimensions.get("window").width;
             const desiredAspectRatio = width > height ? 1.91 : 0.8;
             const heightCalculated = ScreenWidth * (1 / desiredAspectRatio);
@@ -76,7 +74,7 @@ const LMImage = React.memo(
           source={{ uri: imageUrl }}
           onLoad={() => setLoading(false)}
           onError={() => setError(true)}
-          resizeMode={FastImage.resizeMode.contain}
+          resizeMode={boxFit ? boxFit : FastImage.resizeMode.contain}
           defaultSource={require("../../../assets/images/black_background.png")}
           style={StyleSheet.flatten([
             imageStyle,

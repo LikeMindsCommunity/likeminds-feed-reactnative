@@ -51,6 +51,7 @@ import {
   setUploadAttachments,
 } from "../store/actions/createPost";
 import {
+  AttachmentType,
   DecodeURLRequest,
   EditPostRequest,
   GetPostRequest,
@@ -363,9 +364,9 @@ export const CreatePostContextProvider = ({
         let imageCount = 0;
         let videoCount = 0;
         for (const media of selectedImagesVideos) {
-          if (media.attachmentType === IMAGE_ATTACHMENT_TYPE) {
+          if (media.type === AttachmentType.IMAGE) {
             imageCount++;
-          } else if (media.attachmentType === VIDEO_ATTACHMENT_TYPE) {
+          } else if (media.type === AttachmentType.VIDEO) {
             videoCount++;
           }
         }
@@ -424,7 +425,7 @@ export const CreatePostContextProvider = ({
             ...allMedia,
             ...linkData,
             ...pollAttachment,
-            ...[{ attachmentType: 5, attachmentMeta: { meta: metaData } }],
+            ...[{ type: 5, attachmentMeta: { meta: metaData } }],
           ]
           : [...allMedia, ...linkData, ...pollAttachment];
       const post = convertToTemporaryPost(
@@ -618,7 +619,7 @@ export const CreatePostContextProvider = ({
               const convertedLinkData = await convertLinkMetaData(
                 filteredResponses
               );
-              const link = convertedLinkData[0]?.attachmentMeta?.ogTags?.url;
+              const link = convertedLinkData[0]?.metaData?.ogTags?.url;
               setFormattedLinkAttachments(convertedLinkData);
               if (!closedOnce) {
                 setShowLinkPreview(true);
@@ -706,13 +707,13 @@ export const CreatePostContextProvider = ({
       const linkPreview: any = [];
       const pollPreview: any = [];
       for (const media of postDetail.attachments) {
-        if (media.attachmentType === IMAGE_ATTACHMENT_TYPE) {
+        if (media.type === AttachmentType.IMAGE) {
           imageVideoMedia.push(media);
-        } else if (media.attachmentType === VIDEO_ATTACHMENT_TYPE) {
+        } else if (media.type === AttachmentType.VIDEO) {
           imageVideoMedia.push(media);
-        } else if (media.attachmentType === DOCUMENT_ATTACHMENT_TYPE) {
+        } else if (media.type === AttachmentType.DOCUMENT) {
           documentMedia.push(media);
-        } else if (media.attachmentType === POLL_ATTACHMENT_TYPE) {
+        } else if (media.type === AttachmentType.POLL) {
           pollPreview.push(media);
         } else {
           linkPreview.push(media);
@@ -737,11 +738,11 @@ export const CreatePostContextProvider = ({
     const contentText = mentionToRouteConverter(postContentText);
     const linkAttachments = showLinkPreview ? formattedLinkAttachments : [];
     const pollAttachments = convertPollMetaData(
-      formattedPollAttachments[0]?.attachmentMeta
+      formattedPollAttachments[0]?.metaData
     );
 
     // call edit post api
-    if (formattedPollAttachments[0]?.attachmentMeta) {
+    if (formattedPollAttachments[0]?.metaData) {
       const editPostResponse = dispatch(
         editPost(
           EditPostRequest.builder()
