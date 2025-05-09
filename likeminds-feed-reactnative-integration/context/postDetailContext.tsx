@@ -328,9 +328,9 @@ export const PostDetailContextProvider = ({
   const [overlayMenuType, setOverlayMenuType] = useState("");
   const [isPaginationStopped, setIsPaginationStopped] = useState(false);
   const [showLoader, setShowLoader] = useState(true);
-  const [commentOnFocus,setCommentOnFocus] = useState<LMCommentViewData>();
+  const [commentOnFocus, setCommentOnFocus] = useState<LMCommentViewData>();
   const loaderStyle = STYLES.$LOADER_STYLE
-  const [repliesArrayUnderComments,setRepliesArrayUnderComments] = useState<any>([])
+  const [repliesArrayUnderComments, setRepliesArrayUnderComments] = useState<any>([])
 
   // this function is executed on pull to refresh
   const onRefresh = async () => {
@@ -443,7 +443,7 @@ export const PostDetailContextProvider = ({
       postId: id,
     };
 
-    if(postDetail?.isHidden) {
+    if (postDetail?.isHidden) {
       dispatch(
         showToastMessage({
           isToast: true,
@@ -452,7 +452,7 @@ export const PostDetailContextProvider = ({
       );
       return undefined
     }
-    
+
     const pinPostResponse = await dispatch(
       pinPost(PinPostRequest.builder().setPostId(payload.postId).build(), false)
     );
@@ -489,9 +489,9 @@ export const PostDetailContextProvider = ({
       const isPostHidden = (postDetail as LMPostViewData)?.menuItems?.find((menuItem) => menuItem.id == 13);
       await dispatch(hidePost(
         HidePostRequest.
-        builder()
-        .setPostId(postId)
-        .build(),
+          builder()
+          .setPostId(postId)
+          .build(),
         false
       ))
       dispatch({
@@ -515,7 +515,7 @@ export const PostDetailContextProvider = ({
     }
   }
 
-  
+
 
   // this function returns the id of the item selected from menu list and handles further functionalities accordingly for post
   const onMenuItemSelect = (
@@ -655,12 +655,21 @@ export const PostDetailContextProvider = ({
         false
       )
     );
+    let replies: any = []
+    setRepliesArrayUnderComments((previousResponse) => {
+      replies = [
+        ...commentResponseModelConvertor(commentsRepliesResponse)?.replies, ...previousResponse
+      ]
+      return replies
+    })
+    console.log({
+      replies
+    })
     // sets the api response in the callback function
     repliesResponseCallback(
       postDetail?.replies &&
-      commentResponseModelConvertor(commentsRepliesResponse)?.replies
+      replies
     );
-    setRepliesArrayUnderComments((previousResponse) => [commentsRepliesResponse,...previousResponse])
     return commentsRepliesResponse;
   };
 
