@@ -18,6 +18,7 @@ import {
   STATUS_BAR_STYLE,
 } from "../../../store/types/types";
 import { CAROUSEL_SCREEN } from "../../../constants/screenNames";
+import { AttachmentType } from "@likeminds.community/feed-js";
 
 const LMCreatePostCarousel = React.memo(
   ({
@@ -92,7 +93,7 @@ const LMCreatePostCarousel = React.memo(
             onStartShouldSetResponder={() => true}
           >
             {/* this section render image */}
-            {item?.attachmentType === IMAGE_ATTACHMENT_TYPE && (
+            {item?.type === AttachmentType.IMAGE && (
               <Pressable
                 onPress={() => {
                   navigation.navigate(CAROUSEL_SCREEN, {
@@ -134,7 +135,7 @@ const LMCreatePostCarousel = React.memo(
               </Pressable>
             )}
             {/* this section render video */}
-            {item?.attachmentType === VIDEO_ATTACHMENT_TYPE && (
+            {item?.type === AttachmentType.VIDEO && (
               <Pressable
                 onPress={() => {
                   navigation.navigate(CAROUSEL_SCREEN, {

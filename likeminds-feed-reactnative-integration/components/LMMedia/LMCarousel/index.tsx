@@ -176,8 +176,8 @@ const LMCarousel = React.memo(
               >
                 <LMVideo
                   videoUrl={item?.metaData?.url}
-                  height={videoItem?.height}
-                  width={videoItem?.width}
+                  height={item?.metaData?.height}
+                  width={item?.metaData?.width}
                   videoStyle={videoItem?.videoStyle}
                   boxFit={videoItem?.boxFit}
                   boxStyle={videoItem?.boxStyle}
