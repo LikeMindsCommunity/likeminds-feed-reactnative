@@ -1,8 +1,8 @@
-import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity, RefreshControl, FlatList, ActivityIndicator, Platform } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity, RefreshControl, FlatList, ActivityIndicator, Dimensions, Platform } from 'react-native'
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { LMMenuItemsViewData, RootStackParamList } from "../../models";
 import { SearchFeedCustomisableMethodsContextProvider } from '../../context/searchFeedCallbacksContext';
-import React, { useCallback, useEffect, useLayoutEffect, useState, ReactNode } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useState, ReactNode, useMemo } from 'react'
 import STYLES from "../../constants/Styles"
 import { LMHeader, LMLoader, LMPost } from '../../components'
 import { LMIcon, LMInputText, LMText } from '../../uiComponents'
@@ -29,6 +29,7 @@ import { useSearchFeedCustomisableMethodsContext } from '../../context/searchFee
 import { SearchedPostListContextValues, useSearchedPostListContext } from '../../context/searchedPostListContext'
 import { styles } from "./styles"
 import { PollCustomisableMethodsContextProvider } from '../../context/pollCustomisableCallback';
+import FlashList from '@shopify/flash-list/src/FlashList';
 
 interface SearchFeedProps {
     children?: React.ReactNode;
@@ -199,6 +200,8 @@ const LMFeedSearchScreenComponent = ({
         isTopResponse,
         hideTopicsView,
     } = useSearchFeedCustomisableMethodsContext();
+
+    const screenHeight = useMemo(() => Dimensions.get("window").height, [])
 
     // this function returns the id of the item selected from menu list and handles further functionalities accordingly
     const onMenuItemSelect = (
@@ -429,25 +432,25 @@ const LMFeedSearchScreenComponent = ({
                     </View>
                 </View>
             </View>
-            <FlatList
-                style={postListStyle?.listStyle}
-                contentContainerStyle={{
-                    flexGrow: 1,
-                    ...postListStyle?.listContentContainerStyle
-                }}
+            <FlashList
                 data={searchFeedData}
                 extraData={searchFeedData}
+                estimatedItemSize={
+                    (screenHeight) / 3
+                }
+                disableIntervalMomentum={true}
+                decelerationRate={Platform.OS == "android" ? 0.96 : 0.9956}
                 renderItem={renderItem}
                 ListEmptyComponent={() => {
                     if (feedFetching) {
                         return (
-                            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                            <View style={{ height: screenHeight - 250, justifyContent: 'center', alignItems: 'center' }}>
                                 <LMLoader {...loaderStyle?.loader} />
                             </View>
                         )
                     } else if (searchPostQuery?.length > 0 && !feedFetching && searchFeedData?.length == 0) {
                         return displayEmptyComponent && (
-                            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                            <View style={{ height: screenHeight - 250, justifyContent: 'center', alignItems: 'center' }}>
                                 <LMIcon height={100} width={100}
                                     assetPath={require("../../assets/images/nothing3x.png")}
                                     {...searchFeedStyles?.listEmptyStyle?.listEmptyImageStyle} />

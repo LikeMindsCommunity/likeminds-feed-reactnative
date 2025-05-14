@@ -64,6 +64,7 @@ import { Client } from "../client";
 import { PollMultiSelectState, PollType } from "../enums/Poll";
 import {
   REFRESH_FROM_ONBOARDING_SCREEN,
+  SET_CURRENT_ID_OF_VIDEO,
   SET_FLOW_TO_CREATE_POST_SCREEN,
   SET_PAUSED_STATUS,
   SET_POST_UPLOADING_CREATE_SCREEN,
@@ -396,6 +397,12 @@ export const UniversalFeedContextProvider = ({
       setTemporaryPost(null);
       listRef.current?.scrollToIndex({ animated: true, index: 0 });
       if (addPostResponse?.name == "Error") {
+        dispatch({
+          type: SET_POST_UPLOADING_CREATE_SCREEN,
+          body: {
+            uploading: false
+          }
+        })
         dispatch(
           showToastMessage({
             isToast: true,
@@ -404,6 +411,11 @@ export const UniversalFeedContextProvider = ({
         );
         return addPostResponse;
       }
+      dispatch({
+        type: SET_CURRENT_ID_OF_VIDEO,
+        body: { currentIdOfVideo: addPostResponse?.post?.id ?? "" },
+      });
+      dispatch(autoPlayPostVideo(addPostResponse?.post?.id));
       dispatch(
         showToastMessage({
           isToast: true,
@@ -566,6 +578,11 @@ export const UniversalFeedContextProvider = ({
         );
         return addPostResponse;
       }
+      dispatch({
+        type: SET_CURRENT_ID_OF_VIDEO,
+        body: { currentIdOfVideo: addPostResponse?.post?.id ?? "" },
+      });
+      dispatch(autoPlayPostVideo(addPostResponse?.post?.id));
       dispatch(
         showToastMessage({
           isToast: true,

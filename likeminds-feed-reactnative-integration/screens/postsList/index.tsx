@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import {
   FlatList,
   Platform,
@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Dimensions
 } from "react-native";
 import { styles } from "./styles";
 import {
@@ -56,6 +57,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { useLMFeed } from "../../lmFeedProvider";
 import { debounce } from "../../utils/debounce";
 import { FeedType } from "../../enums/FeedType";
+import FlashList from "@shopify/flash-list/src/FlashList";
 
 const PostsList = ({
   route,
@@ -348,8 +350,11 @@ const PostsListComponent = ({
     }
   }, [refreshFromOnboardingScreen]);
 
+  const screenHeight = useMemo(() => Dimensions.get("window").height, [])
+
   // Detect viewable posts
   const onViewableItemsChanged = ({ viewableItems }) => {
+    if (!viewableItems) return
     if (feedType === FeedType.PERSONALISED_FEED) {
       if (!hasFetched.current) {
         const visiblePostIds = viewableItems.map((item) => item.item.id);
@@ -387,10 +392,16 @@ const PostsListComponent = ({
       <>
         {!feedFetching ? (
           feedData?.length > 0 ? (
-            <FlatList
+            <FlashList
+              // @ts-ignore
               ref={listRef}
               refreshing={refreshing}
               style={postListStyle?.listStyle}
+              estimatedItemSize={
+                (screenHeight)/3
+              }
+              disableIntervalMomentum={true}
+              decelerationRate={Platform.OS == "android" ? 0.96 : 0.9956}
               refreshControl={
                 <RefreshControl
                   refreshing={refreshing || refreshFromOnboardingScreen}
@@ -398,6 +409,7 @@ const PostsListComponent = ({
                 />
               }
               data={feedData}
+              extraData={[]}
               renderItem={renderItem}
               onEndReachedThreshold={0.3}
               onEndReached={handleLoadMore}
@@ -408,10 +420,8 @@ const PostsListComponent = ({
               ListFooterComponent={renderLoader}
               onViewableItemsChanged={({ changed, viewableItems }) => {
                 if (changed) {
-                  if (viewableItems) {
-                    setPostInViewport(viewableItems?.[0]?.item?.id);
-                    onViewableItemsChanged({ viewableItems });
-                  }
+                  setPostInViewport(viewableItems?.[0]?.item?.id);
+                  onViewableItemsChanged({ viewableItems });
                 }
               }}
               viewabilityConfig={{ viewAreaCoveragePercentThreshold: 60 }}
