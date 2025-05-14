@@ -67,7 +67,7 @@ const LMVideo = React.memo(
     const player = useRef<any>(null);
     const [paused, setPaused] = useState(true);
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-    const [heightCalculated, setHeightCalculated] = useState(400);
+    const [heightCalculated, setHeightCalculated] = useState(height ?? 400);
     const [desiredAspectRatio, setDesiredAspectRatio] = useState(0);
 
     const currentVideoId = useAppSelector(
@@ -119,7 +119,6 @@ const LMVideo = React.memo(
         setDesiredAspectRatio(desiredAspectRatio);
 
       } else {
-
         const ScreenWidth = Dimensions.get("window").width;
         const desiredAspectRatio = width > height ? 1.91 : 0.8;
         const heightCalculated = ScreenWidth * (1 / desiredAspectRatio);

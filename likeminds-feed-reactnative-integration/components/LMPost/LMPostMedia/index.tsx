@@ -211,6 +211,8 @@ const LMPostMedia = React.memo(() => {
             ) && (
               <LMImage
                 imageUrl={getUrl(AttachmentType.IMAGE)?.metaData?.url}
+                height={getUrl(AttachmentType.IMAGE)?.metaData?.height ?? 400}
+                width={getUrl(AttachmentType.IMAGE)?.metaData?.width ?? 800}
                 {...customPostMediaStyle?.image}
               />
             )}
@@ -219,6 +221,8 @@ const LMPostMedia = React.memo(() => {
             ) && (
               <LMVideo
                 videoUrl={getUrl(AttachmentType.VIDEO)?.metaData?.url}
+                height={getUrl(AttachmentType.VIDEO)?.metaData?.height ?? 400}
+                width={getUrl(AttachmentType.VIDEO)?.metaData?.width ?? 800}
                 postId={post?.id}
                 {...customPostMediaStyle?.video}
                 autoPlay={

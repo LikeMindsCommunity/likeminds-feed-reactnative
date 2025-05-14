@@ -24,7 +24,7 @@ const LMImage = React.memo(
   }: LMImageProps) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
-    const [heightCalculated, setHeightCalculated] = useState(400);
+    const [heightCalculated, setHeightCalculated] = useState(height ?? 400);
     const [desiredAspectRatio, setDesiredAspectRatio] = useState(0);
 
     useLayoutEffect(() => {
@@ -36,7 +36,7 @@ const LMImage = React.memo(
             const ScreenWidth = Dimensions.get("window").width;
             const desiredAspectRatio = width > height ? 1.91 : 0.8;
             const heightCalculated = ScreenWidth * (1 / desiredAspectRatio);
-            
+
             setHeightCalculated(heightCalculated);
             setDesiredAspectRatio(desiredAspectRatio);
           },
@@ -48,7 +48,7 @@ const LMImage = React.memo(
         return;
 
       } else {
-  
+
         const ScreenWidth = Dimensions.get("window").width;
         const desiredAspectRatio = width > height ? 1.91 : 0.8;
         const heightCalculated = ScreenWidth * (1 / desiredAspectRatio);
