@@ -401,7 +401,7 @@ const PostsListComponent = ({
                 (screenHeight)/3
               }
               disableIntervalMomentum={true}
-              decelerationRate={Platform.OS == "android" ? 0.96 : 0.9956}
+              decelerationRate={Platform.OS == "android" ? 0.96 : 0.994}
               refreshControl={
                 <RefreshControl
                   refreshing={refreshing || refreshFromOnboardingScreen}
@@ -409,7 +409,7 @@ const PostsListComponent = ({
                 />
               }
               data={feedData}
-              extraData={[]}
+              extraData={[feedData]}
               renderItem={renderItem}
               onEndReachedThreshold={0.3}
               onEndReached={handleLoadMore}

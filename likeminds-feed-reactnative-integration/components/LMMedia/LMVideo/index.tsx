@@ -69,6 +69,9 @@ const LMVideo = React.memo(
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
     const [heightCalculated, setHeightCalculated] = useState(height ?? 400);
     const [desiredAspectRatio, setDesiredAspectRatio] = useState(0);
+    
+    const [retryKey, setRetryKey] = useState(0);
+    const [retryCount, setRetryCount] = useState(0);
 
     const currentVideoId = useAppSelector(
       (state) => state.feed.autoPlayVideoPostId
@@ -107,6 +110,18 @@ const LMVideo = React.memo(
     const onLoad = (data) => {
       const { width, height } = data.naturalSize;
       setDimensions({ width, height });
+    };
+
+    const handleError = (error) => {
+      console.warn('Video playback error:', error);
+      setError(true);
+      // Retry after a delay
+      if (retryCount < 3) {
+        setTimeout(() => {
+          setRetryKey(prev => prev + 1);
+          setRetryCount(prev => prev + 1);
+        }, 2000);
+      }
     };
 
     useEffect(() => {
@@ -157,7 +172,7 @@ const LMVideo = React.memo(
             <RNVideo
               ref={player}
               source={{ uri: videoUrl }}
-              key={videoUrl}
+              key={`${videoUrl}-${retryKey}`}
               onLoad={(data) => {
                 setError(false);
                 onLoad(data);
@@ -165,7 +180,9 @@ const LMVideo = React.memo(
                 setLoading(false);
               }}
               onProgress={() => setError(false)}
-              onError={() => setError(true)}
+              onError={(error) => {
+                handleError(error)
+              }}
               repeat={
                 Platform.OS === "ios" ? (looping ? looping : true) : false
               }

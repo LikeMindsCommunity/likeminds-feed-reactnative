@@ -434,12 +434,12 @@ const LMFeedSearchScreenComponent = ({
             </View>
             <FlashList
                 data={searchFeedData}
-                extraData={searchFeedData}
+                extraData={[searchFeedData]}
                 estimatedItemSize={
                     (screenHeight) / 3
                 }
                 disableIntervalMomentum={true}
-                decelerationRate={Platform.OS == "android" ? 0.96 : 0.9956}
+                decelerationRate={Platform.OS == "android" ? 0.96 : 0.994}
                 renderItem={renderItem}
                 ListEmptyComponent={() => {
                     if (feedFetching) {
