@@ -46,7 +46,7 @@ import { usePostDetailContext } from "../../context";
 import pluralizeOrCapitalize from "../../utils/variables";
 import { WordAction } from "../../enums/Variables";
 import { CommunityConfigs } from "../../communityConfigs";
-import {ReportEntityType} from "@likeminds.community/feed-js"
+import {ReportEntityType} from "@likeminds.community/feed-rn"
 
 // interface for post report api request
 interface ReportRequest {

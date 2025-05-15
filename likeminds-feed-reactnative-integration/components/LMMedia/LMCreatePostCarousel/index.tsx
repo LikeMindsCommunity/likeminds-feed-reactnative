@@ -18,7 +18,7 @@ import {
   STATUS_BAR_STYLE,
 } from "../../../store/types/types";
 import { CAROUSEL_SCREEN } from "../../../constants/screenNames";
-import { AttachmentType } from "@likeminds.community/feed-js";
+import { AttachmentType } from "@likeminds.community/feed-rn";
 
 const LMCreatePostCarousel = React.memo(
   ({

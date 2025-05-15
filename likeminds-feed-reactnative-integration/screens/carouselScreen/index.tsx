@@ -29,7 +29,7 @@ import { useAppDispatch } from "../../store/store";
 import LMVideoPlayer from "../../components/LMVideoPlayer";
 import ImageViewer from "react-native-image-zoom-viewer";
 import { CallBack } from "../../callBacks/callBackClass";
-import { AttachmentType } from "@likeminds.community/feed-js";
+import { AttachmentType } from "@likeminds.community/feed-rn";
 
 const CarouselScreen = ({ navigation, route }: any) => {
   const dispatch = useAppDispatch();
