@@ -74,6 +74,7 @@ import { FeedType } from "../enums/FeedType";
 import { AddPollOptionParams, SetSelectedPollOptionsParams, SubmitPollParams } from "../constants/types";
 import RNVideoThumbnail from "../optionalDependencies/RNVideoThumbnail";
 import expoVideoThumbnail from "../optionalDependencies/ExpoVideoThumbnail";
+import FlashList from "@shopify/flash-list/src/FlashList";
 interface UniversalFeedContextProps {
   children?: ReactNode;
   navigation: NativeStackNavigationProp<RootStackParamList, "UniversalFeed">;
@@ -96,7 +97,7 @@ export interface UniversalFeedContextValues {
   showCreatePost: boolean;
   refreshing: boolean;
   localRefresh: boolean;
-  listRef: MutableRefObject<FlatList<LMPostViewData> | null>;
+  listRef: MutableRefObject<FlashList<LMPostViewData> | null>;
   mediaAttachmemnts: [];
   linkAttachments: [];
   postContent: string;
@@ -189,7 +190,7 @@ export const UniversalFeedContextProvider = ({
   const [refreshing, setRefreshing] = useState(false);
   const [localRefresh, setLocalRefresh] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const listRef = useRef<FlatList<LMPostViewData>>(null);
+  const listRef = useRef<FlashList<LMPostViewData>>(null);
   const route = useRoute();
   const params = route.params as {
     feedType?: FeedType;

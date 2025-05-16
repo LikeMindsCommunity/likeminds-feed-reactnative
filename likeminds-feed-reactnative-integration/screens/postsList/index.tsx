@@ -393,7 +393,6 @@ const PostsListComponent = ({
         {!feedFetching ? (
           feedData?.length > 0 ? (
             <FlashList
-              // @ts-ignore
               ref={listRef}
               refreshing={refreshing}
               style={postListStyle?.listStyle}

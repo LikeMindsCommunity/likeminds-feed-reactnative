@@ -107,7 +107,7 @@ const ReportModal = ({
   // this function calls the get report tags api for reporting a post
   const fetchReportTags = async () => {
     const payload = {
-      type: ReportEntityType.POST, // type 3 for report tags
+      type: ReportEntityType.POST, // type post for report tags for posts
     };
     const reportTagsResponse = await dispatch(
       getReportTags(

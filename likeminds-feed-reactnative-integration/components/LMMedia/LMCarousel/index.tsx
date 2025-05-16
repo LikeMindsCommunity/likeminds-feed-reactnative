@@ -50,10 +50,11 @@ const LMCarousel = React.memo(
       }
     };
 
+    // this functions calculates the max height among all the attachments in the carousel
     const getMaxHeightOfAttachments = () => {
       if (!post?.attachments?.length) return 0;
     
-      const ScreenWidth = Dimensions.get("window").width;
+      const screenWidth = Dimensions.get("window").width;
     
       // Map over attachments and compute scaled heights
       const scaledHeights = post?.attachments?.map(item => {
@@ -65,7 +66,7 @@ const LMCarousel = React.memo(
     
         // Determine desired aspect ratio (portrait vs landscape)
         const desiredAspectRatio = width > height ? 1.91 : 0.8;
-        return ScreenWidth * (1 / desiredAspectRatio);
+        return screenWidth * (1 / desiredAspectRatio);
       });
 
       let max = Math.max(...scaledHeights);

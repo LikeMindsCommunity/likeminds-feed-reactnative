@@ -655,15 +655,12 @@ export const PostDetailContextProvider = ({
         false
       )
     );
-    let replies: any = []
+    let replies = new Array()
     setRepliesArrayUnderComments((previousResponse) => {
       replies = [
         ...commentResponseModelConvertor(commentsRepliesResponse)?.replies, ...previousResponse
       ]
       return replies
-    })
-    console.log({
-      replies
     })
     // sets the api response in the callback function
     repliesResponseCallback(

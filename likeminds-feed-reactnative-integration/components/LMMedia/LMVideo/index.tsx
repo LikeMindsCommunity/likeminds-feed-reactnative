@@ -127,16 +127,16 @@ const LMVideo = React.memo(
     useEffect(() => {
       if ( (!height || !width) && (dimensions?.height > 0 && dimensions?.width > 0)) {
 
-        const ScreenWidth = Dimensions.get("window").width;
+        const screenWidth = Dimensions.get("window").width;
         const desiredAspectRatio = dimensions?.width > dimensions?.height ? 1.91 : 0.8;
-        const heightCalculated = ScreenWidth * (1 / desiredAspectRatio);
+        const heightCalculated = screenWidth * (1 / desiredAspectRatio);
         setHeightCalculated(heightCalculated);
         setDesiredAspectRatio(desiredAspectRatio);
 
       } else {
-        const ScreenWidth = Dimensions.get("window").width;
+        const screenWidth = Dimensions.get("window").width;
         const desiredAspectRatio = width > height ? 1.91 : 0.8;
-        const heightCalculated = ScreenWidth * (1 / desiredAspectRatio);
+        const heightCalculated = screenWidth * (1 / desiredAspectRatio);
         setHeightCalculated(heightCalculated);
         setDesiredAspectRatio(desiredAspectRatio);
 
