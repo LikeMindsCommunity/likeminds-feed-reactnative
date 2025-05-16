@@ -66,7 +66,7 @@ const LMPostComponent = React.memo(() => {
       const attachmentLength = attachments.length;
       let noOfCustomViewAttachments = 0;
       for (const attachment of attachments) {
-        if (attachment?.type.toString() === AttachmentType.CUSTOM) {
+        if (attachment?.type?.toString() === AttachmentType.CUSTOM) {
           noOfCustomViewAttachments++;
         }
       }
@@ -79,6 +79,7 @@ const LMPostComponent = React.memo(() => {
       return false;
     }
   }, [post]);
+
   if (showCustomPostViewWidget) {
     // TODO Custom Widget
     // Render the complete custom Post View widget
