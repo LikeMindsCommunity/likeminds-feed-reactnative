@@ -5,7 +5,6 @@ import { MEDIA_FETCH_ERROR } from "../../../constants/Strings";
 import LMLoader from "../../LMLoader";
 import { LMButton } from "../../../uiComponents";
 import { defaultStyles } from "./styles";
-import FastImage from "@d11/react-native-fast-image";
 
 const LMImage = React.memo(
   ({
@@ -70,17 +69,17 @@ const LMImage = React.memo(
           {loaderWidget ? loaderWidget : loading && <LMLoader />}
         </View>
         {/* this renders the image */}
-        <FastImage
+        <Image
           source={{ uri: imageUrl }}
           onLoad={() => setLoading(false)}
           onError={() => setError(true)}
-          resizeMode={boxFit ? boxFit : FastImage.resizeMode.contain}
           defaultSource={require("../../../assets/images/black_background.png")}
           style={StyleSheet.flatten([
             imageStyle,
             {
               height: heightCalculated,
               aspectRatio: desiredAspectRatio,
+              resizeMode: boxFit ? boxFit : "contain"
             }
           ])}
         />

@@ -27,7 +27,7 @@ import {
 } from "../../constants/Strings";
 import STYLES from "../../constants/Styles";
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import { deletePost, deletePostStateHandler } from "../../store/actions/feed";
+import { autoPlayPostVideo, deletePost, deletePostStateHandler } from "../../store/actions/feed";
 import {
   deleteComment,
   deleteCommentStateHandler,
@@ -47,6 +47,7 @@ import { usePostDetailContext } from "../../context";
 import { CommunityConfigs } from "../../communityConfigs";
 import { WordAction } from "../../enums/Variables";
 import pluralizeOrCapitalize from "../../utils/variables";
+import { SET_CURRENT_ID_OF_VIDEO } from "../../store/types/types";
 
 // delete modal's props
 interface DeleteModalProps {
@@ -93,7 +94,6 @@ const DeleteModal = ({
         postId: postDetail?.id,
       };
       displayModal(false);
-      dispatch(deletePostStateHandler(payload.postId));
       const deletePostPayload = DeletePostRequest.builder()
         .setDeleteReason(payload.deleteReason)
         .setPostId(payload.postId)
@@ -103,6 +103,12 @@ const DeleteModal = ({
       );
       // toast message action
       if (deletePostResponse?.success == true) {
+        dispatch(deletePostStateHandler(payload.postId));
+        dispatch({
+          type: SET_CURRENT_ID_OF_VIDEO,
+          body: { currentIdOfVideo: "" },
+        });
+        dispatch(autoPlayPostVideo(""));
         LMFeedAnalytics.track(
           Events.POST_DELETED,
           new Map<string, string>([
@@ -284,9 +290,9 @@ const DeleteModal = ({
                 {/* main modal section */}
                 <TouchableWithoutFeedback>
                   <View style={styles.modalContainer}>
-                    <Text style={styles.textHeading}>Delete {(pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.post ?? "post",WordAction.allSmallSingular))}?</Text>
+                    <Text style={styles.textHeading}>Delete {(pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.post ?? "post", WordAction.allSmallSingular))}?</Text>
                     <Text style={styles.text}>
-                      {CONFIRM_DELETE(pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.post ?? "post",WordAction.allSmallSingular))}
+                      {CONFIRM_DELETE(pluralizeOrCapitalize((CommunityConfigs?.getCommunityConfigs("feed_metadata"))?.value?.post ?? "post", WordAction.allSmallSingular))}
                     </Text>
 
                     {/* delete reason selection section */}
