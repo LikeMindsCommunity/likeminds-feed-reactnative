@@ -184,7 +184,7 @@ const LMVideo = React.memo(
                 handleError(error)
               }}
               repeat={
-                Platform.OS === "ios" ? (looping ? looping : true) : false
+                (looping ? looping : true) 
               }
               resizeMode={boxFit ? boxFit : defaultStyles.videoStyle.resizeMode}
               playWhenInactive={false}

@@ -20,6 +20,7 @@ function LMVideoPlayer({ url, setDisableGesture }) {
 
   const ref = useRef<any>();
   const [clicked, setClicked] = useState(false);
+  const [isSeeking, setIsSeeking] = useState(false);
   const [paused, setPaused] = useState(false);
   const [progress, setProgress] = useState<any>(null);
   const [mute, setMute] = useState(false);
@@ -221,8 +222,12 @@ function LMVideoPlayer({ url, setDisableGesture }) {
               }
               step={0}
               value={progress?.currentTime}
+              onSlidingStart={() => setIsSeeking(true)}
+              onSlidingComplete={() => setIsSeeking(false)}
               onValueChange={(x) => {
-                ref.current.seek(x);
+                if (isSeeking) {
+                  ref.current.seek(x);
+                }
               }}
               thumbTintColor={thumbTintColor ? thumbTintColor : "green"}
             />
