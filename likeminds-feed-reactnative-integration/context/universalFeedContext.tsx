@@ -536,7 +536,7 @@ export const UniversalFeedContextProvider = ({
           ...updatedAttachments,
           ...linkAttachments,
           ...pollAttachment,
-          ...[{ type: AttachmentType.CUSTOM, metaData: { meta: metaData } }],
+          ...[{ type: AttachmentType.CUSTOM, metaData: { widget_meta: metaData } }],
         ]
         : [...updatedAttachments, ...linkAttachments, ...pollAttachment];
     const addPostResponse: any = await dispatch(

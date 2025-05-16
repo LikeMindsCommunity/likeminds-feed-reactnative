@@ -425,7 +425,7 @@ export const CreatePostContextProvider = ({
             ...allMedia,
             ...linkData,
             ...pollAttachment,
-            ...[{ type: AttachmentType.CUSTOM, metaData: { meta: metaData } }],
+            ...[{ type: AttachmentType.CUSTOM, metaData: { widget_meta: metaData } }],
           ]
           : [...allMedia, ...linkData, ...pollAttachment];
       const post = convertToTemporaryPost(
