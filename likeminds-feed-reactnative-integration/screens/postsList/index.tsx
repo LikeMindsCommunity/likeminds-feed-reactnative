@@ -172,21 +172,21 @@ const PostsListComponent = ({
       if (Platform.OS == "ios") {
         setTimeout(() => {
           handleReportPostProps
-          ? handleReportPostProps(postId)
-          : handleReportPost();
+            ? handleReportPostProps(postId)
+            : handleReportPost();
         }, 500)
       } else {
         handleReportPostProps
-        ? handleReportPostProps(postId)
-        : handleReportPost();
+          ? handleReportPostProps(postId)
+          : handleReportPost();
       }
     }
     if (itemId === DELETE_POST_MENU_ITEM) {
       if (Platform.OS == "ios") {
         setTimeout(() => {
           handleDeletePostProps
-          ? handleDeletePostProps(true, postId)
-          : handleDeletePost(true);
+            ? handleDeletePostProps(true, postId)
+            : handleDeletePost(true);
         }, 500)
       } else {
         handleDeletePostProps
@@ -310,7 +310,7 @@ const PostsListComponent = ({
               />
             </TouchableOpacity>
             {!postListStyle.shouldHideSeparator &&
-            index != feedData.length - 1 ? (
+              index != feedData.length - 1 ? (
               <View
                 style={{
                   height: 11,
@@ -379,6 +379,29 @@ const PostsListComponent = ({
     debounce(onMomentumScrollEnd, 5000)({ nativeEvent });
   };
 
+  const getMaxHeightOfAttachments = (post) => {
+    if (!post?.attachments?.length) return 350;
+
+    const ScreenWidth = Dimensions.get("window").width;
+
+    // Map over attachments and compute scaled heights
+    const scaledHeights = post?.attachments?.map(item => {
+      const meta = item?.metaData;
+      const width = meta?.width;
+      const height = meta?.height;
+
+      if (!width || !height) return 500;
+
+      // Determine desired aspect ratio (portrait vs landscape)
+      const desiredAspectRatio = width > height ? 1.91 : 0.8;
+      return ScreenWidth * (1 / desiredAspectRatio);
+    });
+
+    let max = Math.max(...scaledHeights);
+
+    return max > 0 ? max : 350
+  };
+
   return (
     <View
       style={{
@@ -393,14 +416,20 @@ const PostsListComponent = ({
         {!feedFetching ? (
           feedData?.length > 0 ? (
             <FlashList
+              // @ts-ignore
               ref={listRef}
               refreshing={refreshing}
               style={postListStyle?.listStyle}
               estimatedItemSize={
-                (screenHeight)/3
+                (screenHeight) / 4
               }
               disableIntervalMomentum={true}
-              decelerationRate={Platform.OS == "android" ? 0.96 : 0.994}
+              decelerationRate={Platform.OS == "android" ? 0.97 : 0.994}
+              overrideItemLayout={(_, item) => {
+                const val = getMaxHeightOfAttachments(item)
+                console.log({val})
+                return val;
+              }}
               refreshControl={
                 <RefreshControl
                   refreshing={refreshing || refreshFromOnboardingScreen}
@@ -408,7 +437,7 @@ const PostsListComponent = ({
                 />
               }
               data={feedData}
-              extraData={[feedData]}
+              extraData={[]}
               renderItem={renderItem}
               onEndReachedThreshold={0.3}
               onEndReached={handleLoadMore}
