@@ -127,16 +127,16 @@ const LMVideo = React.memo(
     useEffect(() => {
       if ( (!height || !width) && (dimensions?.height > 0 && dimensions?.width > 0)) {
 
-        const screenWidth = Dimensions.get("window").width;
+        const ScreenWidth = Dimensions.get("window").width;
         const desiredAspectRatio = dimensions?.width > dimensions?.height ? 1.91 : 0.8;
-        const heightCalculated = screenWidth * (1 / desiredAspectRatio);
+        const heightCalculated = ScreenWidth * (1 / desiredAspectRatio);
         setHeightCalculated(heightCalculated);
         setDesiredAspectRatio(desiredAspectRatio);
 
       } else {
-        const screenWidth = Dimensions.get("window").width;
+        const ScreenWidth = Dimensions.get("window").width;
         const desiredAspectRatio = width > height ? 1.91 : 0.8;
-        const heightCalculated = screenWidth * (1 / desiredAspectRatio);
+        const heightCalculated = ScreenWidth * (1 / desiredAspectRatio);
         setHeightCalculated(heightCalculated);
         setDesiredAspectRatio(desiredAspectRatio);
 
@@ -172,7 +172,7 @@ const LMVideo = React.memo(
             <RNVideo
               ref={player}
               source={{ uri: videoUrl }}
-              key={`${videoUrl}-${retryKey}`}
+              key={videoUrl}
               onLoad={(data) => {
                 setError(false);
                 onLoad(data);
@@ -184,12 +184,13 @@ const LMVideo = React.memo(
                 handleError(error)
               }}
               repeat={
-                (looping ? looping : true) 
+                looping ?? true
               }
               resizeMode={boxFit ? boxFit : defaultStyles.videoStyle.resizeMode}
               playWhenInactive={false}
               playInBackground={false}
               ignoreSilentSwitch="obey"
+              minLoadRetryCount={5}
               bufferConfig={{
                 minBufferMs: 2500,
                 maxBufferMs: 5000,

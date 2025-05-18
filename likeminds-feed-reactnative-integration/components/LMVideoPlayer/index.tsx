@@ -110,10 +110,10 @@ function LMVideoPlayer({ url, setDisableGesture }) {
             style={styles.videoPlayer}
             resizeMode="contain"
             bufferConfig={{
-              minBufferMs: 2500,
+              minBufferMs: 1000,
               maxBufferMs: 5000,
               bufferForPlaybackMs: 2500,
-              bufferForPlaybackAfterRebufferMs: 2500,
+              bufferForPlaybackAfterRebufferMs: 1000,
             }}
             muted={mute}
             onEnd={() => {
@@ -225,7 +225,8 @@ function LMVideoPlayer({ url, setDisableGesture }) {
               onSlidingStart={() => setIsSeeking(true)}
               onSlidingComplete={() => setIsSeeking(false)}
               onValueChange={(x) => {
-                if (isSeeking) {
+                // logic to avoid stuttering issues
+                if ( x!== 0 && Math.abs(x - progress?.currentTime) >= 1) {
                   ref.current.seek(x);
                 }
               }}
