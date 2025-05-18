@@ -19,6 +19,7 @@ import {
 } from "../../../store/types/types";
 import {AttachmentType} from "@likeminds.community/feed-rn"
 import { CAROUSEL_SCREEN } from "../../../constants/screenNames";
+import Layout from "../../../constants/Layout";
 
 const LMCarousel = React.memo(
   ({
@@ -54,7 +55,7 @@ const LMCarousel = React.memo(
     const getMaxHeightOfAttachments = () => {
       if (!post?.attachments?.length) return 0;
     
-      const screenWidth = Dimensions.get("window").width;
+      const screenWidth = Layout.window.width
     
       // Map over attachments and compute scaled heights
       const scaledHeights = post?.attachments?.map(item => {

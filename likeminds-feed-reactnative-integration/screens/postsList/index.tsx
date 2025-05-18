@@ -58,6 +58,7 @@ import { useLMFeed } from "../../lmFeedProvider";
 import { debounce } from "../../utils/debounce";
 import { FeedType } from "../../enums/FeedType";
 import FlashList from "@shopify/flash-list/src/FlashList";
+import Layout from "../../constants/Layout";
 
 const PostsList = ({
   route,
@@ -382,7 +383,7 @@ const PostsListComponent = ({
   const getMaxHeightOfAttachments = (post) => {
     if (!post?.attachments?.length) return 350;
 
-    const ScreenWidth = Dimensions.get("window").width;
+    const screenWidth = Layout.window.width
 
     // Map over attachments and compute scaled heights
     const scaledHeights = post?.attachments?.map(item => {
@@ -394,7 +395,7 @@ const PostsListComponent = ({
 
       // Determine desired aspect ratio (portrait vs landscape)
       const desiredAspectRatio = width > height ? 1.91 : 0.8;
-      return ScreenWidth * (1 / desiredAspectRatio);
+      return screenWidth * (1 / desiredAspectRatio);
     });
 
     let max = Math.max(...scaledHeights);

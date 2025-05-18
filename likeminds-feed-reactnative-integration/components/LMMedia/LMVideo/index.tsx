@@ -27,6 +27,7 @@ import {
 import RNVideo from "../../../optionalDependencies/Video";
 import { useLMFeed } from "../../../lmFeedProvider";
 import { useIsFocused } from "@react-navigation/native";
+import Layout from "../../../constants/Layout";
 
 const LMVideo = React.memo(
   ({
@@ -127,16 +128,16 @@ const LMVideo = React.memo(
     useEffect(() => {
       if ( (!height || !width) && (dimensions?.height > 0 && dimensions?.width > 0)) {
 
-        const ScreenWidth = Dimensions.get("window").width;
+        const screenWidth = Layout.window.width;
         const desiredAspectRatio = dimensions?.width > dimensions?.height ? 1.91 : 0.8;
-        const heightCalculated = ScreenWidth * (1 / desiredAspectRatio);
+        const heightCalculated = screenWidth * (1 / desiredAspectRatio);
         setHeightCalculated(heightCalculated);
         setDesiredAspectRatio(desiredAspectRatio);
 
       } else {
-        const ScreenWidth = Dimensions.get("window").width;
+        const screenWidth = Layout.window.width;
         const desiredAspectRatio = width > height ? 1.91 : 0.8;
-        const heightCalculated = ScreenWidth * (1 / desiredAspectRatio);
+        const heightCalculated = screenWidth * (1 / desiredAspectRatio);
         setHeightCalculated(heightCalculated);
         setDesiredAspectRatio(desiredAspectRatio);
 

@@ -26,6 +26,7 @@ import {
   } from "../../../constants/screenNames";
   import RNVideo from "../../../optionalDependencies/Video";
   import { useLMFeed } from "../../../lmFeedProvider";
+  import Layout from "../../../constants/Layout"
   
   const LMCreatePostVideo = React.memo(
     ({
@@ -108,7 +109,7 @@ import {
       };
   
       useEffect(() => {
-        const screenWidth = Dimensions.get("window").width;
+        const screenWidth = Layout.window.width
         const desiredAspectRatio = width > height ? 1.91 : 0.8;
         const heightCalculated = screenWidth * (1 / desiredAspectRatio);
         setHeightCalculated(heightCalculated);

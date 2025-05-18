@@ -5,6 +5,7 @@ import { MEDIA_FETCH_ERROR } from "../../../constants/Strings";
 import LMLoader from "../../LMLoader";
 import { LMButton } from "../../../uiComponents";
 import { defaultStyles } from "./styles";
+import Layout from "../../../constants/Layout";
 
 const LMImage = React.memo(
   ({
@@ -32,7 +33,7 @@ const LMImage = React.memo(
         Image.getSize(
           imageUrl,
           (width, height) => {
-            const screenWidth = Dimensions.get("window").width;
+            const screenWidth = Layout.window.width
             const desiredAspectRatio = width > height ? 1.91 : 0.8;
             const heightCalculated = screenWidth * (1 / desiredAspectRatio);
 
@@ -48,7 +49,7 @@ const LMImage = React.memo(
 
       } else {
 
-        const screenWidth = Dimensions.get("window").width;
+        const screenWidth = Layout.window.width;
         const desiredAspectRatio = width > height ? 1.91 : 0.8;
         const heightCalculated = screenWidth * (1 / desiredAspectRatio);
 

@@ -30,6 +30,7 @@ import { SearchedPostListContextValues, useSearchedPostListContext } from '../..
 import { styles } from "./styles"
 import { PollCustomisableMethodsContextProvider } from '../../context/pollCustomisableCallback';
 import FlashList from '@shopify/flash-list/src/FlashList';
+import Layout from '../../constants/Layout';
 
 interface SearchFeedProps {
     children?: React.ReactNode;
@@ -201,7 +202,6 @@ const LMFeedSearchScreenComponent = ({
         hideTopicsView,
     } = useSearchFeedCustomisableMethodsContext();
 
-    const screenHeight = useMemo(() => Dimensions.get("window").height, [])
 
     // this function returns the id of the item selected from menu list and handles further functionalities accordingly
     const onMenuItemSelect = (
@@ -436,7 +436,7 @@ const LMFeedSearchScreenComponent = ({
                 data={searchFeedData}
                 extraData={[searchFeedData]}
                 estimatedItemSize={
-                    (screenHeight) / 3
+                    (Layout.window.height) / 3
                 }
                 disableIntervalMomentum={true}
                 decelerationRate={Platform.OS == "android" ? 0.96 : 0.994}
@@ -444,13 +444,13 @@ const LMFeedSearchScreenComponent = ({
                 ListEmptyComponent={() => {
                     if (feedFetching) {
                         return (
-                            <View style={{ height: screenHeight - 250, justifyContent: 'center', alignItems: 'center' }}>
+                            <View style={{ height: Layout.window.height - 250, justifyContent: 'center', alignItems: 'center' }}>
                                 <LMLoader {...loaderStyle?.loader} />
                             </View>
                         )
                     } else if (searchPostQuery?.length > 0 && !feedFetching && searchFeedData?.length == 0) {
                         return displayEmptyComponent && (
-                            <View style={{ height: screenHeight - 250, justifyContent: 'center', alignItems: 'center' }}>
+                            <View style={{ height: Layout.window.height - 250, justifyContent: 'center', alignItems: 'center' }}>
                                 <LMIcon height={100} width={100}
                                     assetPath={require("../../assets/images/nothing3x.png")}
                                     {...searchFeedStyles?.listEmptyStyle?.listEmptyImageStyle} />
