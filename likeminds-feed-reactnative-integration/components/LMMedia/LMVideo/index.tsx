@@ -128,14 +128,14 @@ const LMVideo = React.memo(
     useEffect(() => {
       if ( (!height || !width) && (dimensions?.height > 0 && dimensions?.width > 0)) {
 
-        const screenWidth = Layout.window.width;
+        const screenWidth = Layout.window.width
         const desiredAspectRatio = dimensions?.width > dimensions?.height ? 1.91 : 0.8;
         const heightCalculated = screenWidth * (1 / desiredAspectRatio);
         setHeightCalculated(heightCalculated);
         setDesiredAspectRatio(desiredAspectRatio);
 
       } else {
-        const screenWidth = Layout.window.width;
+        const screenWidth = Layout.window.width
         const desiredAspectRatio = width > height ? 1.91 : 0.8;
         const heightCalculated = screenWidth * (1 / desiredAspectRatio);
         setHeightCalculated(heightCalculated);
@@ -173,7 +173,8 @@ const LMVideo = React.memo(
             <RNVideo
               ref={player}
               source={{ uri: videoUrl }}
-              key={videoUrl}
+              onBuffer={(event) => setLoading(event?.isBuffering ?? false)}
+              key={`${videoUrl}-${retryKey}`}
               onLoad={(data) => {
                 setError(false);
                 onLoad(data);

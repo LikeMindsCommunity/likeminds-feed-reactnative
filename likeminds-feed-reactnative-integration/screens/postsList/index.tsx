@@ -351,8 +351,6 @@ const PostsListComponent = ({
     }
   }, [refreshFromOnboardingScreen]);
 
-  const screenHeight = useMemo(() => Dimensions.get("window").height, [])
-
   // Detect viewable posts
   const onViewableItemsChanged = ({ viewableItems }) => {
     if (!viewableItems) return
@@ -383,7 +381,7 @@ const PostsListComponent = ({
   const getMaxHeightOfAttachments = (post) => {
     if (!post?.attachments?.length) return 350;
 
-    const screenWidth = Layout.window.width
+    const screenWidth = Layout.window.width;
 
     // Map over attachments and compute scaled heights
     const scaledHeights = post?.attachments?.map(item => {
@@ -400,7 +398,7 @@ const PostsListComponent = ({
 
     let max = Math.max(...scaledHeights);
 
-    return max > 0 ? max : 350
+    return max > 0 ? max : 450
   };
 
   return (
@@ -422,7 +420,7 @@ const PostsListComponent = ({
               refreshing={refreshing}
               style={postListStyle?.listStyle}
               estimatedItemSize={
-                (screenHeight) / 4
+                (Layout.window.height) / 4
               }
               disableIntervalMomentum={true}
               decelerationRate={Platform.OS == "android" ? 0.97 : 0.994}

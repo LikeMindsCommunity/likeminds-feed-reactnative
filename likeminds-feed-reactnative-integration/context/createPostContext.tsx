@@ -81,7 +81,7 @@ import { Keys } from "../enums/Keys";
 import { CommunityConfigs } from "../communityConfigs";
 import { CREATE_POLL_SCREEN } from "../constants/screenNames";
 import STYLES from "../constants/Styles";
-import { Video, getVideoMetaData } from "react-native-compressor";
+import { Video, getVideoMetaData, Image, getImageMetaData } from "react-native-compressor";
 import { Client } from "../client";
 import _ from "lodash";
 
@@ -310,7 +310,17 @@ export const CreatePostContextProvider = ({
               );
             } else {
               if (media?.type?.includes("image")) {
-                mediaWithSizeCheck.push(media);
+                const uri = await Image.compress(media?.uri);
+                const response = await getImageMetaData(uri);
+                const convertedMedia = {
+                  fileName: media?.fileName,
+                  fileSize: response?.size,
+                  type: media?.type,
+                  height: response?.ImageHeight,
+                  width: response?.ImageWidth,
+                  uri
+                }
+                mediaWithSizeCheck.push(convertedMedia);
               } else {
                 const uri = await Video.compress(media?.uri);
                 const response = await getVideoMetaData(uri);
@@ -425,7 +435,7 @@ export const CreatePostContextProvider = ({
             ...allMedia,
             ...linkData,
             ...pollAttachment,
-            ...[{ type: AttachmentType.CUSTOM, metaData: { widget_meta: metaData } }],
+            ...[{ type: AttachmentType.CUSTOM, metaData: { widgetMeta: metaData } }],
           ]
           : [...allMedia, ...linkData, ...pollAttachment];
       const post = convertToTemporaryPost(
