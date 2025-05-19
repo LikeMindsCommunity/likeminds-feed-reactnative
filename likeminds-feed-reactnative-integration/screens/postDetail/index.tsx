@@ -11,7 +11,6 @@ import {
   Text,
   View,
   SafeAreaView,
-  Dimensions,
   StatusBar,
 } from "react-native";
 import React, { useState, useEffect, ReactNode } from "react";

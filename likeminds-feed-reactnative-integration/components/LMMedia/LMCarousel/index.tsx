@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, View, Pressable, Dimensions } from "react-native";
+import { StyleSheet, TouchableOpacity, View, Pressable } from "react-native";
 import React, { useState } from "react";
 import SwiperFlatList from "react-native-swiper-flatlist";
 import { LMCarouselProps } from "./types";
