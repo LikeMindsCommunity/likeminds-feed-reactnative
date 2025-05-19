@@ -1,12 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import {
-  FlatList,
   Platform,
   RefreshControl,
   Text,
   TouchableOpacity,
   View,
-  Dimensions
 } from "react-native";
 import { styles } from "./styles";
 import {
@@ -378,7 +376,7 @@ const PostsListComponent = ({
     debounce(onMomentumScrollEnd, 5000)({ nativeEvent });
   };
 
-  const getMaxHeightOfAttachments = (post) => {
+  const getMaxHeightOfAttachments = (post: LMPostViewData) => {
     if (!post?.attachments?.length) return 350;
 
     const screenWidth = Layout.window.width;
@@ -415,7 +413,6 @@ const PostsListComponent = ({
         {!feedFetching ? (
           feedData?.length > 0 ? (
             <FlashList
-              // @ts-ignore
               ref={listRef}
               refreshing={refreshing}
               style={postListStyle?.listStyle}
