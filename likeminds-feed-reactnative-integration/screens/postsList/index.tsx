@@ -423,8 +423,21 @@ const PostsListComponent = ({
               decelerationRate={Platform.OS == "android" ? 0.97 : 0.994}
               overrideItemLayout={(_, item) => {
                 const val = getMaxHeightOfAttachments(item)
-                console.log({val})
                 return val;
+              }}
+              getItemType={(item) => {
+                const attachments = item?.attachments ?? [];
+
+                switch (attachments.length) {
+                  case 0:
+                    return "post";
+              
+                  case 1:
+                    return attachments[0]?.type || "";
+              
+                  default:
+                    return "carousel";
+                }
               }}
               refreshControl={
                 <RefreshControl
