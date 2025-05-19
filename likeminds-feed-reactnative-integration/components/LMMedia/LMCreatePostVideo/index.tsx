@@ -5,7 +5,6 @@ import {
     TouchableOpacity,
     TouchableWithoutFeedback,
     Image,
-    Dimensions,
     Platform,
   } from "react-native";
   import React, { useEffect, useRef, useState } from "react";

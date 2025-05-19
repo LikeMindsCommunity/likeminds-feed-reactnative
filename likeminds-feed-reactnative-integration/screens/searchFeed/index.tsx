@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity, RefreshControl, FlatList, ActivityIndicator, Dimensions, Platform } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity, Platform } from 'react-native'
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { LMMenuItemsViewData, RootStackParamList } from "../../models";
 import { SearchFeedCustomisableMethodsContextProvider } from '../../context/searchFeedCallbacksContext';
@@ -434,7 +434,7 @@ const LMFeedSearchScreenComponent = ({
             </View>
             <FlashList
                 data={searchFeedData}
-                extraData={[searchFeedData]}
+                extraData={[]}
                 estimatedItemSize={
                     (Layout.window.height) / 3
                 }

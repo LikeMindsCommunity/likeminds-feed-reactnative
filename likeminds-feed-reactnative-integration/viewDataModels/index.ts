@@ -210,6 +210,7 @@ export function convertToLMPollViewData(
     multipleSelectState: item?.metadata?.multipleSelectState,
     isAnonymous: item?.metadata?.isAnonymous,
     pollType: item?.metadata?.pollType,
+    widgetMeta: item?.metadata
   };
   return pollMetaData;
 }
