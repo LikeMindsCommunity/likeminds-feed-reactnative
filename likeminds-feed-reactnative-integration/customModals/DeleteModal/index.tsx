@@ -168,7 +168,8 @@ const DeleteModal = ({
         deleteReason: otherReason ? otherReason : deletionReason,
         commentId: commentDetail?.id ? commentDetail.id : "",
         postId: commentDetail?.postId ? commentDetail.postId : "",
-        replyObject
+        replyObject,
+        commentLevel: commentOnFocus?.level
       };
 
       displayModal(false);
