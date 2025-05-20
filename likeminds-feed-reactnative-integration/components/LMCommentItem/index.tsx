@@ -62,6 +62,7 @@ const LMCommentItem = React.memo(
     const [repliesArray, setRepliesArray] = useState<LMCommentViewData[]>([]);
     const [replyPageNumber, setReplyPageNumber] = useState(2);
     const customLikeIcon = likeIconButton?.icon;
+    const [hasRepliesPaginationEnded, setHasRepliesPaginationEnded] = useState(false);
     const loggedInUserMemberRights = useAppSelector(
       (state) => state.login.memberRights
     );
@@ -71,6 +72,8 @@ const LMCommentItem = React.memo(
     const memberData = useAppSelector((state) => state.login.member);
     const isCM = memberData?.state === STATE_ADMIN;
 
+    const { repliesArrayUnderComments } = usePostDetailContext();
+
     // this handles the show more functionality
     const onTextLayout = (event) => {
       if (event.nativeEvent.lines.length > MAX_LINES && !showText) {
@@ -79,7 +82,16 @@ const LMCommentItem = React.memo(
       }
     };
 
-    const {setCommentOnFocus} = usePostDetailContext()
+    const {setCommentOnFocus, commentOnFocus} = usePostDetailContext();
+
+    useEffect(() => {
+      if (repliesArray?.length) {
+        if (comment?.id !== (repliesArrayUnderComments[0])?.comment?.id) {
+          setRepliesArray([]);
+          setShowReplies(false);
+        }
+      }
+    }, [commentOnFocus, repliesArrayUnderComments])
 
     useEffect(() => {
       if (isRepliesVisible) {
@@ -441,6 +453,7 @@ const LMCommentItem = React.memo(
               <FlatList
                 keyboardShouldPersistTaps={"handled"}
                 data={repliesArray}
+                extraData={repliesArrayUnderComments}
                 renderItem={({ item }: any) => {
                   return (
                     <>
@@ -469,17 +482,21 @@ const LMCommentItem = React.memo(
                   <>
                     {repliesArray.length > 0 ? (
                       <>
-                        {comment.repliesCount > repliesArray.length && (
+                        {comment.repliesCount > repliesArray.length && !hasRepliesPaginationEnded && (
                           <View style={styles.showMoreView}>
                             <LMButton
                               onTap={
                                 onTapViewMore
                                   ? () => {
-                                      setReplyPageNumber(replyPageNumber + 1);
                                       onTapViewMore(
                                         replyPageNumber,
-                                        (data: Array<LMCommentViewData>) =>
+                                        (data: Array<LMCommentViewData>, hasPaginationEnded?: boolean) => {
                                           setRepliesArray(data)
+                                          setReplyPageNumber(replyPageNumber + 1);
+                                          if (hasPaginationEnded) {
+                                            setHasRepliesPaginationEnded(hasPaginationEnded)
+                                          }
+                                        }
                                       );
                                     }
                                   : () => null
@@ -513,7 +530,7 @@ const LMCommentItem = React.memo(
                     )}
                   </>
                 }
-                keyExtractor={(item, index) => index?.toString()}
+                keyExtractor={(item, index) => item?.id?.toString()}
               />
             )}
           </View>

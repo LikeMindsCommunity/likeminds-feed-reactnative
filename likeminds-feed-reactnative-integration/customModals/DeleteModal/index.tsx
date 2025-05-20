@@ -62,7 +62,9 @@ interface DeleteModalProps {
     RootStackParamList,
     "PostDetail" | "UniversalFeed" | "PostsList"
   >;
-  repliesArrayUnderComments?: any
+  repliesArrayUnderComments?: any;
+  setRepliesArrayUnderComments?: any;
+  commentOnFocus?: LMCommentViewData;
 }
 
 const DeleteModal = ({
@@ -74,13 +76,15 @@ const DeleteModal = ({
   commentDetail,
   parentCommentId,
   navigation,
-  repliesArrayUnderComments
+  repliesArrayUnderComments,
+  commentOnFocus
 }: DeleteModalProps) => {
   const dispatch = useAppDispatch();
   const loggedInUser = useAppSelector((state) => state.login.member);
   const [deletionReason, setDeletionReason] = useState("");
   const [otherReason, setOtherReason] = useState("");
   const [showReasons, setShowReasons] = useState(false);
+
 
   // this function calls the delete post api
   const postDelete = async () => {
@@ -154,12 +158,13 @@ const DeleteModal = ({
   const commentDelete = async () => {
     if (
       !deletionReason &&
-      loggedInUser.userUniqueId !== commentDetail?.userId
+      loggedInUser.userUniqueId !== commentDetail?.uuid
     ) {
       showToast();
     } else {
-      let replyObject = repliesArrayUnderComments?.find(item => item?.comment?.id == commentDetail?.parentId)
+      let replyObject = (repliesArrayUnderComments[0])?.comment?.replies
       const payload = {
+        parentCommentId: (repliesArrayUnderComments[0])?.comment?.id,
         deleteReason: otherReason ? otherReason : deletionReason,
         commentId: commentDetail?.id ? commentDetail.id : "",
         postId: commentDetail?.postId ? commentDetail.postId : "",
@@ -221,6 +226,7 @@ const DeleteModal = ({
   const selectedReasonForDelete = (val: string) => {
     setDeletionReason(val);
   };
+
 
   // this show the toast message over the modal
   const showToast = () => {
@@ -297,7 +303,7 @@ const DeleteModal = ({
 
                     {/* delete reason selection section */}
                     {loggedInUser.userUniqueId !== postDetail?.uuid &&
-                      loggedInUser.userUniqueId !== commentDetail?.userId && (
+                      loggedInUser.userUniqueId !== commentDetail?.uuid && (
                         <TouchableOpacity
                           activeOpacity={0.8}
                           onPress={() => {

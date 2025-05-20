@@ -390,12 +390,11 @@ export const postDetailReducer = (state = initialState, action) => {
     case DELETE_COMMENT_STATE: {
       const updatedPostDetail: any = state.postDetail;
       // this gets the index of the comment that is deleted
-      const { replyObject } = action.body;
-      let parentCommentId = replyObject?.comment?.id;
+      const { replyObject, parentCommentId } = action.body;
       if (updatedPostDetail?.replies?.length > 0) {
         updatedPostDetail?.replies?.forEach((item) => {
           if (item?.id == parentCommentId) {
-            item.replies = replyObject?.comment?.replies;
+            item.replies = replyObject
           }
         });
       }
@@ -427,7 +426,7 @@ export const postDetailReducer = (state = initialState, action) => {
               deletedCommentIndexChild !== undefined &&
               deletedCommentIndexChild !== -1
             ) {
-              updatedPostDetail.replies[i].replies.splice(
+               const del = updatedPostDetail.replies[i].replies.splice(
                 deletedCommentIndexChild,
                 1
               );

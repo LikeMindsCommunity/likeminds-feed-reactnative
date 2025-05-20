@@ -96,7 +96,7 @@ import {
   SET_FLOW_TO_POST_DETAIL_SCREEN,
   SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
 } from "../store/types/types";
-import { commentResponseModelConvertor } from "../utils/commentResponseModelConvertor";
+import { commentResponseModelConvertor, mergeReplies } from "../utils/commentResponseModelConvertor";
 import STYLES from "../constants/Styles";
 import { Client } from "../client";
 import { SHOW_TOAST } from "../store/types/loader";
@@ -638,13 +638,46 @@ export const PostDetailContextProvider = ({
   };
 
   // this function calls the getComments api
+  // const getCommentsReplies = async (
+  //   postId: string,
+  //   commentId: string,
+  //   repliesResponseCallback: any,
+  //   pageNo: number
+  // ) => {
+  //   const commentsRepliesResponse = await dispatch(
+  //     getComments(
+  //       GetCommentRequest.builder()
+  //         .setPostId(postId)
+  //         .setCommentId(commentId)
+  //         .setPage(pageNo)
+  //         .setPageSize(10)
+  //         .build(),
+  //       false
+  //     )
+  //   );
+  //   let replies = new Array()
+  //   setRepliesArrayUnderComments((previousResponse) => {
+  //     replies = [
+  //       ...commentResponseModelConvertor(commentsRepliesResponse)?.replies, ...previousResponse
+  //     ]
+  //     return replies
+  //   })
+  //   // sets the api response in the callback function
+  //   repliesResponseCallback(
+  //     postDetail?.replies &&
+  //     replies
+  //   );
+  //   return commentsRepliesResponse;
+  // };
+
+    // this function calls the getComments api
   const getCommentsReplies = async (
     postId: string,
     commentId: string,
     repliesResponseCallback: any,
     pageNo: number
   ) => {
-    const commentsRepliesResponse = await dispatch(
+    const commentsRepliesResponse: any = await dispatch(
       getComments(
         GetCommentRequest.builder()
           .setPostId(postId)
@@ -655,17 +688,29 @@ export const PostDetailContextProvider = ({
         false
       )
     );
-    let replies = new Array()
+
+    let val: any = []
+    let hasPaginationEnded = false;
+    if (commentsRepliesResponse?.comment?.replies?.length == 0) {
+      hasPaginationEnded = true;
+    }
+
     setRepliesArrayUnderComments((previousResponse) => {
-      replies = [
-        ...commentResponseModelConvertor(commentsRepliesResponse)?.replies, ...previousResponse
-      ]
-      return replies
+      if (previousResponse?.length) {
+        val = [
+          mergeReplies(previousResponse[0], commentsRepliesResponse)
+        ]
+        return val;
+      } else {
+        val = [commentsRepliesResponse]
+        return val;
+      }
     })
     // sets the api response in the callback function
     repliesResponseCallback(
       postDetail?.replies &&
-      replies
+      commentResponseModelConvertor(val[0])?.replies,
+      hasPaginationEnded
     );
     return commentsRepliesResponse;
   };
@@ -839,7 +884,7 @@ export const PostDetailContextProvider = ({
   const commentEdit = async () => {
     // convert the mentions to route
     const convertedEditedComment = mentionToRouteConverter(commentToAdd);
-    let replyObject = repliesArrayUnderComments?.find(item => item?.comment?.id == commentOnFocus?.parentId)
+    let replyObject = repliesArrayUnderComments?.find(item => item?.comment?.id == commentOnFocus?.parentId || item?.comment?.id == commentOnFocus?.id)
     const payload = {
       commentId: commentOnFocus?.id ?? "",
       commentText: convertedEditedComment.trim(),

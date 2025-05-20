@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { LMImageProps } from "./types";
 import { MEDIA_FETCH_ERROR } from "../../../constants/Strings";
