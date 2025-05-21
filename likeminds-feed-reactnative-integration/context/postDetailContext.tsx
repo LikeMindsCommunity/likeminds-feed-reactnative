@@ -637,40 +637,8 @@ export const PostDetailContextProvider = ({
     return getPostResponse;
   };
 
-  // this function calls the getComments api
-  // const getCommentsReplies = async (
-  //   postId: string,
-  //   commentId: string,
-  //   repliesResponseCallback: any,
-  //   pageNo: number
-  // ) => {
-  //   const commentsRepliesResponse = await dispatch(
-  //     getComments(
-  //       GetCommentRequest.builder()
-  //         .setPostId(postId)
-  //         .setCommentId(commentId)
-  //         .setPage(pageNo)
-  //         .setPageSize(10)
-  //         .build(),
-  //       false
-  //     )
-  //   );
-  //   let replies = new Array()
-  //   setRepliesArrayUnderComments((previousResponse) => {
-  //     replies = [
-  //       ...commentResponseModelConvertor(commentsRepliesResponse)?.replies, ...previousResponse
-  //     ]
-  //     return replies
-  //   })
-  //   // sets the api response in the callback function
-  //   repliesResponseCallback(
-  //     postDetail?.replies &&
-  //     replies
-  //   );
-  //   return commentsRepliesResponse;
-  // };
 
-    // this function calls the getComments api
+  // this function calls the getComments api
   const getCommentsReplies = async (
     postId: string,
     commentId: string,
