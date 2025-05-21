@@ -166,9 +166,138 @@ const LMVideo = React.memo(
             )}
           </View>
         ) : null}
-
+        
         {/* this renders the video */}
-
+        <>
+          {RNVideo ? (
+            <RNVideo
+              ref={player}
+              source={{ uri: videoUrl }}
+              onBuffer={(event) => setLoading(event?.isBuffering ?? false)}
+              key={`${videoUrl}-${retryKey}`}
+              onLoad={(data) => {
+                setError(false);
+                onLoad(data);
+                player.current.seek(0); // this will set first frame of video as thumbnail
+                setLoading(false);
+              }}
+              onProgress={() => setError(false)}
+              onError={(error) => {
+                handleError(error)
+              }}
+              repeat={
+                looping ?? true
+              }
+              resizeMode={boxFit ? boxFit : defaultStyles.videoStyle.resizeMode}
+              playWhenInactive={false}
+              playInBackground={false}
+              ignoreSilentSwitch="obey"
+              minLoadRetryCount={5}
+              bufferConfig={{
+                minBufferMs: 2500,
+                maxBufferMs: 5000,
+                bufferForPlaybackMs: 2500,
+                bufferForPlaybackAfterRebufferMs: 2500,
+              }}
+              /* @ts-ignore */
+              style={StyleSheet.flatten([
+                videoStyle,
+                {
+                  height: heightCalculated,
+                  aspectRatio: aspectRatio ? aspectRatio : desiredAspectRatio,
+                },
+              ])}
+              paused={
+                (isFocused && LMFeedProvider.appState == 'active')
+                  ? flowFromCarouselScreen && currentVideoId === postId
+                    ? false
+                    : flowToCreatePostScreen
+                    ? true
+                    : pauseStatus === true &&
+                      previousRoute?.name === UNIVERSAL_FEED &&
+                      currentRoute?.name !== CREATE_POST
+                    ? pauseStatus
+                    : videoInFeed
+                    ? autoPlay
+                      ? currentVideoId === postId
+                        ? videoInCarousel
+                          ? currentVideoInCarousel === videoUrl
+                            ? false
+                            : true
+                          : false
+                        : true
+                      : playingStatus
+                    : autoPlay
+                    ? videoInCarousel
+                      ? currentVideoInCarousel === videoUrl
+                        ? false
+                        : true
+                      : false
+                    : playingStatus
+                  : true
+              } // handles the auto play/pause functionality
+              muted={
+                isReportModalOpened ||
+                flowToCarouselScreen ||
+                flowToPostDetailScreen
+                  ? true
+                  : mute
+              }
+            />
+          ) : videoCallback ? (
+            videoCallback({
+              paused: isFocused
+                ? flowFromCarouselScreen && currentVideoId === postId
+                  ? false
+                  : flowToCreatePostScreen
+                  ? true
+                  : pauseStatus === true &&
+                    previousRoute?.name === UNIVERSAL_FEED &&
+                    currentRoute?.name !== CREATE_POST
+                  ? pauseStatus
+                  : videoInFeed
+                  ? autoPlay
+                    ? currentVideoId === postId
+                      ? videoInCarousel
+                        ? currentVideoInCarousel === videoUrl
+                          ? false
+                          : true
+                        : false
+                      : true
+                    : playingStatus
+                  : autoPlay
+                  ? videoInCarousel
+                    ? currentVideoInCarousel === videoUrl
+                      ? false
+                      : true
+                    : false
+                  : playingStatus
+                : true,
+              source: videoUrl,
+              ref: player,
+              muted:
+                isReportModalOpened ||
+                flowToCarouselScreen ||
+                flowToPostDetailScreen
+                  ? true
+                  : mute,
+              repeat: looping ? looping : true,
+              resizeMode: boxFit ? boxFit : defaultStyles.videoStyle.resizeMode,
+              playWhenInactive: false,
+              playInBackground: false,
+              ignoreSilentSwitch: "obey",
+              onLoad: onLoad,
+              setLoading: setLoading,
+              style: StyleSheet.flatten([
+                videoStyle,
+                {
+                  height: heightCalculated,
+                  aspectRatio: aspectRatio ? aspectRatio : desiredAspectRatio,
+                },
+              ]),
+            })
+          ) : null}
+        </>
         {/* this renders the cancel button */}
         {showCancel && (
           <View style={defaultStyles.cancelVideoView}>

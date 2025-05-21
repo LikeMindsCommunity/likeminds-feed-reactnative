@@ -99,7 +99,7 @@ function LMVideoPlayer({ url, setDisableGesture }) {
 
         {RNVideo ? (
           <RNVideo
-            paused={paused}
+            paused={paused || (LMFeedProvider.appState !== "active")}
             source={{
               uri: url,
             }}

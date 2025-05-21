@@ -78,6 +78,7 @@ import pluralizeOrCapitalize from "../../utils/variables";
 import { CommunityConfigs } from "../../communityConfigs";
 import { WordAction } from "../..//enums/Variables";
 import { useSafeAreaFrame, useSafeAreaInsets } from "react-native-safe-area-context";
+import { useIsFocused } from '@react-navigation/native';
 
 interface PostDetailProps {
   children?: React.ReactNode;
@@ -276,6 +277,7 @@ const PostDetailComponent = React.memo(() => {
   const memberData = useAppSelector((state) => state.login.member);
   const isCM = memberData?.state === STATE_ADMIN;
   const { repliesArrayUnderComments, setRepliesArrayUnderComments } = usePostDetailContext();
+  const focused = useIsFocused();
 
   // this function returns the id of the item selected from menu list and handles further functionalities accordingly for comment
   const onCommentMenuItemSelect = async (

@@ -3,7 +3,6 @@ import {
     Text,
     StyleSheet,
     TouchableOpacity,
-    TouchableWithoutFeedback,
     Image,
     Platform,
   } from "react-native";
@@ -172,7 +171,7 @@ import {
                   },
                 ])}
                 paused={
-                  flowFromCarouselScreen && currentVideoId === postId
+                  ( LMFeedProvider.appState !== "active" || (flowFromCarouselScreen && currentVideoId === postId
                     ? false
                     : flowToCreatePostScreen
                     ? true
@@ -196,7 +195,7 @@ import {
                         ? false
                         : true
                       : false
-                    : playingStatus
+                    : playingStatus))
                 } // handles the auto play/pause functionality
                 muted={
                   isReportModalOpened ||
