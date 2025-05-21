@@ -553,7 +553,6 @@ const PostDetailComponent = React.memo(() => {
                                   repliesResponseCallback,
                                   commentIdOfReplies
                                 ) => {
-                                  dispatch(clearComments(item?.id));
                                   setShowRepliesOfCommentId(commentIdOfReplies);
                                   getCommentsRepliesProp
                                     ? getCommentsRepliesProp(

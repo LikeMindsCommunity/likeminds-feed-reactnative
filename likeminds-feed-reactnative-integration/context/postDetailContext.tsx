@@ -658,29 +658,19 @@ export const PostDetailContextProvider = ({
       )
     ) as any;
 
-    let replies = new Array();
+    dispatch({
+      type: "ADD_REPLIES_TO_COMMENT",
+      body: {
+        parentCommentId: commentId,
+        replies: commentResponseModelConvertor(commentsRepliesResponse)?.replies,
+      }
+    })
+
     let hasPaginationEnded = false;
     if ((commentsRepliesResponse?.comment)?.replies?.length == 0) {
       hasPaginationEnded = true;
     }
 
-    setRepliesArrayUnderComments((previousResponse) => {
-      if (previousResponse?.length) {
-        replies = [
-          mergeReplies(previousResponse[0], commentsRepliesResponse)
-        ]
-        return replies;
-      } else {
-        replies = [commentsRepliesResponse]
-        return replies;
-      }
-    })
-    // sets the api response in the callback function
-    repliesResponseCallback(
-      postDetail?.replies &&
-      commentResponseModelConvertor(replies[0])?.replies,
-      hasPaginationEnded
-    );
     return commentsRepliesResponse;
   };
 

@@ -143,38 +143,13 @@ export const postDetailReducer = (state = initialState, action) => {
       return { ...state, postDetail: converterPostData };
     }
     case POST_COMMENTS_SUCCESS: {
-      const { comment, users } = action.body;
-      const updatedDetail = state.postDetail;
-      updatedDetail?.replies &&
-        updatedDetail.replies.find((item) => {
-          if (item.id === comment?.id) {
-            const commentData = convertToLMCommentViewData(
-              comment?.postId,
-              comment.replies,
-              users
-            );
-            let newReplies = commentData || [];
-            // Filter out replies that are already present in item.replies
-            newReplies = newReplies.filter(
-              (newReply) =>
-                !item.replies || // Check if item.replies exist
-                !item.replies.some(
-                  (existingReply) => existingReply.id === newReply.id
-                )
-            );
-
-            // Merge the unique newReplies with existing replies in item.replies
-            const mergedReplies = [...(item.replies || []), ...newReplies];
-            item.replies = mergedReplies;
-          }
-        });
-      return { ...state, postDetail: updatedDetail };
+      return {...state}
     }
     case CLEAR_COMMENT: {
       const updatedDetail = state.postDetail;
       updatedDetail?.replies &&
         updatedDetail.replies.find((item) => {
-          if (item.id === action.body) {
+          if (item.id == action.body) {
             item.replies = [];
           }
         });
@@ -337,17 +312,23 @@ export const postDetailReducer = (state = initialState, action) => {
       });
       return { ...state, postDetail: updatedPostDetail };
     }
+    case "ADD_REPLIES_TO_COMMENT": {
+      const { parentCommentId, replies } = action.body;
+      if (!parentCommentId || !replies?.length) return {...state}
+      const postDetail = state.postDetail;
+      const parentComment = postDetail.replies?.find(reply => reply.id == parentCommentId)
+      if (parentComment) {
+        let previousReplies = parentComment.replies;
+        parentComment.replies = [
+          ...previousReplies as [],
+          ...replies,
+        ]
+      }
+      return { ...state }
+    }
     case EDIT_COMMENT_STATE: {
       const updatedPostDetail: any = state.postDetail;
       const { commentId, commentText, replyObject } = action.body;
-      let parentCommentId = replyObject?.comment?.id;
-      if (updatedPostDetail?.replies?.length > 0) {
-        updatedPostDetail?.replies?.forEach((item) => {
-          if (item?.id == parentCommentId) {
-            item.replies = replyObject?.comment?.replies;
-          }
-        });
-      }
       const editCommentIndex =
         updatedPostDetail?.replies &&
         updatedPostDetail.replies.findIndex(
@@ -390,14 +371,6 @@ export const postDetailReducer = (state = initialState, action) => {
     case DELETE_COMMENT_STATE: {
       const updatedPostDetail: any = state.postDetail;
       // this gets the index of the comment that is deleted
-      const { replyObject, parentCommentId } = action.body;
-      if (updatedPostDetail?.replies?.length > 0) {
-        updatedPostDetail?.replies?.forEach((item) => {
-          if (item?.id == parentCommentId) {
-            item.replies = replyObject
-          }
-        });
-      }
       const deletedCommentIndex =
         updatedPostDetail?.replies &&
         updatedPostDetail.replies.findIndex(
@@ -426,7 +399,7 @@ export const postDetailReducer = (state = initialState, action) => {
               deletedCommentIndexChild !== undefined &&
               deletedCommentIndexChild !== -1
             ) {
-               updatedPostDetail.replies[i].replies.splice(
+              updatedPostDetail.replies[i].replies.splice(
                 deletedCommentIndexChild,
                 1
               );

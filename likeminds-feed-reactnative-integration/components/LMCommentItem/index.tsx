@@ -21,13 +21,14 @@ import { LMCommentViewData } from "../../models";
 import { styles } from "./styles";
 import decode from "../../utils/decodeMentions";
 import { timeStamp } from "../../utils";
-import { useAppSelector } from "../../store/store";
+import { useAppDispatch, useAppSelector } from "../../store/store";
 import { MemberRightsEnum } from "../../enums/MemberRightsEnum";
 import STYLES from "../../constants/Styles";
 import { usePostDetailContext } from "../../context";
 import { CommunityConfigs } from "../../communityConfigs";
 import pluralizeOrCapitalize from "../../utils/variables";
 import { WordAction } from "../../enums/Variables";
+import { clearComments } from "../../store/actions/postDetail";
 const LMCommentItem = React.memo(
   ({
     likeIconButton,
@@ -71,8 +72,7 @@ const LMCommentItem = React.memo(
     );
     const memberData = useAppSelector((state) => state.login.member);
     const isCM = memberData?.state === STATE_ADMIN;
-
-    const { repliesArrayUnderComments } = usePostDetailContext();
+    const dispatch = useAppDispatch();
 
     // this handles the show more functionality
     const onTextLayout = (event) => {
@@ -85,19 +85,8 @@ const LMCommentItem = React.memo(
     const {setCommentOnFocus, commentOnFocus} = usePostDetailContext();
 
     useEffect(() => {
-      if (repliesArray?.length) {
-        if (comment?.id !== (repliesArrayUnderComments[0])?.comment?.id) {
-          setRepliesArray([]);
-          setShowReplies(false);
-        }
-      }
-    }, [commentOnFocus, repliesArrayUnderComments])
-
-    useEffect(() => {
       if (isRepliesVisible) {
         setShowReplies(true);
-        onTapReplies &&
-          onTapReplies((data: Array<LMCommentViewData>) => setRepliesArray(data), "");
       }
     }, [isRepliesVisible]);
 
@@ -148,6 +137,10 @@ const LMCommentItem = React.memo(
     };
 
     const handleReplies = () => {
+      if (showReplies) {
+        setHasRepliesPaginationEnded(false);
+        dispatch(clearComments(comment?.id))
+      }
       setShowReplies(!showReplies);
     };
 
@@ -365,7 +358,7 @@ const LMCommentItem = React.memo(
                       ))}
                     <LMButton
                       onTap={() => {
-                        onTapReplies
+                        onTapReplies && !showReplies
                           ? (onTapReplies(
                               (data: Array<LMCommentViewData>) =>
                                 setRepliesArray(data),
@@ -449,11 +442,10 @@ const LMCommentItem = React.memo(
         {/* replies section */}
         {showReplies && comment.repliesCount > 0 && (
           <View style={styles.repliesView}>
-            {repliesArray && (
+            {comment?.replies && (
               <FlatList
                 keyboardShouldPersistTaps={"handled"}
-                data={repliesArray}
-                extraData={repliesArrayUnderComments}
+                data={comment?.replies ?? []}
                 renderItem={({ item }: any) => {
                   return (
                     <>
@@ -477,12 +469,11 @@ const LMCommentItem = React.memo(
                     </>
                   );
                 }}
-                // ListFooterComponentStyle={{}}
                 ListFooterComponent={
                   <>
-                    {repliesArray.length > 0 ? (
+                    {comment?.replies.length > 0 ? (
                       <>
-                        {comment.repliesCount > repliesArray.length && !hasRepliesPaginationEnded && (
+                        {comment.repliesCount > comment?.replies.length && !hasRepliesPaginationEnded && (
                           <View style={styles.showMoreView}>
                             <LMButton
                               onTap={
@@ -518,7 +509,7 @@ const LMCommentItem = React.memo(
                               buttonStyle={styles.viewMoreButton}
                             />
                             <Text style={styles.commentPageNumberText}>
-                              {repliesArray.length} of {comment.repliesCount}
+                              {comment?.replies?.length} of {comment.repliesCount}
                             </Text>
                           </View>
                         )}
@@ -530,7 +521,7 @@ const LMCommentItem = React.memo(
                     )}
                   </>
                 }
-                keyExtractor={(item, index) => item?.id?.toString()}
+                keyExtractor={(item, index) => index?.toString()}
               />
             )}
           </View>
