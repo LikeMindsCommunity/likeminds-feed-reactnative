@@ -426,7 +426,7 @@ export const postDetailReducer = (state = initialState, action) => {
               deletedCommentIndexChild !== undefined &&
               deletedCommentIndexChild !== -1
             ) {
-               const del = updatedPostDetail.replies[i].replies.splice(
+               updatedPostDetail.replies[i].replies.splice(
                 deletedCommentIndexChild,
                 1
               );

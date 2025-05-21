@@ -54,6 +54,7 @@ import {
 import {
   AddCommentRequest,
   EditCommentRequest,
+  GetCommentDetails,
   GetCommentRequest,
   GetPostRequest,
   GetTaggingListRequest,
@@ -645,7 +646,7 @@ export const PostDetailContextProvider = ({
     repliesResponseCallback: any,
     pageNo: number
   ) => {
-    const commentsRepliesResponse: any = await dispatch(
+    const commentsRepliesResponse: GetCommentDetails = await dispatch(
       getComments(
         GetCommentRequest.builder()
           .setPostId(postId)
@@ -655,29 +656,29 @@ export const PostDetailContextProvider = ({
           .build(),
         false
       )
-    );
+    ) as any;
 
-    let val: any = []
+    let replies = new Array();
     let hasPaginationEnded = false;
-    if (commentsRepliesResponse?.comment?.replies?.length == 0) {
+    if ((commentsRepliesResponse?.comment)?.replies?.length == 0) {
       hasPaginationEnded = true;
     }
 
     setRepliesArrayUnderComments((previousResponse) => {
       if (previousResponse?.length) {
-        val = [
+        replies = [
           mergeReplies(previousResponse[0], commentsRepliesResponse)
         ]
-        return val;
+        return replies;
       } else {
-        val = [commentsRepliesResponse]
-        return val;
+        replies = [commentsRepliesResponse]
+        return replies;
       }
     })
     // sets the api response in the callback function
     repliesResponseCallback(
       postDetail?.replies &&
-      commentResponseModelConvertor(val[0])?.replies,
+      commentResponseModelConvertor(replies[0])?.replies,
       hasPaginationEnded
     );
     return commentsRepliesResponse;

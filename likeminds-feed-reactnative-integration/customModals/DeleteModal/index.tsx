@@ -62,8 +62,8 @@ interface DeleteModalProps {
     RootStackParamList,
     "PostDetail" | "UniversalFeed" | "PostsList"
   >;
-  repliesArrayUnderComments?: any;
-  setRepliesArrayUnderComments?: any;
+  repliesArrayUnderComments?: React.Dispatch<LMCommentViewData>;
+  setRepliesArrayUnderComments?: React.Dispatch<LMCommentViewData>;
   commentOnFocus?: LMCommentViewData;
 }
 

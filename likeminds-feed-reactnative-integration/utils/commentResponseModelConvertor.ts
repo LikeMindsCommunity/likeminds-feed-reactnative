@@ -21,6 +21,7 @@ export const commentResponseModelConvertor = (response) => {
   return comment;
 };
 
+// this function merges the level 1 replies during pagination of replies under a single comment
 export function mergeReplies(obj1, obj2) {
   // Ensure both objects and their comments exist
   const comment1 = obj1?.comment;
@@ -55,6 +56,3 @@ export function mergeReplies(obj1, obj2) {
 
   return merged;
 }
-
-
-
