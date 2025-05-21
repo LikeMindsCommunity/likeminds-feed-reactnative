@@ -651,6 +651,13 @@ export const UniversalFeedContextProvider = ({
     ) {
       setPostUploading(true);
       postAdd();
+    } else {
+      dispatch({
+        type: SET_POST_UPLOADING_CREATE_SCREEN,
+        body: {
+          uploading: false
+        }
+      })
     }
   }, [mediaAttachmemnts, linkAttachments, postContent, heading, topics, poll]);
 
