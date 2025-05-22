@@ -61,7 +61,8 @@ const LMCommentItem = React.memo(
       comment?.likesCount
     );
     const [repliesArray, setRepliesArray] = useState<LMCommentViewData[]>([]);
-    const [replyPageNumber, setReplyPageNumber] = useState(2);
+    const [repliesLoading, setRepliesLoading] = useState(false);
+    const [replyPageNumber, setReplyPageNumber] = useState(1);
     const customLikeIcon = likeIconButton?.icon;
     const [hasRepliesPaginationEnded, setHasRepliesPaginationEnded] = useState(false);
     const loggedInUserMemberRights = useAppSelector(
@@ -329,6 +330,14 @@ const LMCommentItem = React.memo(
                           ]),
                         }}
                         onTap={() => {
+                          if (!showReplies) {
+                            (onTapReplies && onTapReplies(
+                              (data: Array<LMCommentViewData>) =>
+                                setRepliesArray(data),
+                              ""
+                            ),
+                            handleReplies())
+                          }
                           replyTextProps?.onTap();
                         }}
                         buttonStyle={StyleSheet.flatten([
@@ -477,12 +486,14 @@ const LMCommentItem = React.memo(
                           <View style={styles.showMoreView}>
                             <LMButton
                               onTap={
-                                onTapViewMore
+                                onTapViewMore && !repliesLoading
                                   ? () => {
+                                      setRepliesLoading(true);
                                       onTapViewMore(
-                                        replyPageNumber,
+                                        replyPageNumber + 1,
                                         (data: Array<LMCommentViewData>, hasPaginationEnded?: boolean) => {
                                           setRepliesArray(data)
+                                          setRepliesLoading(false);
                                           setReplyPageNumber(replyPageNumber + 1);
                                           if (hasPaginationEnded) {
                                             setHasRepliesPaginationEnded(hasPaginationEnded)
