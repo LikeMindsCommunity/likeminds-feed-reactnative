@@ -20,39 +20,3 @@ export const commentResponseModelConvertor = (response) => {
   comment.replies = repliesArray?.length > 0 ? repliesArray : [];
   return comment;
 };
-
-// this function merges the level 1 replies during pagination of replies under a single comment
-export function mergeReplies(obj1, obj2) {
-  // Ensure both objects and their comments exist
-  const comment1 = obj1?.comment;
-  const comment2 = obj2?.comment;
-
-  // If comment IDs don't match, return obj1 unchanged (or handle as needed)
-  if (!comment1 || !comment2 || comment1.id !== comment2.id) {
-    return obj2;
-  }
-
-  // Clone obj1 to avoid mutating it
-  const merged = JSON.parse(JSON.stringify(obj1));
-
-  const replies1 = comment1.replies ?? [];
-  const replies2 = comment2.replies ?? [];
-
-  // Deduplicate replies by reply.id
-  const deduplicatedReplies = [
-    ...new Map(
-      [...replies1, ...replies2].map(reply => [reply.id, reply])
-    ).values()
-  ];
-
-  // Sort by abs(Number(tempId)) in ascending order
-  deduplicatedReplies.sort((a, b) => {
-    const aTime = Math.abs(Number(a.tempId));
-    const bTime = Math.abs(Number(b.tempId));
-    return bTime - aTime;
-  });
-
-  merged.comment.replies = deduplicatedReplies;
-
-  return merged;
-}

@@ -97,7 +97,7 @@ import {
   SET_FLOW_TO_POST_DETAIL_SCREEN,
   SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
 } from "../store/types/types";
-import { commentResponseModelConvertor, mergeReplies } from "../utils/commentResponseModelConvertor";
+import { commentResponseModelConvertor } from "../utils/commentResponseModelConvertor";
 import STYLES from "../constants/Styles";
 import { Client } from "../client";
 import { SHOW_TOAST } from "../store/types/loader";
