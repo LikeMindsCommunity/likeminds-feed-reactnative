@@ -671,6 +671,8 @@ export const PostDetailContextProvider = ({
       hasPaginationEnded = true;
     }
 
+    repliesResponseCallback && repliesResponseCallback([], hasPaginationEnded)
+
     return commentsRepliesResponse;
   };
 
