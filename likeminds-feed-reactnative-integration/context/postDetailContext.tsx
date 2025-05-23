@@ -221,7 +221,8 @@ export interface PostDetailContextValues {
     postId: string,
     commentId: string,
     repliesResponseCallback: any,
-    pageNo: number
+    pageNo: number,
+    haveFirstPageReplies?: boolean
   ) => void;
   commentLikeHandler: (postId: string, commentId: string) => void;
   addNewComment: (postId: string) => void;
@@ -644,7 +645,8 @@ export const PostDetailContextProvider = ({
     postId: string,
     commentId: string,
     repliesResponseCallback: any,
-    pageNo: number
+    pageNo: number,
+    haveFirstPageReplies?: boolean
   ) => {
     const commentsRepliesResponse: GetCommentDetails = await dispatch(
       getComments(
@@ -659,10 +661,11 @@ export const PostDetailContextProvider = ({
     ) as any;
 
     dispatch({
-      type: "ADD_REPLIES_TO_COMMENT",
+      type: "APPEND_REPLIES_TO_COMMENT",
       body: {
         parentCommentId: commentId,
         replies: commentResponseModelConvertor(commentsRepliesResponse)?.replies,
+        haveFirstPageReplies
       }
     })
 

@@ -312,17 +312,26 @@ export const postDetailReducer = (state = initialState, action) => {
       });
       return { ...state, postDetail: updatedPostDetail };
     }
-    case "ADD_REPLIES_TO_COMMENT": {
-      const { parentCommentId, replies } = action.body;
+    case "APPEND_REPLIES_TO_COMMENT": {
+      const { parentCommentId, replies, haveFirstPageReplies } = action.body;
       if (!parentCommentId || !replies?.length) return {...state}
       const postDetail = state.postDetail;
       const parentComment = postDetail.replies?.find(reply => reply.id == parentCommentId)
       if (parentComment) {
         let previousReplies = parentComment.replies;
-        parentComment.replies = [
-          ...previousReplies as [],
-          ...replies,
-        ]
+        if (!haveFirstPageReplies) {
+          // incase of replying to a comment when replies have not been fetched
+          parentComment.replies = [
+            ...new Map(
+              [...(previousReplies as []), ...replies].map((reply: any) => [reply.id, reply])
+            ).values()
+          ];
+        } else {
+          parentComment.replies = [
+            ...previousReplies as [],
+            ...replies,
+          ]
+        }
       }
       return { ...state }
     }

@@ -61,6 +61,7 @@ const LMCommentItem = React.memo(
       comment?.likesCount
     );
     const [repliesArray, setRepliesArray] = useState<LMCommentViewData[]>([]);
+    const [haveFirstPageReplies, setHaveFirstPageReplies] = useState(false);
     const [repliesLoading, setRepliesLoading] = useState(false);
     const [replyPageNumber, setReplyPageNumber] = useState(1);
     const customLikeIcon = likeIconButton?.icon;
@@ -330,14 +331,6 @@ const LMCommentItem = React.memo(
                           ]),
                         }}
                         onTap={() => {
-                          if (!showReplies) {
-                            (onTapReplies && onTapReplies(
-                              (data: Array<LMCommentViewData>) =>
-                                setRepliesArray(data),
-                              ""
-                            ),
-                            handleReplies())
-                          }
                           replyTextProps?.onTap();
                         }}
                         buttonStyle={StyleSheet.flatten([
@@ -490,15 +483,17 @@ const LMCommentItem = React.memo(
                                   ? () => {
                                       setRepliesLoading(true);
                                       onTapViewMore(
-                                        replyPageNumber + 1,
+                                        haveFirstPageReplies ? replyPageNumber + 1 : 1,
                                         (data: Array<LMCommentViewData>, hasPaginationEnded?: boolean) => {
+                                          setHaveFirstPageReplies(true);
                                           setRepliesArray(data)
                                           setRepliesLoading(false);
                                           setReplyPageNumber(replyPageNumber + 1);
                                           if (hasPaginationEnded) {
                                             setHasRepliesPaginationEnded(hasPaginationEnded)
                                           }
-                                        }
+                                        },
+                                        haveFirstPageReplies
                                       );
                                     }
                                   : () => null

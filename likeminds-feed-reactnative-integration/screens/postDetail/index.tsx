@@ -573,13 +573,15 @@ const PostDetailComponent = React.memo(() => {
                                 // this handles the pagination of child replies on click of view more
                                 onTapViewMore={(
                                   pageValue,
-                                  repliesResponseCallback
+                                  repliesResponseCallback,
+                                  haveFirstPageReplies
                                 ) => {
                                   getCommentsReplies(
                                     item?.postId,
                                     item?.id,
                                     repliesResponseCallback,
-                                    pageValue
+                                    pageValue,
+                                    haveFirstPageReplies
                                   );
                                   customCommentItemStyle?.onTapViewMore &&
                                     customCommentItemStyle?.onTapViewMore();
