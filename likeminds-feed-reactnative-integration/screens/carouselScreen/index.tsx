@@ -29,6 +29,7 @@ import { useAppDispatch } from "../../store/store";
 import LMVideoPlayer from "../../components/LMVideoPlayer";
 import ImageViewer from "react-native-image-zoom-viewer";
 import { CallBack } from "../../callBacks/callBackClass";
+import { AttachmentType } from "@likeminds.community/feed-rn";
 
 const CarouselScreen = ({ navigation, route }: any) => {
   const dispatch = useAppDispatch();
@@ -37,7 +38,7 @@ const CarouselScreen = ({ navigation, route }: any) => {
   const data = dataObject?.attachments;
 
   const attachmentsUrls = data?.map((item) => ({
-    ["url"]: item.attachmentMeta.url,
+    ["url"]: item?.metaData?.url,
   }));
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -54,9 +55,9 @@ const CarouselScreen = ({ navigation, route }: any) => {
   let imageCount = 0;
   let videoCount = 0;
   for (let i = 0; i < data.length; i++) {
-    if (data[i].attachmentType == VIDEO_ATTACHMENT_TYPE) {
+    if (data[i].type == AttachmentType.VIDEO) {
       videoCount++;
-    } else if (data[i].attachmentType === IMAGE_ATTACHMENT_TYPE) {
+    } else if (data[i].type === AttachmentType.IMAGE) {
       imageCount++;
     }
   }
@@ -226,7 +227,7 @@ const CarouselScreen = ({ navigation, route }: any) => {
                 justifyContent: "center",
               }}
             >
-              {item?.attachmentType === IMAGE_ATTACHMENT_TYPE ? (
+              {item?.type === AttachmentType.IMAGE ? (
                 <ImageViewer
                   imageUrls={[{url: attachmentsUrls[index]?.url}]}
                   style={styles.image}
@@ -250,18 +251,18 @@ const CarouselScreen = ({ navigation, route }: any) => {
                     );
                   }}
                 />
-              ) : item?.attachmentType === VIDEO_ATTACHMENT_TYPE &&
+              ) : item?.type === AttachmentType.VIDEO &&
                 index === currentIndex ? (
                 <LMVideoPlayer
-                  url={item?.attachmentMeta?.url}
+                  url={item?.metaData?.url}
                   setDisableGesture={setDisableGesture}
                 />
-              ) : item?.attachmentType === VIDEO_ATTACHMENT_TYPE &&
+              ) : item?.type === AttachmentType.VIDEO &&
                 index !== currentIndex ? (
                 <Image
                   style={styles.image}
                   source={{
-                    uri: item?.attachmentMeta?.thumbnailUrl,
+                    uri: item?.metaData?.thumbnailUrl,
                   }}
                 />
               ) : null}

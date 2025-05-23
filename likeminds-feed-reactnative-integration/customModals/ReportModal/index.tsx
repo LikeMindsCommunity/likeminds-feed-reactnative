@@ -46,11 +46,12 @@ import { usePostDetailContext } from "../../context";
 import pluralizeOrCapitalize from "../../utils/variables";
 import { WordAction } from "../../enums/Variables";
 import { CommunityConfigs } from "../../communityConfigs";
+import {ReportEntityType} from "@likeminds.community/feed-rn"
 
 // interface for post report api request
 interface ReportRequest {
   entityId: string;
-  entityType: number;
+  entityType: ReportEntityType;
   reason: string;
   tagId: number;
   uuid: string;
@@ -106,11 +107,11 @@ const ReportModal = ({
   // this function calls the get report tags api for reporting a post
   const fetchReportTags = async () => {
     const payload = {
-      type: REPORT_TAGS_TYPE, // type 3 for report tags
+      type: ReportEntityType.POST, // type post for report tags for posts
     };
     const reportTagsResponse = await dispatch(
       getReportTags(
-        GetReportTagsRequest.builder().setType(payload.type).build(),
+        GetReportTagsRequest.builder().setEntityType(payload.type).build(),
         false
       )
     );
@@ -143,7 +144,7 @@ const ReportModal = ({
         .setEntityType(payload.entityType)
         .setReason(payload.reason)
         .setTagId(payload.tagId)
-        .setUuid(payload.uuid)
+        .setAccusedUUID(payload.uuid)
         .build();
       const postReportResponse = await Client.myClient.postReport(
         postReportRequest
@@ -343,10 +344,10 @@ const ReportModal = ({
                             : "",
                         entityType:
                           reportType === POST_TYPE
-                            ? POST_REPORT_ENTITY_TYPE
+                            ? ReportEntityType.POST
                             : reportType === COMMENT_TYPE
-                            ? COMMENT_REPORT_ENTITY_TYPE
-                            : REPLY_REPORT_ENTITY_TYPE, // different entityType value for post/comment/reply
+                            ? ReportEntityType.COMMENT
+                            : ReportEntityType.REPLY, // different entityType value for post/comment/reply
                         reason: otherReason,
                         tagId: selectedId,
                         uuid:

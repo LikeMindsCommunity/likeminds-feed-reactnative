@@ -54,6 +54,7 @@ import {
 import {
   AddCommentRequest,
   EditCommentRequest,
+  GetCommentDetails,
   GetCommentRequest,
   GetPostRequest,
   GetTaggingListRequest,
@@ -92,6 +93,7 @@ import { getPostType } from "../utils/analytics";
 import LMLoader from "../components/LMLoader";
 import Layout from "../constants/Layout";
 import {
+  APPEND_REPLIES_TO_COMMENT,
   HIDE_POST_STATE,
   SET_FLOW_TO_POST_DETAIL_SCREEN,
   SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
@@ -220,7 +222,8 @@ export interface PostDetailContextValues {
     postId: string,
     commentId: string,
     repliesResponseCallback: any,
-    pageNo: number
+    pageNo: number,
+    haveFirstPageReplies?: boolean
   ) => void;
   commentLikeHandler: (postId: string, commentId: string) => void;
   addNewComment: (postId: string) => void;
@@ -328,9 +331,9 @@ export const PostDetailContextProvider = ({
   const [overlayMenuType, setOverlayMenuType] = useState("");
   const [isPaginationStopped, setIsPaginationStopped] = useState(false);
   const [showLoader, setShowLoader] = useState(true);
-  const [commentOnFocus,setCommentOnFocus] = useState<LMCommentViewData>();
+  const [commentOnFocus, setCommentOnFocus] = useState<LMCommentViewData>();
   const loaderStyle = STYLES.$LOADER_STYLE
-  const [repliesArrayUnderComments,setRepliesArrayUnderComments] = useState<any>([])
+  const [repliesArrayUnderComments, setRepliesArrayUnderComments] = useState<any>([])
 
   // this function is executed on pull to refresh
   const onRefresh = async () => {
@@ -443,7 +446,7 @@ export const PostDetailContextProvider = ({
       postId: id,
     };
 
-    if(postDetail?.isHidden) {
+    if (postDetail?.isHidden) {
       dispatch(
         showToastMessage({
           isToast: true,
@@ -452,7 +455,7 @@ export const PostDetailContextProvider = ({
       );
       return undefined
     }
-    
+
     const pinPostResponse = await dispatch(
       pinPost(PinPostRequest.builder().setPostId(payload.postId).build(), false)
     );
@@ -489,9 +492,9 @@ export const PostDetailContextProvider = ({
       const isPostHidden = (postDetail as LMPostViewData)?.menuItems?.find((menuItem) => menuItem.id == 13);
       await dispatch(hidePost(
         HidePostRequest.
-        builder()
-        .setPostId(postId)
-        .build(),
+          builder()
+          .setPostId(postId)
+          .build(),
         false
       ))
       dispatch({
@@ -515,7 +518,7 @@ export const PostDetailContextProvider = ({
     }
   }
 
-  
+
 
   // this function returns the id of the item selected from menu list and handles further functionalities accordingly for post
   const onMenuItemSelect = (
@@ -637,14 +640,16 @@ export const PostDetailContextProvider = ({
     return getPostResponse;
   };
 
+
   // this function calls the getComments api
   const getCommentsReplies = async (
     postId: string,
     commentId: string,
     repliesResponseCallback: any,
-    pageNo: number
+    pageNo: number,
+    haveFirstPageReplies?: boolean
   ) => {
-    const commentsRepliesResponse = await dispatch(
+    const commentsRepliesResponse: GetCommentDetails = await dispatch(
       getComments(
         GetCommentRequest.builder()
           .setPostId(postId)
@@ -654,13 +659,24 @@ export const PostDetailContextProvider = ({
           .build(),
         false
       )
-    );
-    // sets the api response in the callback function
-    repliesResponseCallback(
-      postDetail?.replies &&
-      commentResponseModelConvertor(commentsRepliesResponse)?.replies
-    );
-    setRepliesArrayUnderComments((previousResponse) => [commentsRepliesResponse,...previousResponse])
+    ) as any;
+
+    dispatch({
+      type: APPEND_REPLIES_TO_COMMENT,
+      body: {
+        parentCommentId: commentId,
+        replies: commentResponseModelConvertor(commentsRepliesResponse)?.replies,
+        haveFirstPageReplies
+      }
+    })
+
+    let hasPaginationEnded = false;
+    if ((commentsRepliesResponse?.comment)?.replies?.length == 0) {
+      hasPaginationEnded = true;
+    }
+
+    repliesResponseCallback && repliesResponseCallback([], hasPaginationEnded)
+
     return commentsRepliesResponse;
   };
 
@@ -833,7 +849,7 @@ export const PostDetailContextProvider = ({
   const commentEdit = async () => {
     // convert the mentions to route
     const convertedEditedComment = mentionToRouteConverter(commentToAdd);
-    let replyObject = repliesArrayUnderComments?.find(item => item?.comment?.id == commentOnFocus?.parentId)
+    let replyObject = repliesArrayUnderComments?.find(item => item?.comment?.id == commentOnFocus?.parentId || item?.comment?.id == commentOnFocus?.id)
     const payload = {
       commentId: commentOnFocus?.id ?? "",
       commentText: convertedEditedComment.trim(),

@@ -513,6 +513,8 @@ export const feedReducer = (state = initialState, action) => {
     }
 
     case DELETE_COMMENT_STATE: {
+      const { commentLevel } = action.body
+      if (commentLevel !== 0) return { ...state };
       const updatedFeed = state.feed;
       const updatedSearchFeed = state.searchedPosts;
       // finds the post whose comment is deleted in post detail and manage its comment count

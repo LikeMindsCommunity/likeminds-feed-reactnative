@@ -60,7 +60,8 @@
     "expo-image-picker": ">=16.0.0",
     "expo-video-thumbnails": ">=9.0.0",
     "@react-native-documents/picker": ">=10.1.1",
-    "@react-native-documents/viewer": ">=1.0.1"
+    "@react-native-documents/viewer": ">=1.0.1",
+    "@shopify/flash-list": ">=1.8.0"
   },
   "peerDependenciesMeta": {
     "react-native-document-picker": {

@@ -27,6 +27,7 @@ import {
 import RNVideo from "../../../optionalDependencies/Video";
 import { useLMFeed } from "../../../lmFeedProvider";
 import { useIsFocused } from "@react-navigation/native";
+import Layout from "../../../constants/Layout";
 
 const LMVideo = React.memo(
   ({
@@ -67,8 +68,11 @@ const LMVideo = React.memo(
     const player = useRef<any>(null);
     const [paused, setPaused] = useState(true);
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-    const [heightCalculated, setHeightCalculated] = useState(0);
+    const [heightCalculated, setHeightCalculated] = useState(height ?? 400);
     const [desiredAspectRatio, setDesiredAspectRatio] = useState(0);
+    
+    const [retryKey, setRetryKey] = useState(0);
+    const [retryCount, setRetryCount] = useState(0);
 
     const currentVideoId = useAppSelector(
       (state) => state.feed.autoPlayVideoPostId
@@ -109,17 +113,41 @@ const LMVideo = React.memo(
       setDimensions({ width, height });
     };
 
+    const handleError = (error) => {
+      console.warn('Video playback error:', error);
+      setError(true);
+      // Retry after a delay
+      if (retryCount < 3) {
+        setTimeout(() => {
+          setRetryKey(prev => prev + 1);
+          setRetryCount(prev => prev + 1);
+        }, 2000);
+      }
+    };
+
     useEffect(() => {
-      const ScreenWidth = Dimensions.get("window").width;
-      const desiredAspectRatio = width > height ? 1.91 : 0.8;
-      const heightCalculated = ScreenWidth * (1 / desiredAspectRatio);
-      setHeightCalculated(heightCalculated);
-      setDesiredAspectRatio(desiredAspectRatio);
+      if ( (!height || !width) && (dimensions?.height > 0 && dimensions?.width > 0)) {
+
+        const screenWidth = Layout.window.width
+        const desiredAspectRatio = dimensions?.width > dimensions?.height ? 1.91 : 0.8;
+        const heightCalculated = screenWidth * (1 / desiredAspectRatio);
+        setHeightCalculated(heightCalculated);
+        setDesiredAspectRatio(desiredAspectRatio);
+
+      } else {
+        const screenWidth = Layout.window.width
+        const desiredAspectRatio = width > height ? 1.91 : 0.8;
+        const heightCalculated = screenWidth * (1 / desiredAspectRatio);
+        setHeightCalculated(heightCalculated);
+        setDesiredAspectRatio(desiredAspectRatio);
+
+      }
+
     }, [dimensions]);
 
     return (
       <View
-        style={StyleSheet.flatten([defaultStyles.videoContainer, boxStyle])}
+        style={StyleSheet.flatten([defaultStyles.videoContainer, boxStyle, {minHeight: heightCalculated}])}
       >
         {/* this renders the loader until the first picture of video is displayed */}
         {loading ? (
@@ -138,14 +166,15 @@ const LMVideo = React.memo(
             )}
           </View>
         ) : null}
-
+        
         {/* this renders the video */}
         <>
           {RNVideo ? (
             <RNVideo
               ref={player}
               source={{ uri: videoUrl }}
-              key={videoUrl}
+              onBuffer={(event) => setLoading(event?.isBuffering ?? false)}
+              key={`${videoUrl}-${retryKey}`}
               onLoad={(data) => {
                 setError(false);
                 onLoad(data);
@@ -153,14 +182,17 @@ const LMVideo = React.memo(
                 setLoading(false);
               }}
               onProgress={() => setError(false)}
-              onError={() => setError(true)}
+              onError={(error) => {
+                handleError(error)
+              }}
               repeat={
-                Platform.OS === "ios" ? (looping ? looping : true) : false
+                looping ?? true
               }
               resizeMode={boxFit ? boxFit : defaultStyles.videoStyle.resizeMode}
               playWhenInactive={false}
               playInBackground={false}
               ignoreSilentSwitch="obey"
+              minLoadRetryCount={5}
               bufferConfig={{
                 minBufferMs: 2500,
                 maxBufferMs: 5000,
@@ -176,7 +208,7 @@ const LMVideo = React.memo(
                 },
               ])}
               paused={
-                isFocused
+                (isFocused && LMFeedProvider.appState == 'active')
                   ? flowFromCarouselScreen && currentVideoId === postId
                     ? false
                     : flowToCreatePostScreen

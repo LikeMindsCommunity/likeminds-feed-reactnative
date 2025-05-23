@@ -3,9 +3,7 @@ import {
     Text,
     StyleSheet,
     TouchableOpacity,
-    TouchableWithoutFeedback,
     Image,
-    Dimensions,
     Platform,
   } from "react-native";
   import React, { useEffect, useRef, useState } from "react";
@@ -26,6 +24,7 @@ import {
   } from "../../../constants/screenNames";
   import RNVideo from "../../../optionalDependencies/Video";
   import { useLMFeed } from "../../../lmFeedProvider";
+  import Layout from "../../../constants/Layout"
   
   const LMCreatePostVideo = React.memo(
     ({
@@ -108,9 +107,9 @@ import {
       };
   
       useEffect(() => {
-        const ScreenWidth = Dimensions.get("window").width;
+        const screenWidth = Layout.window.width
         const desiredAspectRatio = width > height ? 1.91 : 0.8;
-        const heightCalculated = ScreenWidth * (1 / desiredAspectRatio);
+        const heightCalculated = screenWidth * (1 / desiredAspectRatio);
         setHeightCalculated(heightCalculated);
         setDesiredAspectRatio(desiredAspectRatio);
       }, [dimensions]);
@@ -172,7 +171,7 @@ import {
                   },
                 ])}
                 paused={
-                  flowFromCarouselScreen && currentVideoId === postId
+                  ( LMFeedProvider.appState !== "active" || (flowFromCarouselScreen && currentVideoId === postId
                     ? false
                     : flowToCreatePostScreen
                     ? true
@@ -196,7 +195,7 @@ import {
                         ? false
                         : true
                       : false
-                    : playingStatus
+                    : playingStatus))
                 } // handles the auto play/pause functionality
                 muted={
                   isReportModalOpened ||

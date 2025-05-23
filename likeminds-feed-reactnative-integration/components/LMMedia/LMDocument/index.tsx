@@ -52,10 +52,10 @@ const LMDocument = React.memo(
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => {
-                item?.attachmentMeta?.url
-                  ? item?.attachmentMeta?.url.includes("https://")
-                    ? Linking.openURL(item?.attachmentMeta?.url)
-                    : viewDocument(item?.attachmentMeta?.url)
+                item?.metaData?.url
+                  ? item?.metaData?.url.includes("https://")
+                    ? Linking.openURL(item?.metaData?.url)
+                    : viewDocument(item?.metaData?.url)
                   : null;
                 onTap && onTap();
               }}
@@ -108,11 +108,11 @@ const LMDocument = React.memo(
                       documentTitleStyle,
                     ])}
                   >
-                    {item?.attachmentMeta?.name}
+                    {item?.metaData?.name}
                   </Text>
                   <View style={styles.alignRow}>
                     {/* document page count text */}
-                    {item?.attachmentMeta?.pageCount ? (
+                    {item?.metaData?.pageCount ? (
                       <>
                         <Text
                           style={StyleSheet.flatten([
@@ -128,9 +128,9 @@ const LMDocument = React.memo(
                             },
                           ])}
                         >
-                          {item?.attachmentMeta?.pageCount > 1
-                            ? `${item?.attachmentMeta?.pageCount} Pages`
-                            : `${item?.attachmentMeta?.pageCount} Page`}
+                          {item?.metaData?.pageCount > 1
+                            ? `${item?.metaData?.pageCount} Pages`
+                            : `${item?.metaData?.pageCount} Page`}
                         </Text>
                         <Image
                           source={require("../../../assets/images/single_dot3x.png")}
@@ -165,8 +165,8 @@ const LMDocument = React.memo(
                         },
                       ])}
                     >
-                      {item.attachmentMeta.size
-                        ? formatBytes(item.attachmentMeta.size)
+                      {item.metaData?.size
+                        ? formatBytes(item.metaData?.size)
                         : ""}
                     </Text>
                     <Image

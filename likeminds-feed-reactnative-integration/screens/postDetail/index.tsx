@@ -78,6 +78,7 @@ import pluralizeOrCapitalize from "../../utils/variables";
 import { CommunityConfigs } from "../../communityConfigs";
 import { WordAction } from "../..//enums/Variables";
 import { useSafeAreaFrame, useSafeAreaInsets } from "react-native-safe-area-context";
+import { useIsFocused } from '@react-navigation/native';
 
 interface PostDetailProps {
   children?: React.ReactNode;
@@ -275,7 +276,8 @@ const PostDetailComponent = React.memo(() => {
   );
   const memberData = useAppSelector((state) => state.login.member);
   const isCM = memberData?.state === STATE_ADMIN;
-  const { repliesArrayUnderComments } = usePostDetailContext();
+  const { repliesArrayUnderComments, setRepliesArrayUnderComments } = usePostDetailContext();
+  const focused = useIsFocused();
 
   // this function returns the id of the item selected from menu list and handles further functionalities accordingly for comment
   const onCommentMenuItemSelect = async (
@@ -551,7 +553,6 @@ const PostDetailComponent = React.memo(() => {
                                   repliesResponseCallback,
                                   commentIdOfReplies
                                 ) => {
-                                  dispatch(clearComments(item?.id));
                                   setShowRepliesOfCommentId(commentIdOfReplies);
                                   getCommentsRepliesProp
                                     ? getCommentsRepliesProp(
@@ -572,13 +573,15 @@ const PostDetailComponent = React.memo(() => {
                                 // this handles the pagination of child replies on click of view more
                                 onTapViewMore={(
                                   pageValue,
-                                  repliesResponseCallback
+                                  repliesResponseCallback,
+                                  haveFirstPageReplies
                                 ) => {
                                   getCommentsReplies(
                                     item?.postId,
                                     item?.id,
                                     repliesResponseCallback,
-                                    pageValue
+                                    pageValue,
+                                    haveFirstPageReplies
                                   );
                                   customCommentItemStyle?.onTapViewMore &&
                                     customCommentItemStyle?.onTapViewMore();
@@ -1141,11 +1144,13 @@ const PostDetailComponent = React.memo(() => {
           deleteType={selectedMenuItemPostId ? POST_TYPE : COMMENT_TYPE}
           postDetail={postDetail}
           commentDetail={getCommentDetail(postDetail?.replies)?.commentDetail}
+          commentOnFocus={commentOnFocus}
           parentCommentId={
             getCommentDetail(postDetail?.replies)?.parentCommentId
           }
           navigation={navigation}
           repliesArrayUnderComments={repliesArrayUnderComments}
+          setRepliesArrayUnderComments={setRepliesArrayUnderComments}
         />
       )}
       {/* report post modal */}

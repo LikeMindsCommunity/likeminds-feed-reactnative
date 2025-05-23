@@ -12,6 +12,7 @@ import Layout from "../../../constants/Layout";
 import STYLES from "../../../constants/Styles";
 import LMPostHeading from "../LMPostHeading";
 import LMPostTopResponse from "../LMPostTopResponse";
+import { AttachmentType } from "@likeminds.community/feed-rn";
 
 const LMPost = ({
   navigation,
@@ -61,11 +62,11 @@ const LMPostComponent = React.memo(() => {
 
   const showCustomPostViewWidget = useMemo(() => {
     if (post?.attachments && post?.attachments.length > 0) {
-      const attachments = post.attachments;
-      const attachmentLength = attachments.length;
+      const attachments = post?.attachments;
+      const attachmentLength = attachments?.length;
       let noOfCustomViewAttachments = 0;
       for (const attachment of attachments) {
-        if (attachment.attachmentType.toString() === "5") {
+        if (attachment?.type?.toString() === AttachmentType.CUSTOM) {
           noOfCustomViewAttachments++;
         }
       }
@@ -78,6 +79,7 @@ const LMPostComponent = React.memo(() => {
       return false;
     }
   }, [post]);
+
   if (showCustomPostViewWidget) {
     // TODO Custom Widget
     // Render the complete custom Post View widget
@@ -135,8 +137,8 @@ const LMPostComponent = React.memo(() => {
       {/* post content */}
       {(post?.text ||
         post?.attachments?.find(
-          (item) => item?.attachmentType === LINK_ATTACHMENT_TYPE
-        )?.attachmentType === LINK_ATTACHMENT_TYPE) && <LMPostContent />}
+          (item) => item?.type === AttachmentType.LINK
+        )?.type === AttachmentType.LINK) && <LMPostContent />}
 
       {/* post media */}
       {post?.attachments && post?.attachments.length > 0 && <LMPostMedia />}

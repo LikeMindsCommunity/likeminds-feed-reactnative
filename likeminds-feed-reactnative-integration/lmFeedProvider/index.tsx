@@ -6,7 +6,7 @@ import React, {
   useEffect,
 } from "react";
 import STYLES from "../constants/Styles";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, AppState, AppStateStatus } from "react-native";
 import { Credentials } from "../credentials";
 import {
   InitiateUserRequest,
@@ -53,6 +53,7 @@ interface LMFeedContextProps {
   ) => void;
   callGetCommunityConfigurations: () => void;
   callIsUserOnboardingDone: () => Promise<boolean>;
+  appState: AppStateStatus
 }
 
 // Create a context for LMFeedProvider
@@ -84,6 +85,8 @@ export const LMFeedProvider = ({
   const [isInitiated, setIsInitiated] = useState(false);
   const [onBoardUser, setOnboardUser] = useState(false);
   const [withAPIKeySecurity, setWithAPIKeySecurity] = useState(false);
+  const [appState, setAppState] = useState(AppState.currentState);
+
   const dispatch = useAppDispatch();
   const showToast = useAppSelector((state) => state.loader.isToast);
 
@@ -213,6 +216,19 @@ export const LMFeedProvider = ({
     })();
   }, [accessToken, refreshToken]);
 
+
+  useEffect(() => {
+    const handleAppStateChange = (nextAppState) => {
+      setAppState(nextAppState);
+    };
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+
+    return () => {
+      subscription.remove(); // Clean up listener on unmount
+    };
+  }, []);
+
   const contextValues: LMFeedContextProps = {
     myClient: myClient,
     videoCallback: videoCallback,
@@ -223,6 +239,7 @@ export const LMFeedProvider = ({
     withAPIKeySecurity,
     apiKey,
     userUniqueId,
+    appState,
 
     setOnboardUser,
     setIsInitiated,

@@ -17,6 +17,6 @@ export const commentResponseModelConvertor = (response) => {
   });
 
   // Modify the comment object to include the replies array
-  comment.replies = repliesArray;
+  comment.replies = repliesArray?.length > 0 ? repliesArray : [];
   return comment;
 };

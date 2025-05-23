@@ -21,13 +21,14 @@ import { LMCommentViewData } from "../../models";
 import { styles } from "./styles";
 import decode from "../../utils/decodeMentions";
 import { timeStamp } from "../../utils";
-import { useAppSelector } from "../../store/store";
+import { useAppDispatch, useAppSelector } from "../../store/store";
 import { MemberRightsEnum } from "../../enums/MemberRightsEnum";
 import STYLES from "../../constants/Styles";
 import { usePostDetailContext } from "../../context";
 import { CommunityConfigs } from "../../communityConfigs";
 import pluralizeOrCapitalize from "../../utils/variables";
 import { WordAction } from "../../enums/Variables";
+import { clearComments } from "../../store/actions/postDetail";
 const LMCommentItem = React.memo(
   ({
     likeIconButton,
@@ -60,8 +61,11 @@ const LMCommentItem = React.memo(
       comment?.likesCount
     );
     const [repliesArray, setRepliesArray] = useState<LMCommentViewData[]>([]);
-    const [replyPageNumber, setReplyPageNumber] = useState(2);
+    const [haveFirstPageReplies, setHaveFirstPageReplies] = useState(false);
+    const [repliesLoading, setRepliesLoading] = useState(false);
+    const [replyPageNumber, setReplyPageNumber] = useState(1);
     const customLikeIcon = likeIconButton?.icon;
+    const [hasRepliesPaginationEnded, setHasRepliesPaginationEnded] = useState(false);
     const loggedInUserMemberRights = useAppSelector(
       (state) => state.login.memberRights
     );
@@ -70,6 +74,7 @@ const LMCommentItem = React.memo(
     );
     const memberData = useAppSelector((state) => state.login.member);
     const isCM = memberData?.state === STATE_ADMIN;
+    const dispatch = useAppDispatch();
 
     // this handles the show more functionality
     const onTextLayout = (event) => {
@@ -79,13 +84,11 @@ const LMCommentItem = React.memo(
       }
     };
 
-    const {setCommentOnFocus} = usePostDetailContext()
+    const {setCommentOnFocus, commentOnFocus} = usePostDetailContext();
 
     useEffect(() => {
       if (isRepliesVisible) {
         setShowReplies(true);
-        onTapReplies &&
-          onTapReplies((data: Array<LMCommentViewData>) => setRepliesArray(data), "");
       }
     }, [isRepliesVisible]);
 
@@ -136,6 +139,12 @@ const LMCommentItem = React.memo(
     };
 
     const handleReplies = () => {
+      if (showReplies) {
+        setHasRepliesPaginationEnded(false);
+        setReplyPageNumber(1);
+        setHaveFirstPageReplies(false);
+        dispatch(clearComments(comment?.id))
+      }
       setShowReplies(!showReplies);
     };
 
@@ -353,10 +362,13 @@ const LMCommentItem = React.memo(
                       ))}
                     <LMButton
                       onTap={() => {
-                        onTapReplies
+                        onTapReplies && !showReplies
                           ? (onTapReplies(
-                              (data: Array<LMCommentViewData>) =>
-                                setRepliesArray(data),
+                              (data: Array<LMCommentViewData>) => {
+                                setRepliesArray(data);
+                                setReplyPageNumber(replyPageNumber + 1)
+                                setHaveFirstPageReplies(true);
+                              },
                               ""
                             ),
                             handleReplies())
@@ -437,10 +449,10 @@ const LMCommentItem = React.memo(
         {/* replies section */}
         {showReplies && comment.repliesCount > 0 && (
           <View style={styles.repliesView}>
-            {repliesArray && (
+            {comment?.replies && (
               <FlatList
                 keyboardShouldPersistTaps={"handled"}
-                data={repliesArray}
+                data={comment?.replies ?? []}
                 renderItem={({ item }: any) => {
                   return (
                     <>
@@ -464,22 +476,29 @@ const LMCommentItem = React.memo(
                     </>
                   );
                 }}
-                // ListFooterComponentStyle={{}}
                 ListFooterComponent={
                   <>
-                    {repliesArray.length > 0 ? (
+                    {comment?.replies.length > 0 ? (
                       <>
-                        {comment.repliesCount > repliesArray.length && (
+                        {comment.repliesCount > comment?.replies.length && !hasRepliesPaginationEnded && (
                           <View style={styles.showMoreView}>
                             <LMButton
                               onTap={
-                                onTapViewMore
+                                onTapViewMore && !repliesLoading
                                   ? () => {
-                                      setReplyPageNumber(replyPageNumber + 1);
+                                      setRepliesLoading(true);
                                       onTapViewMore(
-                                        replyPageNumber,
-                                        (data: Array<LMCommentViewData>) =>
+                                        haveFirstPageReplies ? replyPageNumber : 1,
+                                        (data: Array<LMCommentViewData>, hasPaginationEnded?: boolean) => {
+                                          setHaveFirstPageReplies(true);
                                           setRepliesArray(data)
+                                          setRepliesLoading(false);
+                                          setReplyPageNumber(replyPageNumber + 1);
+                                          if (hasPaginationEnded) {
+                                            setHasRepliesPaginationEnded(hasPaginationEnded)
+                                          }
+                                        },
+                                        haveFirstPageReplies
                                       );
                                     }
                                   : () => null
@@ -501,7 +520,7 @@ const LMCommentItem = React.memo(
                               buttonStyle={styles.viewMoreButton}
                             />
                             <Text style={styles.commentPageNumberText}>
-                              {repliesArray.length} of {comment.repliesCount}
+                              {comment?.replies?.length} of {comment.repliesCount}
                             </Text>
                           </View>
                         )}

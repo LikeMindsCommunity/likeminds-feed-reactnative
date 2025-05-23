@@ -25,6 +25,7 @@ import {
 } from "../../constants/Strings";
 import { styles } from "../../screens/createPost/styles";
 import { LMButton } from "../../uiComponents";
+import { AttachmentType } from "@likeminds.community/feed-rn";
 
 const LMCreatePostMedia = () => {
   const postListStyle = STYLES.$POST_LIST_STYLE;
@@ -96,7 +97,7 @@ const LMCreatePostMedia = () => {
           >
             <LMPostPollView
               item={{
-                ...formattedPollAttachments[0]?.attachmentMeta,
+                ...formattedPollAttachments[0]?.metaData,
                 disabled: true,
               }}
               post={post}
@@ -134,11 +135,11 @@ const LMCreatePostMedia = () => {
           ) : (
             <>
               {/* single image selected section */}
-              {formattedMediaAttachments[0]?.attachmentType ===
-                IMAGE_ATTACHMENT_TYPE && (
+              {formattedMediaAttachments[0]?.type ===
+                AttachmentType.IMAGE && (
                 <LMImage
                   {...postMediaStyle?.image}
-                  imageUrl={`${formattedMediaAttachments[0]?.attachmentMeta.url}`}
+                  imageUrl={`${formattedMediaAttachments[0]?.metaData?.url}`}
                   showCancel={
                     postMediaStyle?.image?.showCancel != undefined
                       ? postMediaStyle?.image?.showCancel
@@ -153,11 +154,11 @@ const LMCreatePostMedia = () => {
                 />
               )}
               {/* single video selected section  */}
-              {formattedMediaAttachments[0]?.attachmentType ===
-                VIDEO_ATTACHMENT_TYPE && (
+              {formattedMediaAttachments[0]?.type ===
+                AttachmentType.VIDEO && (
                 <LMCreatePostVideo
                   {...postMediaStyle?.video}
-                  videoUrl={`${formattedMediaAttachments[0]?.attachmentMeta.url}`}
+                  videoUrl={`${formattedMediaAttachments[0]?.metaData?.url}`}
                   showCancel={
                     postMediaStyle?.video?.showCancel != undefined
                       ? postMediaStyle?.video?.showCancel
