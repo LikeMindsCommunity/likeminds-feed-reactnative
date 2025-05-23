@@ -93,6 +93,7 @@ import { getPostType } from "../utils/analytics";
 import LMLoader from "../components/LMLoader";
 import Layout from "../constants/Layout";
 import {
+  APPEND_REPLIES_TO_COMMENT,
   HIDE_POST_STATE,
   SET_FLOW_TO_POST_DETAIL_SCREEN,
   SET_REPORT_MODEL_STATUS_IN_POST_DETAIL,
@@ -661,7 +662,7 @@ export const PostDetailContextProvider = ({
     ) as any;
 
     dispatch({
-      type: "APPEND_REPLIES_TO_COMMENT",
+      type: APPEND_REPLIES_TO_COMMENT,
       body: {
         parentCommentId: commentId,
         replies: commentResponseModelConvertor(commentsRepliesResponse)?.replies,

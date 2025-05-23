@@ -25,6 +25,7 @@ import {
   POST_DATA_REFRESH_SUCCESS,
   POST_DATA_SUCCESS,
   SAVE_POST_STATE,
+  APPEND_REPLIES_TO_COMMENT
 } from "../types/types";
 import { LMCommentViewData, LMPostViewData } from "../../models";
 
@@ -312,7 +313,7 @@ export const postDetailReducer = (state = initialState, action) => {
       });
       return { ...state, postDetail: updatedPostDetail };
     }
-    case "APPEND_REPLIES_TO_COMMENT": {
+    case APPEND_REPLIES_TO_COMMENT: {
       const { parentCommentId, replies, haveFirstPageReplies } = action.body;
       if (!parentCommentId || !replies?.length) return {...state}
       const postDetail = state.postDetail;
@@ -320,7 +321,7 @@ export const postDetailReducer = (state = initialState, action) => {
       if (parentComment) {
         let previousReplies = parentComment.replies;
         if (!haveFirstPageReplies) {
-          // incase of replying to a comment when replies have not been fetched
+          // incase of replying to a comment when replies have not been fetched so to avoid the already locally appended reply to be fetched again from backend
           parentComment.replies = [
             ...new Map(
               [...(previousReplies as []), ...replies].map((reply: any) => [reply.id, reply])
