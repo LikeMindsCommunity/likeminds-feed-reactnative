@@ -141,6 +141,8 @@ const LMCommentItem = React.memo(
     const handleReplies = () => {
       if (showReplies) {
         setHasRepliesPaginationEnded(false);
+        setReplyPageNumber(1);
+        setHaveFirstPageReplies(false);
         dispatch(clearComments(comment?.id))
       }
       setShowReplies(!showReplies);
@@ -362,8 +364,11 @@ const LMCommentItem = React.memo(
                       onTap={() => {
                         onTapReplies && !showReplies
                           ? (onTapReplies(
-                              (data: Array<LMCommentViewData>) =>
-                                setRepliesArray(data),
+                              (data: Array<LMCommentViewData>) => {
+                                setRepliesArray(data);
+                                setReplyPageNumber(replyPageNumber + 1)
+                                setHaveFirstPageReplies(true);
+                              },
                               ""
                             ),
                             handleReplies())
@@ -483,7 +488,7 @@ const LMCommentItem = React.memo(
                                   ? () => {
                                       setRepliesLoading(true);
                                       onTapViewMore(
-                                        haveFirstPageReplies ? replyPageNumber + 1 : 1,
+                                        haveFirstPageReplies ? replyPageNumber : 1,
                                         (data: Array<LMCommentViewData>, hasPaginationEnded?: boolean) => {
                                           setHaveFirstPageReplies(true);
                                           setRepliesArray(data)
