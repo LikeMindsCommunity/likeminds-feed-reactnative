@@ -1,3 +1,4 @@
+import { ActivityEntityType, ActivityActionType } from '@likeminds.community/feed-rn';
 import {LMActivityEntityViewData} from './LMActivityEntityViewData';
 import {LMUserViewData} from './LMUserViewData';
 
@@ -6,10 +7,10 @@ export interface LMActivityViewData {
   isRead: boolean;
   actionOn: string;
   actionBy: Array<string>;
-  entityType: number;
+  entityType: ActivityEntityType;
   entityId: string;
   entityOwnerId: string;
-  action: number;
+  action: ActivityActionType;
   cta: string;
   activityText: string;
   activityEntityData?: LMActivityEntityViewData;

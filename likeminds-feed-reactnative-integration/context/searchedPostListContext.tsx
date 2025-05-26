@@ -194,9 +194,9 @@ export const SearchedPostListContextProvider = ({
         if (postInViewport && isFocus) {
             dispatch({
                 type: SET_CURRENT_ID_OF_VIDEO,
-                body: { currentIdOfVideo: postInViewport },
+                body: { currentIdOfVideo: postInViewport ?? "" },
             });
-            dispatch(autoPlayPostVideo(postInViewport));
+            dispatch(autoPlayPostVideo(postInViewport ?? ""));
         }
     }, [postInViewport, isFocus]);
 

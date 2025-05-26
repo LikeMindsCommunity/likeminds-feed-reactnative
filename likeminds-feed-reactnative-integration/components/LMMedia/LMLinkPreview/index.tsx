@@ -29,7 +29,7 @@ const LMLinkPreview = React.memo(
     onCancel,
     cancelButton,
   }: LMLinkPreviewProps) => {
-    const previewAttachmentData = attachments[0].attachmentMeta?.ogTags;
+    const previewAttachmentData = attachments[0]?.metaData?.ogTags;
     return (
       <TouchableOpacity
         activeOpacity={0.8}

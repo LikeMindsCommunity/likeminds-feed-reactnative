@@ -10,6 +10,7 @@ import {
   Reply,
   Like,
   GetPostLikes,
+  AttachmentType
 } from "@likeminds.community/feed-rn";
 import {
   DocumentMetaData,
@@ -103,7 +104,6 @@ export function convertToLMPostViewData(
       ? convertToLMAttachmentsViewData(post.attachments, widgets)
       : [],
     commentsCount: post.commentsCount,
-    communityId: post.communityId,
     createdAt: post.createdAt,
     isEdited: post.isEdited,
     isLiked: post.isLiked,
@@ -143,11 +143,11 @@ export function convertToLMAttachmentsViewData(
 ): LMAttachmentViewData[] {
   return data?.map((item: Attachment) => {
     return {
-      attachmentMeta: convertToLMAttachmentMetaViewData(
-        item.attachmentMeta,
+      metaData: convertToLMAttachmentMetaViewData(
+        item?.metaData,
         widgets
       ),
-      attachmentType: item.attachmentType,
+      type: item?.type,
     };
   });
 }
@@ -161,14 +161,16 @@ export function convertToLMAttachmentMetaViewData(
   widgets
 ): LMAttachmentMetaViewData {
   const attachmentMetaData: LMAttachmentMetaViewData = {
-    duration: data.duration,
-    format: data.format,
-    name: data.name,
-    ogTags: data.ogTags ? convertToLMOgTagsViewData(data.ogTags) : undefined,
-    pageCount: data.pageCount,
-    size: data.size,
-    url: data.url,
-    thumbnailUrl: data.thumbnailUrl,
+    duration: data?.duration,
+    format: data?.format,
+    name: data?.name,
+    ogTags: data?.ogTags ? convertToLMOgTagsViewData(data.ogTags) : undefined,
+    pageCount: data?.pageCount,
+    size: data?.size,
+    url: data?.url,
+    thumbnailUrl: data?.thumbnailUrl,
+    height: data?.height,
+    width: data?.width,
     ...convertToLMPollViewData(data?.entityId ? data?.entityId : "", widgets),
   };
   return attachmentMetaData;
@@ -208,6 +210,7 @@ export function convertToLMPollViewData(
     multipleSelectState: item?.metadata?.multipleSelectState,
     isAnonymous: item?.metadata?.isAnonymous,
     pollType: item?.metadata?.pollType,
+    widgetMeta: item?.metadata
   };
   return pollMetaData;
 }
@@ -320,8 +323,9 @@ export function convertImageVideoMetaData(
   data: ImageVideoMetaData[]
 ): LMAttachmentViewData[] {
   const convertedImageVideoMetaData = data?.map((item) => {
+    console.log(item)
     return {
-      attachmentMeta: {
+      metaData: {
         entityId: "",
         format: item?.type,
         name: item?.fileName,
@@ -335,10 +339,12 @@ export function convertImageVideoMetaData(
         duration: Math.round(item?.duration ? item.duration : 0),
         pageCount: 0,
         url: item?.uri,
+        height: item?.height,
+        width: item?.width
       },
-      attachmentType: item?.duration
-        ? VIDEO_ATTACHMENT_TYPE
-        : IMAGE_ATTACHMENT_TYPE, // You need to specify the attachment type.
+      type: item?.duration
+        ? AttachmentType.VIDEO
+        : AttachmentType.IMAGE, // You need to specify the attachment type.
     };
   });
   return convertedImageVideoMetaData;
@@ -353,7 +359,7 @@ export function convertDocumentMetaData(
 ): LMAttachmentViewData[] {
   const convertedDocumentMetaData = data?.map((item: any) => {
     return {
-      attachmentMeta: {
+      metaData: {
         entityId: "",
         format: item?.type ?? item?.mimeType,
         name: item?.name,
@@ -368,7 +374,7 @@ export function convertDocumentMetaData(
         pageCount: 0,
         url: item?.uri,
       },
-      attachmentType: DOCUMENT_ATTACHMENT_TYPE, // You need to specify the attachment type.
+      type: AttachmentType.DOCUMENT, // You need to specify the attachment type.
     };
   });
   return convertedDocumentMetaData;
@@ -383,7 +389,7 @@ export function convertLinkMetaData(
 ): LMAttachmentViewData[] {
   const convertedLinkMetaData = data?.map((item) => {
     return {
-      attachmentMeta: {
+      metaData: {
         entityId: "",
         format: "",
         name: "",
@@ -396,9 +402,9 @@ export function convertLinkMetaData(
         size: 0,
         duration: 0,
         pageCount: 0,
-        url: "",
+        url: item?.url ?? "",
       },
-      attachmentType: LINK_ATTACHMENT_TYPE, // You need to specify the attachment type.
+      type: AttachmentType.LINK, // You need to specify the attachment type.
     };
   });
   return convertedLinkMetaData;
@@ -421,7 +427,7 @@ export function convertPollOptionsMetaData(
  */
 export function convertPollMetaData(item: any): LMAttachmentViewData {
   return {
-    attachmentMeta: {
+    metaData: {
       entityId: item?.id ? item?.id : "",
       format: "",
       name: "",
@@ -446,7 +452,7 @@ export function convertPollMetaData(item: any): LMAttachmentViewData {
       isAnonymous: item?.isAnonymous,
       allowAddOption: item?.allowAddOption,
     },
-    attachmentType: POLL_ATTACHMENT_TYPE, // You need to specify the attachment type.
+    type: AttachmentType.POLL, // You need to specify the attachment type.
   };
 }
 
@@ -572,7 +578,6 @@ export function convertToTemporaryPost(
     tempId: `-${Date.now()}`,
     attachments: attachment,
     commentsCount: 0,
-    communityId: 0,
     createdAt: Date.now(),
     heading: heading,
     isEdited: false,
@@ -584,7 +589,6 @@ export function convertToTemporaryPost(
     text: text,
     topics: topics,
     updatedAt: 0,
-    userId: "",
     uuid: "",
     isRepost: false,
     repostCount: 0,

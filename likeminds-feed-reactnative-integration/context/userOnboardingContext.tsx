@@ -222,7 +222,7 @@ export default function UserOnboardingContextProvider({
   const uploadProfileImage = async () => {
     let uuid = (memberData as any)?.userUniqueId;
     let formattedMedia = convertImageVideoMetaData([profileImage as any])[0]
-      ?.attachmentMeta;
+      ?.metaData;
     try {
       const url = await uploadFilesToAWS(
         formattedMedia,

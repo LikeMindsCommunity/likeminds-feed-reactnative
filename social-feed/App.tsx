@@ -326,7 +326,7 @@ const App = () => {
                   <Stack.Screen
                     name={TOPIC_FEED}
                     component={LMTopicFeedScreen}
-                    options={{ headerShown: true }}
+                    options={{ headerShown: false }}
                   />
                   <Stack.Screen
                     name={NOTIFICATION_FEED}

@@ -1,6 +1,5 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import {
-  FlatList,
   Platform,
   RefreshControl,
   Text,
@@ -56,6 +55,8 @@ import { useIsFocused } from "@react-navigation/native";
 import { useLMFeed } from "../../lmFeedProvider";
 import { debounce } from "../../utils/debounce";
 import { FeedType } from "../../enums/FeedType";
+import FlashList from "@shopify/flash-list/src/FlashList";
+import Layout from "../../constants/Layout";
 
 const PostsList = ({
   route,
@@ -170,21 +171,21 @@ const PostsListComponent = ({
       if (Platform.OS == "ios") {
         setTimeout(() => {
           handleReportPostProps
-          ? handleReportPostProps(postId)
-          : handleReportPost();
+            ? handleReportPostProps(postId)
+            : handleReportPost();
         }, 500)
       } else {
         handleReportPostProps
-        ? handleReportPostProps(postId)
-        : handleReportPost();
+          ? handleReportPostProps(postId)
+          : handleReportPost();
       }
     }
     if (itemId === DELETE_POST_MENU_ITEM) {
       if (Platform.OS == "ios") {
         setTimeout(() => {
           handleDeletePostProps
-          ? handleDeletePostProps(true, postId)
-          : handleDeletePost(true);
+            ? handleDeletePostProps(true, postId)
+            : handleDeletePost(true);
         }, 500)
       } else {
         handleDeletePostProps
@@ -308,7 +309,7 @@ const PostsListComponent = ({
               />
             </TouchableOpacity>
             {!postListStyle.shouldHideSeparator &&
-            index != feedData.length - 1 ? (
+              index != feedData.length - 1 ? (
               <View
                 style={{
                   height: 11,
@@ -350,6 +351,7 @@ const PostsListComponent = ({
 
   // Detect viewable posts
   const onViewableItemsChanged = ({ viewableItems }) => {
+    if (!viewableItems) return
     if (feedType === FeedType.PERSONALISED_FEED) {
       if (!hasFetched.current) {
         const visiblePostIds = viewableItems.map((item) => item.item.id);
@@ -374,6 +376,29 @@ const PostsListComponent = ({
     debounce(onMomentumScrollEnd, 5000)({ nativeEvent });
   };
 
+  const getMaxHeightOfAttachments = (post: LMPostViewData) => {
+    if (!post?.attachments?.length) return 350;
+
+    const screenWidth = Layout.window.width;
+
+    // Map over attachments and compute scaled heights
+    const scaledHeights = post?.attachments?.map(item => {
+      const meta = item?.metaData;
+      const width = meta?.width;
+      const height = meta?.height;
+
+      if (!width || !height) return 500;
+
+      // Determine desired aspect ratio (portrait vs landscape)
+      const desiredAspectRatio = width > height ? 1.91 : 0.8;
+      return screenWidth * (1 / desiredAspectRatio);
+    });
+
+    let max = Math.max(...scaledHeights);
+
+    return max > 0 ? max : 450
+  };
+
   return (
     <View
       style={{
@@ -387,10 +412,33 @@ const PostsListComponent = ({
       <>
         {!feedFetching ? (
           feedData?.length > 0 ? (
-            <FlatList
+            <FlashList
               ref={listRef}
               refreshing={refreshing}
               style={postListStyle?.listStyle}
+              estimatedItemSize={
+                (Layout.window.height) / 4
+              }
+              disableIntervalMomentum={true}
+              decelerationRate={Platform.OS == "android" ? 0.97 : 0.994}
+              overrideItemLayout={(_, item) => {
+                const val = getMaxHeightOfAttachments(item)
+                return val;
+              }}
+              getItemType={(item) => {
+                const attachments = item?.attachments ?? [];
+
+                switch (attachments.length) {
+                  case 0:
+                    return "post";
+              
+                  case 1:
+                    return attachments[0]?.type || "";
+              
+                  default:
+                    return "carousel";
+                }
+              }}
               refreshControl={
                 <RefreshControl
                   refreshing={refreshing || refreshFromOnboardingScreen}
@@ -398,6 +446,7 @@ const PostsListComponent = ({
                 />
               }
               data={feedData}
+              extraData={[]}
               renderItem={renderItem}
               onEndReachedThreshold={0.3}
               onEndReached={handleLoadMore}
@@ -408,10 +457,8 @@ const PostsListComponent = ({
               ListFooterComponent={renderLoader}
               onViewableItemsChanged={({ changed, viewableItems }) => {
                 if (changed) {
-                  if (viewableItems) {
-                    setPostInViewport(viewableItems?.[0]?.item?.id);
-                    onViewableItemsChanged({ viewableItems });
-                  }
+                  setPostInViewport(viewableItems?.[0]?.item?.id);
+                  onViewableItemsChanged({ viewableItems });
                 }
               }}
               viewabilityConfig={{ viewAreaCoveragePercentThreshold: 60 }}

@@ -20,6 +20,7 @@ function LMVideoPlayer({ url, setDisableGesture }) {
 
   const ref = useRef<any>();
   const [clicked, setClicked] = useState(false);
+  const [isSeeking, setIsSeeking] = useState(false);
   const [paused, setPaused] = useState(false);
   const [progress, setProgress] = useState<any>(null);
   const [mute, setMute] = useState(false);
@@ -98,7 +99,7 @@ function LMVideoPlayer({ url, setDisableGesture }) {
 
         {RNVideo ? (
           <RNVideo
-            paused={paused}
+            paused={paused || (LMFeedProvider.appState !== "active")}
             source={{
               uri: url,
             }}
@@ -109,10 +110,10 @@ function LMVideoPlayer({ url, setDisableGesture }) {
             style={styles.videoPlayer}
             resizeMode="contain"
             bufferConfig={{
-              minBufferMs: 2500,
+              minBufferMs: 1000,
               maxBufferMs: 5000,
               bufferForPlaybackMs: 2500,
-              bufferForPlaybackAfterRebufferMs: 2500,
+              bufferForPlaybackAfterRebufferMs: 1000,
             }}
             muted={mute}
             onEnd={() => {
@@ -221,8 +222,13 @@ function LMVideoPlayer({ url, setDisableGesture }) {
               }
               step={0}
               value={progress?.currentTime}
+              onSlidingStart={() => setIsSeeking(true)}
+              onSlidingComplete={() => setIsSeeking(false)}
               onValueChange={(x) => {
-                ref.current.seek(x);
+                // logic to avoid stuttering issues
+                if ( x!== 0 && Math.abs(x - progress?.currentTime) >= 1) {
+                  ref.current.seek(x);
+                }
               }}
               thumbTintColor={thumbTintColor ? thumbTintColor : "green"}
             />

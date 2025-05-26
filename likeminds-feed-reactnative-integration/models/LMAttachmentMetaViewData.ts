@@ -23,4 +23,6 @@ export interface LMAttachmentMetaViewData {
   multipleSelectNumber?: number;
   isAnonymous?: boolean;
   allowAddOption?: boolean;
+  height?: number;
+  width?: number;
 }
