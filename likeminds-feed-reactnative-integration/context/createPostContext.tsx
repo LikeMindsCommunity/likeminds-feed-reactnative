@@ -51,6 +51,7 @@ import {
   setUploadAttachments,
 } from "../store/actions/createPost";
 import {
+  AttachmentType,
   DecodeURLRequest,
   EditPostRequest,
   GetPostRequest,
@@ -80,7 +81,7 @@ import { Keys } from "../enums/Keys";
 import { CommunityConfigs } from "../communityConfigs";
 import { CREATE_POLL_SCREEN } from "../constants/screenNames";
 import STYLES from "../constants/Styles";
-import { Video, getVideoMetaData } from "react-native-compressor";
+import { Video, getVideoMetaData, Image, getImageMetaData } from "react-native-compressor";
 import { Client } from "../client";
 import _ from "lodash";
 
@@ -309,7 +310,17 @@ export const CreatePostContextProvider = ({
               );
             } else {
               if (media?.type?.includes("image")) {
-                mediaWithSizeCheck.push(media);
+                const uri = await Image.compress(media?.uri);
+                const response = await getImageMetaData(uri);
+                const convertedMedia = {
+                  fileName: media?.fileName,
+                  fileSize: response?.size,
+                  type: media?.type,
+                  height: response?.ImageHeight,
+                  width: response?.ImageWidth,
+                  uri
+                }
+                mediaWithSizeCheck.push(convertedMedia);
               } else {
                 const uri = await Video.compress(media?.uri);
                 const response = await getVideoMetaData(uri);
@@ -363,9 +374,9 @@ export const CreatePostContextProvider = ({
         let imageCount = 0;
         let videoCount = 0;
         for (const media of selectedImagesVideos) {
-          if (media.attachmentType === IMAGE_ATTACHMENT_TYPE) {
+          if (media.type === AttachmentType.IMAGE) {
             imageCount++;
-          } else if (media.attachmentType === VIDEO_ATTACHMENT_TYPE) {
+          } else if (media.type === AttachmentType.VIDEO) {
             videoCount++;
           }
         }
@@ -424,7 +435,7 @@ export const CreatePostContextProvider = ({
             ...allMedia,
             ...linkData,
             ...pollAttachment,
-            ...[{ attachmentType: 5, attachmentMeta: { meta: metaData } }],
+            ...[{ type: AttachmentType.CUSTOM, metaData: { widgetMeta: { meta: metaData } } }],
           ]
           : [...allMedia, ...linkData, ...pollAttachment];
       const post = convertToTemporaryPost(
@@ -618,7 +629,7 @@ export const CreatePostContextProvider = ({
               const convertedLinkData = await convertLinkMetaData(
                 filteredResponses
               );
-              const link = convertedLinkData[0]?.attachmentMeta?.ogTags?.url;
+              const link = convertedLinkData[0]?.metaData?.ogTags?.url;
               setFormattedLinkAttachments(convertedLinkData);
               if (!closedOnce) {
                 setShowLinkPreview(true);
@@ -706,13 +717,13 @@ export const CreatePostContextProvider = ({
       const linkPreview: any = [];
       const pollPreview: any = [];
       for (const media of postDetail.attachments) {
-        if (media.attachmentType === IMAGE_ATTACHMENT_TYPE) {
+        if (media.type === AttachmentType.IMAGE) {
           imageVideoMedia.push(media);
-        } else if (media.attachmentType === VIDEO_ATTACHMENT_TYPE) {
+        } else if (media.type === AttachmentType.VIDEO) {
           imageVideoMedia.push(media);
-        } else if (media.attachmentType === DOCUMENT_ATTACHMENT_TYPE) {
+        } else if (media.type === AttachmentType.DOCUMENT) {
           documentMedia.push(media);
-        } else if (media.attachmentType === POLL_ATTACHMENT_TYPE) {
+        } else if (media.type === AttachmentType.POLL) {
           pollPreview.push(media);
         } else {
           linkPreview.push(media);
@@ -737,11 +748,11 @@ export const CreatePostContextProvider = ({
     const contentText = mentionToRouteConverter(postContentText);
     const linkAttachments = showLinkPreview ? formattedLinkAttachments : [];
     const pollAttachments = convertPollMetaData(
-      formattedPollAttachments[0]?.attachmentMeta
+      formattedPollAttachments[0]?.metaData
     );
 
     // call edit post api
-    if (formattedPollAttachments[0]?.attachmentMeta) {
+    if (formattedPollAttachments[0]?.metaData) {
       const editPostResponse = dispatch(
         editPost(
           EditPostRequest.builder()

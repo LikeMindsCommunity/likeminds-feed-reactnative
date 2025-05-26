@@ -19,6 +19,7 @@ import {
   GetPersonalisedFeedRequest,
   Post,
   PostSeenRequest,
+  AttachmentType
 } from "@likeminds.community/feed-rn";
 import {
   autoPlayPostVideo,
@@ -63,6 +64,7 @@ import { Client } from "../client";
 import { PollMultiSelectState, PollType } from "../enums/Poll";
 import {
   REFRESH_FROM_ONBOARDING_SCREEN,
+  SET_CURRENT_ID_OF_VIDEO,
   SET_FLOW_TO_CREATE_POST_SCREEN,
   SET_PAUSED_STATUS,
   SET_POST_UPLOADING_CREATE_SCREEN,
@@ -72,6 +74,7 @@ import { FeedType } from "../enums/FeedType";
 import { AddPollOptionParams, SetSelectedPollOptionsParams, SubmitPollParams } from "../constants/types";
 import RNVideoThumbnail from "../optionalDependencies/RNVideoThumbnail";
 import expoVideoThumbnail from "../optionalDependencies/ExpoVideoThumbnail";
+import FlashList from "@shopify/flash-list/src/FlashList";
 interface UniversalFeedContextProps {
   children?: ReactNode;
   navigation: NativeStackNavigationProp<RootStackParamList, "UniversalFeed">;
@@ -94,7 +97,7 @@ export interface UniversalFeedContextValues {
   showCreatePost: boolean;
   refreshing: boolean;
   localRefresh: boolean;
-  listRef: MutableRefObject<FlatList<LMPostViewData> | null>;
+  listRef: MutableRefObject<FlashList<LMPostViewData> | null>;
   mediaAttachmemnts: [];
   linkAttachments: [];
   postContent: string;
@@ -181,13 +184,13 @@ export const UniversalFeedContextProvider = ({
   const unreadNotificationCount = useAppSelector(
     (state) => state.notification.activitiesCount
   );
-  const uploadingMediaAttachmentType = mediaAttachmemnts[0]?.attachmentType;
-  const uploadingMediaAttachment = mediaAttachmemnts[0]?.attachmentMeta.url;
+  const uploadingMediaAttachmentType = mediaAttachmemnts[0]?.type;
+  const uploadingMediaAttachment = mediaAttachmemnts[0]?.metaData.url;
 
   const [refreshing, setRefreshing] = useState(false);
   const [localRefresh, setLocalRefresh] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const listRef = useRef<FlatList<LMPostViewData>>(null);
+  const listRef = useRef<FlashList<LMPostViewData>>(null);
   const route = useRoute();
   const params = route.params as {
     feedType?: FeedType;
@@ -285,11 +288,11 @@ export const UniversalFeedContextProvider = ({
     const topics = temporaryPost?.topics;
 
     const mediaAttachmemnts = temporaryPost?.attachments?.filter(item => {
-      return item?.attachmentType == 1 || item?.attachmentType == 2 || item?.attachmentType == 3
+      return item?.type == AttachmentType.IMAGE || item?.type == AttachmentType.VIDEO || item?.type == AttachmentType.DOCUMENT
     }) ?? []
 
     const otherAttachments = temporaryPost?.attachments?.filter(item => {
-      return item?.attachmentType == 4 || item?.attachmentType == 5 || item?.attachmentType == 6
+      return item?.type == AttachmentType.LINK || item?.type == AttachmentType.CUSTOM || item?.type == AttachmentType.POLL
     }) ?? []
 
     let progressArray = new Array(mediaAttachmemnts?.length ?? 0).fill(0);
@@ -302,20 +305,20 @@ export const UniversalFeedContextProvider = ({
     // upload media to aws
     const uploadPromises = mediaAttachmemnts?.map(
       async (item: LMAttachmentViewData, index) => {
-        if (item?.attachmentType == 2) {
+        if (item?.type == AttachmentType.VIDEO) {
           if (RNVideoThumbnail) {
             await RNVideoThumbnail.createThumbnail({
-              url: item?.attachmentMeta?.url,
+              url: item?.metaData?.url,
               timeStamp: 1000
             }).then(async (response) => {
               const newName =
-                item.attachmentMeta.name &&
-                item.attachmentMeta.name.substring(
+                item?.metaData?.name &&
+                item?.metaData?.name.substring(
                   0,
-                  item.attachmentMeta.name.lastIndexOf(".")
+                  item.metaData?.name.lastIndexOf(".")
                 ) + ".jpeg";
               const thumbnailMeta = {
-                ...item.attachmentMeta,
+                ...item?.metaData,
                 name: newName,
                 format: "image/jpeg",
                 thumbnailUrl: response?.path,
@@ -325,24 +328,24 @@ export const UniversalFeedContextProvider = ({
                 memberData.userUniqueId,
                 response?.path
               );
-              item.attachmentMeta.thumbnailUrl = thumbnailRes.Location;
+              item.metaData.thumbnailUrl = thumbnailRes.Location;
             })
               .catch((res) => { });
           } else if (expoVideoThumbnail) {
             await expoVideoThumbnail.getThumbnailAsync(
-              item?.attachmentMeta?.url,
+              item?.metaData?.url,
               {
                 time: 1000
               }
             ).then(async (response) => {
               const newName =
-                item.attachmentMeta.name &&
-                item.attachmentMeta.name.substring(
+                item.metaData.name &&
+                item.metaData.name.substring(
                   0,
-                  item.attachmentMeta.name.lastIndexOf(".")
+                  item.metaData.name.lastIndexOf(".")
                 ) + ".jpeg";
               const thumbnailMeta = {
-                ...item.attachmentMeta,
+                ...item.metaData,
                 name: newName,
                 format: "image/jpeg",
                 thumbnailUrl: response?.path,
@@ -352,22 +355,22 @@ export const UniversalFeedContextProvider = ({
                 memberData.userUniqueId,
                 response?.path
               );
-              item.attachmentMeta.thumbnailUrl = thumbnailRes.Location;
+              item.metaData.thumbnailUrl = thumbnailRes.Location;
             })
               .catch((res) => { });
           }
         }
         return uploadFilesToAWS(
-          item.attachmentMeta,
+          item.metaData,
           memberData.userUniqueId,
-          item.attachmentMeta?.url,
+          item.metaData?.url,
           undefined,
           (progress) => {
             progressArray[index] = progress; // Update progress of this file
             updateTotalProgress(); // Recalculate total progress
           }
         ).then((res) => {
-          item.attachmentMeta.url = res.Location;
+          item.metaData.url = res.Location;
           return item; // Return the updated item
         });
       }
@@ -395,6 +398,12 @@ export const UniversalFeedContextProvider = ({
       setTemporaryPost(null);
       listRef.current?.scrollToIndex({ animated: true, index: 0 });
       if (addPostResponse?.name == "Error") {
+        dispatch({
+          type: SET_POST_UPLOADING_CREATE_SCREEN,
+          body: {
+            uploading: false
+          }
+        })
         dispatch(
           showToastMessage({
             isToast: true,
@@ -403,6 +412,11 @@ export const UniversalFeedContextProvider = ({
         );
         return addPostResponse;
       }
+      dispatch({
+        type: SET_CURRENT_ID_OF_VIDEO,
+        body: { currentIdOfVideo: addPostResponse?.post?.id ?? "" },
+      });
+      dispatch(autoPlayPostVideo(addPostResponse?.post?.id));
       dispatch(
         showToastMessage({
           isToast: true,
@@ -438,20 +452,20 @@ export const UniversalFeedContextProvider = ({
     // upload media to aws
     const uploadPromises = mediaAttachmemnts?.map(
       async (item: LMAttachmentViewData, index) => {
-        if (item?.attachmentType == 2) {
+        if (item?.type == AttachmentType.VIDEO) {
           if (RNVideoThumbnail) {
             await RNVideoThumbnail.createThumbnail({
-              url: item?.attachmentMeta?.url,
+              url: item?.metaData?.url,
               timeStamp: 1000
             }).then(async (response) => {
               const newName =
-                item.attachmentMeta.name &&
-                item.attachmentMeta.name.substring(
+                item.metaData.name &&
+                item.metaData.name.substring(
                   0,
-                  item.attachmentMeta.name.lastIndexOf(".")
+                  item.metaData.name.lastIndexOf(".")
                 ) + ".jpeg";
               const thumbnailMeta = {
-                ...item.attachmentMeta,
+                ...item.metaData,
                 name: newName,
                 format: "image/jpeg",
                 thumbnailUrl: response?.path,
@@ -461,24 +475,24 @@ export const UniversalFeedContextProvider = ({
                 memberData.userUniqueId,
                 response?.path
               );
-              item.attachmentMeta.thumbnailUrl = thumbnailRes.Location;
+              item.metaData.thumbnailUrl = thumbnailRes.Location;
             })
               .catch((res) => { });
           } else if (expoVideoThumbnail) {
             await expoVideoThumbnail.getThumbnailAsync(
-              item?.attachmentMeta?.url,
+              item?.metaData?.url,
               {
                 time: 1000
               }
             ).then(async (response) => {
               const newName =
-                item.attachmentMeta.name &&
-                item.attachmentMeta.name.substring(
+                item.metaData.name &&
+                item.metaData.name.substring(
                   0,
-                  item.attachmentMeta.name.lastIndexOf(".")
+                  item.metaData.name.lastIndexOf(".")
                 ) + ".jpeg";
               const thumbnailMeta = {
-                ...item.attachmentMeta,
+                ...item.metaData,
                 name: newName,
                 format: "image/jpeg",
                 thumbnailUrl: response?.path,
@@ -488,22 +502,22 @@ export const UniversalFeedContextProvider = ({
                 memberData.userUniqueId,
                 response?.path
               );
-              item.attachmentMeta.thumbnailUrl = thumbnailRes.Location;
+              item.metaData.thumbnailUrl = thumbnailRes.Location;
             })
               .catch((res) => { });
           }
         }
         return uploadFilesToAWS(
-          item.attachmentMeta,
+          item.metaData,
           memberData.userUniqueId,
-          item.attachmentMeta?.url,
+          item.metaData?.url,
           undefined,
           (progress) => {
             progressArray[index] = progress; // Update progress of this file
             updateTotalProgress(); // Recalculate total progress
           }
         ).then((res) => {
-          item.attachmentMeta.url = res.Location;
+          item.metaData.url = res.Location;
           return item; // Return the updated item
         });
       }
@@ -522,7 +536,7 @@ export const UniversalFeedContextProvider = ({
           ...updatedAttachments,
           ...linkAttachments,
           ...pollAttachment,
-          ...[{ attachmentType: 5, attachmentMeta: { meta: metaData } }],
+          ...[{ type: AttachmentType.CUSTOM, metaData: { widgetMeta: { meta: metaData } } }],
         ]
         : [...updatedAttachments, ...linkAttachments, ...pollAttachment];
     const addPostResponse: any = await dispatch(
@@ -551,6 +565,12 @@ export const UniversalFeedContextProvider = ({
       );
       listRef.current?.scrollToIndex({ animated: true, index: 0 });
       if (addPostResponse?.name == "Error") {
+        dispatch({
+          type: SET_POST_UPLOADING_CREATE_SCREEN,
+          body: {
+            uploading: false
+          }
+        })
         dispatch(
           showToastMessage({
             isToast: true,
@@ -559,6 +579,11 @@ export const UniversalFeedContextProvider = ({
         );
         return addPostResponse;
       }
+      dispatch({
+        type: SET_CURRENT_ID_OF_VIDEO,
+        body: { currentIdOfVideo: addPostResponse?.post?.id ?? "" },
+      });
+      dispatch(autoPlayPostVideo(addPostResponse?.post?.id));
       dispatch(
         showToastMessage({
           isToast: true,
@@ -626,6 +651,13 @@ export const UniversalFeedContextProvider = ({
     ) {
       setPostUploading(true);
       postAdd();
+    } else {
+      dispatch({
+        type: SET_POST_UPLOADING_CREATE_SCREEN,
+        body: {
+          uploading: false
+        }
+      })
     }
   }, [mediaAttachmemnts, linkAttachments, postContent, heading, topics, poll]);
 
@@ -667,7 +699,7 @@ export const UniversalFeedContextProvider = ({
     setAddOptionInputField,
     reloadPost,
   }: AddPollOptionParams) {
-    const item = poll?.attachments[0]?.attachmentMeta;
+    const item = poll?.attachments[0]?.metaData;
     try {
       if (addOptionInputField.trim().length === 0) {
         return;
@@ -723,7 +755,7 @@ export const UniversalFeedContextProvider = ({
     reloadPost,
     setSelectedPolls,
   }: SetSelectedPollOptionsParams) {
-    const item = poll?.attachments[0]?.attachmentMeta;
+    const item = poll?.attachments[0]?.metaData;
     if (Date.now() > item?.expiryTime) {
       dispatch({
         type: SHOW_TOAST,
@@ -837,7 +869,7 @@ export const UniversalFeedContextProvider = ({
     setSelectedPolls,
     stringManipulation,
   }: SubmitPollParams) {
-    const item = poll?.attachments[0]?.attachmentMeta;
+    const item = poll?.attachments[0]?.metaData;
     if (shouldShowSubmitPollButton) {
       try {
         const votes = selectedPolls?.map((itemIndex: any) => {

@@ -1,7 +1,7 @@
 import { View, Text, Modal, Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
 import styles from "./styles";
-import { GetReportTagsRequest } from "@likeminds.community/feed-rn";
+import { GetReportTagsRequest, ReportEntityType } from "@likeminds.community/feed-rn";
 import STYLES from "../../constants/Styles";
 import { DELETE_TAGS_TYPE, DELETION_REASON } from "../../constants/Strings";
 import { useAppDispatch, useAppSelector } from "../../store/store";
@@ -35,7 +35,7 @@ const DeleteReasonsModal = ({
     };
     const reportTagsResponse = await dispatch(
       getReportTags(
-        GetReportTagsRequest.builder().setType(payload.type).build(),
+        GetReportTagsRequest.builder().setEntityType(ReportEntityType.POST).build(),
         false
       )
     );

@@ -8,7 +8,8 @@ export interface LMCommentProps {
   likeTextButton?: LMButtonProps; // custom like text button
   onTapViewMore?: (
     page: number,
-    data: (repliesArray: Array<LMCommentViewData>) => void
+    data: (repliesArray: Array<LMCommentViewData>) => void,
+    haveFirstPageReplies?: boolean
   ) => void; // callback function to be executed on click of view more replies
   commentMaxLines?: number; // maximun lines of comment to be shown
   menuIcon?: LMButtonProps; // custom menu icon button

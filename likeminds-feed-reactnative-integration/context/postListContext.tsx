@@ -203,12 +203,12 @@ export const PostListContextProvider = ({
 
   // handles the auto play/pause of video in viewport
   useEffect(() => {
-    if (postInViewport && isFocus) {
+    if (isFocus) {
       dispatch({
         type: SET_CURRENT_ID_OF_VIDEO,
-        body: { currentIdOfVideo: postInViewport },
+        body: { currentIdOfVideo: postInViewport ?? "" },
       });
-      dispatch(autoPlayPostVideo(postInViewport));
+      dispatch(autoPlayPostVideo(postInViewport ?? ""));
     }
   }, [postInViewport, isFocus]);
 

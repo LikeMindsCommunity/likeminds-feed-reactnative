@@ -17,7 +17,9 @@ import {
   SET_FLOW_TO_CAROUSEL_SCREEN,
   STATUS_BAR_STYLE,
 } from "../../../store/types/types";
+import {AttachmentType} from "@likeminds.community/feed-rn"
 import { CAROUSEL_SCREEN } from "../../../constants/screenNames";
+import Layout from "../../../constants/Layout";
 
 const LMCarousel = React.memo(
   ({
@@ -49,6 +51,30 @@ const LMCarousel = React.memo(
       }
     };
 
+    // this functions calculates the max height among all the attachments in the carousel
+    const getMaxHeightOfAttachments = () => {
+      if (!post?.attachments?.length) return 0;
+    
+      const screenWidth = Layout.window.width
+    
+      // Map over attachments and compute scaled heights
+      const scaledHeights = post?.attachments?.map(item => {
+        const meta = item?.metaData;
+        const width = meta?.width;
+        const height = meta?.height;
+    
+        if (!width || !height) return 0;
+    
+        // Determine desired aspect ratio (portrait vs landscape)
+        const desiredAspectRatio = width > height ? 1.91 : 0.8;
+        return screenWidth * (1 / desiredAspectRatio);
+      });
+
+      let max = Math.max(...scaledHeights);
+    
+      return max > 0 ? max : 500
+    };
+
     return (
       <SwiperFlatList
         autoplay={lastItem ? true : false}
@@ -64,7 +90,7 @@ const LMCarousel = React.memo(
             setLastItem(false);
           }
         }}
-        style={StyleSheet.flatten([styles.swiperView, carouselStyle])}
+        style={StyleSheet.flatten([styles.swiperView, carouselStyle, {minHeight: getMaxHeightOfAttachments()}])}
         // handling custom style of pagination container
         paginationStyle={StyleSheet.flatten([
           styles.paginationView,
@@ -89,7 +115,7 @@ const LMCarousel = React.memo(
         renderItem={({ item, index }) => (
           <View style={styles.swiperListMediaContainer} onStartShouldSetResponder={() => true}>
             {/* this section render image */}
-            {item?.attachmentType === IMAGE_ATTACHMENT_TYPE && (
+            {item?.type === AttachmentType.IMAGE && (
               <Pressable
                 onPress={() => {
                   navigation.navigate(CAROUSEL_SCREEN, {
@@ -107,9 +133,9 @@ const LMCarousel = React.memo(
                 }}
               >
                 <LMImage
-                  imageUrl={item?.attachmentMeta?.url}
-                  width={imageItem?.width}
-                  height={imageItem?.height}
+                  imageUrl={item?.metaData?.url}
+                  width={item?.metaData?.width}
+                  height={item?.metaData?.height}
                   imageStyle={imageItem?.imageStyle}
                   boxFit={imageItem?.boxFit}
                   boxStyle={imageItem?.boxStyle}
@@ -131,7 +157,7 @@ const LMCarousel = React.memo(
               </Pressable>
             )}
             {/* this section render video */}
-            {item?.attachmentType === VIDEO_ATTACHMENT_TYPE && (
+            {item?.type === AttachmentType.VIDEO && (
               <Pressable
                 onPress={() => {
                   navigation.navigate(CAROUSEL_SCREEN, {
@@ -151,9 +177,9 @@ const LMCarousel = React.memo(
                 }}
               >
                 <LMVideo
-                  videoUrl={item?.attachmentMeta?.url}
-                  height={videoItem?.height}
-                  width={videoItem?.width}
+                  videoUrl={item?.metaData?.url}
+                  height={item?.metaData?.height}
+                  width={item?.metaData?.width}
                   videoStyle={videoItem?.videoStyle}
                   boxFit={videoItem?.boxFit}
                   boxStyle={videoItem?.boxStyle}
@@ -183,7 +209,7 @@ const LMCarousel = React.memo(
                   videoInFeed={videoItem?.videoInFeed}
                   videoInCarousel={true}
                   currentVideoInCarousel={
-                    attachments[activeIndex]?.attachmentMeta?.url
+                    attachments[activeIndex]?.metaData?.url
                   }
                   postId={videoItem?.postId}
                   showMuteUnmute={true}

@@ -43,7 +43,7 @@ export function getRoute(route: any) {
     } else {
         return {
           route: UNIVERSAL_FEED,
-          params: { navigationRoute: navigationRoute[1] },
+          params: { navigationRoute: {} },
         };
       }
   }
