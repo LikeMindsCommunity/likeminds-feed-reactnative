@@ -74,7 +74,7 @@ import { FeedType } from "../enums/FeedType";
 import { AddPollOptionParams, SetSelectedPollOptionsParams, SubmitPollParams } from "../constants/types";
 import RNVideoThumbnail from "../optionalDependencies/RNVideoThumbnail";
 import expoVideoThumbnail from "../optionalDependencies/ExpoVideoThumbnail";
-import FlashList from "@shopify/flash-list/src/FlashList";
+import {FlashList} from "@shopify/flash-list";
 interface UniversalFeedContextProps {
   children?: ReactNode;
   navigation: NativeStackNavigationProp<RootStackParamList, "UniversalFeed">;

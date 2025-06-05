@@ -29,7 +29,7 @@ import { useSearchFeedCustomisableMethodsContext } from '../../context/searchFee
 import { SearchedPostListContextValues, useSearchedPostListContext } from '../../context/searchedPostListContext'
 import { styles } from "./styles"
 import { PollCustomisableMethodsContextProvider } from '../../context/pollCustomisableCallback';
-import FlashList from '@shopify/flash-list/src/FlashList';
+import {FlashList} from "@shopify/flash-list";
 import Layout from '../../constants/Layout';
 
 interface SearchFeedProps {

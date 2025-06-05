@@ -55,7 +55,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { useLMFeed } from "../../lmFeedProvider";
 import { debounce } from "../../utils/debounce";
 import { FeedType } from "../../enums/FeedType";
-import FlashList from "@shopify/flash-list/src/FlashList";
+import {FlashList} from "@shopify/flash-list";
 import Layout from "../../constants/Layout";
 
 const PostsList = ({
