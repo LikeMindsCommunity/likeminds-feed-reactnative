@@ -16,7 +16,7 @@
   },
   "author": "LikeMinds",
   "homepage": "https://likeminds.community/",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "dependencies": {
     "@likeminds.community/feed-rn": "1.7.0",
     "aws-sdk": "2.1548.0",
